@@ -1,0 +1,161 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <script src="lib/vdom.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+
+function render(node) {
+    if('text' in node) {
+        return node.domNode = document.createTextNode(node.text);
+    }
+
+    var res = node.domNode = document.createElement(node.tag);
+    for(var name in node.attrs) {
+        res[name] = node.attrs[name];
+    }
+
+    var children = node.children;
+    if(children) {
+        var i = 0, child;
+        while(child = children[i++]) {
+            res.appendChild(render(child));
+        }
+    }
+
+    return res;
+}
+
+function insertAt(parentNode, node, idx) {
+    idx < parentNode.childNodes.length - 1?
+        parentNode.insertBefore(node, parentNode.childNodes[idx + 1]) :
+        parentNode.appendChild(node);
+}
+
+function applyPatch(patch) {
+    var i = 0, op;
+    while(op = patch[i++]) {
+        console.log(op);
+        switch(op.type) {
+            case 'updateText':
+                op.node.domNode.nodeValue = op.text;
+            break;
+
+            case 'replaceNode':
+                var oldNode = op.oldNode,
+                    newDomNode = render(op.newNode);
+
+                oldNode.domNode.parentNode.replaceChild(newDomNode, oldNode.domNode);
+                oldNode.domNode = newDomNode;
+            break;
+
+            case 'updateAttr':
+                op.node.domNode[op.attrName] = op.attrVal;
+            break;
+
+            case 'removeAttr':
+                op.node.domNode.removeAttribute(op.attrName);
+            break;
+
+            case 'appendChild':
+                op.parentNode.domNode.appendChild(render(op.childNode));
+            break;
+
+            case 'removeChild':
+                op.parentNode.domNode.removeChild(op.childNode.domNode);
+            break;
+
+            case 'insertChild':
+                insertAt(op.parentNode.domNode, render(op.childNode), op.idx);
+            break;
+
+            case 'moveChild':
+                insertAt(op.parentNode.domNode, op.childNode.domNode, op.idx);
+            break;
+
+            case 'removeChildren':
+                op.parentNode.domNode.innerHTML = '';
+            break;
+
+            default:
+                throw Error('unsupported operation: ' + op.type);
+        }
+    }
+}
+
+var tree = {
+        tag : 'a',
+        children : [
+            { tag : 'i', key : 1 },
+            { tag : 'i', key : 2 },
+            { tag : 'i', key : 3 }
+        ]
+    };
+
+document.body.appendChild(render(tree));
+
+[{
+        tag : 'a',
+        attrs : { disabled : true, tabIndex : 10 },
+        children : [
+            {
+                tag : 'b',
+                attrs : { className : 'aa' }
+            },
+            { tag : 'i', key : 2 },
+            { tag : 'i', children : [], key : 3, attrs : { className : 'test test_a' } },
+            { tag : 'i', key : 1, children : [] }
+        ]
+},
+{
+    tag : 'a',
+    children : [
+        {
+            tag : 'b',
+            attrs : { className : 'aa' },
+            children : []
+        },
+        { tag : 'i', children : [], key : 1 },
+        { tag : 'i', children : [{ text : 'text' }], key : 2 },
+        { tag : 'i', children : [{ text : 'text12' }], key : 3, attrs : { className : 'test test_a' } }
+    ]
+},
+{
+    tag : 'a',
+    attrs : { disabled : 'disabled', tabIndex : 10 },
+    children : [
+        { tag : 'i', children : [] },
+        {
+            tag : 'b',
+            children : []
+        },
+        { tag : 'a', attrs : { href : '/' }, children : [{ text : 'link' }] },
+        { tag : 'input', attrs : { type : 'radio', checked : true }, children : [] },
+        { text : 'text1' }
+    ]
+},
+{
+    tag : 'a',
+    attrs : { disabled : 'disabled', tabIndex : 10 },
+    children : [
+        { tag : 'i', children : [] },
+        {
+            tag : 'b',
+            children : []
+        },
+        { tag : 'a', children : [{ text : 'link' }] },
+        { tag : 'input', attrs : { type : 'radio', checked : false }, children : [] },
+        { tag : 'b', children : [] }
+    ]
+}
+].reduce(
+    function(treeA, treeB) {
+        applyPatch(merge(treeA, treeB));
+        return treeB;
+    },
+    tree);
+
+</script>
+</body>
+</html>
