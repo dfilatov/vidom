@@ -1,11 +1,10 @@
-vidom
-=====
+# vidom
 
 Experimental project that implements virtual dom differ. It enables you to get minimal set of operations needed to update real DOM tree.
 
-===Virtual dom nodes representaion
+## Virtual dom nodes representaion
 
-====Element node
+### Element node
 ```js
 {
     tag : 'div',
@@ -18,11 +17,11 @@ Experimental project that implements virtual dom differ. It enables you to get m
 }
 ```
 
-====Text node
+### Text node
 ```js
 {
-    text : 'some text',
-    key : '342'
+    text : 'some text', // required
+    key : '342' // optional
 }
 ```
 
