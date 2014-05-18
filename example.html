@@ -151,7 +151,15 @@ document.body.appendChild(render(tree));
 }
 ].reduce(
     function(treeA, treeB) {
-        applyPatch(merge(treeA, treeB));
+        applyPatch(
+            vdom.diff(
+                treeA,
+                treeB,
+                {
+                    onNode : function(nodeA, nodeB) {
+                        nodeA.domNode && (nodeB.domNode = nodeA.domNode);
+                    }
+                }));
         return treeB;
     },
     tree);
