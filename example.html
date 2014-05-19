@@ -156,7 +156,7 @@ document.body.appendChild(render(tree));
                 treeA,
                 treeB,
                 {
-                    onNode : function(nodeA, nodeB) {
+                    after : function(nodeA, nodeB) {
                         nodeA.domNode && (nodeB.domNode = nodeA.domNode);
                     }
                 }));
