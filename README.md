@@ -12,7 +12,7 @@ Experimental project that implements virtual dom differ. It enables you to get m
   * `removeChild` { `parentNode`, `childNode` } remove given `childNode` from `parentNode`
   * `removeChildren` { `parentNode` } remove all children from `parentNode`
   * `insertChild` { `parentNode`, `childNode`, `idx` } insert new `childNode` to the given position `idx` of children of `parentNode`
-  * `moveChild` { `parentNode`, `childNode`, `idx` }  move given `childNode` to the given position `idx` og children of `parentNode`
+  * `moveChild` { `parentNode`, `childNode`, `idx` }  move given `childNode` to the given position `idx` of children of `parentNode`
 
 ## Virtual dom nodes representaion
 
