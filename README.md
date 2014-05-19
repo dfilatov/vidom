@@ -8,8 +8,8 @@ Vidom is an experimental project that implements a virtual dom differ. It enable
 Calculates patch between `tree1` and `tree2`. The patch is the array of operations which can be applied to `tree1` to get `tree2`.
  * @param {Object} `tree1` root node of the first tree
  * @param {Object} `tree2` root node of the second tree
- * @param {Object} [options]
- * @param {Function} [options.after] hook which is called after comparing of two nodes
+ * @param {Object} [`options`]
+ * @param {Function} [`options.after`] hook which is called after comparing of two nodes
  * @returns {Array} patch
   
 ## Patch operations
