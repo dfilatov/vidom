@@ -17,83 +17,83 @@ Each operation is represented by object contained its type and some specific fie
 
 ### Update text of node
 ```js
-    {
-        type : 'updateText',
-        node : nodeToBeUpdated,
-        text : 'some new text'
-    }
+{
+    type : 'updateText',
+    node : nodeToBeUpdated,
+    text : 'some new text'
+}
 ```
 
 ### Update attribute
 ```js
-    {
-        type : 'updateAttr',
-        node : nodeToBeUpdated,
-        attrName : 'href',
-        attrVal : '/'
-    }
+{
+    type : 'updateAttr',
+    node : nodeToBeUpdated,
+    attrName : 'href',
+    attrVal : '/'
+}
 ```
 
 ### Remove attribute
 ```js
-    {
-        type : 'removeAttr',
-        node : nodeToBeUpdated,
-        attrName : 'disabled',
-    }
+{
+    type : 'removeAttr',
+    node : nodeToBeUpdated,
+    attrName : 'disabled',
+}
 ```
 
 ### Append child  
 ```js
-    {
-        type : 'appendChild',
-        parentNode : nodeToBeAppendedTo,
-        childNode : nodeToBeAppended
-    }
+{
+    type : 'appendChild',
+    parentNode : nodeToBeAppendedTo,
+    childNode : nodeToBeAppended
+}
 ```
 
 ### Remove child
 ```js
-    {
-        type : 'removeChild',
-        parentNode : parentNode,
-        childNode : nodeToBeRemoved
-    }
+{
+    type : 'removeChild',
+    parentNode : parentNode,
+    childNode : nodeToBeRemoved
+}
 ```
 
 ### Remove all children
 ```js
-    {
-        type : 'removeChildren',
-        parentNode : parentNode
-    }
+{
+    type : 'removeChildren',
+    parentNode : parentNode
+}
 ```
 
 ### Insert child at specified position
 ```js
-    {
-        type : 'insertChild',
-        parentNode : parentNode,
-        idx : 3
-    }
+{
+    type : 'insertChild',
+    parentNode : parentNode,
+    idx : 3
+}
 ```
   
 ### Move child to specified position
 ```js
-    {
-        type : 'moveChild',
-        parentNode : parentNode,
-        idx : 3
-    }
+{
+    type : 'moveChild',
+    parentNode : parentNode,
+    idx : 3
+}
 ```
 
 ### Replace node
 ```js
-    {
-        type : 'replaceNode',
-        oldNode : nodeToBeReplaced, 
-        newNode : nodeToReplace
-    }
+{
+    type : 'replaceNode',
+    oldNode : nodeToBeReplaced, 
+    newNode : nodeToReplace
+}
 ```
   
 ## Virtual dom nodes representaion
