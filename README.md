@@ -24,15 +24,6 @@ Each operation is represented by object contained its type and some specific fie
     }
 ```
 
-### Replace node
-```js
-    {
-        type : 'replaceNode',
-        oldNode : nodeToBeReplaced, 
-        newNode : nodeToReplace
-    }
-```
-  
 ### Update attribute
 ```js
     {
@@ -96,6 +87,15 @@ Each operation is represented by object contained its type and some specific fie
     }
 ```
 
+### Replace node
+```js
+    {
+        type : 'replaceNode',
+        oldNode : nodeToBeReplaced, 
+        newNode : nodeToReplace
+    }
+```
+  
 ## Virtual dom nodes representaion
 
 ### Element node
