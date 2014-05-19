@@ -1,33 +1,100 @@
 # vidom
 
-Experimental project that implements virtual dom differ. It enables you to get minimal set of operations (patch) needed to update real DOM tree. It based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html).
+Vidom is an experimental project that implements a virtual dom differ. It enables you to get a minimal set of operations (patch) needed to update real DOM tree. It based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html).
 
 ## API
 
-```js
-
-/*
- * Calculates patch between `tree1` and `tree2`. The patch is the array of commands which can be applied with `tree1` to get `tree2`.
+### vdom.diff(`tree1`, `tree2`, `options`)
+Calculates patch between `tree1` and `tree2`. The patch is the array of operations which can be applied to `tree1` to get `tree2`.
  * @param {Object} `tree1` root node of the first tree
  * @param {Object} `tree2` root node of the second tree
  * @param {Object} [options]
  * @param {Function} [options.after] hook which is called after comparing of two nodes
  * @returns {Array} patch
- */
-```
-### vdom.diff(tree1, tree2, options)
   
 ## Patch operations
+Each operation is represented by object contained its type and some specific fields depended on type.
 
-  * `updateText` { `node`, `text` } update text of given `node`
-  * `replaceNode` { `oldNode`, `newNode` } replace `oldNode` with new `newNode`
-  * `updateAttr` { `node`, `attrName`, `attrVal` } update attribute `attrName` of `node` with value of `attrVal`
-  * `removeAttr` { `node`, `attrName` } remove attribute of `node` with given `attrName`
-  * `appendChild` { `parentNode`, `childNode` } append new `childNode` to `parentNode`
-  * `removeChild` { `parentNode`, `childNode` } remove given `childNode` from `parentNode`
-  * `removeChildren` { `parentNode` } remove all children from `parentNode`
-  * `insertChild` { `parentNode`, `childNode`, `idx` } insert new `childNode` to the given position `idx` of children of `parentNode`
-  * `moveChild` { `parentNode`, `childNode`, `idx` }  move given `childNode` to the given position `idx` of children of `parentNode`
+### Update text of node
+```js
+    {
+        type : 'updateText',
+        node : nodeToBeUpdated,
+        text : 'some new text'
+    }
+```
+
+### Replace node
+```js
+    {
+        type : 'replaceNode',
+        oldNode : nodeToBeReplaced, 
+        newNode : nodeToReplace
+    }
+```
+  
+### Update attribute
+```js
+    {
+        type : 'updateAttr',
+        node : nodeToBeUpdated,
+        attrName : 'href',
+        attrVal : '/'
+    }
+```
+
+### Remove attribute
+```js
+    {
+        type : 'removeAttr',
+        node : nodeToBeUpdated,
+        attrName : 'disabled',
+    }
+```
+
+### Append child  
+```js
+    {
+        type : 'appendChild',
+        parentNode : nodeToBeAppendedTo,
+        childNode : nodeToBeAppended
+    }
+```
+
+### Remove child
+```js
+    {
+        type : 'removeChild',
+        parentNode : parentNode,
+        childNode : nodeToBeRemoved
+    }
+```
+
+### Remove all children
+```js
+    {
+        type : 'removeChildren',
+        parentNode : parentNode
+    }
+```
+
+### Insert child at specified position
+```js
+    {
+        type : 'insertChild',
+        parentNode : parentNode,
+        idx : 3
+    }
+```
+  
+### Move child to specified position
+```js
+    {
+        type : 'moveChild',
+        parentNode : parentNode,
+        idx : 3
+    }
+```
 
 ## Virtual dom nodes representaion
 
