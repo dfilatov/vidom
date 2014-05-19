@@ -4,15 +4,15 @@ Experimental project that implements virtual dom differ. It enables you to get m
 
 ## Patch operations
 
-  * `updateText` { `node`, `text` } update text of given node `node`
-  * `replaceNode` { `oldNode`, `newNode` } replace node `oldNode` with new node `newNode`
+  * `updateText` { `node`, `text` } update text of given `node`
+  * `replaceNode` { `oldNode`, `newNode` } replace `oldNode` with new `newNode`
   * `updateAttr` { `node`, `attrName`, `attrVal` } update attribute `attrName` of `node` with value of `attrVal`
   * `removeAttr` { `node`, `attrName` } remove attribute of `node` with given `attrName`
   * `appendChild` { `parentNode`, `childNode` } append new `childNode` to `parentNode`
   * `removeChild` { `parentNode`, `childNode` } remove given `childNode` from `parentNode`
   * `removeChildren` { `parentNode` } remove all children from `parentNode`
-  * `insertChild` { `parentNode`, `childNode`, `idx` } insert new `childNode` to the given position `idx` to children of `parentNode`
-  * `moveChild` { `parentNode`, `childNode`, `idx` }  move given `childNode` to the given position `idx` to children of `parentNode`
+  * `insertChild` { `parentNode`, `childNode`, `idx` } insert new `childNode` to the given position `idx` of children of `parentNode`
+  * `moveChild` { `parentNode`, `childNode`, `idx` }  move given `childNode` to the given position `idx` og children of `parentNode`
 
 ## Virtual dom nodes representaion
 
