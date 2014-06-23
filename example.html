@@ -99,7 +99,7 @@ function getDomNode(node) {
         }
     }
 
-    throw Error('can\'t get dom node');
+    return render(node);
 }
 
 var batch = [];
