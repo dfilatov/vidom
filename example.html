@@ -7,24 +7,27 @@
 <script type="text/javascript">
 
 function render(node) {
+    var res;
+
     if('text' in node) {
-        return node.domNode = document.createTextNode(node.text);
+        res = document.createTextNode(node.text);
     }
+    else {
+        res = document.createElement(node.tag);
+        for(var name in node.attrs) {
+            res[name] = node.attrs[name];
+        }
 
-    var res = node.domNode = document.createElement(node.tag);
-    for(var name in node.attrs) {
-        res[name] = node.attrs[name];
-    }
-
-    var children = node.children;
-    if(children) {
-        var i = 0, child;
-        while(child = children[i++]) {
-            res.appendChild(render(child));
+        var children = node.children;
+        if(children) {
+            var i = 0, child;
+            while(child = children[i++]) {
+                res.appendChild(render(child));
+            }
         }
     }
 
-    return res;
+    return node.domNode = res;
 }
 
 function insertAt(parentNode, node, idx) {
@@ -39,49 +42,79 @@ function applyPatch(patch) {
         console.log(op);
         switch(op.type) {
             case 'updateText':
-                op.node.domNode.nodeValue = op.text;
+                getDomNode(op.node).nodeValue = op.text;
             break;
 
             case 'replaceNode':
                 var oldNode = op.oldNode,
+                    oldDomNode = getDomNode(oldNode),
                     newDomNode = render(op.newNode);
 
-                oldNode.domNode.parentNode.replaceChild(newDomNode, oldNode.domNode);
-                oldNode.domNode = newDomNode;
+                oldDomNode.parentNode.replaceChild(newDomNode, oldDomNode);
             break;
 
             case 'updateAttr':
-                op.node.domNode[op.attrName] = op.attrVal;
+                getDomNode(op.node)[op.attrName] = op.attrVal;
             break;
 
             case 'removeAttr':
-                op.node.domNode.removeAttribute(op.attrName);
+                getDomNode(op.node).removeAttribute(op.attrName);
             break;
 
             case 'appendChild':
-                op.parentNode.domNode.appendChild(render(op.childNode));
+                getDomNode(op.parentNode).appendChild(render(op.childNode));
             break;
 
             case 'removeChild':
-                op.parentNode.domNode.removeChild(op.childNode.domNode);
+                getDomNode(op.parentNode).removeChild(getDomNode(op.childNode));
             break;
 
             case 'insertChild':
-                insertAt(op.parentNode.domNode, render(op.childNode), op.idx);
+                insertAt(getDomNode(op.parentNode), render(op.childNode), op.idx);
             break;
 
             case 'moveChild':
-                insertAt(op.parentNode.domNode, op.childNode.domNode, op.idx);
+                insertAt(getDomNode(op.parentNode), getDomNode(op.childNode), op.idx);
             break;
 
             case 'removeChildren':
-                op.parentNode.domNode.innerHTML = '';
+                getDomNode(op.parentNode).innerHTML = '';
             break;
 
             default:
                 throw Error('unsupported operation: ' + op.type);
         }
     }
+}
+
+function getDomNode(node) {
+    if(node.domNode) {
+        return node.domNode;
+    }
+
+    var prevNode = node;
+    while(prevNode = prevNode.prevNode) {
+        if(prevNode.domNode) {
+            return node.domNode = prevNode.domNode;
+        }
+    }
+
+    throw Error('can\'t get dom node');
+}
+
+var batch = [];
+
+function scheduleUpdate(patch) {
+    if(!batch.length) {
+        window.requestAnimationFrame(performUpdate);
+    }
+
+    batch = batch.concat(patch);
+}
+
+function performUpdate() {
+    applyPatch(batch);
+    batch = [];
 }
 
 var tree = {
@@ -104,7 +137,7 @@ document.body.appendChild(render(tree));
                 attrs : { className : 'aa' }
             },
             { tag : 'i', key : 2 },
-            { tag : 'i', children : [], key : 3, attrs : { className : 'test test_a' } },
+            { tag : 'i', children : [{ text : 'text12' }], key : 3, attrs : { className : 'test test_a' } },
             { tag : 'i', key : 1, children : [] }
         ]
 },
@@ -118,9 +151,36 @@ document.body.appendChild(render(tree));
         },
         { tag : 'i', children : [], key : 1 },
         { tag : 'i', children : [{ text : 'text' }], key : 2 },
-        { tag : 'i', children : [{ text : 'text12' }], key : 3, attrs : { className : 'test test_a' } }
+        { tag : 'i', children : [{ text : 'text123' }], key : 3, attrs : { className : 'test test_a' } }
     ]
 },
+{
+    tag : 'a',
+    children : [
+        {
+            tag : 'b',
+            attrs : { className : 'aa' },
+            children : []
+        },
+        { tag : 'i', children : [], key : 1 },
+        { tag : 'i', children : [{ text : 'text' }], key : 2 },
+        { tag : 'i', children : [{ text : 'text1234' }], key : 3, attrs : { className : 'test test_a' } }
+    ]
+},
+{
+    tag : 'a',
+    children : [
+        {
+            tag : 'b',
+            attrs : { className : 'aa' },
+            children : []
+        },
+        { tag : 'i', children : [], key : 1 },
+        { tag : 'i', children : [{ text : 'text' }], key : 2 },
+        { tag : 'i', children : [{ text : 'text12345' }], key : 3, attrs : { className : 'test test_a' } }
+    ]
+},
+
 {
     tag : 'a',
     attrs : { disabled : 'disabled', tabIndex : 10 },
@@ -151,15 +211,10 @@ document.body.appendChild(render(tree));
 }
 ].reduce(
     function(treeA, treeB) {
-        applyPatch(
+        scheduleUpdate(
             vdom.diff(
                 treeA,
-                treeB,
-                {
-                    after : function(nodeA, nodeB) {
-                        nodeA.domNode && (nodeB.domNode = nodeA.domNode);
-                    }
-                }));
+                treeB));
         return treeB;
     },
     tree);
