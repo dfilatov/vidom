@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="lib/vdom.js"></script>
+    <script src="lib/vidom.js"></script>
 </head>
 <body>
 <script type="text/javascript">
@@ -93,7 +93,7 @@ function getDomNode(node) {
     }
 
     var prevNode = node;
-    while(prevNode = prevNode.prevNode) {
+    while(prevNode = prevNode.prev) {
         if(prevNode.domNode) {
             return node.domNode = prevNode.domNode;
         }
@@ -212,9 +212,14 @@ document.body.appendChild(render(tree));
 ].reduce(
     function(treeA, treeB) {
         scheduleUpdate(
-            vdom.diff(
+            vidom.diff(
                 treeA,
-                treeB));
+                treeB,
+                {
+                    after : function(nodeA, nodeB) {
+                        nodeB.prev = nodeA;
+                    }
+                }));
         return treeB;
     },
     tree);
