@@ -88,18 +88,28 @@ function applyPatch(patch) {
 }
 
 function getDomNode(node) {
-    if(node.domNode) {
-        return node.domNode;
-    }
+    var res;
 
-    var prevNode = node;
-    while(prevNode = prevNode.prev) {
-        if(prevNode.domNode) {
-            return node.domNode = prevNode.domNode;
+    if(node.domNode) {
+        res = node.domNode;
+    }
+    else {
+        var prevNode = node;
+        while(prevNode = prevNode.prev) {
+            if(prevNode.domNode) {
+                res = node.domNode = prevNode.domNode;
+                break;
+            }
+        }
+
+        if(!node.domNode) {
+            res = render(node);
         }
     }
 
-    return render(node);
+    node.prev && (node.prev = null);
+
+    return res;
 }
 
 var batch = [];
@@ -205,6 +215,20 @@ document.body.appendChild(render(tree));
             children : []
         },
         { tag : 'a', children : [{ text : 'link' }] },
+        { tag : 'input', attrs : { type : 'radio', checked : false }, children : [] },
+        { tag : 'b', children : [] }
+    ]
+},
+{
+    tag : 'a',
+    attrs : { disabled : 'disabled', tabIndex : 10 },
+    children : [
+        { tag : 'i', children : [] },
+        {
+            tag : 'b',
+            children : []
+        },
+        { tag : 'a', children : [{ text : 'link2' }] },
         { tag : 'input', attrs : { type : 'radio', checked : false }, children : [] },
         { tag : 'b', children : [] }
     ]
