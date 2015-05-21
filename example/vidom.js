@@ -1,118 +1,5 @@
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <script src="lib/vidom.js"></script>
-</head>
-<body>
-<script type="text/javascript">
-
-function render(node) {
-    var res;
-
-    if('text' in node) {
-        res = document.createTextNode(node.text);
-    }
-    else {
-        res = document.createElement(node.tag);
-        for(var name in node.attrs) {
-            res[name] = node.attrs[name];
-        }
-
-        var children = node.children;
-        if(children) {
-            var i = 0, child;
-            while(child = children[i++]) {
-                res.appendChild(render(child));
-            }
-        }
-    }
-
-    return node.domNode = res;
-}
-
-function insertAt(parentNode, node, idx) {
-    idx < parentNode.childNodes.length - 1?
-        parentNode.insertBefore(node, parentNode.childNodes[idx + 1]) :
-        parentNode.appendChild(node);
-}
-
-function applyPatch(patch) {
-    var i = 0, op;
-    while(op = patch[i++]) {
-        console.log(op);
-        switch(op.type) {
-            case 'updateText':
-                getDomNode(op.node).nodeValue = op.text;
-            break;
-
-            case 'replaceNode':
-                var oldNode = op.oldNode,
-                    oldDomNode = getDomNode(oldNode),
-                    newDomNode = render(op.newNode);
-
-                oldDomNode.parentNode.replaceChild(newDomNode, oldDomNode);
-            break;
-
-            case 'updateAttr':
-                getDomNode(op.node)[op.attrName] = op.attrVal;
-            break;
-
-            case 'removeAttr':
-                getDomNode(op.node).removeAttribute(op.attrName);
-            break;
-
-            case 'appendChild':
-                getDomNode(op.parentNode).appendChild(render(op.childNode));
-            break;
-
-            case 'removeChild':
-                getDomNode(op.parentNode).removeChild(getDomNode(op.childNode));
-            break;
-
-            case 'insertChild':
-                insertAt(getDomNode(op.parentNode), render(op.childNode), op.idx);
-            break;
-
-            case 'moveChild':
-                insertAt(getDomNode(op.parentNode), getDomNode(op.childNode), op.idx);
-            break;
-
-            case 'removeChildren':
-                getDomNode(op.parentNode).innerHTML = '';
-            break;
-
-            default:
-                throw Error('unsupported operation: ' + op.type);
-        }
-    }
-}
-
-function getDomNode(node) {
-    var res;
-
-    if(node.domNode) {
-        res = node.domNode;
-    }
-    else {
-        var prevNode = node;
-        while(prevNode = prevNode.prev) {
-            if(prevNode.domNode) {
-                res = node.domNode = prevNode.domNode;
-                break;
-            }
-        }
-
-        if(!node.domNode) {
-            res = render(node);
-        }
-    }
-
-    node.prev && (node.prev = null);
-
-    return res;
-}
-
-var batch = [];
+var vidom = require('../lib/vidom'),
+    batch = [];
 
 function scheduleUpdate(patch) {
     if(!batch.length) {
@@ -123,7 +10,7 @@ function scheduleUpdate(patch) {
 }
 
 function performUpdate() {
-    applyPatch(batch);
+    vidom.patchDom(batch);
     batch = [];
 }
 
@@ -136,7 +23,7 @@ var tree = {
         ]
     };
 
-document.body.appendChild(render(tree));
+document.body.appendChild(vidom.renderToDom(tree));
 
 [{
         tag : 'a',
@@ -236,7 +123,7 @@ document.body.appendChild(render(tree));
 ].reduce(
     function(treeA, treeB) {
         scheduleUpdate(
-            vidom.diff(
+            vidom.calcPatch(
                 treeA,
                 treeB,
                 {
@@ -247,7 +134,3 @@ document.body.appendChild(render(tree));
         return treeB;
     },
     tree);
-
-</script>
-</body>
-</html>

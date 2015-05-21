@@ -1,0 +1,15 @@
+{
+  "name": "vidom",
+  "version": "0.0.1",
+  "description": "",
+  "keywords": [],
+  "main": "lib/vidom.js",
+  "author": "Dmitry Filatov <dfilatov@yandex-team.ru>",
+  "devDependencies": {
+    "browserify": "10.2.1"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build-example": "browserify example/vidom.js > example/vidom.build.js"
+  }
+}
