@@ -147,7 +147,7 @@ var tree = generateTable(100, 10, 0),
 function draw() {
     var prevTree = tree;
     tree = generateTable(100, 10, counter++);
-    vidom.patchDom(rootNode, vidom.calcPatch(prevTree, tree, { after : function(nodeA, nodeB) { nodeB.prev = nodeA; } }));
+    vidom.patchDom(rootNode, vidom.calcPatch(prevTree, tree));
     requestAnimationFrame(draw);
 }
 

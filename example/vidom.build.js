@@ -192,7 +192,6 @@ module.exports = function(treeA, treeB) {
 var renderToDom = require('./renderToDom');
 
 function insertAt(parentNode, node, idx) {
-    console.log(parentNode, node, idx);
     idx < parentNode.childNodes.length - 1?
         parentNode.insertBefore(node, parentNode.childNodes[idx]) :
         parentNode.appendChild(node);
@@ -439,14 +438,13 @@ function generateTable(rowsCount, cellsCount, content) {
 }
 
 var tree = generateTable(100, 10, 0),
-    counter = 1;
-
-var rootNode = document.body.appendChild(vidom.renderToDom(tree));
+    counter = 1,
+    rootNode = document.body.appendChild(vidom.renderToDom(tree));
 
 function draw() {
     var prevTree = tree;
     tree = generateTable(100, 10, counter++);
-    vidom.patchDom(rootNode, vidom.calcPatch(prevTree, tree, { after : function(nodeA, nodeB) { nodeB.prev = nodeA; } }));
+    vidom.patchDom(rootNode, vidom.calcPatch(prevTree, tree));
     requestAnimationFrame(draw);
 }
 
