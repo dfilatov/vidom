@@ -4,22 +4,30 @@ Vidom is an experimental project that implements a virtual dom differ. It enable
 
 ## API
 
-### vdom.diff(`tree1`, `tree2`, `options`)
+### vdom.renderToDom(`tree`)
+Renders given `tree` to DOM.
+ * @param {Object} `tree` root node of the first tree
+ * @returns {Node} root DOM node
+
+### vdom.diff(`tree1`, `tree2`)
 Calculates patch between `tree1` and `tree2`. The patch is the array of operations which can be applied to `tree1` to get `tree2`.
  * @param {Object} `tree1` root node of the first tree
  * @param {Object} `tree2` root node of the second tree
- * @param {Object} [`options`]
- * @param {Function} [`options.after`] hook which is called after comparing of two nodes
  * @returns {Array} patch
   
+### vdom.patchDom(`node`, `patch`)
+Patches DOM .
+ * @param {Node} `node` root DOM node
+ * @param {Array} `patch` patch
+  
 ## Patch operations
-Each operation is represented by object contained its type and some specific fields depended on type.
+Each operation is represented by object contained its type, path to target node and some specific fields depended on type.
 
 ### Update text of node
 ```js
 {
     type : 'updateText',
-    node : nodeToBeUpdated,
+    path : pathToNode,
     text : 'some new text'
 }
 ```
@@ -28,7 +36,7 @@ Each operation is represented by object contained its type and some specific fie
 ```js
 {
     type : 'updateAttr',
-    node : nodeToBeUpdated,
+    path : pathToNode,
     attrName : 'href',
     attrVal : '/'
 }
@@ -38,7 +46,7 @@ Each operation is represented by object contained its type and some specific fie
 ```js
 {
     type : 'removeAttr',
-    node : nodeToBeUpdated,
+    path : pathToNode,
     attrName : 'disabled',
 }
 ```
@@ -47,17 +55,17 @@ Each operation is represented by object contained its type and some specific fie
 ```js
 {
     type : 'appendChild',
-    parentNode : nodeToBeAppendedTo,
+    path : pathToNode,
     childNode : nodeToBeAppended
 }
 ```
 
-### Remove child
+### Remove child at specified index
 ```js
 {
     type : 'removeChild',
-    parentNode : parentNode,
-    childNode : nodeToBeRemoved
+    path : pathToNode,
+    idx : 5
 }
 ```
 
@@ -65,25 +73,27 @@ Each operation is represented by object contained its type and some specific fie
 ```js
 {
     type : 'removeChildren',
-    parentNode : parentNode
+    path : pathToNode
 }
 ```
 
-### Insert child at specified position
+### Insert child at specified index
 ```js
 {
     type : 'insertChild',
-    parentNode : parentNode,
-    idx : 3
+    path : pathToNode,
+    idx : 3,
+    childNode : childNode
 }
 ```
   
-### Move child to specified position
+### Move child from specified index to another one
 ```js
 {
     type : 'moveChild',
-    parentNode : parentNode,
-    idx : 3
+    path : pathToNode,
+    idxFrom : 3,
+    idxTo : 2
 }
 ```
 
@@ -91,7 +101,7 @@ Each operation is represented by object contained its type and some specific fie
 ```js
 {
     type : 'replaceNode',
-    oldNode : nodeToBeReplaced, 
+    path : pathToNode,
     newNode : nodeToReplace
 }
 ```
