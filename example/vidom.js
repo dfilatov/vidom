@@ -10,22 +10,20 @@ var vidom = require('../lib/vidom'),
 //}
 //
 //function performUpdate() {
-//    vidom.patchDom(batch);
+//    vidom.patchDom(rootNode, batch);
 //    batch = [];
 //}
 //
 //var tree = {
-//        tag : 'a',
-//        children : [
-//            { tag : 'i', key : 1 },
-//            { tag : 'i', key : 2 },
-//            { tag : 'i', key : 3 }
-//        ]
+//        tag : 'a'
 //    };
 //
-//document.body.appendChild(vidom.renderToDom(tree));
+//var rootNode = vidom.renderToDom(tree);
 //
-//[{
+//document.body.appendChild(rootNode);
+//
+//[
+//{
 //        tag : 'a',
 //        attrs : { disabled : true, tabIndex : 10 },
 //        children : [
@@ -116,7 +114,7 @@ var vidom = require('../lib/vidom'),
 //            children : []
 //        },
 //        { tag : 'a', children : [{ text : 'link2' }] },
-//        { tag : 'input', attrs : { type : 'radio', checked : false }, children : [] },
+//        { tag : 'input', attrs : { type : 'radio', checked : true, disabled : true }, children : [] },
 //        { tag : 'b', children : [] }
 //    ]
 //}
@@ -125,16 +123,11 @@ var vidom = require('../lib/vidom'),
 //        scheduleUpdate(
 //            vidom.calcPatch(
 //                treeA,
-//                treeB,
-//                {
-//                    after : function(nodeA, nodeB) {
-//                        nodeB.prev = nodeA;
-//                    }
-//                }));
+//                treeB
+//                ));
 //        return treeB;
 //    },
 //    tree);
-
 
 function generateTable(rowsCount, cellsCount, content) {
     var res = { tag : 'table', children : [] };
@@ -148,16 +141,14 @@ function generateTable(rowsCount, cellsCount, content) {
 }
 
 var tree = generateTable(100, 10, 0),
-    counter = 1;
-
-document.body.appendChild(vidom.renderToDom(tree));
+    counter = 1,
+    rootNode = document.body.appendChild(vidom.renderToDom(tree));
 
 function draw() {
     var prevTree = tree;
     tree = generateTable(100, 10, counter++);
-    vidom.patchDom(vidom.calcPatch(prevTree, tree, { after : function(nodeA, nodeB) { nodeB.prev = nodeA; } }));
+    vidom.patchDom(rootNode, vidom.calcPatch(prevTree, tree, { after : function(nodeA, nodeB) { nodeB.prev = nodeA; } }));
     requestAnimationFrame(draw);
 }
 
 requestAnimationFrame(draw);
-
