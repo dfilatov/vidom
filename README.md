@@ -6,7 +6,7 @@ Vidom is an experimental project that implements a virtual dom differ. It enable
 
 ### vdom.renderToDom(`tree`)
 Renders given `tree` to DOM.
- * @param {Object} `tree` root node of the first tree
+ * @param {Object} `tree` root node of the given tree
  * @returns {Node} root DOM node
 
 ### vdom.diff(`tree1`, `tree2`)
