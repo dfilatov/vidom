@@ -1,0 +1,34 @@
+{
+    "trees" : [
+        {
+            "tag" : "div"
+        },
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "div"
+                },
+                {
+                    "tag" : "span"
+                }
+            ]
+        }
+    ],
+    "patch" : [
+        {
+            "type" : "appendChild",
+            "path" : "",
+            "childNode" : {
+                "tag" : "div"
+            }
+        },
+        {
+            "type" : "appendChild",
+            "path" : "",
+            "childNode" : {
+                "tag" : "span"
+            }
+        }
+    ]
+}

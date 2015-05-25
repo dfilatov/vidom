@@ -1,5 +1,0 @@
-[{
-    "type" : "replaceNode",
-    "path" : "",
-    "newNode" : { "tag" : "span" }
-}]

@@ -1,0 +1,26 @@
+{
+    "trees" : [
+        {
+            "tag" : "input",
+            "attrs" : {
+                "value" : "text",
+                "className" : "input"
+            }
+        },
+        {
+            "tag" : "input"
+        }
+    ],
+    "patch" : [
+        {
+            "type" : "removeAttr",
+            "path" : "",
+            "attrName" : "value"
+        },
+        {
+            "type" : "removeAttr",
+            "path" : "",
+            "attrName" : "className"
+        }
+    ]
+}

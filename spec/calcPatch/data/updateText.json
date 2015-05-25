@@ -1,0 +1,19 @@
+{
+    "trees" : [
+        {
+            "tag" : "span",
+            "text" : "text"
+        },
+        {
+            "tag" : "span",
+            "text" : "new text"
+        }
+    ],
+    "patch" : [
+        {
+            "type" : "updateText",
+            "path" : "",
+            "text" : "new text"
+        }
+    ]
+}

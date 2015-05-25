@@ -4,14 +4,10 @@ var glob = require('glob'),
     calcPatch = require('../../lib/calcPatch');
 
 describe('calcPatch', function() {
-    glob.sync(path.join(__dirname, 'data/*.trees.json')).forEach(function(treesFile) {
+    glob.sync(path.join(__dirname, 'data/*.json')).forEach(function(treesFile) {
         it(path.basename(treesFile, '.json'), function() {
-            var trees = JSON.parse(fs.readFileSync(treesFile, 'utf-8')),
-                ops = JSON.parse(fs.readFileSync(path.join(
-                    path.dirname(treesFile),
-                    path.basename(treesFile, '.trees.json') + '.patch.json')));
-
-            expect(calcPatch(trees[0], trees[1])).toEqual(ops);
+            var data = JSON.parse(fs.readFileSync(treesFile, 'utf-8'));
+            expect(calcPatch(data.trees[0], data.trees[1])).toEqual(data.patch);
         });
     });
 });
