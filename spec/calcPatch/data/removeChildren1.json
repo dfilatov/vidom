@@ -1,0 +1,27 @@
+{
+    "trees" : [
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "div"
+                },
+                {
+                    "tag" : "div"
+                },
+                {
+                    "tag" : "div"
+                }
+            ]
+        },
+        {
+            "tag" : "div"
+        }
+    ],
+    "patch" : [
+        {
+            "type" : "removeChildren",
+            "path" : ""
+        }
+    ]
+}
