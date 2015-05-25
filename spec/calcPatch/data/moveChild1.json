@@ -1,0 +1,50 @@
+{
+    "trees" : [
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "input",
+                    "key" : "a",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                },
+                {
+                    "tag" : "input",
+                    "key" : "b",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                }
+            ]
+        },
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "input",
+                    "key" : "b",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                },
+                {
+                    "tag" : "input",
+                    "key" : "a",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                }
+            ]
+        }
+    ],
+    "patch" : [
+        {
+            "type" : "moveChild",
+            "path" : "",
+            "idxFrom" : 1,
+            "idxTo" : 0
+        }
+    ]
+}
