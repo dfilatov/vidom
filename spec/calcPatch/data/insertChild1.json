@@ -1,0 +1,63 @@
+{
+    "trees" : [
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "input",
+                    "key" : "a",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                },
+                {
+                    "tag" : "input",
+                    "key" : "c",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                }
+            ]
+        },
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "input",
+                    "key" : "a",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                },
+                {
+                    "tag" : "input",
+                    "key" : "b",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                },
+                {
+                    "tag" : "input",
+                    "key" : "c",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                }
+            ]
+        }
+    ],
+    "patch" : [
+        {
+            "type" : "insertChild",
+            "path" : "",
+            "idx" : 1,
+            "childNode" : {
+                "tag" : "input",
+                "key" : "b",
+                "attrs" : {
+                    "value" : "text"
+                }
+            }
+        }
+    ]
+}
