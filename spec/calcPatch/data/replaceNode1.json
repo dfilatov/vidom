@@ -1,0 +1,19 @@
+{
+    "trees" : [
+        {
+            "tag" : "div"
+        },
+        {
+            "tag" : "span"
+        }
+    ],
+    "patch" : [
+        {
+            "type" : "replaceNode",
+            "path" : "",
+            "newNode" : {
+                "tag" : "span"
+            }
+        }
+    ]
+}
