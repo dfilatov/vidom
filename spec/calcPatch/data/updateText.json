@@ -2,17 +2,25 @@
     "trees" : [
         {
             "tag" : "span",
-            "text" : "text"
+            "children" : [
+                {
+                    "text" : "text"
+                }
+            ]
         },
         {
             "tag" : "span",
-            "text" : "new text"
+            "children" : [
+                {
+                    "text" : "new text"
+                }
+            ]
         }
     ],
     "patch" : [
         {
             "type" : "updateText",
-            "path" : "",
+            "path" : ".0",
             "text" : "new text"
         }
     ]
