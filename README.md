@@ -9,7 +9,7 @@ Renders given `tree` to DOM.
  * @param {Object} `tree` root node of the given tree
  * @returns {Node} root DOM node
 
-### vdom.diff(`tree1`, `tree2`)
+### vdom.calcPatch(`tree1`, `tree2`)
 Calculates patch between `tree1` and `tree2`. The patch is the array of operations which can be applied to `tree1` to get `tree2`.
  * @param {Object} `tree1` root node of the first tree
  * @param {Object} `tree2` root node of the second tree
