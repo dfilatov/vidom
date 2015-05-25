@@ -1,0 +1,15 @@
+[{
+    "type" : "updateAttr",
+    "path" : "",
+    "attrName" : "value",
+    "attrVal" : "new text"
+}, {
+    "type" : "removeAttr",
+    "path" : "",
+    "attrName" : "className"
+}, {
+    "type" : "updateAttr",
+    "path" : "",
+    "attrName" : "disabled",
+    "attrVal" : true
+}]

@@ -1,0 +1,15 @@
+[{
+    "tag" : "input",
+    "attrs" : {
+        "id" : "id1",
+        "value" : "text",
+        "className" : "input"
+    }
+}, {
+    "tag" : "input",
+    "attrs" : {
+        "id" : "id1",
+        "value" : "new text",
+        "disabled" : true
+    }
+}]
