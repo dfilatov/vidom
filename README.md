@@ -1,4 +1,4 @@
-# vidom
+# vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom)
 
 Vidom is an experimental project that implements a virtual dom differ. It enables you to get a minimal set of operations (patch) needed to update real DOM tree. It's based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html).
 
