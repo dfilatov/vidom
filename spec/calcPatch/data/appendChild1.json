@@ -25,14 +25,14 @@
     ],
     "patch" : [
         {
-            "type" : "appendChild",
+            "type" : 5,
             "path" : "",
             "childNode" : {
                 "tag" : "div"
             }
         },
         {
-            "type" : "appendChild",
+            "type" : 5,
             "path" : "",
             "childNode" : {
                 "tag" : "span"

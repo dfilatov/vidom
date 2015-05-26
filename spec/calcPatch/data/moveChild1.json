@@ -41,7 +41,7 @@
     ],
     "patch" : [
         {
-            "type" : "moveChild",
+            "type" : 8,
             "path" : "",
             "idxFrom" : 1,
             "idxTo" : 0

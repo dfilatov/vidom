@@ -9,7 +9,7 @@
     ],
     "patch" : [
         {
-            "type" : "replaceNode",
+            "type" : 4,
             "path" : "",
             "newNode" : {
                 "tag" : "span"

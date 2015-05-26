@@ -13,12 +13,12 @@
     ],
     "patch" : [
         {
-            "type" : "removeAttr",
+            "type" : 3,
             "path" : "",
             "attrName" : "value"
         },
         {
-            "type" : "removeAttr",
+            "type" : 3,
             "path" : "",
             "attrName" : "className"
         }

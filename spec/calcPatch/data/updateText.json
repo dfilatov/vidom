@@ -19,7 +19,7 @@
     ],
     "patch" : [
         {
-            "type" : "updateText",
+            "type" : 1,
             "path" : ".0",
             "text" : "new text"
         }

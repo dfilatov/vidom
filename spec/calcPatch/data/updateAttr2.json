@@ -16,7 +16,7 @@
     ],
     "patch" : [
         {
-            "type" : "updateAttr",
+            "type" : 2,
             "path" : "",
             "attrName" : "disabled",
             "attrVal" : true

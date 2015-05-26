@@ -20,7 +20,7 @@
     ],
     "patch" : [
         {
-            "type" : "removeChildren",
+            "type" : 9,
             "path" : ""
         }
     ]

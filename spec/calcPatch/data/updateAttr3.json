@@ -37,7 +37,7 @@
     ],
     "patch" : [
         {
-            "type" : "updateAttr",
+            "type" : 2,
             "path" : ".1",
             "attrName" : "value",
             "attrVal" : "new text"
