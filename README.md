@@ -112,6 +112,7 @@ Each operation is represented by object contained its type, path to target node 
 ```js
 {
     tag : 'div',
+    ns : 'http://www.w3.org/2000/svg', // optional
     key : '123', // optional
     attrs : { // optional
         className : 'test',
@@ -128,5 +129,3 @@ Each operation is represented by object contained its type, path to target node 
     key : '342' // optional
 }
 ```
-
-
