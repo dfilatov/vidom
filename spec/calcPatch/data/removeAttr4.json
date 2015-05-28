@@ -1,0 +1,14 @@
+{
+    "trees" : [
+        {
+            "tag" : "input",
+            "attrs" : {
+                "className" : null
+            }
+        },
+        {
+            "tag" : "input"
+        }
+    ],
+    "patch" : []
+}
