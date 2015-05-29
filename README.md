@@ -5,12 +5,12 @@ Vidom is an experimental project that implements a virtual dom differ. It enable
 ## API
 
 ### vdom.renderToDom(`tree`)
-Renders given `tree` to DOM.
+Renders given the `tree` to DOM.
  * @param {Object} `tree` root node of the given tree
  * @returns {Node} root DOM node
 
 ### vdom.calcPatch(`tree1`, `tree2`)
-Calculates patch between `tree1` and `tree2`. The patch is the array of operations which can be applied to `tree1` to get `tree2`.
+Calculates a patch between `tree1` and `tree2`. The patch is an array of operations which can be applied to the `tree1` to get the `tree2`.
  * @param {Object} `tree1` root node of the first tree
  * @param {Object} `tree2` root node of the second tree
  * @returns {Array} patch
@@ -21,7 +21,7 @@ Patches DOM .
  * @param {Array} `patch` patch
   
 ## Patch operations
-Each operation is represented by object contained its type, path to target node and some specific fields depended on type.
+Each operation is represented by an object contained its type, a path to a target node and some specific fields depended on the type.
 
 ### Update text of node
 ```js
