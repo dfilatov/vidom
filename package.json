@@ -13,6 +13,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jasmine",
-    "build-example": "browserify example/vidom.js > example/vidom.build.js"
+    "build-example": "browserify example/vidom.js > example/vidom.build.js",
+    "build-demo": "browserify demo/demo.js > demo/demo.build.js"
   }
 }
