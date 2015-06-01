@@ -1,24 +1,26 @@
-{
+module.exports = {
+    "name" : "updateAttr2",
     "trees" : [
-        {
-            "tag" : "input",
-            "attrs" : {
-                "value" : "text",
-                "className" : "input"
-            }
-        },
         {
             "tag" : "input",
             "attrs" : {
                 "value" : "text"
             }
+        },
+        {
+            "tag" : "input",
+            "attrs" : {
+                "value" : "text",
+                "disabled" : true
+            }
         }
     ],
     "patch" : [
         {
-            "type" : 3,
+            "type" : 2,
             "path" : "",
-            "attrName" : "className"
+            "attrName" : "disabled",
+            "attrVal" : true
         }
     ]
-}
+};

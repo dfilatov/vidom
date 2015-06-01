@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "removeAttr1",
     "trees" : [
         {
             "tag" : "input",
@@ -8,19 +9,17 @@
             }
         },
         {
-            "tag" : "input"
+            "tag" : "input",
+            "attrs" : {
+                "value" : "text"
+            }
         }
     ],
     "patch" : [
         {
             "type" : 3,
             "path" : "",
-            "attrName" : "value"
-        },
-        {
-            "type" : 3,
-            "path" : "",
             "attrName" : "className"
         }
     ]
-}
+};

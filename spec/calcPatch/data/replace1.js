@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "replace1",
     "trees" : [
         {
             "tag" : "div"
@@ -16,4 +17,4 @@
             }
         }
     ]
-}
+};

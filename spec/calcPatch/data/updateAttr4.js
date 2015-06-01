@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "updateAttr4",
     "trees" : [
         {
             "tag" : "div",
@@ -38,4 +39,4 @@
             }
         }
     ]
-}
+};

@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "replace2",
     "trees" : [
         {
             "tag" : "div",
@@ -8,20 +9,28 @@
                 },
                 {
                     "tag" : "div"
+                }
+            ]
+        },
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "span"
                 },
                 {
                     "tag" : "div"
                 }
             ]
-        },
-        {
-            "tag" : "div"
         }
     ],
     "patch" : [
         {
-            "type" : 9,
-            "path" : ""
+            "type" : 4,
+            "path" : ".0",
+            "newNode" : {
+                "tag" : "span"
+            }
         }
     ]
-}
+};

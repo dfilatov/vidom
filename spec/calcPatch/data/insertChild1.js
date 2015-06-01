@@ -1,22 +1,9 @@
-{
+module.exports = {
+    "name" : "insertChild1",
     "trees" : [
         {
             "tag" : "div",
             "children" : [
-                {
-                    "tag" : "span"
-                },
-                {
-                    "tag" : "input"
-                }
-            ]
-        },
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "span"
-                },
                 {
                     "tag" : "input",
                     "key" : "a",
@@ -25,7 +12,37 @@
                     }
                 },
                 {
-                    "tag" : "input"
+                    "tag" : "input",
+                    "key" : "c",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                }
+            ]
+        },
+        {
+            "tag" : "div",
+            "children" : [
+                {
+                    "tag" : "input",
+                    "key" : "a",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                },
+                {
+                    "tag" : "input",
+                    "key" : "b",
+                    "attrs" : {
+                        "value" : "text"
+                    }
+                },
+                {
+                    "tag" : "input",
+                    "key" : "c",
+                    "attrs" : {
+                        "value" : "text"
+                    }
                 }
             ]
         }
@@ -37,11 +54,11 @@
             "idx" : 1,
             "childNode" : {
                 "tag" : "input",
-                "key" : "a",
+                "key" : "b",
                 "attrs" : {
                     "value" : "text"
                 }
             }
         }
     ]
-}
+};

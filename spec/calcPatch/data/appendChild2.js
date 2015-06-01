@@ -1,19 +1,12 @@
-{
+module.exports = {
+    "name" : "appendChild2",
     "trees" : [
         {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "div"
-                }
-            ]
+            "tag" : "div"
         },
         {
             "tag" : "div",
             "children" : [
-                {
-                    "tag" : "div"
-                },
                 {
                     "tag" : "div"
                 },
@@ -39,4 +32,4 @@
             }
         }
     ]
-}
+};

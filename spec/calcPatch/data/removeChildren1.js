@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "removeChildren1",
     "trees" : [
         {
             "tag" : "div",
@@ -8,28 +9,20 @@
                 },
                 {
                     "tag" : "div"
-                }
-            ]
-        },
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "span"
                 },
                 {
                     "tag" : "div"
                 }
             ]
+        },
+        {
+            "tag" : "div"
         }
     ],
     "patch" : [
         {
-            "type" : 4,
-            "path" : ".0",
-            "newNode" : {
-                "tag" : "span"
-            }
+            "type" : 9,
+            "path" : ""
         }
     ]
-}
+};

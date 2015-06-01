@@ -5,14 +5,18 @@
   "keywords": [],
   "main": "lib/vidom.js",
   "author": "Dmitry Filatov <dfilatov@yandex-team.ru>",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dfilatov/vidom.git"
+  },
   "devDependencies": {
     "browserify": "10.2.1",
-    "jasmine": "2.3.1",
-    "glob": "5.0.9"
+    "phantomjs": "1.9.17",
+    "mocha-phantomjs": "3.5.3"
   },
   "license": "MIT",
   "scripts": {
-    "test": "jasmine",
+    "test": "browserify spec/boot.js > spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "build-example": "browserify example/vidom.js > example/vidom.build.js",
     "build-demo": "browserify demo/demo.js > demo/demo.build.js"
   }

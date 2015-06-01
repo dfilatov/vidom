@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "removeChild1",
     "trees" : [
         {
             "tag" : "div",
@@ -33,4 +34,4 @@
             "idx" : 2
         }
     ]
-}
+};

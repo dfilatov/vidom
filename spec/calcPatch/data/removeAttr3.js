@@ -1,25 +1,24 @@
-{
+module.exports = {
+    "name" : "removeAttr3",
     "trees" : [
         {
             "tag" : "input",
             "attrs" : {
-                "value" : "text"
+                "className" : "input"
             }
         },
         {
             "tag" : "input",
             "attrs" : {
-                "value" : "text",
-                "disabled" : true
+                "className" : null
             }
         }
     ],
     "patch" : [
         {
-            "type" : 2,
+            "type" : 3,
             "path" : "",
-            "attrName" : "disabled",
-            "attrVal" : true
+            "attrName" : "className"
         }
     ]
-}
+};

@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "complex1",
     "trees" : [
         {
             "tag" : "div",
@@ -186,4 +187,4 @@
             "idx" : 4
         }
     ]
-}
+};

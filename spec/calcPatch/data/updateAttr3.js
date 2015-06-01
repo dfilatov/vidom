@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "updateAttr3",
     "trees" : [
         {
             "tag" : "div",
@@ -43,4 +44,4 @@
             "attrVal" : "new text"
         }
     ]
-}
+};

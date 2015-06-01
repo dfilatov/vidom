@@ -1,4 +1,5 @@
-{
+module.exports = {
+    "name" : "updateText1",
     "trees" : [
         {
             "tag" : "span",
@@ -24,4 +25,4 @@
             "text" : "new text"
         }
     ]
-}
+};
