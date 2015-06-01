@@ -4,3 +4,7 @@ node_js:
 branches:
   only:
   - master
+env:
+  global:
+  - secure: f6nhQC7zLFFzdnh7ITiUUyvxOJc5a6TP85XXsxPCASSMl9b+97yychlIZLIsxXUzTK/rwxoXPM9KydE5bR0UeHwGQMPAA7UsgVGISldE9DDPNLtXcumjVYFOUz5OF603Ks7PRg+I/WvwJlhiH0O26sBf+JdBRM6TRV4/lOeIDBg=
+  - secure: iF8yPLO0Lxz1C/Hw0xh86CYAJYJhtwdtXfFBRhFtzT2PdIFjenHc9WM/TZ7NQE9aHhTGVbV1J+h4adT0uOZtYo3sSQeJfsbV4N1+BeSSUhc8wZE+1Ex0YjzmNgOqbC9Dzdx3ljYxXXIn08JYaHEUnl8XMTSkuESWIOwfeRpv8Os=
