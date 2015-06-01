@@ -12,6 +12,8 @@
   "devDependencies": {
     "browserify": "10.2.1",
     "phantomjs": "1.9.17",
+    "mocha": "2.2.5",
+    "chai": "2.3.0",
     "mocha-phantomjs": "3.5.3"
   },
   "license": "MIT",
