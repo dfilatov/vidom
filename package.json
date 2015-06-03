@@ -14,11 +14,13 @@
     "phantomjs": "1.9.17",
     "mocha": "2.2.5",
     "chai": "2.3.0",
-    "mocha-phantomjs": "3.5.3"
+    "mocha-phantomjs": "3.5.3",
+    "zuul": "3.0.0"
   },
   "license": "MIT",
   "scripts": {
-    "test": "browserify spec/boot.js > spec/boot.build.js && mocha-phantomjs spec/runner.html",
+    "test": "zuul -- spec/boot.js",
+    "test-local": "browserify spec/boot.js > spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "build-example": "browserify example/vidom.js > example/vidom.build.js",
     "build-demo": "browserify demo/demo.js > demo/demo.build.js"
   }
