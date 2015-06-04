@@ -1,6 +1,4 @@
 ui: mocha-bdd
-scripts:
-  - "node_modules/chai/chai.js"
 browsers:
   - name: chrome
     version: latest
