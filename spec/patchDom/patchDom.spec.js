@@ -38,4 +38,21 @@ describe('patchDom', function() {
             expect(domNode.value).to.equal('');
         });
     });
+
+    describe('replace', function() {
+        it('should replace node', function() {
+            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
+            patchDom(domNode, [{ type : patchOps.REPLACE, path : '.1', newNode : { tag : 'div' } }]);
+            expect(domNode.childNodes[1].tagName).to.equal('DIV');
+        });
+    });
+
+    describe('appendChild', function() {
+        it('should append child node', function() {
+            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
+            patchDom(domNode, [{ type : patchOps.APPEND_CHILD, path : '', childNode : { tag : 'div' } }]);
+            expect(domNode.childNodes.length).to.equal(3);
+            expect(domNode.childNodes[2].tagName).to.equal('DIV');
+        });
+    });
 });
