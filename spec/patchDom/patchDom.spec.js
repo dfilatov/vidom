@@ -55,4 +55,22 @@ describe('patchDom', function() {
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
         });
     });
+
+    describe('removeChild', function() {
+        it('should remove child node', function() {
+            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
+            patchDom(domNode, [{ type : patchOps.REMOVE_CHILD, path : '', idx : 1 }]);
+            expect(domNode.childNodes.length).to.equal(1);
+            expect(domNode.childNodes[0].tagName).to.equal('A');
+        });
+    });
+
+    describe('insertChild', function() {
+        it('should insert child node', function() {
+            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
+            patchDom(domNode, [{ type : patchOps.INSERT_CHILD, path : '', idx : 1, childNode : { tag : 'div' } }]);
+            expect(domNode.childNodes.length).to.equal(3);
+            expect(domNode.childNodes[1].tagName).to.equal('DIV');
+        });
+    });
 });
