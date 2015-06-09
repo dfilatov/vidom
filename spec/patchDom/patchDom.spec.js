@@ -58,10 +58,13 @@ describe('patchDom', function() {
 
     describe('removeChild', function() {
         it('should remove child node', function() {
-            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
+            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] }),
+                aNode = domNode.children[0];
+
             patchDom(domNode, [{ type : patchOps.REMOVE_CHILD, path : '', idx : 1 }]);
+
             expect(domNode.childNodes.length).to.equal(1);
-            expect(domNode.childNodes[0].tagName).to.equal('A');
+            expect(domNode.childNodes[0]).to.equal(aNode);
         });
     });
 
@@ -71,6 +74,28 @@ describe('patchDom', function() {
             patchDom(domNode, [{ type : patchOps.INSERT_CHILD, path : '', idx : 1, childNode : { tag : 'div' } }]);
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
+        });
+    });
+
+    describe('moveChild', function() {
+        it('should move child node', function() {
+            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] }),
+                aNode = domNode.children[0],
+                spanNode = domNode.children[1];
+
+            patchDom(domNode, [{ type : patchOps.MOVE_CHILD, path : '', idxFrom : 1, idxTo : 0 }]);
+
+            expect(domNode.childNodes.length).to.equal(2);
+            expect(domNode.childNodes[0]).to.equal(spanNode);
+            expect(domNode.childNodes[1]).to.equal(aNode);
+        });
+    });
+
+    describe('removeChildren', function() {
+        it('should remove children nodes', function() {
+            var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
+            patchDom(domNode, [{ type : patchOps.REMOVE_CHILDREN, path : '' }]);
+            expect(domNode.childNodes.length).to.equal(0);
         });
     });
 });
