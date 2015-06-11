@@ -18,7 +18,6 @@ module.exports = {
     "patch" : [
         {
             "type" : 2,
-            "path" : "",
             "attrName" : "disabled",
             "attrVal" : true
         }

@@ -18,7 +18,6 @@ module.exports = {
     "patch" : [
         {
             "type" : 3,
-            "path" : "",
             "attrName" : "className"
         }
     ]

@@ -17,7 +17,6 @@ module.exports = {
     "patch" : [
         {
             "type" : 2,
-            "path" : "",
             "attrName" : "value",
             "attrVal" : "new text"
         }

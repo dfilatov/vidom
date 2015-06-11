@@ -114,60 +114,12 @@ module.exports = {
     ],
     "patch" : [
         {
-            "type" : 2,
-            "path" : ".0",
-            "attrName" : "value",
-            "attrVal" : "text2"
-        },
-        {
-            "type" : 3,
-            "path" : ".0",
-            "attrName" : "disabled"
-        },
-        {
             "type" : 8,
-            "path" : "",
             "idxFrom" : 2,
             "idxTo" : 1
         },
         {
-            "type" : 1,
-            "path" : ".1.0.0",
-            "text" : "bad"
-        },
-        {
-            "type" : 2,
-            "path" : ".1.0",
-            "attrName" : "id",
-            "attrVal" : "id1"
-        },
-        {
-            "type" : 8,
-            "path" : ".1.1",
-            "idxFrom" : 1,
-            "idxTo" : 0
-        },
-        {
-            "type" : 4,
-            "path" : ".1.1.0",
-            "newNode" : {
-                "tag" : "span",
-                "key" : "a",
-                "children" : [
-                    {
-                        "text" : "new text"
-                    }
-                ]
-            }
-        },
-        {
-            "type" : 6,
-            "path" : ".1.1",
-            "idx" : 1
-        },
-        {
             "type" : 7,
-            "path" : "",
             "idx" : 3,
             "childNode" : {
                 "tag" : "div",
@@ -178,13 +130,100 @@ module.exports = {
         },
         {
             "type" : 6,
-            "path" : "",
             "idx" : 4
         },
         {
             "type" : 6,
-            "path" : "",
             "idx" : 4
+        },
+        {
+            "type" : 10,
+            "children" : [
+                {
+                    "idx" : 0,
+                    "patch" : [
+                        {
+                            "type" : 2,
+                            "attrName" : "value",
+                            "attrVal" : "text2"
+                        },
+                        {
+                            "type" : 3,
+                            "attrName" : "disabled"
+                        }
+                    ]
+                },
+                {
+                    "idx" : 1,
+                    "patch" : [
+                        {
+                            "type" : 10,
+                            "children" : [
+                                {
+                                    "idx" : 0,
+                                    "patch" : [
+                                        {
+                                            "type" : 10,
+                                            "children" : [
+                                                {
+                                                    "idx" : 0,
+                                                    "patch" : [
+                                                        {
+                                                            "type" : 1,
+                                                            "text" : "bad"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type" : 2,
+                                            "attrName" : "id",
+                                            "attrVal" : "id1"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "idx" : 1,
+                                    "patch" : [
+                                        {
+                                            "type" : 8,
+                                            "idxFrom" : 1,
+                                            "idxTo" : 0
+                                        },
+                                        {
+                                            "type" : 6,
+                                            "idx" : 1
+                                        },
+                                        {
+                                            "type" : 10,
+                                            "children" : [
+                                                {
+                                                    "idx" : 0,
+                                                    "patch" : [
+                                                        {
+                                                            "type" : 4,
+                                                            "newNode" : {
+                                                                "tag" : "span",
+                                                                "key" : "a",
+                                                                "children" : [
+                                                                    {
+                                                                        "text" : "new text"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         }
     ]
 };

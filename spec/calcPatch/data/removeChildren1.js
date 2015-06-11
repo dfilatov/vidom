@@ -21,8 +21,7 @@ module.exports = {
     ],
     "patch" : [
         {
-            "type" : 9,
-            "path" : ""
+            "type" : 9
         }
     ]
 };

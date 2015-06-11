@@ -5,9 +5,9 @@ var renderToDom = require('../../lib/renderToDom'),
 describe('patchDom', function() {
     describe('updateText', function() {
         it('should update node text', function() {
-            var domNode = renderToDom({ tag : 'span', children : [{ text : 'text' }]});
-            patchDom(domNode, [{ type : patchOps.UPDATE_TEXT, path : '.0', text : 'new text' }]);
-            expect(domNode.childNodes[0].nodeValue).to.equal('new text');
+            var domNode = renderToDom({ text : 'text' });
+            patchDom(domNode, [{ type : patchOps.UPDATE_TEXT, text : 'new text' }]);
+            expect(domNode.nodeValue).to.equal('new text');
         });
     });
 
@@ -42,7 +42,10 @@ describe('patchDom', function() {
     describe('replace', function() {
         it('should replace node', function() {
             var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
-            patchDom(domNode, [{ type : patchOps.REPLACE, path : '.1', newNode : { tag : 'div' } }]);
+            patchDom(domNode, [{
+                type : patchOps.UPDATE_CHILDREN,
+                children : [{ idx : 1, patch : [{ type : patchOps.REPLACE, newNode : { tag : 'div' } }] }]
+            }]);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
     });

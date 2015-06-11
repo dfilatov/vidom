@@ -38,10 +38,19 @@ module.exports = {
     ],
     "patch" : [
         {
-            "type" : 2,
-            "path" : ".1",
-            "attrName" : "value",
-            "attrVal" : "new text"
+            "type" : 10,
+            "children" : [
+                {
+                    "idx" : 1,
+                    "patch" : [
+                        {
+                            "type" : 2,
+                            "attrName" : "value",
+                            "attrVal" : "new text"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 };

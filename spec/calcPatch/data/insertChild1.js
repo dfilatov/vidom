@@ -50,7 +50,6 @@ module.exports = {
     "patch" : [
         {
             "type" : 7,
-            "path" : "",
             "idx" : 1,
             "childNode" : {
                 "tag" : "input",

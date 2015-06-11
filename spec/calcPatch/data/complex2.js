@@ -36,14 +36,22 @@ module.exports = {
     ],
     "patch" : [
         {
-            "type" : 1,
-            "path" : ".0",
-            "text" : "new text"
+            "type" : 6,
+            "idx" : 2
         },
         {
-            "type" : 6,
-            "path" : "",
-            "idx" : 2
+            "type" : 10,
+            "children" : [
+                {
+                    "idx" : 0,
+                    "patch" : [
+                        {
+                            "type" : 1,
+                            "text" : "new text"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 };

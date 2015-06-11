@@ -29,7 +29,6 @@ module.exports = {
     "patch" : [
         {
             "type" : 2,
-            "path" : "",
             "attrName" : "style",
             "attrVal" : {
                 "height" : null,

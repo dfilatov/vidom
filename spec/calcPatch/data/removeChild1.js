@@ -30,7 +30,6 @@ module.exports = {
     "patch" : [
         {
             "type" : 6,
-            "path" : "",
             "idx" : 2
         }
     ]

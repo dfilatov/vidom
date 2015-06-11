@@ -28,12 +28,21 @@ module.exports = {
     ],
     "patch" : [
         {
-            "type" : 4,
-            "path" : ".0",
-            "newNode" : {
-                "tag" : "span",
-                "key" : "a"
-            }
+            "type" : 10,
+            "children" : [
+                {
+                    "idx" : 0,
+                    "patch" : [
+                        {
+                            "type" : 4,
+                            "newNode" : {
+                                "tag" : "span",
+                                "key" : "a"
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 };
