@@ -6,18 +6,18 @@ Vidom is an experimental project that implements a virtual dom differ. It enable
 ## API
 
 ### vdom.renderToDom(`tree`)
-Renders given the `tree` to DOM.
+Renders a given `tree` to DOM.
  * @param {Object} `tree` root node of the given tree
  * @returns {Node} root DOM node
 
 ### vdom.calcPatch(`tree1`, `tree2`)
-Calculates a patch between `tree1` and `tree2`. The patch is an array of operations which can be applied to the `tree1` to get the `tree2`.
+Calculates a patch between a `tree1` and a `tree2`. The patch is an array of operations which can be applied to the `tree1` to get the `tree2`.
  * @param {Object} `tree1` root node of the first tree
  * @param {Object} `tree2` root node of the second tree
  * @returns {Array} patch
   
 ### vdom.patchDom(`node`, `patch`)
-Patches DOM .
+Applies a given patch to DOM.
  * @param {Node} `node` root DOM node
  * @param {Array} `patch` patch
   
