@@ -22,13 +22,12 @@ Patches DOM .
  * @param {Array} `patch` patch
   
 ## Patch operations
-Each operation is represented by an object contained its type, a path to a target node and some specific fields depended on the type.
+Each operation is represented by an object contained its type and some specific fields depended on the type.
 
 ### Update text of node
 ```js
 {
-    type : 'updateText',
-    path : pathToNode,
+    type : UPDATE_TEXT,
     text : 'some new text'
 }
 ```
@@ -36,8 +35,7 @@ Each operation is represented by an object contained its type, a path to a targe
 ### Update attribute
 ```js
 {
-    type : 'updateAttr',
-    path : pathToNode,
+    type : UPDATE_ATTR,
     attrName : 'href',
     attrVal : '/'
 }
@@ -46,8 +44,7 @@ Each operation is represented by an object contained its type, a path to a targe
 ### Remove attribute
 ```js
 {
-    type : 'removeAttr',
-    path : pathToNode,
+    type : REMOVE_ATTR,
     attrName : 'disabled',
 }
 ```
@@ -55,8 +52,7 @@ Each operation is represented by an object contained its type, a path to a targe
 ### Append child  
 ```js
 {
-    type : 'appendChild',
-    path : pathToNode,
+    type : APPEND_CHILD,
     childNode : nodeToBeAppended
 }
 ```
@@ -64,8 +60,7 @@ Each operation is represented by an object contained its type, a path to a targe
 ### Remove child at specified index
 ```js
 {
-    type : 'removeChild',
-    path : pathToNode,
+    type : REMOVE_CHILD,
     idx : 5
 }
 ```
@@ -73,16 +68,14 @@ Each operation is represented by an object contained its type, a path to a targe
 ### Remove all children
 ```js
 {
-    type : 'removeChildren',
-    path : pathToNode
+    type : REMOVE_CHILDREN
 }
 ```
 
 ### Insert child at specified index
 ```js
 {
-    type : 'insertChild',
-    path : pathToNode,
+    type : INSERT_CHILD,
     idx : 3,
     childNode : childNode
 }
@@ -91,8 +84,7 @@ Each operation is represented by an object contained its type, a path to a targe
 ### Move child from specified index to another one
 ```js
 {
-    type : 'moveChild',
-    path : pathToNode,
+    type : MOVE_CHILD,
     idxFrom : 3,
     idxTo : 2
 }
@@ -101,9 +93,21 @@ Each operation is represented by an object contained its type, a path to a targe
 ### Replace node
 ```js
 {
-    type : 'replaceNode',
-    path : pathToNode,
+    type : REPLACE,
     newNode : nodeToReplace
+}
+
+### Update children
+```js
+{
+    type : UPDATE_CHILDREN,
+    children : [
+        {
+            idx : idx
+            patch : patch
+        },
+        ...
+    ]
 }
 ```
   
