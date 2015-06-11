@@ -1,139 +1,151 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var patchOps = require('./patchOps');
 
-function diff(nodeA, nodeB, path, patch) {
+function diff(nodeA, nodeB, patch) {
     var isNodeAText = 'text' in nodeA,
         isNodeBText = 'text' in nodeB;
 
     if(isNodeAText || isNodeBText) {
-        if(isNodeAText && isNodeBText) {
-            diffText(nodeA, nodeB, path, patch);
-        }
-        else {
-            diffMixed(nodeA, nodeB, path, patch);
-        }
+        patch.push(isNodeAText && isNodeBText && nodeA.text !== nodeB.text?
+            {
+                type : patchOps.UPDATE_TEXT,
+                text : nodeB.text
+            } :
+            {
+                type : patchOps.REPLACE,
+                newNode : nodeB
+            });
     }
     else if(nodeA.tag !== nodeB.tag || nodeA.ns !== nodeB.ns) {
-        diffMixed(nodeA, nodeB, path, patch);
+        patch.push({
+            type : patchOps.REPLACE,
+            newNode : nodeB
+        });
     }
     else {
-        diffChildren(nodeA, nodeB, path, patch);
-        diffAttrs(nodeA, nodeB, path, patch);
+        diffChildren(nodeA, nodeB, patch);
+        diffAttrs(nodeA, nodeB, patch);
     }
-
-    return patch;
 }
 
-function diffText(nodeA, nodeB, path, patch) {
-    nodeA.text !== nodeB.text && patch.push({
-        type : patchOps.UPDATE_TEXT,
-        path : path,
-        text : nodeB.text
-    });
-}
-
-function diffMixed(nodeA, nodeB, path, patch) {
-    patch.push({
-        type : patchOps.REPLACE,
-        path : path,
-        newNode : nodeB
-    });
-}
-
-function diffChildren(nodeA, nodeB, path, patch) {
+function diffChildren(nodeA, nodeB, patch) {
     var childrenA = nodeA.children,
         childrenB = nodeB.children,
         hasChildrenA = childrenA && childrenA.length,
         hasChildrenB = childrenB && childrenB.length;
 
     if(!hasChildrenB) {
-        hasChildrenA && patch.push({
-            type : patchOps.REMOVE_CHILDREN,
-            path : path
-        });
-
+        hasChildrenA && patch.push({ type : patchOps.REMOVE_CHILDREN });
         return;
     }
 
-    var curChildren = hasChildrenA? childrenA.slice() : null,
-        i = 0, childB;
+    var iA = 0, iB = 0,
+        childA, childB,
+        skippedAIndices = {},
+        childrenBKeys = {},
+        childrenPatch = [];
 
-    while(i < childrenB.length) {
-        childB = childrenB[i];
+    while(iB < childrenB.length) {
+        childB = childrenB[iB++];
+        'key' in childB && (childrenBKeys[childB.key] = true);
+    }
 
-        if(!curChildren || i >= curChildren.length) {
+    iB = 0;
+    while(iB < childrenB.length) {
+        childB = childrenB[iB];
+
+        while(skippedAIndices[iA]) {
+            ++iA;
+        }
+
+        if(!hasChildrenA || iA >= childrenA.length) {
             patch.push({
                 type : patchOps.APPEND_CHILD,
-                path : path,
                 childNode : childB
             });
         }
         else {
-            if(childB.key) {
-                if(childB.key === curChildren[i].key) {
-                    diff(curChildren[i], childB, appendToPath(path, i), patch);
+            childA = childrenA[iA];
+            if('key' in childB) {
+                if(childA.key === childB.key) {
+                    addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                    ++iA;
                 }
                 else {
-                    var foundIdx = null;
-                    for(var j = i + 1; j < curChildren.length; j++) {
-                        if(curChildren[j].key === childB.key) {
-                            foundIdx = j;
+                    var foundIdx, foundChildA,
+                        skippedCnt = 0;
+                    for(var j = iA + 1; j < childrenA.length; j++) {
+                        if(skippedAIndices[j]) {
+                            ++skippedCnt;
+                        }
+                        else if(childrenA[j].key === childB.key) {
+                            foundIdx = j - skippedCnt + iB - iA;
+                            foundChildA = childrenA[j];
+                            skippedAIndices[j] = true;
                             break;
                         }
                     }
 
-                    if(foundIdx !== null) {
-                        patch.push({
+                    if(foundChildA) {
+                        foundIdx !== iB && patch.push({
                             type : patchOps.MOVE_CHILD,
-                            path : path,
                             idxFrom : foundIdx,
-                            idxTo : i
+                            idxTo : iB
                         });
-                        curChildren.splice(i, 0, curChildren[foundIdx]);
-                        curChildren.splice(foundIdx + 1, 1);
-                        diff(curChildren[i], childB, appendToPath(path, i), patch);
+                        addChildPatchToChildrenPatch(foundChildA, childB, iB, childrenPatch);
+                    }
+                    else if('key' in childA && !(childrenBKeys[childA.key])) {
+                        addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                        ++iA;
                     }
                     else {
                         patch.push({
                             type : patchOps.INSERT_CHILD,
-                            path : path,
-                            idx : i,
+                            idx : iB,
                             childNode : childB
                         });
-                        curChildren.splice(i, 0, childB);
                     }
                 }
             }
-            else if(curChildren[i].key) {
+            else if('key' in childA) {
                 patch.push({
                     type : patchOps.INSERT_CHILD,
-                    path : path,
-                    idx : i,
+                    idx : iB,
                     childNode : childB
                 });
-                curChildren.splice(i, 0, childB);
             }
             else {
-                diff(curChildren[i], childB, appendToPath(path, i), patch);
+                addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                ++iA;
             }
         }
 
-        ++i;
+        ++iB;
     }
 
     if(hasChildrenA) {
-        var idx = i;
-        while(i++ < curChildren.length) {
-            patch.push({
+        var idx = iB;
+        while(iA < childrenA.length) {
+            skippedAIndices[iA++] || patch.push({
                 type : patchOps.REMOVE_CHILD,
-                path : path,
                 idx : idx
             });
         }
     }
+
+    childrenPatch.length && patch.push({
+        type : patchOps.UPDATE_CHILDREN,
+        children : childrenPatch
+    });
 }
 
-function diffAttrs(nodeA, nodeB, path, patch) {
+function addChildPatchToChildrenPatch(childA, childB, idx, childrenPatch) {
+    var childPatch = [];
+    diff(childA, childB, childPatch);
+    childPatch.length && childrenPatch.push({ idx : idx, patch : childPatch });
+}
+
+function diffAttrs(nodeA, nodeB, patch) {
     var attrsA = nodeA.attrs,
         attrsB = nodeB.attrs,
         attrName;
@@ -144,17 +156,15 @@ function diffAttrs(nodeA, nodeB, path, patch) {
                 if(attrsB[attrName] == null) {
                     patch.push({
                         type : patchOps.REMOVE_ATTR,
-                        path : path,
                         attrName : attrName
                     });
                 }
                 else if(typeof attrsB[attrName] === 'object' && typeof attrsA[attrName] === 'object') {
-                    diffAttrObj(attrName, attrsA[attrName], attrsB[attrName], path, patch);
+                    diffAttrObj(attrName, attrsA[attrName], attrsB[attrName], patch);
                 }
                 else {
                     patch.push({
                         type : patchOps.UPDATE_ATTR,
-                        path : path,
                         attrName : attrName,
                         attrVal : attrsB[attrName]
                     });
@@ -168,7 +178,6 @@ function diffAttrs(nodeA, nodeB, path, patch) {
             if((!attrsB || !(attrName in attrsB)) && attrsA[attrName] != null) {
                 patch.push({
                     type : patchOps.REMOVE_ATTR,
-                    path : path,
                     attrName : attrName
                 });
             }
@@ -176,7 +185,7 @@ function diffAttrs(nodeA, nodeB, path, patch) {
     }
 }
 
-function diffAttrObj(attrName, objA, objB, path, patch) {
+function diffAttrObj(attrName, objA, objB, patch) {
     var hasDiff = false,
         diffObj = {},
         i;
@@ -197,18 +206,15 @@ function diffAttrObj(attrName, objA, objB, path, patch) {
 
     hasDiff && patch.push({
         type : patchOps.UPDATE_ATTR,
-        path : path,
         attrName : attrName,
         attrVal : diffObj
     });
 }
 
-function appendToPath(path, idx) {
-    return path + '.' + idx;
-}
-
 module.exports = function(treeA, treeB) {
-    return diff(treeA, treeB, '', []);
+    var res = [];
+    diff(treeA, treeB, res);
+    return res;
 };
 
 },{"./patchOps":4}],2:[function(require,module,exports){
@@ -253,7 +259,7 @@ function checkBitmask(value, bitmask) {
 
 var IS_ATTR = 1,
     IS_OBJ = 2,
-    CHECK_VAL_BEFORE_SET = 3,
+    CHECK_VAL_BEFORE_SET = 4,
 
     DEFAULT_ATTR = '__default__',
 
@@ -362,11 +368,10 @@ var renderToDom = require('./renderToDom'),
     patchOps = require('./patchOps'),
     domAttrsMutators = require('./domAttrsMutators');
 
-function applyPatch(node, patch) {
-    var i = 0, op, domNode;
+function applyPatch(domNode, patch) {
+    var i = 0, op;
     while(i < patch.length) {
         op = patch[i++];
-        domNode = getDomNode(node, op.path);
         //console.log(op);
         switch(op.type) {
             case patchOps.UPDATE_TEXT:
@@ -391,7 +396,7 @@ function applyPatch(node, patch) {
 
             case patchOps.REMOVE_CHILD:
                 domNode.removeChild(domNode.childNodes[op.idx]);
-            break;
+                break;
 
             case patchOps.INSERT_CHILD:
                 insertAt(domNode, renderToDom(op.childNode), op.idx);
@@ -405,26 +410,22 @@ function applyPatch(node, patch) {
                 domNode.innerHTML = '';
             break;
 
+            case patchOps.UPDATE_CHILDREN:
+                var j = 0, childPatch;
+                while(j < op.children.length) {
+                    childPatch = op.children[j++];
+                    applyPatch(domNode.childNodes[childPatch.idx], childPatch.patch);
+                }
+            break;
+
             default:
                 throw Error('unsupported operation: ' + op.type);
         }
     }
 }
 
-function getDomNode(tree, idx) {
-    var path = idx.split('.'),
-        i = 1,
-        res = tree;
-
-    while(i < path.length) {
-        res = res.childNodes[path[i++]];
-    }
-
-    return res;
-}
-
 function insertAt(parentNode, node, idx) {
-    idx < parentNode.childNodes.length - 1?
+    idx < parentNode.childNodes.length?
         parentNode.insertBefore(node, parentNode.childNodes[idx]) :
         parentNode.appendChild(node);
 }
@@ -441,7 +442,8 @@ module.exports = {
     REMOVE_CHILD : 6,
     INSERT_CHILD : 7,
     MOVE_CHILD : 8,
-    REMOVE_CHILDREN : 9
+    REMOVE_CHILDREN : 9,
+    UPDATE_CHILDREN : 10
 };
 
 },{}],5:[function(require,module,exports){
