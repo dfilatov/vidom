@@ -96,6 +96,7 @@ Each operation is represented by an object contained its type and some specific 
     type : REPLACE,
     newNode : nodeToReplace
 }
+```
 
 ### Update children
 ```js
@@ -110,7 +111,7 @@ Each operation is represented by an object contained its type and some specific 
     ]
 }
 ```
-  
+
 ## Virtual dom nodes representaion
 
 ### Element node
