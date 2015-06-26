@@ -5,9 +5,11 @@ var calcPatch = require('../../lib/calcPatch'),
         require('./data/complex1'),
         require('./data/complex2'),
         require('./data/complex3'),
+        require('./data/complex4'),
         require('./data/insertChild1'),
         require('./data/insertChild2'),
         require('./data/moveChild1'),
+        require('./data/moveChild2'),
         require('./data/removeAttr1'),
         require('./data/removeAttr2'),
         require('./data/removeAttr3'),
@@ -21,7 +23,8 @@ var calcPatch = require('../../lib/calcPatch'),
         require('./data/updateAttr2'),
         require('./data/updateAttr3'),
         require('./data/updateAttr4'),
-        require('./data/updateText1')
+        require('./data/updateText1'),
+        require('./data/updateText2')
     ];
 
 describe('calcPatch', function() {

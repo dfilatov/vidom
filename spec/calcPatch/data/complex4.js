@@ -1,20 +1,16 @@
 module.exports = {
-    "name" : "complex3",
+    "name" : "complex4",
     "trees" : [
         {
             "tag" : "div",
             "children" : [
                 {
                     "tag" : "a",
-                    "key" : "a"
+                    "key" : "d"
                 },
                 {
                     "tag" : "a",
-                    "key" : "c"
-                },
-                {
-                    "tag" : "a",
-                    "key" : "e"
+                    "key" : "b"
                 }
             ]
         },
@@ -40,10 +36,6 @@ module.exports = {
                 {
                     "tag" : "a",
                     "key" : "e"
-                },
-                {
-                    "tag" : "a",
-                    "key" : "f"
                 }
             ]
         }
@@ -51,25 +43,30 @@ module.exports = {
     "patch" : [
         {
             "type" : 7,
-            "idx" : 1,
+            "idx" : 0,
             "childNode" : {
                 "tag" : "a",
-                "key" : "b"
+                "key" : "a"
             }
         },
         {
+            "type" : 8,
+            "idxFrom" : 2,
+            "idxTo" : 1
+        },
+        {
             "type" : 7,
-            "idx" : 3,
+            "idx" : 2,
             "childNode" : {
                 "tag" : "a",
-                "key" : "d"
+                "key" : "c"
             }
         },
         {
             "type" : 5,
             "childNode" : {
                 "tag" : "a",
-                "key" : "f"
+                "key" : "e"
             }
         }
     ]
