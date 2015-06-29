@@ -53,7 +53,7 @@ Each operation is represented by an object contained its type and some specific 
 ```js
 {
     type : APPEND_CHILD,
-    childNode : nodeToBeAppended
+    node : nodeToAppend
 }
 ```
 
@@ -77,7 +77,7 @@ Each operation is represented by an object contained its type and some specific 
 {
     type : INSERT_CHILD,
     idx : 3,
-    childNode : childNode
+    node : nodeToInsert
 }
 ```
   
@@ -94,7 +94,7 @@ Each operation is represented by an object contained its type and some specific 
 ```js
 {
     type : REPLACE,
-    newNode : nodeToReplace
+    node : nodeToReplace
 }
 ```
 

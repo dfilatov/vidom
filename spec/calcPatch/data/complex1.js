@@ -121,7 +121,7 @@ module.exports = {
         {
             "type" : 7,
             "idx" : 3,
-            "childNode" : {
+            "node" : {
                 "tag" : "div",
                 "attrs" : {
                     "id" : "id2"
@@ -203,7 +203,7 @@ module.exports = {
                                                     "patch" : [
                                                         {
                                                             "type" : 4,
-                                                            "newNode" : {
+                                                            "node" : {
                                                                 "tag" : "span",
                                                                 "key" : "a",
                                                                 "children" : [

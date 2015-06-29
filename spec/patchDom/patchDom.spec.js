@@ -44,7 +44,7 @@ describe('patchDom', function() {
             var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
             patchDom(domNode, [{
                 type : patchOps.UPDATE_CHILDREN,
-                children : [{ idx : 1, patch : [{ type : patchOps.REPLACE, newNode : { tag : 'div' } }] }]
+                children : [{ idx : 1, patch : [{ type : patchOps.REPLACE, node : { tag : 'div' } }] }]
             }]);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
@@ -53,7 +53,7 @@ describe('patchDom', function() {
     describe('appendChild', function() {
         it('should append child node', function() {
             var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
-            patchDom(domNode, [{ type : patchOps.APPEND_CHILD, path : '', childNode : { tag : 'div' } }]);
+            patchDom(domNode, [{ type : patchOps.APPEND_CHILD, path : '', node : { tag : 'div' } }]);
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
         });
@@ -74,7 +74,7 @@ describe('patchDom', function() {
     describe('insertChild', function() {
         it('should insert child node', function() {
             var domNode = renderToDom({ tag : 'div', children : [{ tag : 'a' }, { tag : 'span' }] });
-            patchDom(domNode, [{ type : patchOps.INSERT_CHILD, path : '', idx : 1, childNode : { tag : 'div' } }]);
+            patchDom(domNode, [{ type : patchOps.INSERT_CHILD, path : '', idx : 1, node : { tag : 'div' } }]);
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });

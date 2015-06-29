@@ -19,13 +19,13 @@ module.exports = {
     "patch" : [
         {
             "type" : 5,
-            "childNode" : {
+            "node" : {
                 "tag" : "div"
             }
         },
         {
             "type" : 5,
-            "childNode" : {
+            "node" : {
                 "tag" : "span"
             }
         }

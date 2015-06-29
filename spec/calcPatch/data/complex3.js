@@ -52,7 +52,7 @@ module.exports = {
         {
             "type" : 7,
             "idx" : 1,
-            "childNode" : {
+            "node" : {
                 "tag" : "a",
                 "key" : "b"
             }
@@ -60,14 +60,14 @@ module.exports = {
         {
             "type" : 7,
             "idx" : 3,
-            "childNode" : {
+            "node" : {
                 "tag" : "a",
                 "key" : "d"
             }
         },
         {
             "type" : 5,
-            "childNode" : {
+            "node" : {
                 "tag" : "a",
                 "key" : "f"
             }

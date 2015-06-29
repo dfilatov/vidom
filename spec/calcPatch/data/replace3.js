@@ -35,7 +35,7 @@ module.exports = {
                     "patch" : [
                         {
                             "type" : 4,
-                            "newNode" : {
+                            "node" : {
                                 "tag" : "span",
                                 "key" : "a"
                             }

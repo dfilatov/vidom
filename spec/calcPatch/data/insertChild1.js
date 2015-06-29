@@ -51,7 +51,7 @@ module.exports = {
         {
             "type" : 7,
             "idx" : 1,
-            "childNode" : {
+            "node" : {
                 "tag" : "input",
                 "key" : "b",
                 "attrs" : {
