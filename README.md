@@ -22,7 +22,7 @@ Applies a given patch to DOM.
  * @param {Array} `patch` patch
   
 ## Patch operations
-Each operation is represented by an object contained its type and some specific fields depended on the type.
+Each operation is represented by an object which contains its type and some specific fields depended on the type.
 
 ### Update text of node
 ```js
