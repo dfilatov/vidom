@@ -1,19 +1,15 @@
+var createNode = require('../../../lib/createNode'),
+    ReplaceOp = require('../../../lib/client/patchOps/Replace'),
+    oldNode = createNode('div'),
+    newNode = createNode('span');
+
 module.exports = {
-    "name" : "replace1",
-    "trees" : [
-        {
-            "tag" : "div"
-        },
-        {
-            "tag" : "span"
-        }
+    'name' : 'replace1',
+    'trees' : [
+        oldNode,
+        newNode
     ],
-    "patch" : [
-        {
-            "type" : 4,
-            "node" : {
-                "tag" : "span"
-            }
-        }
+    'patch' : [
+        new ReplaceOp(oldNode, newNode)
     ]
 };

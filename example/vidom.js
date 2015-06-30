@@ -1,154 +1,103 @@
-var vidom = require('../lib/vidom'),
-    batch = [];
+var vidom = require('../lib/vidom');
 
-//function scheduleUpdate(patch) {
-//    if(!batch.length) {
-//        window.requestAnimationFrame(performUpdate);
-//    }
-//
-//    batch = batch.concat(patch);
-//}
-//
-//function performUpdate() {
-//    vidom.patchDom(rootNode, batch);
-//    batch = [];
-//}
-//
-//var tree = {
-//        tag : 'a'
-//    };
-//
-//var rootNode = vidom.renderToDom(tree);
-//
-//document.body.appendChild(rootNode);
-//
-//[
-//{
-//        tag : 'a',
-//        attrs : { disabled : true, tabIndex : 10 },
-//        children : [
-//            {
-//                tag : 'b',
-//                attrs : { className : 'aa' }
-//            },
-//            { tag : 'i', key : 2 },
-//            { tag : 'i', children : [{ text : 'text12' }], key : 3, attrs : { className : 'test test_a' } },
-//            { tag : 'i', key : 1, children : [] }
-//        ]
-//},
-//{
-//    tag : 'a',
-//    children : [
-//        {
-//            tag : 'b',
-//            attrs : { className : 'aa' },
-//            children : []
-//        },
-//        { tag : 'i', children : [], key : 1 },
-//        { tag : 'i', children : [{ text : 'text' }], key : 2 },
-//        { tag : 'i', children : [{ text : 'text123' }], key : 3, attrs : { className : 'test test_a' } }
-//    ]
-//},
-//{
-//    tag : 'a',
-//    children : [
-//        {
-//            tag : 'b',
-//            attrs : { className : 'aa' },
-//            children : []
-//        },
-//        { tag : 'i', children : [], key : 1 },
-//        { tag : 'i', children : [{ text : 'text' }], key : 2 },
-//        { tag : 'i', children : [{ text : 'text1234' }], key : 3, attrs : { className : 'test test_a' } }
-//    ]
-//},
-//{
-//    tag : 'a',
-//    children : [
-//        {
-//            tag : 'b',
-//            attrs : { className : 'aa' },
-//            children : []
-//        },
-//        { tag : 'i', children : [], key : 1 },
-//        { tag : 'i', children : [{ text : 'text' }], key : 2 },
-//        { tag : 'i', children : [{ text : 'text12345' }], key : 3, attrs : { className : 'test test_a' } }
-//    ]
-//},
-//
-//{
-//    tag : 'a',
-//    attrs : { disabled : 'disabled', tabIndex : 10 },
-//    children : [
-//        { tag : 'i', children : [] },
-//        {
-//            tag : 'b',
-//            children : []
-//        },
-//        { tag : 'a', attrs : { href : '/' }, children : [{ text : 'link' }] },
-//        { tag : 'input', attrs : { type : 'radio', checked : true }, children : [] },
-//        { text : 'text1' }
-//    ]
-//},
-//{
-//    tag : 'a',
-//    attrs : { disabled : 'disabled', tabIndex : 10 },
-//    children : [
-//        { tag : 'i', children : [] },
-//        {
-//            tag : 'b',
-//            children : []
-//        },
-//        { tag : 'a', children : [{ text : 'link' }] },
-//        { tag : 'input', attrs : { type : 'radio', checked : false }, children : [] },
-//        { tag : 'b', children : [] }
-//    ]
-//},
-//{
-//    tag : 'a',
-//    attrs : { disabled : 'disabled', tabIndex : 10 },
-//    children : [
-//        { tag : 'i', children : [] },
-//        {
-//            tag : 'b',
-//            children : []
-//        },
-//        { tag : 'a', children : [{ text : 'link2' }] },
-//        { tag : 'input', attrs : { type : 'radio', checked : true, disabled : true }, children : [] },
-//        { tag : 'b', children : [] }
-//    ]
-//}
-//].reduce(
-//    function(treeA, treeB) {
-//        scheduleUpdate(
-//            vidom.calcPatch(
-//                treeA,
-//                treeB
-//                ));
-//        return treeB;
-//    },
-//    tree);
+var f = true;
 
-function generateTable(rowsCount, cellsCount, content) {
-    var res = { tag : 'table', children : [] };
-    for(var i = 0; i < rowsCount; i++) {
-        for(var j = 0, tr = { tag : 'tr', key : i, children : [] }; j < cellsCount; j++) {
-            tr.children.push({ tag : 'td', key : j, children : [{ text : content }] });
+var C1 = vidom.createComponent({
+        onMount : function() {
+            console.log('onMount C1');
+        },
+
+        onUnmount : function() {
+            console.log('onUnmount C1');
+        },
+
+        render : function(_, children) {
+            //console.log('render C1');
+            return vidom.createNode(C2)
+                .children(children);
         }
-        res.children.push(tr);
-    }
-    return res;
-}
+    }),
+    C2 = vidom.createComponent({
+        onMount : function() {
+            console.log('onMount C2');
+            setTimeout(function() {
+                this._className = 'c22';
+                this.update();
+            }.bind(this), 100);
+        },
 
-var tree = generateTable(100, 10, 0),
-    counter = 1,
-    rootNode = document.body.appendChild(vidom.renderToDom(tree));
+        onUnmount : function() {
+            console.log('onUnmount C2');
+        },
 
-function draw() {
-    var prevTree = tree;
-    tree = generateTable(100, 10, counter++);
-    vidom.patchDom(rootNode, vidom.calcPatch(prevTree, tree));
-    requestAnimationFrame(draw);
-}
+        render : function(_, children) {
+            return vidom.createNode(f? 'div' : 'span')
+                .attrs({ className : this._className || 'c2' })
+                .children(children);
+        }
+    }),
+    C3 = vidom.createComponent({
+        onMount : function() {
+            console.log('onMount C3');
+        },
 
-requestAnimationFrame(draw);
+        onUnmount : function() {
+            console.log('onUnmount C3');
+        },
+
+        render : function(attrs) {
+            //console.log('render C3');
+            return vidom.createNode('i').children(attrs.value);
+        }
+    }),
+    C4 = vidom.createComponent({
+        onMount : function() {
+            console.log('onMount C4', this._domNode);
+        },
+
+        onUnmount : function() {
+            console.log('onUnmount C4');
+        },
+
+        render : function(attrs) {
+            return vidom.createNode('i', null, attrs.value);
+        }
+    });
+
+var tree1 = vidom.createNode('div')
+        .children(
+            vidom.createNode(C1)
+                .key(1)
+                .attrs({ value : '1' })
+                .children([
+                    vidom.createNode(C3).key(1).attrs({ value : '1' }),
+                    vidom.createNode(C3).key(2).attrs({ value : '2' }),
+                    vidom.createNode(C3).key(3).attrs({ value : '3' })
+                ])),
+    tree2 = vidom.createNode('div')
+        .children(
+            vidom.createNode(C1)
+                .key(1)
+                .attrs({ value : '1' })
+                .children([
+                    vidom.createNode(C3).key(3).attrs({ value : '3' }),
+                    vidom.createNode(C3).key(2).attrs({ value : '2' })
+                ])),
+    parentDomNode = document.body,
+    root1DomNode = document.getElementById('root1');
+
+vidom.mountToDom(root1DomNode, tree1, function() {
+    f=false;
+})
+//vidom.mountToDom(root1DomNode, tree2);
+//vidom.mountToDom(root1DomNode, tree1);
+//vidom.mountToDom(root1DomNode, tree2);
+//f=true;
+//vidom.mountToDom(root1DomNode, tree2);
+setTimeout(function() {
+    //vidom.unmountFromDom(root1DomNode);
+    vidom.mountToDom(root1DomNode, tree1);
+}, 50);
+
+//vidom.mountToDom(root1DomNode, tree1);
+//vidom.mountToDom(root1DomNode, vidom.createNode(C4, { key : 3, attrs : { value : 'C4' } }));

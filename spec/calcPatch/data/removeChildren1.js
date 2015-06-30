@@ -1,27 +1,18 @@
+var createNode = require('../../../lib/createNode'),
+    RemoveChildrenOp = require('../../../lib/client/patchOps/RemoveChildren'),
+    oldNodes = [
+        createNode('div'),
+        createNode('div'),
+        createNode('div')
+    ];
+
 module.exports = {
-    "name" : "removeChildren1",
-    "trees" : [
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "div"
-                },
-                {
-                    "tag" : "div"
-                },
-                {
-                    "tag" : "div"
-                }
-            ]
-        },
-        {
-            "tag" : "div"
-        }
+    'name' : 'removeChildren1',
+    'trees' : [
+        createNode('div').children(oldNodes),
+        createNode('div')
     ],
-    "patch" : [
-        {
-            "type" : 9
-        }
+    'patch' : [
+        new RemoveChildrenOp(oldNodes)
     ]
 };

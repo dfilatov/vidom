@@ -1,25 +1,14 @@
+var createNode = require('../../../lib/createNode'),
+    RemoveAttrOp = require('../../../lib/client/patchOps/RemoveAttr');
+
 module.exports = {
-    "name" : "removeAttr2",
-    "trees" : [
-        {
-            "tag" : "input",
-            "attrs" : {
-                "value" : "text",
-                "className" : "input"
-            }
-        },
-        {
-            "tag" : "input"
-        }
+    'name' : 'removeAttr2',
+    'trees' : [
+        createNode('input').attrs({ value : 'text', className : 'input' }),
+        createNode('input')
     ],
-    "patch" : [
-        {
-            "type" : 3,
-            "attrName" : "value"
-        },
-        {
-            "type" : 3,
-            "attrName" : "className"
-        }
+    'patch' : [
+        new RemoveAttrOp('value'),
+        new RemoveAttrOp('className')
     ]
 };

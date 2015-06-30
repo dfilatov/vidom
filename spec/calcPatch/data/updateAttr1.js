@@ -1,24 +1,13 @@
+var createNode = require('../../../lib/createNode'),
+    UpdateAttrOp = require('../../../lib/client/patchOps/UpdateAttr');
+
 module.exports = {
-    "name" : "updateAttr1",
-    "trees" : [
-        {
-            "tag" : "input",
-            "attrs" : {
-                "value" : "text"
-            }
-        },
-        {
-            "tag" : "input",
-            "attrs" : {
-                "value" : "new text"
-            }
-        }
+    'name' : 'updateAttr1',
+    'trees' : [
+        createNode('input').attrs({ value : 'text' }),
+        createNode('input').attrs({ value : 'new text' })
     ],
-    "patch" : [
-        {
-            "type" : 2,
-            "attrName" : "value",
-            "attrVal" : "new text"
-        }
+    'patch' : [
+        new UpdateAttrOp('value', 'new text')
     ]
 };
