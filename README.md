@@ -1,137 +1,39 @@
 # vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)
 
-Vidom is an experimental project that implements a virtual dom differ. It enables you to get a minimal set of operations (patch) needed to update real DOM tree. It's based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html).
+Vidom is an project that implements a virtual dom builder and differ. It enables you to get a minimal set of operations (patch) needed to update real DOM tree. It's highly inspired and based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html).
 
-## API
+## Top-Level API
 
-### vdom.renderToDom(`tree`)
-Renders a given `tree` to DOM.
- * @param {Object} `tree` root node of the given tree
- * @returns {Node} root DOM node
+### vidom.createNode(`tag`)
+Creates a virtual node with the given `tag`.
+* @param {String} `tag` the tag
+* @returns {TagNode}
 
-### vdom.calcPatch(`tree1`, `tree2`)
-Calculates a patch between a `tree1` and a `tree2`. The patch is an array of operations which can be applied to the `tree1` to get the `tree2`.
- * @param {Object} `tree1` root node of the first tree
- * @param {Object} `tree2` root node of the second tree
- * @returns {Array} patch
-  
-### vdom.patchDom(`node`, `patch`)
-Applies a given patch to DOM.
- * @param {Node} `node` root DOM node
- * @param {Array} `patch` patch
-  
-## Patch operations
-Each operation is represented by an object which contains its type and some specific fields depended on the type.
+### vidom.createNode()
+* @returns {TextNode}
+Creates a virtual text node.
 
-### Update text of node
-```js
-{
-    type : UPDATE_TEXT,
-    text : 'some new text'
-}
-```
+### vidom.createNode(`Component`)
+Creates a virtual node with the custom `Component`.
+* @param {Function} `Component` the component class 
+* @returns {ComponentNode}
 
-### Update attribute
-```js
-{
-    type : UPDATE_ATTR,
-    attrName : 'href',
-    attrVal : '/'
-}
-```
+### vidom.createComponent(props, staticProps)
+Creates a component class.
+* @param {Object} `props` the props
+* @param {Object} `staticProps` the static props
+* @returns {Function}
 
-### Remove attribute
-```js
-{
-    type : REMOVE_ATTR,
-    attrName : 'disabled',
-}
-```
+### vidom.mountToDom(`domNode`, `tree`, `cb`, `cbCtx`)
+Mounts the virtual `tree` to DOM.
+ * @param {Object} `domNode` the container DOM node to mount to
+ * @param {Object} `tree` the root node of the given tree
+ * @param {Function} [`cb`] the callback which will be called when the given tree is mounted to DOM
+ * @param {Function} [`cbСtx`] the context to invoke callback with
 
-### Append child  
-```js
-{
-    type : APPEND_CHILD,
-    node : nodeToAppend
-}
-```
-
-### Remove child at specified index
-```js
-{
-    type : REMOVE_CHILD,
-    idx : 5
-}
-```
-
-### Remove all children
-```js
-{
-    type : REMOVE_CHILDREN
-}
-```
-
-### Insert child at specified index
-```js
-{
-    type : INSERT_CHILD,
-    idx : 3,
-    node : nodeToInsert
-}
-```
-  
-### Move child from specified index to another one
-```js
-{
-    type : MOVE_CHILD,
-    idxFrom : 3,
-    idxTo : 2
-}
-```
-
-### Replace node
-```js
-{
-    type : REPLACE,
-    node : nodeToReplace
-}
-```
-
-### Update children
-```js
-{
-    type : UPDATE_CHILDREN,
-    children : [
-        {
-            idx : idx
-            patch : patch
-        },
-        ...
-    ]
-}
-```
-
-## Virtual dom nodes representaion
-
-### Element node
-```js
-{
-    tag : 'div',
-    ns : 'http://www.w3.org/2000/svg', // optional
-    key : '123', // optional
-    attrs : { // optional
-        className : 'test',
-        tabIndex : 10
-    },
-    children : [] // optional
-}
-```
-
-### Text node
-```js
-{
-    text : 'some text', // required
-    key : '342' // optional
-}
-```
+### vidom.unmountFromDom(`domNode`, `cb`, `cbCtx`)
+Unmounts a virtual tree from DOM.
+ * @param {Object} `domNode` the container DOM node to unmount from
+ * @param {Function} [`cb`] the callback which will be called when a mounted tree is unmounted from DOM
+ * @param {Function} [`cbСtx`] the context to invoke callback with
