@@ -1,47 +1,21 @@
+var createNode = require('../../../lib/createNode'),
+    InsertChildOp = require('../../../lib/client/patchOps/InsertChild'),
+    newNode = createNode('input').key('a');
+
 module.exports = {
-    "name" : "insertChild2",
-    "trees" : [
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "span"
-                },
-                {
-                    "tag" : "input"
-                }
-            ]
-        },
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "span"
-                },
-                {
-                    "tag" : "input",
-                    "key" : "a",
-                    "attrs" : {
-                        "value" : "text"
-                    }
-                },
-                {
-                    "tag" : "input"
-                }
-            ]
-        }
+    'name' : 'insertChild2',
+    'trees' : [
+        createNode('div').children([
+            createNode('span'),
+            createNode('input')
+        ]),
+        createNode('div').children([
+            createNode('span'),
+            newNode,
+            createNode('input')
+        ])
     ],
-    "patch" : [
-        {
-            "type" : 7,
-            "idx" : 1,
-            "node" : {
-                "tag" : "input",
-                "key" : "a",
-                "attrs" : {
-                    "value" : "text"
-                }
-            }
-        }
+    'patch' : [
+        new InsertChildOp(newNode, 1)
     ]
 };

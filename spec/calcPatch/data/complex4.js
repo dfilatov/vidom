@@ -1,73 +1,30 @@
+var createNode = require('../../../lib/createNode'),
+    InsertChildOp = require('../../../lib/client/patchOps/InsertChild'),
+    AppendChildOp = require('../../../lib/client/patchOps/AppendChild'),
+    MoveChildOp = require('../../../lib/client/patchOps/MoveChild'),
+    node1 = createNode('a').key('a'),
+    node2 = createNode('a').key('c'),
+    node3 = createNode('a').key('e');
+
 module.exports = {
-    "name" : "complex4",
-    "trees" : [
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "a",
-                    "key" : "d"
-                },
-                {
-                    "tag" : "a",
-                    "key" : "b"
-                }
-            ]
-        },
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "a",
-                    "key" : "a"
-                },
-                {
-                    "tag" : "a",
-                    "key" : "b"
-                },
-                {
-                    "tag" : "a",
-                    "key" : "c"
-                },
-                {
-                    "tag" : "a",
-                    "key" : "d"
-                },
-                {
-                    "tag" : "a",
-                    "key" : "e"
-                }
-            ]
-        }
+    'name' : 'complex4',
+    'trees' : [
+        createNode('div').children([
+            createNode('a').key('d'),
+            createNode('a').key('b')
+        ]),
+        createNode('div').children([
+            node1,
+            createNode('a').key('b'),
+            node2,
+            createNode('a').key('d'),
+            node3
+        ])
     ],
-    "patch" : [
-        {
-            "type" : 7,
-            "idx" : 0,
-            "node" : {
-                "tag" : "a",
-                "key" : "a"
-            }
-        },
-        {
-            "type" : 8,
-            "idxFrom" : 2,
-            "idxTo" : 1
-        },
-        {
-            "type" : 7,
-            "idx" : 2,
-            "node" : {
-                "tag" : "a",
-                "key" : "c"
-            }
-        },
-        {
-            "type" : 5,
-            "node" : {
-                "tag" : "a",
-                "key" : "e"
-            }
-        }
+    'patch' : [
+        new InsertChildOp(node1, 0),
+        new MoveChildOp(2, 1),
+        new InsertChildOp(node2, 2),
+        new AppendChildOp(node3)
     ]
 };

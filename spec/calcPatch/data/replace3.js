@@ -1,48 +1,27 @@
+var createNode = require('../../../lib/createNode'),
+    ReplaceOp = require('../../../lib/client/patchOps/Replace'),
+    UpdateChildrenOp = require('../../../lib/client/patchOps/UpdateChildren'),
+    oldNode = createNode('div').key('a'),
+    newNode = createNode('span').key('a');
+
 module.exports = {
-    "name" : "replace3",
-    "trees" : [
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "div",
-                    "key" : "a"
-                },
-                {
-                    "tag" : "div"
-                }
-            ]
-        },
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "span",
-                    "key" : "a"
-                },
-                {
-                    "tag" : "div"
-                }
-            ]
-        }
+    'name' : 'replace3',
+    'trees' : [
+        createNode('div').children([
+            oldNode,
+            createNode('div')
+        ]),
+        createNode('div').children([
+            newNode,
+            createNode('div')
+        ])
     ],
-    "patch" : [
-        {
-            "type" : 10,
-            "children" : [
-                {
-                    "idx" : 0,
-                    "patch" : [
-                        {
-                            "type" : 4,
-                            "node" : {
-                                "tag" : "span",
-                                "key" : "a"
-                            }
-                        }
-                    ]
-                }
-            ]
-        }
+    'patch' : [
+        new UpdateChildrenOp([
+            {
+                idx : 0,
+                patch : [new ReplaceOp(oldNode, newNode)]
+            }
+        ])
     ]
 };

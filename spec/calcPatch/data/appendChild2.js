@@ -1,33 +1,19 @@
+var createNode = require('../../../lib/createNode'),
+    AppendChildOp = require('../../../lib/client/patchOps/AppendChild'),
+    node1 = createNode('div'),
+    node2 = createNode('span');
+
 module.exports = {
-    "name" : "appendChild2",
-    "trees" : [
-        {
-            "tag" : "div"
-        },
-        {
-            "tag" : "div",
-            "children" : [
-                {
-                    "tag" : "div"
-                },
-                {
-                    "tag" : "span"
-                }
-            ]
-        }
+    'name' : 'appendChild2',
+    'trees' : [
+        createNode('div'),
+        createNode('div').children([
+            node1,
+            node2
+        ])
     ],
-    "patch" : [
-        {
-            "type" : 5,
-            "node" : {
-                "tag" : "div"
-            }
-        },
-        {
-            "type" : 5,
-            "node" : {
-                "tag" : "span"
-            }
-        }
+    'patch' : [
+        new AppendChildOp(node1),
+        new AppendChildOp(node2)
     ]
 };

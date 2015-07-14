@@ -1,40 +1,25 @@
+var createNode = require('../../../lib/createNode'),
+    MoveChildOp = require('../../../lib/client/patchOps/MoveChild');
+
 module.exports = {
-    "name" : "moveChild2",
-    "trees" : [
-        {
-            "tag" : "div",
-            "children" : [
-                { "tag" : "a", "key" : "a" },
-                { "tag" : "a", "key" : "b" },
-                { "tag" : "a", "key" : "c" },
-                { "tag" : "a", "key" : "d" }
-            ]
-        },
-        {
-            "tag" : "div",
-            "children" : [
-                { "tag" : "a", "key" : "d" },
-                { "tag" : "a", "key" : "c" },
-                { "tag" : "a", "key" : "b" },
-                { "tag" : "a", "key" : "a" }
-            ]
-        }
+    'name' : 'moveChild2',
+    'trees' : [
+        createNode('div').children([
+            createNode('a').key('a'),
+            createNode('a').key('b'),
+            createNode('a').key('c'),
+            createNode('a').key('d')
+        ]),
+        createNode('div').children([
+            createNode('a').key('d'),
+            createNode('a').key('c'),
+            createNode('a').key('b'),
+            createNode('a').key('a')
+        ])
     ],
-    "patch" : [
-        {
-            "type" : 8,
-            "idxFrom" : 3,
-            "idxTo" : 0
-        },
-        {
-            "type" : 8,
-            "idxFrom" : 3,
-            "idxTo" : 1
-        },
-        {
-            "type" : 8,
-            "idxFrom" : 3,
-            "idxTo" : 2
-        }
+    'patch' : [
+        new MoveChildOp(3, 0),
+        new MoveChildOp(3, 1),
+        new MoveChildOp(3, 2)
     ]
 };
