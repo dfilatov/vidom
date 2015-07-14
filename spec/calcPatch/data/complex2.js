@@ -1,27 +1,32 @@
 var createNode = require('../../../lib/createNode'),
+    InsertChildOp = require('../../../lib/client/patchOps/InsertChild'),
     RemoveChildOp = require('../../../lib/client/patchOps/RemoveChild'),
     UpdateChildrenOp = require('../../../lib/client/patchOps/UpdateChildren'),
     UpdateTextOp = require('../../../lib/client/patchOps/UpdateText'),
-    node1 = createNode('a').key('d');
+    nodeC = createNode('a').key('c'),
+    nodeD = createNode('a').key('d'),
+    nodeB = createNode('a').key('b');
 
 module.exports = {
     'name' : 'complex2',
     'trees' : [
         createNode('div').children([
-            createNode('a').key('c').children('text'),
-            createNode('a').key('a'),
-            node1
+            nodeC,
+            createNode('a').key('a').children('text'),
+            nodeD
         ]),
         createNode('div').children([
-            createNode('a').key('b').children('new text'),
-            createNode('a').key('a')
+            nodeB,
+            createNode('a').key('a').children('new text')
         ])
     ],
     'patch' : [
-        new RemoveChildOp(node1, 2),
+        new InsertChildOp(nodeB, 0),
+        new RemoveChildOp(nodeC, 1),
+        new RemoveChildOp(nodeD, 2),
         new UpdateChildrenOp([
             {
-                idx : 0,
+                idx : 1,
                 patch : [
                     new UpdateChildrenOp([
                         {

@@ -7,25 +7,29 @@ var createNode = require('../../../lib/createNode'),
     UpdateAttrOp = require('../../../lib/client/patchOps/UpdateAttr'),
     RemoveAttrOp = require('../../../lib/client/patchOps/RemoveAttr'),
     ReplaceOp = require('../../../lib/client/patchOps/Replace'),
+    AppendChildOp = require('../../../lib/client/patchOps/AppendChild'),
     node1 = createNode('div').attrs({ id : 'id2' }),
     node2 = createNode('div').key('c'),
     node3 = createNode('div'),
     node4 = createNode('span'),
     node5 = createNode('a').key('a').attrs({ 'href' : 'http://ya.ru' }),
-    node6 = createNode('span').key('a').children('new text');
+    node6 = createNode('span').key('a').children('new text'),
+    node7 = createNode('label').attrs({ 'for' : 'text' }),
+    node8 = createNode('label').attrs({ 'for' : 'text' }),
+    node9 = createNode('div');
 
 module.exports = {
     'name' : 'complex1',
     'trees' : [
         createNode('div').children([
             createNode('input').key('a').attrs({ value : 'text', disabled : true }),
-            createNode('label').attrs({ 'for' : 'text' }),
+            node7,
             createNode('div').key('b').children([
                 createNode('span').children('good'),
                 createNode('div').children([node4, node5])
             ]),
             createNode('div').key('c'),
-            createNode('div')
+            node9
         ]),
         createNode('div').children([
             createNode('input').key('a').attrs({ value : 'text2' }),
@@ -33,15 +37,14 @@ module.exports = {
                 createNode('span').attrs({ id : 'id1' }).children('bad'),
                 createNode('div').children(node6)
             ]),
-            createNode('label').attrs({ 'for' : 'text' }),
+            node8,
             node1
         ])
     ],
     'patch' : [
-        new MoveChildOp(2, 1),
-        new InsertChildOp(node1, 3),
-        new RemoveChildOp(node2, 4),
-        new RemoveChildOp(node3, 4),
+        new RemoveChildOp(node7, 1),
+        new RemoveChildOp(node2, 2),
+        new AppendChildOp(node1),
         new UpdateChildrenOp([
             {
                 idx : 0,
@@ -69,8 +72,7 @@ module.exports = {
                         {
                             idx : 1,
                             patch : [
-                                new MoveChildOp(1, 0),
-                                new RemoveChildOp(node4, 1),
+                                new RemoveChildOp(node4, 0),
                                 new UpdateChildrenOp([
                                     {
                                         idx : 0,
@@ -81,6 +83,10 @@ module.exports = {
                         }
                     ])
                 ]
+            },
+            {
+                idx : 2,
+                patch : [new ReplaceOp(node9, node8)]
             }
         ])
     ]
