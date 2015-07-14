@@ -1,223 +1,13 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var patchOps = require('./patchOps');
-
-function diff(nodeA, nodeB, patch) {
-    var isNodeAText = 'text' in nodeA,
-        isNodeBText = 'text' in nodeB;
-
-    if(isNodeAText || isNodeBText) {
-        patch.push(isNodeAText && isNodeBText && nodeA.text !== nodeB.text?
-            {
-                type : patchOps.UPDATE_TEXT,
-                text : nodeB.text
-            } :
-            {
-                type : patchOps.REPLACE,
-                newNode : nodeB
-            });
-    }
-    else if(nodeA.tag !== nodeB.tag || nodeA.ns !== nodeB.ns) {
-        patch.push({
-            type : patchOps.REPLACE,
-            newNode : nodeB
-        });
-    }
-    else {
-        diffChildren(nodeA, nodeB, patch);
-        diffAttrs(nodeA, nodeB, patch);
-    }
-}
-
-function diffChildren(nodeA, nodeB, patch) {
-    var childrenA = nodeA.children,
-        childrenB = nodeB.children,
-        hasChildrenA = childrenA && childrenA.length,
-        hasChildrenB = childrenB && childrenB.length;
-
-    if(!hasChildrenB) {
-        hasChildrenA && patch.push({ type : patchOps.REMOVE_CHILDREN });
-        return;
-    }
-
-    var iA = 0, iB = 0,
-        childA, childB,
-        skippedAIndices = {},
-        childrenBKeys = {},
-        childrenPatch = [];
-
-    while(iB < childrenB.length) {
-        childB = childrenB[iB++];
-        'key' in childB && (childrenBKeys[childB.key] = true);
-    }
-
-    iB = 0;
-    while(iB < childrenB.length) {
-        childB = childrenB[iB];
-
-        while(skippedAIndices[iA]) {
-            ++iA;
-        }
-
-        if(!hasChildrenA || iA >= childrenA.length) {
-            patch.push({
-                type : patchOps.APPEND_CHILD,
-                childNode : childB
-            });
-        }
-        else {
-            childA = childrenA[iA];
-            if('key' in childB) {
-                if(childA.key === childB.key) {
-                    addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
-                    ++iA;
-                }
-                else {
-                    var foundIdx, foundChildA,
-                        skippedCnt = 0;
-                    for(var j = iA + 1; j < childrenA.length; j++) {
-                        if(skippedAIndices[j]) {
-                            ++skippedCnt;
-                        }
-                        else if(childrenA[j].key === childB.key) {
-                            foundIdx = j - skippedCnt + iB - iA;
-                            foundChildA = childrenA[j];
-                            skippedAIndices[j] = true;
-                            break;
-                        }
-                    }
-
-                    if(foundChildA) {
-                        foundIdx !== iB && patch.push({
-                            type : patchOps.MOVE_CHILD,
-                            idxFrom : foundIdx,
-                            idxTo : iB
-                        });
-                        addChildPatchToChildrenPatch(foundChildA, childB, iB, childrenPatch);
-                    }
-                    else if('key' in childA && !(childrenBKeys[childA.key])) {
-                        addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
-                        ++iA;
-                    }
-                    else {
-                        patch.push({
-                            type : patchOps.INSERT_CHILD,
-                            idx : iB,
-                            childNode : childB
-                        });
-                    }
-                }
-            }
-            else if('key' in childA) {
-                patch.push({
-                    type : patchOps.INSERT_CHILD,
-                    idx : iB,
-                    childNode : childB
-                });
-            }
-            else {
-                addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
-                ++iA;
-            }
-        }
-
-        ++iB;
-    }
-
-    if(hasChildrenA) {
-        var idx = iB;
-        while(iA < childrenA.length) {
-            skippedAIndices[iA++] || patch.push({
-                type : patchOps.REMOVE_CHILD,
-                idx : idx
-            });
-        }
-    }
-
-    childrenPatch.length && patch.push({
-        type : patchOps.UPDATE_CHILDREN,
-        children : childrenPatch
-    });
-}
-
-function addChildPatchToChildrenPatch(childA, childB, idx, childrenPatch) {
-    var childPatch = [];
-    diff(childA, childB, childPatch);
-    childPatch.length && childrenPatch.push({ idx : idx, patch : childPatch });
-}
-
-function diffAttrs(nodeA, nodeB, patch) {
-    var attrsA = nodeA.attrs,
-        attrsB = nodeB.attrs,
-        attrName;
-
-    if(attrsB) {
-        for(attrName in attrsB) {
-            if(!attrsA || !(attrName in attrsA) || attrsA[attrName] !== attrsB[attrName]) {
-                if(attrsB[attrName] == null) {
-                    patch.push({
-                        type : patchOps.REMOVE_ATTR,
-                        attrName : attrName
-                    });
-                }
-                else if(typeof attrsB[attrName] === 'object' && typeof attrsA[attrName] === 'object') {
-                    diffAttrObj(attrName, attrsA[attrName], attrsB[attrName], patch);
-                }
-                else {
-                    patch.push({
-                        type : patchOps.UPDATE_ATTR,
-                        attrName : attrName,
-                        attrVal : attrsB[attrName]
-                    });
-                }
-            }
-        }
-    }
-
-    if(attrsA) {
-        for(attrName in attrsA) {
-            if((!attrsB || !(attrName in attrsB)) && attrsA[attrName] != null) {
-                patch.push({
-                    type : patchOps.REMOVE_ATTR,
-                    attrName : attrName
-                });
-            }
-        }
-    }
-}
-
-function diffAttrObj(attrName, objA, objB, patch) {
-    var hasDiff = false,
-        diffObj = {},
-        i;
-
-    for(i in objB) {
-        if(objA[i] != objB[i]) {
-            hasDiff = true;
-            diffObj[i] = objB[i];
-        }
-    }
-
-    for(i in objA) {
-        if(objA[i] != null && !(i in objB)) {
-            hasDiff = true;
-            diffObj[i] = null;
-        }
-    }
-
-    hasDiff && patch.push({
-        type : patchOps.UPDATE_ATTR,
-        attrName : attrName,
-        attrVal : diffObj
-    });
-}
-
-module.exports = function(treeA, treeB) {
-    var res = [];
-    diff(treeA, treeB, res);
+function calcPatch(treeA, treeB, res) {
+    res || (res = []);
+    treeA.calcPatch(treeB, res);
     return res;
-};
+}
 
-},{"./patchOps":4}],2:[function(require,module,exports){
+module.exports = calcPatch;
+
+},{}],2:[function(require,module,exports){
 function setAttr(node, name, val) {
     node.setAttribute(name, '' + val);
 }
@@ -364,65 +154,147 @@ module.exports = function(attrName) {
 };
 
 },{}],3:[function(require,module,exports){
-var renderToDom = require('./renderToDom'),
-    patchOps = require('./patchOps'),
-    domAttrsMutators = require('./domAttrsMutators');
+var ID_PROP = '__vidom__id__',
+    counter = 1;
 
-function applyPatch(domNode, patch) {
-    var i = 0, op;
-    while(i < patch.length) {
-        op = patch[i++];
-        //console.log(op);
-        switch(op.type) {
-            case patchOps.UPDATE_TEXT:
-                domNode.nodeValue = op.text;
-            break;
+function getDomNodeId(node) {
+    return node[ID_PROP] || (node[ID_PROP] = counter++);
+}
 
-            case patchOps.UPDATE_ATTR:
-                domAttrsMutators(op.attrName).set(domNode, op.attrName, op.attrVal);
-            break;
+module.exports = getDomNodeId;
 
-            case patchOps.REMOVE_ATTR:
-                domAttrsMutators(op.attrName).remove(domNode, op.attrName);
-            break;
+},{}],4:[function(require,module,exports){
+var calcPatch = require('../calcPatch'),
+    patchDom = require('./patchDom'),
+    getDomNodeId = require('./getDomNodeId'),
+    rafBatch = require('./rafBatch'),
+    mountedNodes = {},
+    counter = 0;
 
-            case patchOps.REPLACE:
-                domNode.parentNode.replaceChild(renderToDom(op.newNode), domNode);
-            break;
+function mountToDom(domNode, tree, cb, cbCtx, syncMode) {
+    var domNodeId = getDomNodeId(domNode),
+        prevMounted = mountedNodes[domNodeId],
+        mountId;
 
-            case patchOps.APPEND_CHILD:
-                domNode.appendChild(renderToDom(op.childNode));
-            break;
-
-            case patchOps.REMOVE_CHILD:
-                domNode.removeChild(domNode.childNodes[op.idx]);
-                break;
-
-            case patchOps.INSERT_CHILD:
-                insertAt(domNode, renderToDom(op.childNode), op.idx);
-            break;
-
-            case patchOps.MOVE_CHILD:
-                insertAt(domNode, domNode.childNodes[op.idxFrom], op.idxTo);
-            break;
-
-            case patchOps.REMOVE_CHILDREN:
-                domNode.innerHTML = '';
-            break;
-
-            case patchOps.UPDATE_CHILDREN:
-                var j = 0, childPatch;
-                while(j < op.children.length) {
-                    childPatch = op.children[j++];
-                    applyPatch(domNode.childNodes[childPatch.idx], childPatch.patch);
+    if(prevMounted && prevMounted.tree) {
+        var patch = calcPatch(prevMounted.tree, tree);
+        if(patch.length) {
+            mountId = ++prevMounted.id;
+            var patchFn = function() {
+                    if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
+                        prevMounted.tree = tree;
+                        patchDom(domNode.childNodes[0], patch);
+                        callCb(cb, cbCtx);
+                    }
+                };
+            syncMode? patchFn() : rafBatch(patchFn);
+        }
+        else if(!syncMode) {
+            callCb(cb, cbCtx);
+        }
+    }
+    else {
+        mountedNodes[domNodeId] = { tree : null, id : mountId = ++counter };
+        var renderFn = function() {
+                if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
+                    mountedNodes[domNodeId].tree = tree;
+                    domNode.appendChild(tree.renderToDom());
+                    tree.mount();
+                    callCb(cb, cbCtx);
                 }
-            break;
+            };
+        syncMode? renderFn() : rafBatch(renderFn);
+    }
+}
 
-            default:
-                throw Error('unsupported operation: ' + op.type);
+function unmountFromDom(domNode, cb, cbCtx, syncMode) {
+    var domNodeId = getDomNodeId(domNode),
+        prevMounted = mountedNodes[domNodeId];
+
+    if(prevMounted) {
+        var mountId = ++prevMounted.id,
+            unmountFn = function() {
+                var mounted = mountedNodes[domNodeId];
+                if(mounted && mounted.id === mountId) {
+                    mounted.tree && mounted.tree.unmount();
+                    delete mountedNodes[domNodeId];
+                    domNode.innerHTML = '';
+                    callCb(cb, cbCtx);
+                }
+            };
+
+        prevMounted.tree?
+            syncMode? unmountFn() : rafBatch(unmountFn) :
+            syncMode || callCb(cb, cbCtx);
+    }
+    else if(!syncMode) {
+        callCb(cb, cbCtx);
+    }
+}
+
+function callCb(cb, cbCtx) {
+    cb && cb.call(cbCtx || this);
+}
+
+module.exports = {
+    mountToDom : function(domNode, tree, cb, cbCtx) {
+        mountToDom(domNode, tree, cb, cbCtx, false);
+    },
+
+    mountToDomSync : function(domNode, tree) {
+        mountToDom(domNode, tree, null, null, true);
+    },
+
+    unmountFromDom : function(domNode, cb, cbCtx) {
+        unmountFromDom(domNode, cb, cbCtx, false);
+    },
+
+    unmountFromDomSync : function(domNode) {
+        mountToDom(domNode, null, null, true);
+    }
+};
+
+},{"../calcPatch":1,"./getDomNodeId":3,"./patchDom":5,"./rafBatch":17}],5:[function(require,module,exports){
+function patchDom(domNode, patch) {
+    var i = 0,
+        len = patch.length,
+        res;
+
+    while(i < len) {
+        if(res = patch[i++].applyTo(domNode)) {
+            return res;
         }
     }
 }
+
+module.exports = patchDom;
+
+},{}],6:[function(require,module,exports){
+function AppendChild(childNode) {
+    this._childNode = childNode;
+}
+
+AppendChild.prototype = {
+    applyTo : function(domNode) {
+        domNode.appendChild(this._childNode.renderToDom());
+        this._childNode.mount();
+    }
+};
+
+module.exports = AppendChild;
+
+},{}],7:[function(require,module,exports){
+function InsertChild(childNode, idx) {
+    this._childNode = childNode;
+    this._idx = idx;
+}
+
+InsertChild.prototype = {
+    applyTo : function(domNode) {
+        insertAt(domNode, this._childNode.renderToDom(), this._idx);
+        this._childNode.mount();
+    }
+};
 
 function insertAt(parentNode, node, idx) {
     idx < parentNode.childNodes.length?
@@ -430,64 +302,706 @@ function insertAt(parentNode, node, idx) {
         parentNode.appendChild(node);
 }
 
-module.exports = applyPatch;
+module.exports = InsertChild;
 
-},{"./domAttrsMutators":2,"./patchOps":4,"./renderToDom":5}],4:[function(require,module,exports){
-module.exports = {
-    UPDATE_TEXT : 1,
-    UPDATE_ATTR : 2,
-    REMOVE_ATTR : 3,
-    REPLACE : 4,
-    APPEND_CHILD : 5,
-    REMOVE_CHILD : 6,
-    INSERT_CHILD : 7,
-    MOVE_CHILD : 8,
-    REMOVE_CHILDREN : 9,
-    UPDATE_CHILDREN : 10
+},{}],8:[function(require,module,exports){
+function MoveChild(idxFrom, idxTo) {
+    this._idxFrom = idxFrom;
+    this._idxTo = idxTo;
+}
+
+MoveChild.prototype = {
+    applyTo : function(domNode) {
+        insertAt(domNode, domNode.childNodes[this._idxFrom], this._idxTo);
+    }
 };
 
-},{}],5:[function(require,module,exports){
-var domAttrSetter = require('./domAttrsMutators');
+function insertAt(parentNode, node, idx) {
+    idx < parentNode.childNodes.length?
+        parentNode.insertBefore(node, parentNode.childNodes[idx]) :
+        parentNode.appendChild(node);
+}
 
-function render(node) {
-    var res;
+module.exports = MoveChild;
 
-    if('text' in node) {
-        res = document.createTextNode(node.text);
+},{}],9:[function(require,module,exports){
+var domAttrsMutators = require('../domAttrsMutators');
+
+function RemoveAttr(attrName) {
+    this._attrName = attrName;
+}
+
+RemoveAttr.prototype = {
+    applyTo : function(domNode) {
+        domAttrsMutators(this._attrName).remove(domNode, this._attrName);
     }
-    else {
-        res = node.ns?
-            document.createElementNS(node.ns, node.tag) :
-            document.createElement(node.tag);
+};
 
-        var name, value;
-        for(name in node.attrs) {
-            (value = node.attrs[name]) != null && domAttrSetter(name).set(res, name, node.attrs[name]);
+module.exports = RemoveAttr;
+
+},{"../domAttrsMutators":2}],10:[function(require,module,exports){
+function RemoveChild(childNode, idx) {
+    this._childNode = childNode;
+    this._idx = idx;
+}
+
+RemoveChild.prototype = {
+    applyTo : function(domNode) {
+        this._childNode.unmount();
+        domNode.removeChild(domNode.childNodes[this._idx]);
+    }
+};
+
+module.exports = RemoveChild;
+
+},{}],11:[function(require,module,exports){
+function RemoveChildren(childNodes) {
+    this._childNodes = childNodes;
+}
+
+RemoveChildren.prototype = {
+    applyTo : function(domNode) {
+        var j = 0,
+            childNodes = this._childNodes,
+            len = childNodes.length;
+
+        while(j < len) {
+            childNodes[j++].unmount();
         }
 
-        var children = node.children;
-        if(children) {
-            var i = 0,
-                len = children.length;
-            while(i < len) {
-                res.appendChild(render(children[i++]));
-            }
+        domNode.innerHTML = '';
+    }
+};
+
+module.exports = RemoveChildren;
+
+},{}],12:[function(require,module,exports){
+function Replace(oldNode, newNode) {
+    this._oldNode = oldNode;
+    this._newNode = newNode;
+}
+
+Replace.prototype = {
+    applyTo : function(domNode) {
+        this._oldNode.unmount();
+        var newDomNode = this._newNode.renderToDom();
+        domNode.parentNode.replaceChild(newDomNode, domNode);
+        this._newNode.mount();
+        return newDomNode;
+    }
+};
+
+module.exports = Replace;
+
+},{}],13:[function(require,module,exports){
+var domAttrsMutators = require('../domAttrsMutators');
+
+function UpdateAttr(attrName, attrVal) {
+    this._attrName = attrName;
+    this._attrVal = attrVal;
+}
+
+UpdateAttr.prototype = {
+    applyTo : function(domNode) {
+        domAttrsMutators(this._attrName).set(domNode, this._attrName, this._attrVal);
+    }
+};
+
+module.exports = UpdateAttr;
+
+},{"../domAttrsMutators":2}],14:[function(require,module,exports){
+var patchDom = require('../patchDom');
+
+function UpdateChildren(children) {
+    this._children = children;
+}
+
+UpdateChildren.prototype = {
+    applyTo : function(domNode) {
+        var j = 0,
+            children = this._children,
+            len = children.length,
+            childDomNodes = domNode.childNodes,
+            childPatch;
+
+        while(j < len) {
+            childPatch = children[j++];
+            patchDom(childDomNodes[childPatch.idx], childPatch.patch);
         }
+    }
+};
+
+module.exports = UpdateChildren;
+
+},{"../patchDom":5}],15:[function(require,module,exports){
+function UpdateComponent(instance, patch) {
+    this._instance = instance;
+    this._patch = patch;
+}
+
+UpdateComponent.prototype = {
+    applyTo : function(domNode) {
+        this._instance.patchDom(this._patch);
+    }
+};
+
+module.exports = UpdateComponent;
+
+},{}],16:[function(require,module,exports){
+function UpdateText(text) {
+    this._text = text;
+}
+
+UpdateText.prototype = {
+    applyTo : function(domNode) {
+        domNode.textContent = this._text;
+    }
+};
+
+module.exports = UpdateText;
+
+},{}],17:[function(require,module,exports){
+var raf = window.requestAnimationFrame ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame ||
+        function(callback) {
+            return setTimeout(callback, 1000 / 60);
+        },
+    batch = [];
+
+function applyBatch() {
+    var i = 0,
+        item;
+
+    while(i < batch.length) {
+        item = batch[i++];
+        item.fn.call(item.fnCtx || this);
+    }
+
+    batch = [];
+}
+
+function rafBatch(fn, fnCtx) {
+    batch.push({ fn : fn, fnCtx : fnCtx }) === 1 && raf(applyBatch);
+}
+
+module.exports = rafBatch;
+
+},{}],18:[function(require,module,exports){
+var noOp = require('./noOp'),
+    rafBatch = require('./client/rafBatch'),
+    patchDom = require('./client/patchDom'),
+    calcPatch = require('./calcPatch');
+
+function mountComponent() {
+    this._isMounted = true;
+    this._rootNode.mount();
+    this.onMount();
+}
+
+function unmountComponent() {
+    this._isMounted = false;
+    this._rootNode.unmount();
+    this.onUnmount();
+}
+
+function calcComponentPatch(attrs, children) {
+    var prevRootNode = this._rootNode;
+
+    this._attrs = attrs;
+    this._children = children;
+    this._rootNode = this.render(attrs, children);
+
+    if(!this.isMounted()) {
+        return [];
+    }
+
+    return calcPatch(prevRootNode, this._rootNode);
+}
+
+function renderComponentToDom() {
+    return this._domNode = this._rootNode.renderToDom();
+}
+
+function patchComponentDom(patch) {
+    var newDomNode = patchDom(this._domNode, patch);
+    newDomNode && (this._domNode = newDomNode);
+    this.onUpdate();
+}
+
+function renderComponent() {
+    throw Error('render() should be specified');
+}
+
+function updateComponent() {
+    var patch = this.calcPatch(this._attrs, this._children);
+    patch.length && rafBatch(function() {
+        this.isMounted() && this.patchDom(patch);
+    }, this);
+}
+
+function isComponentMounted() {
+    return this._isMounted;
+}
+
+function createComponent(props, staticProps) {
+    var res = function(attrs, children) {
+            this._attrs = attrs;
+            this._children = children;
+            this._rootNode = this.render(attrs, children);
+            this._domNode = null;
+            this._isMounted = false;
+        },
+        ptp = {
+            mount : mountComponent,
+            unmount : unmountComponent,
+            onMount : noOp,
+            onUnmount : noOp,
+            onUpdate : noOp,
+            isMounted : isComponentMounted,
+            renderToDom : renderComponentToDom,
+            patchDom : patchComponentDom,
+            render : renderComponent,
+            update : updateComponent,
+            calcPatch : calcComponentPatch
+        },
+        i;
+
+    for(i in props) {
+        ptp[i] = props[i];
+    }
+
+    res.prototype = ptp;
+
+    for(i in staticProps) {
+        res[i] = staticProps[i];
     }
 
     return res;
 }
 
-module.exports = render;
+module.exports = createComponent;
 
-},{"./domAttrsMutators":2}],6:[function(require,module,exports){
-module.exports = {
-    renderToDom : require('./renderToDom'),
-    calcPatch : require('./calcPatch'),
-    patchDom : require('./patchDom')
+},{"./calcPatch":1,"./client/patchDom":5,"./client/rafBatch":17,"./noOp":20}],19:[function(require,module,exports){
+var TextNode = require('./nodes/TextNode'),
+    TagNode = require('./nodes/TagNode'),
+    ComponentNode = require('./nodes/ComponentNode');
+
+function createNode(type) {
+    switch(typeof type) {
+        case 'string':
+            return new TagNode(type);
+
+        case 'function':
+            return new ComponentNode(type);
+
+        default:
+            return new TextNode();
+    }
+}
+
+module.exports = createNode;
+
+},{"./nodes/ComponentNode":21,"./nodes/TagNode":22,"./nodes/TextNode":23}],20:[function(require,module,exports){
+module.exports = function noOp() {};
+
+},{}],21:[function(require,module,exports){
+var ReplaceOp = require('../client/patchOps/Replace'),
+    UpdateComponentOp = require('../client/patchOps/UpdateComponent');
+
+function ComponentNode(component) {
+    this.type = ComponentNode;
+    this._component = component;
+    this._key = null;
+    this._attrs = null;
+    this._instance = null;
+    this._children = null;
+}
+
+ComponentNode.prototype = {
+    key : function(key) {
+        this._key = key;
+        return this;
+    },
+
+    attrs : function(attrs) {
+        this._attrs = attrs;
+        return this;
+    },
+
+    children : function(children) {
+        this._children = children;
+        return this;
+    },
+
+    renderToDom : function() {
+        return (this._instance || (this._instance = new this._component(this._attrs, this._children)))
+            .renderToDom();
+    },
+
+    mount : function() {
+        this._instance.mount();
+    },
+
+    unmount : function() {
+        if(this._instance) {
+            this._instance.unmount();
+            this._instance = null;
+        }
+    },
+
+    calcPatch : function(node, patch) {
+        if(this.type !== node.type || this._component !== node._component) {
+            patch.push(new ReplaceOp(this, node));
+        }
+        else {
+            this._instance || (this._instance = new this._component(this._attrs, this._children));
+
+            var componentPatch = this._instance.calcPatch(node._attrs, node._children);
+            node._instance = this._instance;
+
+            componentPatch.length && patch.push(new UpdateComponentOp(this._instance, componentPatch));
+        }
+    }
 };
 
-},{"./calcPatch":1,"./patchDom":3,"./renderToDom":5}],7:[function(require,module,exports){
+module.exports = ComponentNode;
+
+},{"../client/patchOps/Replace":12,"../client/patchOps/UpdateComponent":15}],22:[function(require,module,exports){
+var ReplaceOp = require('../client/patchOps/Replace'),
+    RemoveChildrenOp = require('../client/patchOps/RemoveChildren'),
+    AppendChildOp = require('../client/patchOps/AppendChild'),
+    InsertChildOp = require('../client/patchOps/InsertChild'),
+    MoveChildOp = require('../client/patchOps/MoveChild'),
+    RemoveChildOp = require('../client/patchOps/RemoveChild'),
+    UpdateChildrenOp = require('../client/patchOps/UpdateChildren'),
+    UpdateAttrOp = require('../client/patchOps/UpdateAttr'),
+    RemoveAttrOp = require('../client/patchOps/RemoveAttr'),
+    calcPatch = require('../calcPatch'),
+    domAttrsMutators = require('../client/domAttrsMutators'),
+    TextNode = require('./TextNode'),
+    doc = document;
+
+function TagNode(tag) {
+    this.type = TagNode;
+    this._tag = tag;
+    this._key = null;
+    this._ns = null;
+    this._attrs = null;
+    this._children = null;
+}
+
+TagNode.prototype = {
+    key : function(key) {
+        this._key = key;
+        return this;
+    },
+
+    ns : function(ns) {
+        this._ns = ns;
+        return this;
+    },
+
+    attrs : function(attrs) {
+        this._attrs = attrs;
+        return this;
+    },
+
+    children : function(children) {
+        this._children = processChildren(children);
+        return this;
+    },
+
+    renderToDom : function() {
+        var domNode = this._ns?
+                doc.createElementNS(this._ns, this._tag) :
+                doc.createElement(this._tag),
+            attrs = this._attrs,
+            name, value;
+
+        for(name in attrs) {
+            (value = attrs[name]) != null && domAttrsMutators(name).set(domNode, name, value);
+        }
+
+        var children = this._children;
+
+        if(children) {
+            var i = 0,
+                len = children.length;
+
+            while(i < len) {
+                domNode.appendChild(children[i++].renderToDom());
+            }
+        }
+
+        return domNode;
+    },
+
+    mount : function() {
+        var children = this._children;
+
+        if(children) {
+            var i = 0,
+                len = children.length;
+
+            while(i < len) {
+                children[i++].mount();
+            }
+        }
+    },
+
+    unmount : function() {
+        var children = this._children;
+
+        if(children) {
+            var i = 0,
+                len = children.length;
+
+            while(i < len) {
+                children[i++].unmount();
+            }
+        }
+    },
+
+    calcPatch : function(node, patch) {
+        if(this.type !== node.type || this._tag !== node._tag || this._ns !== node._ns) {
+            patch.push(new ReplaceOp(this, node));
+        }
+        else {
+            this._calcChildrenPatch(node, patch);
+            this._calcAttrsPatch(node, patch);
+        }
+    },
+
+    _calcChildrenPatch : function(node, patch) {
+        var childrenA = this._children,
+            childrenB = node._children,
+            hasChildrenA = childrenA && childrenA.length,
+            hasChildrenB = childrenB && childrenB.length;
+
+        if(!hasChildrenB) {
+            hasChildrenA && patch.push(new RemoveChildrenOp(childrenA));
+            return;
+        }
+
+        if(!hasChildrenA) {
+            var iB = 0;
+            while(iB < childrenB.length) {
+                patch.push(new AppendChildOp(childrenB[iB++]));
+            }
+            return;
+        }
+
+        var childrenALen = childrenA.length,
+            childrenBLen = childrenB.length,
+            childrenPatch = [];
+
+        if(childrenALen === 1 && childrenBLen === 1) {
+            addChildPatchToChildrenPatch(childrenA[0], childrenB[0], 0, childrenPatch);
+        }
+        else {
+            var iA = 0,
+                childA, childB,
+                skippedAIndices = {},
+                childrenBKeys = {},
+                foundIdx, foundChildA, skippedCnt;
+
+            iB = 0;
+            while(iB < childrenBLen) {
+                childB = childrenB[iB++];
+                childB._key != null && (childrenBKeys[childB._key] = true);
+            }
+
+            iB = 0;
+            while(iB < childrenBLen) {
+                childB = childrenB[iB];
+
+                while(skippedAIndices[iA]) {
+                    ++iA;
+                }
+
+                if(iA >= childrenALen) {
+                    patch.push(new AppendChildOp(childB));
+                }
+                else {
+                    childA = childrenA[iA];
+                    if(childB._key != null) {
+                        if(childA._key === childB._key) {
+                            addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                            ++iA;
+                        }
+                        else {
+                            foundChildA = null;
+                            skippedCnt = 0;
+                            for(var j = iA + 1; j < childrenALen; j++) {
+                                if(skippedAIndices[j]) {
+                                    ++skippedCnt;
+                                }
+                                else if(childrenA[j]._key === childB._key) {
+                                    foundIdx = j - skippedCnt + iB - iA;
+                                    foundChildA = childrenA[j];
+                                    skippedAIndices[j] = true;
+                                    break;
+                                }
+                            }
+
+                            if(foundChildA) {
+                                foundIdx !== iB && patch.push(new MoveChildOp(foundIdx, iB));
+                                addChildPatchToChildrenPatch(foundChildA, childB, iB, childrenPatch);
+                            }
+                            else if(childA._key != null && !(childrenBKeys[childA._key])) {
+                                addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                                ++iA;
+                            }
+                            else {
+                                patch.push(new InsertChildOp(childB, iB));
+                            }
+                        }
+                    }
+                    else if(childA._key != null) {
+                        patch.push(new InsertChildOp(childB, iB));
+                    }
+                    else {
+                        addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                        ++iA;
+                    }
+                }
+
+                ++iB;
+            }
+
+            while(iA < childrenALen) {
+                skippedAIndices[iA] || patch.push(new RemoveChildOp(childrenA[iA], iB));
+                ++iA;
+            }
+        }
+
+        childrenPatch.length && patch.push(new UpdateChildrenOp(childrenPatch));
+    },
+
+    _calcAttrsPatch : function(node, patch) {
+        var attrsA = this._attrs,
+            attrsB = node._attrs,
+            attrName;
+
+        if(attrsB) {
+            for(attrName in attrsB) {
+                if(!attrsA || !(attrName in attrsA) || attrsA[attrName] !== attrsB[attrName]) {
+                    if(attrsB[attrName] == null) {
+                        patch.push(new RemoveAttrOp(attrName));
+                    }
+                    else if(typeof attrsB[attrName] === 'object' && typeof attrsA[attrName] === 'object') {
+                        calcAttrObjPatch(attrName, attrsA[attrName], attrsB[attrName], patch);
+                    }
+                    else {
+                        patch.push(new UpdateAttrOp(attrName, attrsB[attrName]));
+                    }
+                }
+            }
+        }
+
+        if(attrsA) {
+            for(attrName in attrsA) {
+                if((!attrsB || !(attrName in attrsB)) && attrsA[attrName] != null) {
+                    patch.push(new RemoveAttrOp(attrName));
+                }
+            }
+        }
+    }
+};
+
+function calcAttrObjPatch(attrName, objA, objB, patch) {
+    var hasDiff = false,
+        diffObj = {},
+        i;
+
+    for(i in objB) {
+        if(objA[i] != objB[i]) {
+            hasDiff = true;
+            diffObj[i] = objB[i];
+        }
+    }
+
+    for(i in objA) {
+        if(objA[i] != null && !(i in objB)) {
+            hasDiff = true;
+            diffObj[i] = null;
+        }
+    }
+
+    hasDiff && patch.push(new UpdateAttrOp(attrName, diffObj));
+}
+
+function addChildPatchToChildrenPatch(childA, childB, idx, childrenPatch) {
+    var childPatch = [];
+    calcPatch(childA, childB, childPatch);
+    childPatch.length && childrenPatch.push({ idx : idx, patch : childPatch });
+}
+
+function processChildren(children) {
+    return typeof children === 'string'?
+        [new TextNode().text(children)] :
+        children && (Array.isArray(children)? children : [children]);
+}
+
+module.exports = TagNode;
+
+},{"../calcPatch":1,"../client/domAttrsMutators":2,"../client/patchOps/AppendChild":6,"../client/patchOps/InsertChild":7,"../client/patchOps/MoveChild":8,"../client/patchOps/RemoveAttr":9,"../client/patchOps/RemoveChild":10,"../client/patchOps/RemoveChildren":11,"../client/patchOps/Replace":12,"../client/patchOps/UpdateAttr":13,"../client/patchOps/UpdateChildren":14,"./TextNode":23}],23:[function(require,module,exports){
+var ReplaceOp = require('../client/patchOps/Replace'),
+    UpdateTextOp = require('../client/patchOps/UpdateText'),
+    noOp = require('../noOp'),
+    doc = document;
+
+function TextNode() {
+    this.type = TextNode;
+    this._text = '';
+    this._key = null;
+}
+
+TextNode.prototype = {
+    text : function(text) {
+        this._text = text;
+        return this;
+    },
+
+    key : function(key) {
+        this._key = key;
+        return this;
+    },
+
+    renderToDom : function() {
+        return doc.createTextNode(this._text);
+    },
+
+    mount : noOp,
+
+    unmount : noOp,
+
+    calcPatch : function(node, patch) {
+        if(this.type !== node.type) {
+            patch.push(new ReplaceOp(this, node));
+        }
+        else if(this._text !== node._text) {
+            patch.push(new UpdateTextOp(node._text));
+        }
+    }
+};
+
+module.exports = TextNode;
+
+},{"../client/patchOps/Replace":12,"../client/patchOps/UpdateText":16,"../noOp":20}],24:[function(require,module,exports){
+var mounter = require('./client/mounter');
+
+module.exports = {
+    createComponent : require('./createComponent'),
+    createNode : require('./createNode'),
+    mountToDom : mounter.mountToDom,
+    mountToDomSync : mounter.mountToDomSync,
+    unmountFromDom : mounter.unmountFromDom,
+    unmountFromDomSync : mounter.unmountFromDomSync
+};
+
+},{"./client/mounter":4,"./createComponent":18,"./createNode":19}],25:[function(require,module,exports){
 var vidom = require('../lib/vidom'),
     users = [
         { login : 'dmitry', online : false },
@@ -503,7 +1017,7 @@ var vidom = require('../lib/vidom'),
         { login : 'inna', online : false }
     ],
     tree = buildTree(sortUsers()),
-    rootDomNode = document.body.appendChild(vidom.renderToDom(tree));
+    rootDomNode = document.body.appendChild(document.createElement('div'));
 
 function updateUsersStates() {
     users.forEach(function(user) {
@@ -532,44 +1046,38 @@ function buildTree(sortOrder) {
             return !user.online;
         });
 
-    return {
-        tag : 'div',
-        attrs : { className : 'users' },
-        children : users.map(function(user) {
-            return {
-                tag : 'div',
-                key : user.login,
-                attrs : {
+    return vidom.createNode('div')
+        .attrs({ className : 'users' })
+        .children(users.map(function(user) {
+            return vidom.createNode('div')
+                .key(user.login)
+                .attrs({
                     className : 'user' + (user.online? ' user_online' : ''),
                     style : {
                         transform : 'translateY(' + (sortOrder.indexOf(user.login) * 30) + 'px)'
                     }
-                },
-                children : [{ text : user.login }]
-            };
-        }).concat({
-            tag : 'div',
-            key : '__delimiter__',
-            attrs : {
-                className : 'delimiter' + (onlineUsers.length && offlineUsers.length?
-                    ' delimiter_visible' :
-                    ''),
-                style : {
-                    transform : 'translateY(' + (onlineUsers.length * 30) + 'px)'
-                }
-            }
-        })
-    };
+                })
+                .children(user.login);
+        }).concat(
+            vidom.createNode('div')
+                .key('__delimiter__')
+                .attrs({
+                    className : 'delimiter' + (onlineUsers.length && offlineUsers.length?
+                        ' delimiter_visible' :
+                        ''),
+                    style : {
+                        transform : 'translateY(' + (onlineUsers.length * 30) + 'px)'
+                    }
+                })));
 }
 
 function update() {
-    requestAnimationFrame(function() {
+    vidom.mountToDom(rootDomNode, buildTree(sortUsers()), function() {
         updateUsersStates();
-        vidom.patchDom(rootDomNode, vidom.calcPatch(tree, tree = buildTree(sortUsers())));
         setTimeout(update, 3000);
     });
 }
 
 update();
 
-},{"../lib/vidom":6}]},{},[7]);
+},{"../lib/vidom":24}]},{},[25]);

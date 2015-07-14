@@ -13,7 +13,7 @@ var vidom = require('../lib/vidom'),
         { login : 'inna', online : false }
     ],
     tree = buildTree(sortUsers()),
-    rootDomNode = document.body.appendChild(vidom.renderToDom(tree));
+    rootDomNode = document.body.appendChild(document.createElement('div'));
 
 function updateUsersStates() {
     users.forEach(function(user) {
@@ -42,40 +42,34 @@ function buildTree(sortOrder) {
             return !user.online;
         });
 
-    return {
-        tag : 'div',
-        attrs : { className : 'users' },
-        children : users.map(function(user) {
-            return {
-                tag : 'div',
-                key : user.login,
-                attrs : {
+    return vidom.createNode('div')
+        .attrs({ className : 'users' })
+        .children(users.map(function(user) {
+            return vidom.createNode('div')
+                .key(user.login)
+                .attrs({
                     className : 'user' + (user.online? ' user_online' : ''),
                     style : {
                         transform : 'translateY(' + (sortOrder.indexOf(user.login) * 30) + 'px)'
                     }
-                },
-                children : [{ text : user.login }]
-            };
-        }).concat({
-            tag : 'div',
-            key : '__delimiter__',
-            attrs : {
-                className : 'delimiter' + (onlineUsers.length && offlineUsers.length?
-                    ' delimiter_visible' :
-                    ''),
-                style : {
-                    transform : 'translateY(' + (onlineUsers.length * 30) + 'px)'
-                }
-            }
-        })
-    };
+                })
+                .children(user.login);
+        }).concat(
+            vidom.createNode('div')
+                .key('__delimiter__')
+                .attrs({
+                    className : 'delimiter' + (onlineUsers.length && offlineUsers.length?
+                        ' delimiter_visible' :
+                        ''),
+                    style : {
+                        transform : 'translateY(' + (onlineUsers.length * 30) + 'px)'
+                    }
+                })));
 }
 
 function update() {
-    requestAnimationFrame(function() {
+    vidom.mountToDom(rootDomNode, buildTree(sortUsers()), function() {
         updateUsersStates();
-        vidom.patchDom(rootDomNode, vidom.calcPatch(tree, tree = buildTree(sortUsers())));
         setTimeout(update, 3000);
     });
 }
