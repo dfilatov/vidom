@@ -19,7 +19,7 @@ Creates a virtual node with the custom `Component`.
 * @param {Function} `Component` the component class 
 * @returns {ComponentNode}
 
-### vidom.createComponent(props, staticProps)
+### vidom.createComponent(`props`, `staticProps`)
 Creates a component class.
 * @param {Object} `props` the props
 * @param {Object} `staticProps` the static props
