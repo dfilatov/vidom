@@ -21,8 +21,6 @@ module.exports = {
         ])
     ],
     'patch' : [
-        new InsertChildOp(nodeB, 0),
-        new RemoveChildOp(nodeC, 1),
         new RemoveChildOp(nodeD, 2),
         new UpdateChildrenOp([
             {
