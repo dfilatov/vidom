@@ -25,7 +25,18 @@ var calcPatch = require('../../lib/calcPatch'),
         require('./data/complex1'),
         require('./data/complex2'),
         require('./data/complex3'),
-        require('./data/complex4')
+        require('./data/complex4'),
+        require('./data/complex-reverse'),
+        require('./data/complex-insert-to-beginning-with-key'),
+        require('./data/complex-insert-to-beginning-without-key'),
+        require('./data/complex-insert-to-middle-with-key'),
+        require('./data/complex-insert-to-middle-without-key'),
+        require('./data/complex-insert-to-ending-with-key'),
+        require('./data/complex-insert-to-ending-without-key'),
+        require('./data/complex-remove-from-beginning-with-key'),
+        require('./data/complex-remove-from-beginning-without-key'),
+        require('./data/complex-remove-from-ending-with-key'),
+        require('./data/complex-remove-from-ending-without-key')
     ];
 
 describe('calcPatch', function() {
