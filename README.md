@@ -1,7 +1,7 @@
 # vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)
 
-Vidom is an project that implements a virtual dom builder and differ. It enables you to get a minimal set of operations (patch) needed to update real DOM tree. It's highly inspired and based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html).
+Vidom is an project that implements a virtual dom builder and differ. It enables you to get a minimal set of operations (patch) needed to update real DOM tree. It's highly inspired and based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html). Its main goal is to provide as fast as possible implementation with API similar to React.
 
 ## Top-Level API
 
