@@ -171,49 +171,87 @@ var calcPatch = require('../calcPatch'),
     mountedNodes = {},
     counter = 0;
 
-function mountToDom(domNode, tree, cb, cbCtx) {
+function mountToDom(domNode, tree, cb, cbCtx, syncMode) {
     var domNodeId = getDomNodeId(domNode),
         prevMounted = mountedNodes[domNodeId],
         mountId;
 
-    if(prevMounted) {
+    if(prevMounted && prevMounted.tree) {
         var patch = calcPatch(prevMounted.tree, tree);
         if(patch.length) {
-            prevMounted.tree = tree;
-            mountId = prevMounted.id;
-            rafBatch(function() {
-                if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
-                    patchDom(domNode.childNodes[0], patch);
-                    cb && cb.call(cbCtx || this);
-                }
-            });
+            mountId = ++prevMounted.id;
+            var patchFn = function() {
+                    if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
+                        prevMounted.tree = tree;
+                        patchDom(domNode.childNodes[0], patch);
+                        callCb(cb, cbCtx);
+                    }
+                };
+            syncMode? patchFn() : rafBatch(patchFn);
+        }
+        else if(!syncMode) {
+            callCb(cb, cbCtx);
         }
     }
     else {
-        mountedNodes[domNodeId] = { tree : tree, id : mountId = counter++ };
-        rafBatch(function() {
-            if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
-                domNode.appendChild(tree.renderToDom());
-                tree.mount();
-                cb && cb.call(cbCtx || this);
-            }
-        });
+        mountedNodes[domNodeId] = { tree : null, id : mountId = ++counter };
+        var renderFn = function() {
+                if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
+                    mountedNodes[domNodeId].tree = tree;
+                    domNode.appendChild(tree.renderToDom());
+                    tree.mount();
+                    callCb(cb, cbCtx);
+                }
+            };
+        syncMode? renderFn() : rafBatch(renderFn);
     }
 }
 
-function unmountFromDom(domNode) {
-    var domNodeId = getDomNodeId(domNode);
+function unmountFromDom(domNode, cb, cbCtx, syncMode) {
+    var domNodeId = getDomNodeId(domNode),
+        prevMounted = mountedNodes[domNodeId];
 
-    if(mountedNodes[domNodeId]) {
-        mountedNodes[domNodeId].tree.unmount();
-        domNode.innerHTML = '';
-        delete mountedNodes[domNodeId];
+    if(prevMounted) {
+        var mountId = ++prevMounted.id,
+            unmountFn = function() {
+                var mounted = mountedNodes[domNodeId];
+                if(mounted && mounted.id === mountId) {
+                    mounted.tree && mounted.tree.unmount();
+                    delete mountedNodes[domNodeId];
+                    domNode.innerHTML = '';
+                    callCb(cb, cbCtx);
+                }
+            };
+
+        prevMounted.tree?
+            syncMode? unmountFn() : rafBatch(unmountFn) :
+            syncMode || callCb(cb, cbCtx);
     }
+    else if(!syncMode) {
+        callCb(cb, cbCtx);
+    }
+}
+
+function callCb(cb, cbCtx) {
+    cb && cb.call(cbCtx || this);
 }
 
 module.exports = {
-    mountToDom : mountToDom,
-    unmountFromDom : unmountFromDom
+    mountToDom : function(domNode, tree, cb, cbCtx) {
+        mountToDom(domNode, tree, cb, cbCtx, false);
+    },
+
+    mountToDomSync : function(domNode, tree) {
+        mountToDom(domNode, tree, null, null, true);
+    },
+
+    unmountFromDom : function(domNode, cb, cbCtx) {
+        unmountFromDom(domNode, cb, cbCtx, false);
+    },
+
+    unmountFromDomSync : function(domNode) {
+        unmountFromDom(domNode, null, null, true);
+    }
 };
 
 },{"../calcPatch":1,"./getDomNodeId":3,"./patchDom":5,"./rafBatch":17}],5:[function(require,module,exports){
@@ -338,22 +376,22 @@ RemoveChildren.prototype = {
 module.exports = RemoveChildren;
 
 },{}],12:[function(require,module,exports){
-function AppendChild(oldNode, newNode) {
+function Replace(oldNode, newNode) {
     this._oldNode = oldNode;
     this._newNode = newNode;
 }
 
-AppendChild.prototype = {
+Replace.prototype = {
     applyTo : function(domNode) {
         this._oldNode.unmount();
         var newDomNode = this._newNode.renderToDom();
-        domNode.parentNode.appendChild(newDomNode, domNode);
+        domNode.parentNode.replaceChild(newDomNode, domNode);
         this._newNode.mount();
         return newDomNode;
     }
 };
 
-module.exports = AppendChild;
+module.exports = Replace;
 
 },{}],13:[function(require,module,exports){
 var domAttrsMutators = require('../domAttrsMutators');
@@ -453,8 +491,7 @@ module.exports = rafBatch;
 var noOp = require('./noOp'),
     rafBatch = require('./client/rafBatch'),
     patchDom = require('./client/patchDom'),
-    calcPatch = require('./calcPatch'),
-    UpdateComponentOp = require('./client/patchOps/UpdateComponent');
+    calcPatch = require('./calcPatch');
 
 function mountComponent() {
     this._isMounted = true;
@@ -476,14 +513,10 @@ function calcComponentPatch(attrs, children) {
     this._rootNode = this.render(attrs, children);
 
     if(!this.isMounted()) {
-        return null;
+        return [];
     }
 
-    var patch = calcPatch(prevRootNode, this._rootNode);
-
-    return patch.length?
-        new UpdateComponentOp(this, patch) :
-        null;
+    return calcPatch(prevRootNode, this._rootNode);
 }
 
 function renderComponentToDom() {
@@ -501,9 +534,9 @@ function renderComponent() {
 }
 
 function updateComponent() {
-    var patchOp = this.calcPatch(this._attrs, this._children);
-    patchOp && rafBatch(function() {
-        this.isMounted() && this.patchDom(patchOp);
+    var patch = this.calcPatch(this._attrs, this._children);
+    patch.length && rafBatch(function() {
+        this.isMounted() && this.patchDom(patch);
     }, this);
 }
 
@@ -549,7 +582,7 @@ function createComponent(props, staticProps) {
 
 module.exports = createComponent;
 
-},{"./calcPatch":1,"./client/patchDom":5,"./client/patchOps/UpdateComponent":15,"./client/rafBatch":17,"./noOp":20}],19:[function(require,module,exports){
+},{"./calcPatch":1,"./client/patchDom":5,"./client/rafBatch":17,"./noOp":20}],19:[function(require,module,exports){
 var TextNode = require('./nodes/TextNode'),
     TagNode = require('./nodes/TagNode'),
     ComponentNode = require('./nodes/ComponentNode');
@@ -573,7 +606,8 @@ module.exports = createNode;
 module.exports = function noOp() {};
 
 },{}],21:[function(require,module,exports){
-var ReplaceOp = require('../client/patchOps/Replace');
+var ReplaceOp = require('../client/patchOps/Replace'),
+    UpdateComponentOp = require('../client/patchOps/UpdateComponent');
 
 function ComponentNode(component) {
     this.type = ComponentNode;
@@ -623,16 +657,17 @@ ComponentNode.prototype = {
         else {
             this._instance || (this._instance = new this._component(this._attrs, this._children));
 
-            var componentPatchOp = this._instance.calcPatch(node._attrs, node._children);
+            var componentPatch = this._instance.calcPatch(node._attrs, node._children);
             node._instance = this._instance;
-            componentPatchOp && patch.push(componentPatchOp);
+
+            componentPatch.length && patch.push(new UpdateComponentOp(this._instance, componentPatch));
         }
     }
 };
 
 module.exports = ComponentNode;
 
-},{"../client/patchOps/Replace":12}],22:[function(require,module,exports){
+},{"../client/patchOps/Replace":12,"../client/patchOps/UpdateComponent":15}],22:[function(require,module,exports){
 var ReplaceOp = require('../client/patchOps/Replace'),
     RemoveChildrenOp = require('../client/patchOps/RemoveChildren'),
     AppendChildOp = require('../client/patchOps/AppendChild'),
@@ -645,7 +680,7 @@ var ReplaceOp = require('../client/patchOps/Replace'),
     calcPatch = require('../calcPatch'),
     domAttrsMutators = require('../client/domAttrsMutators'),
     TextNode = require('./TextNode'),
-    doc = document;
+    doc = typeof document !== 'undefined'? document : null;
 
 function TagNode(tag) {
     this.type = TagNode;
@@ -766,16 +801,12 @@ TagNode.prototype = {
         }
         else {
             var iA = 0,
+                i = 0,
                 childA, childB,
                 skippedAIndices = {},
-                childrenBKeys = {},
+                childrenAKeys = buildKeys(childrenA),
+                childrenBKeys = buildKeys(childrenB),
                 foundIdx, foundChildA, skippedCnt;
-
-            iB = 0;
-            while(iB < childrenBLen) {
-                childB = childrenB[iB++];
-                childB._key != null && (childrenBKeys[childB._key] = true);
-            }
 
             iB = 0;
             while(iB < childrenBLen) {
@@ -787,52 +818,68 @@ TagNode.prototype = {
 
                 if(iA >= childrenALen) {
                     patch.push(new AppendChildOp(childB));
+                    ++iB;
+                    ++i;
                 }
                 else {
                     childA = childrenA[iA];
                     if(childB._key != null) {
-                        if(childA._key === childB._key) {
-                            addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
-                            ++iA;
-                        }
-                        else {
-                            foundChildA = null;
-                            skippedCnt = 0;
-                            for(var j = iA + 1; j < childrenALen; j++) {
-                                if(skippedAIndices[j]) {
-                                    ++skippedCnt;
-                                }
-                                else if(childrenA[j]._key === childB._key) {
-                                    foundIdx = j - skippedCnt + iB - iA;
-                                    foundChildA = childrenA[j];
-                                    skippedAIndices[j] = true;
-                                    break;
-                                }
-                            }
-
-                            if(foundChildA) {
-                                foundIdx !== iB && patch.push(new MoveChildOp(foundIdx, iB));
-                                addChildPatchToChildrenPatch(foundChildA, childB, iB, childrenPatch);
-                            }
-                            else if(childA._key != null && !(childrenBKeys[childA._key])) {
+                        if(childB._key in childrenAKeys) {
+                            if(childA._key === childB._key) {
                                 addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                                ++iA;
+                                ++iB;
+                                ++i;
+                            }
+                            else if(childA._key == null || !(childA._key in childrenBKeys)) {
+                                patch.push(new RemoveChildOp(childA, i));
                                 ++iA;
                             }
                             else {
-                                patch.push(new InsertChildOp(childB, iB));
+                                foundChildA = null;
+                                skippedCnt = 0;
+                                for(var j = iA + 1; j < childrenALen; j++) {
+                                    if(skippedAIndices[j]) {
+                                        ++skippedCnt;
+                                    }
+                                    else if(childrenA[j]._key === childB._key) {
+                                        foundIdx = j - skippedCnt + i - iA;
+                                        foundChildA = childrenA[j];
+                                        skippedAIndices[j] = true;
+                                        break;
+                                    }
+                                }
+
+                                foundIdx !== i && patch.push(new MoveChildOp(foundIdx, i));
+                                addChildPatchToChildrenPatch(foundChildA, childB, i, childrenPatch);
+                                ++i;
+                                ++iB;
                             }
+                        }
+                        else {
+                            patch.push(new InsertChildOp(childB, i));
+                            ++iB;
+                            ++i;
                         }
                     }
                     else if(childA._key != null) {
-                        patch.push(new InsertChildOp(childB, iB));
+                        if(childA._key in childrenBKeys) {
+                            patch.push(new InsertChildOp(childB, i));
+                            ++iB;
+                            ++i;
+                        }
+                        else {
+                            patch.push(new RemoveChildOp(childA, i));
+                            ++iA;
+                        }
                     }
                     else {
-                        addChildPatchToChildrenPatch(childA, childB, iB, childrenPatch);
+                        addChildPatchToChildrenPatch(childA, childB, i, childrenPatch);
                         ++iA;
+                        ++iB;
+                        ++i;
                     }
                 }
-
-                ++iB;
             }
 
             while(iA < childrenALen) {
@@ -909,13 +956,27 @@ function processChildren(children) {
         children && (Array.isArray(children)? children : [children]);
 }
 
+function buildKeys(children) {
+    var res = {},
+        i = 0,
+        len = children.length,
+        child;
+
+    while(i < len) {
+        child = children[i++];
+        child._key != null && (res[child._key] = true);
+    }
+
+    return res;
+}
+
 module.exports = TagNode;
 
 },{"../calcPatch":1,"../client/domAttrsMutators":2,"../client/patchOps/AppendChild":6,"../client/patchOps/InsertChild":7,"../client/patchOps/MoveChild":8,"../client/patchOps/RemoveAttr":9,"../client/patchOps/RemoveChild":10,"../client/patchOps/RemoveChildren":11,"../client/patchOps/Replace":12,"../client/patchOps/UpdateAttr":13,"../client/patchOps/UpdateChildren":14,"./TextNode":23}],23:[function(require,module,exports){
 var ReplaceOp = require('../client/patchOps/Replace'),
     UpdateTextOp = require('../client/patchOps/UpdateText'),
     noOp = require('../noOp'),
-    doc = document;
+    doc = typeof document !== 'undefined'? document : null;
 
 function TextNode() {
     this.type = TextNode;
@@ -961,7 +1022,9 @@ module.exports = {
     createComponent : require('./createComponent'),
     createNode : require('./createNode'),
     mountToDom : mounter.mountToDom,
-    unmountFromDom : mounter.unmountFromDom
+    mountToDomSync : mounter.mountToDomSync,
+    unmountFromDom : mounter.unmountFromDom,
+    unmountFromDomSync : mounter.unmountFromDomSync
 };
 
 },{"./client/mounter":4,"./createComponent":18,"./createNode":19}],25:[function(require,module,exports){
