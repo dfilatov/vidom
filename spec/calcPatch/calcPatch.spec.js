@@ -36,7 +36,8 @@ var calcPatch = require('../../lib/calcPatch'),
         require('./data/complex-remove-from-beginning-with-key'),
         require('./data/complex-remove-from-beginning-without-key'),
         require('./data/complex-remove-from-ending-with-key'),
-        require('./data/complex-remove-from-ending-without-key')
+        require('./data/complex-remove-from-ending-without-key'),
+        require('./data/complex-shuffle-with-inserts-removes')
     ];
 
 describe('calcPatch', function() {
