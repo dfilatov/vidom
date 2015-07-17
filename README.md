@@ -50,13 +50,21 @@ Schedules component update.
 
 ### isMounted()
 Returns whether a component is mounted to DOM.
-* @returns {Boolean}
+* @returns {Boolean} 
 
 ### onMount()
-The callback which will be invoked when component is mounted to DOM.
+The callback which will be invoked when a component is mounted to DOM.
+
+### onAttrsReceive(`newAttrs`, `prevAttrs`)
+The callback which will be invoked when a component is received new attributes.
+* @param {Object} `newAttrs`
+* @param {Object} `prevAttrs`
+
+### onUpdate()
+The callback which will be invoked after a component has updated its DOM.
 
 ### onUnmount()
-The callback which will be invoked before component is unmounted from DOM.
+The callback which will be invoked before a component is unmounted from DOM.
 
 #### Example
 ```js
