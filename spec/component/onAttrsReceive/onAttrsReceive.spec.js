@@ -17,7 +17,7 @@ describe('onAttrsReceive', function() {
     it('should be called when new attrs is passed', function() {
         var spy = sinon.spy(),
             C = createComponent({
-                render : function() {
+                onRender : function() {
                     return createNode('div');
                 },
 
@@ -36,7 +36,7 @@ describe('onAttrsReceive', function() {
     it('shouldn\'t be called when no new attrs is passed', function() {
         var spy = sinon.spy(),
             C = createComponent({
-                render : function() {
+                onRender : function() {
                     return createNode('div');
                 },
 
