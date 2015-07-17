@@ -39,15 +39,24 @@ Unmounts a virtual tree from DOM.
  * @param {Function} [`cbСtx`] the context to invoke callback with
 
 ## Component API
+
 ### render(`attrs`, `children`)
+Renders component content. Shouldn't be invoked directly.
 * @param {Object} `attrs` the attributes passed to the corresponding virtual node
-* @param {Array} `children` the children passed to the corresponding virtual node
+* @param {Array} `children` the children passed to the corresponding virtual node 
+
+### update()
+Schedules component update.
+
+### isMounted()
+Returns whether a component is mounted to DOM.
+* @returns {Boolean}
 
 ### onMount()
-The callback which will be invoked when component is mounted to DOM
+The callback which will be invoked when component is mounted to DOM.
 
 ### onUnmount()
-The callback which will be invoked before component is unmounted from DOM
+The callback which will be invoked before component is unmounted from DOM.
 
 #### Example
 ```js
