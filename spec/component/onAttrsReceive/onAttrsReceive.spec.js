@@ -23,13 +23,14 @@ describe('onAttrsReceive', function() {
 
                 onAttrsReceive : spy
             }),
-            newAttrs = { id : 'id1' };
+            oldAttrs = { id : 1 },
+            newAttrs = { id : 2 };
 
-        mounter.mountToDomSync(domNode, createNode(C));
+        mounter.mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
         mounter.mountToDomSync(domNode, createNode(C).attrs(newAttrs));
 
         expect(spy.called).to.be.ok();
-        expect(spy.calledWith(newAttrs)).to.be.ok();
+        expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
     });
 
     it('shouldn\'t be called when no new attrs is passed', function() {
