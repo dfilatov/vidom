@@ -20,19 +20,19 @@ describe('onMount', function() {
             spy3 = sinon.spy(),
             C1 = createComponent({
                 onMount : spy1,
-                render : function() {
+                onRender : function() {
                     return createNode('div').children(createNode(C2).children(createNode(C3)));
                 }
             }),
             C2 = createComponent({
                 onMount : spy2,
-                render : function(_, content) {
+                onRender : function(_, content) {
                     return createNode('div').children(content);
                 }
             }),
             C3 = createComponent({
                 onMount : spy3,
-                render : function() {
+                onRender : function() {
                     return createNode('div');
                 }
             });

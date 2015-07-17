@@ -11,8 +11,8 @@ var C1 = vidom.createComponent({
             console.log('onUnmount C1');
         },
 
-        render : function(_, children) {
-            //console.log('render C1');
+        onRender : function(_, children) {
+            //console.log('onRender C1');
             return vidom.createNode(C2)
                 .children(children);
         }
@@ -30,7 +30,7 @@ var C1 = vidom.createComponent({
             console.log('onUnmount C2');
         },
 
-        render : function(_, children) {
+        onRender : function(_, children) {
             return vidom.createNode(f? 'div' : 'span')
                 .attrs({ className : this._className || 'c2' })
                 .children(children);
@@ -45,8 +45,8 @@ var C1 = vidom.createComponent({
             console.log('onUnmount C3');
         },
 
-        render : function(attrs) {
-            //console.log('render C3');
+        onRender : function(attrs) {
+            //console.log('onRender C3');
             return vidom.createNode('i').children(attrs.value);
         }
     }),
@@ -59,7 +59,7 @@ var C1 = vidom.createComponent({
             console.log('onUnmount C4');
         },
 
-        render : function(attrs) {
+        onRender : function(attrs) {
             return vidom.createNode('i', null, attrs.value);
         }
     });

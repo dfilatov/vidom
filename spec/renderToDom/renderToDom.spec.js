@@ -70,7 +70,7 @@ describe('renderToDom', function() {
     describe('component', function() {
         it('should be rendered as component', function() {
             var Component = createComponent({
-                    render : function(attrs, content) {
+                    onRender : function(attrs, content) {
                         return createNode('div').attrs(attrs).children([
                             createNode('a'),
                             createNode('span')
@@ -85,6 +85,15 @@ describe('renderToDom', function() {
             expect(domNode.children[0].tagName).to.equal('A');
             expect(domNode.children[1].tagName).to.equal('SPAN');
             expect(domNode.children[2].tagName).to.equal('I');
+        });
+
+        it('should render <noscript/> if onRender() returns nothing', function() {
+            var Component = createComponent({
+                    onRender : function() {}
+                }),
+                domNode = createNode(Component).renderToDom();
+
+            expect(domNode.tagName).to.equal('NOSCRIPT');
         });
     });
 });
