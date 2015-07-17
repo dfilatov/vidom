@@ -20,20 +20,6 @@ describe('renderToDom', function() {
         });
     });
 
-    describe('attrs', function() {
-        it('should be rendered as attributes', function() {
-            var domNode = createNode('textarea').attrs({ cols : 5, rows : 2, disabled : true }).renderToDom();
-            expect(domNode.getAttribute('cols')).to.equal('5');
-            expect(domNode.getAttribute('rows')).to.equal('2');
-            expect(domNode.getAttribute('disabled')).to.equal('true');
-        });
-
-        it('should be rendered as properties', function() {
-            var domNode = createNode('input').attrs({ checked : true }).renderToDom();
-            expect(domNode.checked).to.equal(true);
-        });
-    });
-
     describe('children', function() {
         it('should be rendered as child nodes', function() {
             var domNode = createNode('div').children([createNode('span'), createNode('img')]).renderToDom();
@@ -41,6 +27,34 @@ describe('renderToDom', function() {
             expect(domNode.children.length).to.equal(2);
             expect(domNode.children[0].tagName).to.equal('SPAN');
             expect(domNode.children[1].tagName).to.equal('IMG');
+        });
+    });
+
+    describe('attrs', function() {
+        it('should be rendered as attributes', function() {
+            var domNode = createNode('textarea').attrs({ cols : 5, rows : 2, disabled : true }).renderToDom();
+
+            expect(domNode.getAttribute('cols')).to.equal('5');
+            expect(domNode.getAttribute('rows')).to.equal('2');
+            expect(domNode.getAttribute('disabled')).to.equal('true');
+        });
+
+        it('should be rendered as properties', function() {
+            var domNode = createNode('input').attrs({ checked : true }).renderToDom();
+
+            expect(domNode.checked).to.equal(true);
+        });
+
+        it('should be rendered after children', function() {
+            var domNode = createNode('select')
+                    .attrs({ value : 2 })
+                    .children([
+                            createNode('option').attrs({ value : 1 }),
+                            createNode('option').attrs({ value : 2 })
+                        ])
+                        .renderToDom();
+
+            expect(domNode.childNodes[1].selected).to.equal(true);
         });
     });
 
