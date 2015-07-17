@@ -38,19 +38,12 @@ Unmounts a virtual tree from DOM.
  * @param {Function} [`cb`] the callback which will be called when a mounted tree is unmounted from DOM
  * @param {Function} [`cbСtx`] the context to invoke callback with
 
-## Component API
+## Component lifecycle API
 
-### render(`attrs`, `children`)
-Renders component content. Shouldn't be invoked directly.
+### onRender(`attrs`, `children`)
+The callback which will be invoked when a component should be rendered.
 * @param {Object} `attrs` the attributes passed to the corresponding virtual node
 * @param {Array} `children` the children passed to the corresponding virtual node 
-
-### update()
-Forces to schedules component update.
-
-### isMounted()
-Returns whether a component is mounted to DOM.
-* @returns {Boolean} 
 
 ### onMount()
 The callback which will be invoked when a component is mounted to DOM.
@@ -66,10 +59,19 @@ The callback which will be invoked after a component has updated its DOM.
 ### onUnmount()
 The callback which will be invoked before a component is unmounted from DOM.
 
+## Component methods
+
+### update()
+Forces to schedule component update.
+
+### isMounted()
+Returns whether a component is mounted to DOM.
+* @returns {Boolean} 
+
 #### Example
 ```js
 var InputComponent = vidom.createComponent({
-        render : function() {
+        onRender : function() {
             return vidom.createNode('div')
                 .attrs({ className : 'input' })
                 .children(vidom.createNode('input').attrs({ type : 'text', className : 'input__control' }));
