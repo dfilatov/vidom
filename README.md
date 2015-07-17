@@ -41,10 +41,27 @@ Unmounts a virtual tree from DOM.
 ## Component API
 ### render(`attrs`, `children`)
 * @param {Object} `attrs` the attributes passed to the corresponding virtual node
-* @param {Array] `children` the children passed to the corresponding virtual node
+* @param {Array} `children` the children passed to the corresponding virtual node
 
 ### onMount()
 The callback which will be invoked when component is mounted to DOM
 
 ### onUnmount()
 The callback which will be invoked before component is unmounted from DOM
+
+#### Example
+```js
+var InputComponent = vidom.createComponent({
+        render : function() {
+            return vidom.createNode('div')
+                .attrs({ className : 'input' })
+                .children(vidom.createNode('input').attrs({ type : 'text', className : 'input__control' }));
+        },
+        
+        onMount : function() {
+        },
+        
+        onUnmount : function() {
+        }
+    });
+```
