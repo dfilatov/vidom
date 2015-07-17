@@ -37,3 +37,14 @@ Unmounts a virtual tree from DOM.
  * @param {Object} `domNode` the container DOM node to unmount from
  * @param {Function} [`cb`] the callback which will be called when a mounted tree is unmounted from DOM
  * @param {Function} [`cbСtx`] the context to invoke callback with
+
+## Component API
+### render(`attrs`, `children`)
+* @param {Object} `attrs` the attributes passed to the corresponding virtual node
+* @param {Array] `children` the children passed to the corresponding virtual node
+
+### onMount()
+The callback which will be invoked when component is mounted to DOM
+
+### onUnmount()
+The callback which will be invoked before component is unmounted from DOM
