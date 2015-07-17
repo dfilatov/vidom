@@ -46,7 +46,7 @@ Renders component content. Shouldn't be invoked directly.
 * @param {Array} `children` the children passed to the corresponding virtual node 
 
 ### update()
-Schedules component update.
+Forces to schedules component update.
 
 ### isMounted()
 Returns whether a component is mounted to DOM.
