@@ -74,13 +74,19 @@ var InputComponent = vidom.createComponent({
         onRender : function() {
             return vidom.createNode('div')
                 .attrs({ className : 'input' })
-                .children(vidom.createNode('input').attrs({ type : 'text', className : 'input__control' }));
+                .children(
+                    vidom.createNode('input')
+                        .attrs({ type : 'text', className : 'input__control' })
+                        .on({ focus : this.onFocus })); // onFocus will be invoked in component context
         },
         
         onMount : function() {
         },
         
         onUnmount : function() {
+        },
+        
+        onFocus : function() {
         }
     });
 ```
