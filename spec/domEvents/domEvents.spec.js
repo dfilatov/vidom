@@ -146,37 +146,32 @@ describe('domEvents', function() {
             expect(spy2.called).to.be.ok();
         });
 
+        it('should properly simulate bubbling of focus event', function() {
+            var spy = sinon.spy();
 
-        if(!isEventSupported('focusin')) {
-            it('should properly simulate focusin event', function() {
-                var spy = sinon.spy();
+            mounter.mountToDomSync(
+                domNode,
+                createNode('div').on({ focus : spy }).attrs({ id : 'id1' }).children(
+                    createNode('input')));
 
-                mounter.mountToDomSync(
-                    domNode,
-                    createNode('div').on({ focusin : spy }).attrs({ id : 'id1' }).children(
-                        createNode('input')));
+            simulate[isEventSupported('focusin')? 'focusin' : 'focus'](document.getElementById('id1'));
 
-                simulate.focus(document.getElementById('id1'));
+            expect(spy.called).to.be.ok();
+        });
 
-                expect(spy.called).to.be.ok();
-            });
-        }
+        it('should properly simulate bubbling of blur event', function() {
+            var spy = sinon.spy();
 
-        if(!isEventSupported('focusout')) {
-            it('should properly simulate focusout event', function() {
-                var spy = sinon.spy();
+            mounter.mountToDomSync(
+                domNode,
+                createNode('div').on({ blur : spy }).children(
+                    createNode('input').attrs({ id : 'id1' })));
 
-                mounter.mountToDomSync(
-                    domNode,
-                    createNode('div').on({ focusout : spy }).children(
-                        createNode('input').attrs({ id : 'id1' })));
+            simulate.focus(document.getElementById('id1'));
+            simulate[isEventSupported('focusout')? 'focusout' : 'blur'](document.getElementById('id1'));
 
-                simulate.focus(document.getElementById('id1'));
-                simulate.blur(document.getElementById('id1'));
-
-                expect(spy.called).to.be.ok();
-            });
-        }
+            expect(spy.called).to.be.ok();
+        });
     });
 
     describe('non-bubbleable events', function() {

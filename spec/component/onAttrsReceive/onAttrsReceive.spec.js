@@ -10,7 +10,7 @@ describe('onAttrsReceive', function() {
     });
 
     afterEach(function() {
-        mounter.unmountFromDom(domNode);
+        mounter.unmountFromDomSync(domNode);
         document.body.removeChild(domNode);
     });
 
