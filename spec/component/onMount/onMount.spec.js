@@ -10,11 +10,11 @@ describe('onMount', function() {
     });
 
     afterEach(function() {
-        mounter.unmountFromDom(domNode);
+        mounter.unmountFromDomSync(domNode);
         document.body.removeChild(domNode);
     });
 
-    it('should be recursively called', function(done) {
+    it('should be recursively called', function() {
         var spy1 = sinon.spy(),
             spy2 = sinon.spy(),
             spy3 = sinon.spy(),
@@ -37,12 +37,10 @@ describe('onMount', function() {
                 }
             });
 
-        mounter.mountToDom(domNode, createNode(C1), function() {
-            expect(spy1.called).to.be.ok();
-            expect(spy2.called).to.be.ok();
-            expect(spy3.called).to.be.ok();
+        mounter.mountToDomSync(domNode, createNode(C1));
 
-            done();
-        });
+        expect(spy1.called).to.be.ok();
+        expect(spy2.called).to.be.ok();
+        expect(spy3.called).to.be.ok();
     });
 });

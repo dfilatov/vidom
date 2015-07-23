@@ -17,11 +17,12 @@
     "expect.js": "0.3.1",
     "mocha-phantomjs": "3.5.3",
     "zuul": "3.0.0",
-    "simulate": "0.0.4"
+    "simulate": "git://github.com/dfilatov/simulate.js"
   },
   "license": "MIT",
   "scripts": {
     "test": "zuul -- spec/boot.js",
+    "test-server": "zuul --local 3000 -- spec/boot.js",
     "test-local": "browserify spec/boot.js > spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "build-example": "browserify example/vidom.js > example/vidom.build.js",
     "build-cmp": "browserify example/cmp.js > example/cmp.build.js",
