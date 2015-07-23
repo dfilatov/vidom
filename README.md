@@ -62,7 +62,7 @@ Adds DOM event `listeners` to a node. DOM event delegation mechanism will be aut
 ```js
 vidom.createNode('input').on({
     change : function() { ... },
-    focusin : function() { ... }
+    focus : function() { ... }
 });
 ```
 ### node.key(`key`)
