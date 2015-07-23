@@ -75,6 +75,10 @@ vidom.createNode('div').children([
     vidom.createNode('div').key('footer')
 ]);
 ```
+### node.ref(`ref`)
+Sets the ref to a node. It should be used in `onRender()` callback within custom component in case you need to have access to corresponding DOM node further.
+* @param {String} `ref` key
+* @returns {TagNode} this
 
 ### node.ns(`ns`)
 Sets the namespace to the node.
@@ -139,11 +143,13 @@ var InputComponent = vidom.createComponent({
                 .attrs({ className : 'input' })
                 .children(
                     vidom.createNode('input')
+                        .ref('control') // add reference "control" to get corresponding DOM node further
                         .attrs({ type : 'text', className : 'input__control' })
                         .on({ focus : this.onFocus })); // onFocus will be invoked in a current component context
         },
         
         onMount : function() {
+            this.getRef('control').focus(); // use reference got in onRender()
         },
         
         onUnmount : function() {
