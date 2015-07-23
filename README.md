@@ -76,8 +76,8 @@ vidom.createNode('div').children([
 ]);
 ```
 ### node.ref(`ref`)
-Sets the reference to a node. It should be used in `onRender()` callback within custom component in case you need to have access to the corresponding DOM node further.
-* @param {String} `ref` key
+Sets the reference `ref` to a node. It should be used in `onRender()` callback within custom component in case you need to have access to the corresponding DOM node further.
+* @param {String} `ref` the reference
 * @returns {TagNode} this
 
 ### node.ns(`ns`)
