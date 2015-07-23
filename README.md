@@ -1,4 +1,4 @@
-## ATTENTION! This project is in a progress state. Everything can be changed at any time.
+## ATTENTION! This project is in a progress state. Everything can be changed at any moment.
 
 # vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)
@@ -122,8 +122,10 @@ The callback which will be invoked before a component is unmounted from the DOM.
 
 ## Component methods
 
-### update()
+### update(`cb`, `cbCtx`)
 Forces to schedule component update.
+* @param {Function} [`cb`] the callback which will be called when the update has been finished
+* @param {Function} [`cbСtx`] the context to invoke callback with
 
 ### isMounted()
 Returns whether a component is mounted to the DOM.
@@ -138,7 +140,7 @@ var InputComponent = vidom.createComponent({
                 .children(
                     vidom.createNode('input')
                         .attrs({ type : 'text', className : 'input__control' })
-                        .on({ focusin : this.onFocus })); // onFocus will be invoked in component context
+                        .on({ focusin : this.onFocus })); // onFocus will be invoked in a current component context
         },
         
         onMount : function() {
