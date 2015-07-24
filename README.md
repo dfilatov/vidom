@@ -137,7 +137,7 @@ var InputComponent = vidom.createComponent({
                     vidom.createNode('input')
                         .ref('control') // add "control" reference to get corresponding DOM node further
                         .attrs({
-                            type : 'text',.
+                            type : 'text',
                             className : 'input__control',
                             onFocus : this.onFocus.bind(this)
                         });
