@@ -43,4 +43,19 @@ describe('onMount', function() {
         expect(spy2.called).to.be.ok();
         expect(spy3.called).to.be.ok();
     });
+
+    it('should be called with actual attributes', function() {
+        var spy = sinon.spy(),
+            C1 = createComponent({
+                onMount : spy,
+                onRender : function() {
+                    return null;
+                }
+            }),
+            attrs = { name : 'value' };
+
+        mounter.mountToDomSync(domNode, createNode(C1).attrs(attrs));
+
+        expect(spy.calledWith(attrs)).to.be.ok();
+    });
 });
