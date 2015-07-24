@@ -43,7 +43,7 @@ Unmounts a virtual tree from the DOM.
 ## Tag node API
 
 ### node.attrs(`attrs`)
-Sets the attributes to a node. When this node is mounted to the DOM, attributes will be translated to the corresponding DOM attributes or properties.
+Sets the attributes to a node. When this node is mounted to the DOM, attributes will be translated to the corresponding DOM attributes, properties or event handlers.
 * @param {Object} `attrs` attributes
 * @returns {TagNode} this
 ```js
@@ -51,20 +51,12 @@ vidom.createNode('input').attrs({
     className : 'input',
     type : 'text',
     value : 'bla',
-    disabled : true
+    disabled : true,
+    onChange : function() { ... },
+    onFocus : function() { ... }
 });
 ```
 
-### node.on(`listeners`)
-Adds DOM event `listeners` to a node. DOM event delegation mechanism will be automatically used if possible.
-* @param {Object} `listeners` listeners
-* @returns {TagNode} this
-```js
-vidom.createNode('input').on({
-    change : function() { ... },
-    focus : function() { ... }
-});
-```
 ### node.key(`key`)
 Sets the key to a node. It should be used when the node is specified as a child of another one.
 * @param {String} `key` key
@@ -143,9 +135,12 @@ var InputComponent = vidom.createComponent({
                 .attrs({ className : 'input' })
                 .children(
                     vidom.createNode('input')
-                        .ref('control') // add reference "control" to get corresponding DOM node further
-                        .attrs({ type : 'text', className : 'input__control' })
-                        .on({ focus : this.onFocus })); // onFocus will be invoked in a current component context
+                        .ref('control') // add "control" reference to get corresponding DOM node further
+                        .attrs({
+                            type : 'text',.
+                            className : 'input__control',
+                            onFocus : this.onFocus.bind(this)
+                        });
         },
         
         onMount : function() {
