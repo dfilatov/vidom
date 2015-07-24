@@ -25,10 +25,10 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').on({ click : spy1 }).children([
-                    createNode('div').on({ click : spy2 }).children(
+                createNode('div').attrs({ onClick : spy1 }).children([
+                    createNode('div').attrs({ onClick : spy2 }).children(
                         createNode('div').attrs({ id : 'id1' })),
-                    createNode('div').on({ click : spy3 }).children(
+                    createNode('div').attrs({ onClick : spy3 }).children(
                         createNode('div').attrs({ id : 'id2' }))
                 ]));
 
@@ -50,7 +50,7 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ click : spy }));
+                createNode('div').attrs({ id : 'id1', onClick : spy }));
 
             simulate.click(document.getElementById('id1'));
 
@@ -61,34 +61,15 @@ describe('domEvents', function() {
             expect(e.nativeEvent.type).to.be.equal('click');
         });
 
-        it('should properly call handler with context of parent component', function(done) {
-            var ctx,
-                C = createComponent({
-                    render : function() {
-                        ctx = this;
-                        return createNode('div').children(
-                            createNode('div').attrs({ id : 'id1' }).on({ click : this.onClick }));
-                    },
-
-                    onClick : function() {
-                        expect(this).to.be.equal(ctx);
-                        done();
-                    }
-                });
-
-            mounter.mountToDomSync(domNode, createNode(C));
-
-            simulate.click(document.getElementById('id1'));
-        });
-
         it('should properly stop propagation', function() {
             var spy = sinon.spy();
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').on({ click : spy }).children(
-                    createNode('div').attrs({ id : 'id1' }).on({
-                        click : function(e) {
+                createNode('div').attrs({ onClick : spy }).children(
+                    createNode('div').attrs({
+                        id : 'id1',
+                        onClick : function(e) {
                             e.stopPropagation();
                         }
                     })));
@@ -101,8 +82,10 @@ describe('domEvents', function() {
         it('should properly prevent default', function() {
             mounter.mountToDomSync(
                 domNode,
-                createNode('input').attrs({ type : 'checkbox', id : 'id1' }).on({
-                    click : function(e) {
+                createNode('input').attrs({
+                    type : 'checkbox',
+                    id : 'id1',
+                    onClick : function(e) {
                         e.preventDefault();
                     }
                 }));
@@ -113,19 +96,22 @@ describe('domEvents', function() {
         });
 
         it('should properly remove handler', function() {
-            var spy = sinon.spy();
+            var spy1 = sinon.spy(),
+                spy2 = sinon.spy();
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ click : spy }));
+                createNode('div').attrs({ id : 'id1', onClick : spy1 }));
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ dblclick : function() {} }));
+                createNode('div').attrs({ id : 'id1', onDblClick : spy2 }));
 
             simulate.click(document.getElementById('id1'));
+            simulate.dblclick(document.getElementById('id1'));
 
-            expect(spy.called).not.to.be.ok();
+            expect(spy1.called).not.to.be.ok();
+            expect(spy2.called).to.be.ok();
         });
 
         it('should properly replace handler for bubbleable events', function() {
@@ -134,11 +120,11 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ click : spy1 }));
+                createNode('div').attrs({ id : 'id1', onClick : spy1 }));
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ click : spy2 }));
+                createNode('div').attrs({ id : 'id1', onClick : spy2 }));
 
             simulate.click(document.getElementById('id1'));
 
@@ -151,8 +137,8 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').on({ focus : spy }).attrs({ id : 'id1' }).children(
-                    createNode('input')));
+                createNode('div').attrs({ id : 'id1', onFocus : spy })
+                    .children(createNode('input')));
 
             simulate[isEventSupported('focusin')? 'focusin' : 'focus'](document.getElementById('id1'));
 
@@ -164,7 +150,7 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').on({ blur : spy }).children(
+                createNode('div').attrs({ onBlur : spy }).children(
                     createNode('input').attrs({ id : 'id1' })));
 
             simulate.focus(document.getElementById('id1'));
@@ -182,9 +168,9 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').on({ scroll : spy1 }).children([
-                    createNode('div').attrs({ id : 'id1' }).on({ scroll : spy2 }),
-                    createNode('div').attrs({ id : 'id2' }).on({ scroll : spy3 })
+                createNode('div').attrs({ onScroll : spy1 }).children([
+                    createNode('div').attrs({ id : 'id1', onScroll : spy2 }),
+                    createNode('div').attrs({ id : 'id2', onScroll : spy3 })
                 ]));
 
             simulate.scroll(document.getElementById('id1'));
@@ -199,7 +185,7 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ scroll : spy }));
+                createNode('div').attrs({ id : 'id1', onScroll : spy }));
 
             simulate.scroll(document.getElementById('id1'));
 
@@ -209,32 +195,12 @@ describe('domEvents', function() {
             expect(e.type).to.be.equal('scroll');
         });
 
-        it('should properly call handler with context of parent component', function(done) {
-            var ctx,
-                C = createComponent({
-                    render : function() {
-                        ctx = this;
-                        return createNode('div').children(
-                            createNode('div').attrs({ id : 'id1' }).on({ scroll : this.onScroll }));
-                    },
-
-                    onScroll : function() {
-                        expect(this).to.be.equal(ctx);
-                        done();
-                    }
-                });
-
-            mounter.mountToDomSync(domNode, createNode(C));
-
-            simulate.scroll(document.getElementById('id1'));
-        });
-
         it('should properly remove handler', function() {
             var spy = sinon.spy();
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ scroll : spy }));
+                createNode('div').attrs({ id : 'id1', onScroll : spy }));
 
             mounter.mountToDomSync(
                 domNode,
@@ -251,11 +217,11 @@ describe('domEvents', function() {
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ scroll : spy1 }));
+                createNode('div').attrs({ id : 'id1', onScroll : spy1 }));
 
             mounter.mountToDomSync(
                 domNode,
-                createNode('div').attrs({ id : 'id1' }).on({ scroll : spy2 }));
+                createNode('div').attrs({ id : 'id1', onScroll : spy2 }));
 
             simulate.scroll(document.getElementById('id1'));
 
