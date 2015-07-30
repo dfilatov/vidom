@@ -1,22 +1,13 @@
 var createNode = require('../../lib/createNode'),
-    patchDom = require('../../lib/client/patchDom'),
-    UpdateTextOp = require('../../lib/client/patchOps/UpdateText'),
-    UpdateAttrOp = require('../../lib/client/patchOps/UpdateAttr'),
-    RemoveAttrOp = require('../../lib/client/patchOps/RemoveAttr'),
-    ReplaceOp = require('../../lib/client/patchOps/Replace'),
-    UpdateChildrenOp = require('../../lib/client/patchOps/UpdateChildren'),
-    AppendChildOp = require('../../lib/client/patchOps/AppendChild'),
-    RemoveChildOp = require('../../lib/client/patchOps/RemoveChild'),
-    InsertChildOp = require('../../lib/client/patchOps/InsertChild'),
-    MoveChildOp = require('../../lib/client/patchOps/MoveChild'),
-    RemoveChildrenOp = require('../../lib/client/patchOps/RemoveChildren');
+    patchOps = require('../../lib/client/patchOps');
 
 describe('patchDom', function() {
     describe('updateText', function() {
         it('should update node text', function() {
-            var domNode = createNode().text('text').renderToDom();
+            var node = createNode().text('text'),
+                domNode = node.renderToDom();
 
-            patchDom(domNode, [new UpdateTextOp('new text' )]);
+            node.patch(createNode().text('new text'));
 
             expect(domNode.textContent).to.equal('new text');
         });
@@ -24,17 +15,19 @@ describe('patchDom', function() {
 
     describe('updateAttr', function() {
         it('should update node attribute', function() {
-            var domNode = createNode('textarea', { attrs : { cols : 5 } }).renderToDom();
+            var node = createNode('textarea').attrs({ cols : 5 }),
+                domNode = node.renderToDom();
 
-            patchDom(domNode, [new UpdateAttrOp('cols', 3)]);
+            node.patch(createNode('textarea').attrs({ cols : 3 }));
 
             expect(domNode.getAttribute('cols')).to.equal('3');
         });
 
         it('should update node property', function() {
-            var domNode = createNode('input', { attrs : { value : 'val' } }).renderToDom();
+            var node = createNode('input').attrs({ value : 'val' }),
+                domNode = node.renderToDom();
 
-            patchDom(domNode, [new UpdateAttrOp('value', 'new val')]);
+            node.patch(createNode('input').attrs({ value : 'new val' }));
 
             expect(domNode.value).to.equal('new val');
         });
@@ -42,17 +35,19 @@ describe('patchDom', function() {
 
     describe('removeAttr', function() {
         it('should remove node attribute', function() {
-            var domNode = createNode('textarea', { attrs : { disabled : true } }).renderToDom();
+            var node = createNode('textarea').attrs({ disabled : true }),
+                domNode = node.renderToDom();
 
-            patchDom(domNode, [new RemoveAttrOp('disabled' )]);
+            node.patch(createNode('textarea'));
 
             expect(domNode.hasAttribute('disabled')).to.equal(false);
         });
 
         it('should remove node property', function() {
-            var domNode = createNode('input', { attrs : { value : 'val' } }).renderToDom();
+            var node = createNode('input').attrs({ value : 'val' }),
+                domNode = node.renderToDom();
 
-            patchDom(domNode, [new RemoveAttrOp('value' )]);
+            node.patch(createNode('input'));
 
             expect(domNode.value).to.equal('');
         });
@@ -61,13 +56,10 @@ describe('patchDom', function() {
     describe('replace', function() {
         it('should replace node', function() {
             var oldNode = createNode('span'),
-                domNode = createNode('div').children([createNode('a'), oldNode]).renderToDom();
+                parentNode = createNode('div').children([createNode('a'), oldNode]),
+                domNode = parentNode.renderToDom();
 
-            patchDom(domNode, [
-                new UpdateChildrenOp([
-                    { idx : 1, patch : [new ReplaceOp(oldNode, createNode('div'))] }
-                ])
-            ]);
+            parentNode.patch(createNode('div').children([createNode('a'), createNode('div')]));
 
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
@@ -75,9 +67,10 @@ describe('patchDom', function() {
 
     describe('appendChild', function() {
         it('should append child node', function() {
-            var domNode = createNode('div').children([createNode('a'), createNode('span')]).renderToDom();
+            var parentNode = createNode('div').children([createNode('a'), createNode('span')]),
+                domNode = parentNode.renderToDom();
 
-            patchDom(domNode, [new AppendChildOp(createNode('div'))]);
+            parentNode.patch(createNode('div').children([createNode('a'), createNode('span'), createNode('div')]));
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
@@ -87,10 +80,11 @@ describe('patchDom', function() {
     describe('removeChild', function() {
         it('should remove child node', function() {
             var oldNode = createNode('span'),
-                domNode = createNode('div').children([createNode('a'), oldNode]).renderToDom(),
+                parentNode = createNode('div').children([createNode('a'), oldNode]),
+                domNode = parentNode.renderToDom(),
                 aDomNode = domNode.children[0];
 
-            patchDom(domNode, [new RemoveChildOp(oldNode, 1)]);
+            parentNode.patch(createNode('div').children(createNode('a')));
 
             expect(domNode.childNodes.length).to.equal(1);
             expect(domNode.childNodes[0]).to.equal(aDomNode);
@@ -99,9 +93,14 @@ describe('patchDom', function() {
 
     describe('insertChild', function() {
         it('should insert child node', function() {
-            var domNode = createNode('div').children([createNode('a'), createNode('span')]).renderToDom();
+            var parentNode = createNode('div').children([createNode('a').key('a'), createNode('span').key('c')]),
+                domNode = parentNode.renderToDom();
 
-            patchDom(domNode, [new InsertChildOp(createNode('div'), 1)]);
+            parentNode.patch(createNode('div').children([
+                createNode('a').key('a'),
+                createNode('div').key('b'),
+                createNode('span').key('c')
+            ]));
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
@@ -110,24 +109,27 @@ describe('patchDom', function() {
 
     describe('moveChild', function() {
         it('should move child node', function() {
-            var domNode = createNode('div').children([createNode('a'), createNode('span')]).renderToDom(),
+            var aNode = createNode('a').key('a'),
+                bNode = createNode('a').key('b'),
+                parentNode = createNode('div').children([aNode, bNode]),
+                domNode = parentNode.renderToDom(),
                 aDomNode = domNode.children[0],
-                spanDomNode = domNode.children[1];
+                bDomNode = domNode.children[1];
 
-            patchDom(domNode, [new MoveChildOp(1, 0)]);
+            parentNode.patch(createNode('div').children([bNode, aNode]));
 
             expect(domNode.childNodes.length).to.equal(2);
-            expect(domNode.childNodes[0]).to.equal(spanDomNode);
+            expect(domNode.childNodes[0]).to.equal(bDomNode);
             expect(domNode.childNodes[1]).to.equal(aDomNode);
         });
     });
 
     describe('removeChildren', function() {
         it('should remove children nodes', function() {
-            var oldNodes = [createNode('a'), createNode('span')],
-                domNode = createNode('div').children(oldNodes).renderToDom();
+            var parentNode = createNode('div').children([createNode('a'), createNode('span')]),
+                domNode = parentNode.renderToDom();
 
-            patchDom(domNode, [new RemoveChildrenOp(oldNodes)]);
+            parentNode.patch(createNode('div'));
 
             expect(domNode.childNodes.length).to.equal(0);
         });
