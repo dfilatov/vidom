@@ -45,6 +45,18 @@ describe('renderToDom', function() {
             expect(domNode.checked).to.equal(true);
         });
 
+        it('should be rendered as data-attribute', function() {
+            var domNode = createNode('div').attrs({ 'data-id' : '123' }).renderToDom();
+
+            expect(domNode.getAttribute('data-id')).to.equal('123');
+        });
+
+        it('should be rendered as custom attribute', function() {
+            var domNode = createNode('div').attrs({ 'custom-attr' : '123' }).renderToDom();
+
+            expect(domNode.getAttribute('custom-attr')).to.equal('123');
+        });
+
         it('should be rendered after children', function() {
             var domNode = createNode('select')
                     .attrs({ value : 2 })
