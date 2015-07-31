@@ -1,6 +1,6 @@
 var expect = require('expect.js');
-require('./calcPatch/calcPatch.spec.js');
 require('./renderToDom/renderToDom.spec.js');
+require('./patch/patch.spec.js');
 require('./patchDom/patchDom.spec.js');
 require('./mountToDom/mountToDom.spec.js');
 require('./unmountFromDom/unmountFromDom.spec.js');
