@@ -52,6 +52,20 @@ describe('renderToDom', function() {
             expect(domNode.style.display).to.equal('none');
         });
 
+        it('shouldn\'t render null value', function() {
+            var domNode = createNode('input').attrs({ value : null }).renderToDom();
+
+            expect(domNode.className).to.equal('');
+            expect(domNode.value).to.equal('');
+        });
+
+        it('shouldn\'t render undefined value', function() {
+            var domNode = createNode('input').attrs({ 'class' : undefined }).renderToDom();
+
+            expect(domNode.className).to.equal('');
+            expect(domNode.value).to.equal('');
+        });
+
         it('should be rendered as data-attribute', function() {
             var domNode = createNode('div').attrs({ 'data-id' : '123' }).renderToDom();
 
