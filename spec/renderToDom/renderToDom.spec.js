@@ -45,6 +45,13 @@ describe('renderToDom', function() {
             expect(domNode.checked).to.equal(true);
         });
 
+        it('should properly render style', function() {
+            var domNode = createNode('div').attrs({ style : { width : '100px', display : 'none' } }).renderToDom();
+
+            expect(domNode.style.width).to.equal('100px');
+            expect(domNode.style.display).to.equal('none');
+        });
+
         it('should be rendered as data-attribute', function() {
             var domNode = createNode('div').attrs({ 'data-id' : '123' }).renderToDom();
 
