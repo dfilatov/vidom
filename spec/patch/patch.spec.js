@@ -15,6 +15,8 @@ describe('patch', function() {
         require('./data/updateAttr2'),
         require('./data/updateAttr3'),
         require('./data/updateAttr4'),
+        require('./data/updateAttr5'),
+        require('./data/updateAttr6'),
         require('./data/removeAttr1'),
         require('./data/removeAttr2'),
         require('./data/removeAttr3'),
