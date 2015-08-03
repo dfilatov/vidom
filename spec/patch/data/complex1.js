@@ -22,8 +22,8 @@ module.exports = {
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [parentNode, nodeB, nodeC] },
-        { op : patchOps.updateText, args : [textNode, 'new text'] },
         { op : patchOps.moveChild, args : [parentNode, nodeA, nodeC] },
+        { op : patchOps.updateText, args : [textNode, 'new text'] },
         { op : patchOps.removeChild, args : [parentNode, nodeC] },
         { op : patchOps.removeChild, args : [parentNode, nodeD] }
     ]
