@@ -33,6 +33,15 @@ describe('patchDom', function() {
             expect(domNode.value).to.equal('new val');
         });
 
+        it('should keep value of input if type is changed', function() {
+            var node = createNode('input').attrs({ type : 'text', value : 'val' }),
+                domNode = node.renderToDom();
+
+            node.patch(createNode('input').attrs({ type : 'checkbox', value : 'val' }));
+
+            expect(domNode.value).to.equal('val');
+        });
+
         it('should update select children', function() {
             var node = createNode('select')
                     .attrs({ multiple : true, value : [1] })
