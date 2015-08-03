@@ -77,18 +77,6 @@ describe('renderToDom', function() {
 
             expect(domNode.getAttribute('custom-attr')).to.equal('123');
         });
-
-        it('should be rendered after children', function() {
-            var domNode = createNode('select')
-                    .attrs({ value : 2 })
-                    .children([
-                            createNode('option').attrs({ value : 1 }),
-                            createNode('option').attrs({ value : 2 })
-                        ])
-                        .renderToDom();
-
-            expect(domNode.childNodes[1].selected).to.equal(true);
-        });
     });
 
     describe('text', function() {
@@ -97,6 +85,36 @@ describe('renderToDom', function() {
 
             expect(domNode.nodeType).to.equal(3);
             expect(domNode.nodeValue).to.equal('some text');
+        });
+    });
+
+    describe('select', function() {
+        it('should be properly rendered', function() {
+            var domNode = createNode('select')
+                    .attrs({ value : 2 })
+                    .children([
+                            createNode('option').attrs({ value : 1 }),
+                            createNode('option').attrs({ value : 2 })
+                        ])
+                        .renderToDom();
+
+            expect(domNode.childNodes[0].selected).to.equal(false);
+            expect(domNode.childNodes[1].selected).to.equal(true);
+        });
+
+        it('should be properly rendered with multiple values', function() {
+            var domNode = createNode('select')
+                    .attrs({ multiple : true, value : [2, 3] })
+                    .children([
+                            createNode('option').attrs({ value : 1 }),
+                            createNode('option').attrs({ value : 2 }),
+                            createNode('option').attrs({ value : 3 })
+                        ])
+                        .renderToDom();
+
+            expect(domNode.childNodes[0].selected).to.equal(false);
+            expect(domNode.childNodes[1].selected).to.equal(true);
+            expect(domNode.childNodes[2].selected).to.equal(true);
         });
     });
 

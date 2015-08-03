@@ -32,6 +32,29 @@ describe('patchDom', function() {
 
             expect(domNode.value).to.equal('new val');
         });
+
+        it('should update select children', function() {
+            var node = createNode('select')
+                    .attrs({ multiple : true, value : [1] })
+                    .children([
+                        createNode('option').attrs({ value : 1 }),
+                        createNode('option').attrs({ value : 2 }),
+                        createNode('option').attrs({ value : 3 })
+                    ]),
+                domNode = node.renderToDom();
+
+            node.patch(createNode('select')
+                .attrs({ multiple : true, value : [2, 3] })
+                .children([
+                    createNode('option').attrs({ value : 1 }),
+                    createNode('option').attrs({ value : 2 }),
+                    createNode('option').attrs({ value : 3 })
+                ]));
+
+            expect(domNode.childNodes[0].selected).to.equal(false);
+            expect(domNode.childNodes[1].selected).to.equal(true);
+            expect(domNode.childNodes[2].selected).to.equal(true);
+        });
     });
 
     describe('removeAttr', function() {
@@ -51,6 +74,26 @@ describe('patchDom', function() {
             node.patch(createNode('input'));
 
             expect(domNode.value).to.equal('');
+        });
+
+        it('should update select children', function() {
+            var node = createNode('select')
+                    .attrs({ value : 1 })
+                    .children([
+                        createNode('option').attrs({ value : 1 }),
+                        createNode('option').attrs({ value : 2 })
+                    ]),
+                domNode = node.renderToDom();
+
+            node.patch(createNode('select')
+                .attrs({ multiple : true })
+                .children([
+                    createNode('option').attrs({ value : 1 }),
+                    createNode('option').attrs({ value : 2 })
+                ]));
+
+            expect(domNode.childNodes[0].selected).to.equal(false);
+            expect(domNode.childNodes[1].selected).to.equal(false);
         });
     });
 
