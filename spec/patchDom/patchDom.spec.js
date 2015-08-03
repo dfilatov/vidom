@@ -1,4 +1,5 @@
 var createNode = require('../../lib/createNode'),
+    mounter = require('../../lib/client/mounter'),
     patchOps = require('../../lib/client/patchOps');
 
 describe('patchDom', function() {
@@ -121,6 +122,35 @@ describe('patchDom', function() {
             expect(domNode.childNodes.length).to.equal(2);
             expect(domNode.childNodes[0]).to.equal(bDomNode);
             expect(domNode.childNodes[1]).to.equal(aDomNode);
+        });
+
+        it('should keep focus', function() {
+            var rootDomElement = document.createElement('div');
+
+            document.body.appendChild(rootDomElement);
+
+            mounter.mountToDomSync(rootDomElement, createNode('div').children([
+                createNode('div').key(1).children([
+                    createNode('input').attrs({ id : 'id1' }).key(1),
+                    createNode('input').key(2)
+                ]),
+                createNode('div').key(2)
+            ]));
+
+            var activeElement = document.getElementById('id1');
+            activeElement.focus();
+
+            mounter.mountToDomSync(rootDomElement, createNode('div').children([
+                createNode('div').key(2),
+                createNode('div').key(1).children([
+                    createNode('input').key(2),
+                    createNode('input').attrs({ id : 'id1' }).key(1),
+                ])
+            ]));
+
+            expect(document.activeElement).to.equal(activeElement);
+
+            document.body.removeChild(rootDomElement);
         });
     });
 
