@@ -77,6 +77,16 @@ describe('renderToDom', function() {
 
             expect(domNode.getAttribute('custom-attr')).to.equal('123');
         });
+
+        it('should support alternative names', function() {
+            var domNode1 = createNode('label').attrs({ 'for' : 'id1', 'class' : 'c1' }).renderToDom(),
+                domNode2 = createNode('label').attrs({ htmlFor : 'id1', className : 'c1' }).renderToDom();
+
+            expect(domNode1.className).to.equal('c1');
+            expect(domNode1.getAttribute('for')).to.equal('id1');
+            expect(domNode2.className).to.equal('c1');
+            expect(domNode2.getAttribute('for')).to.equal('id1');
+        });
     });
 
     describe('text', function() {
