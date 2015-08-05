@@ -67,10 +67,6 @@ vidom.createNode('div').children([
     vidom.createNode('div').key('footer')
 ]);
 ```
-### node.ref(`ref`)
-Sets the reference `ref` to a node. It should be used in `onRender()` callback within custom component in case you need to have access to the corresponding DOM node further.
-* @param {String} `ref` the reference
-* @returns {TagNode} this
 
 ### node.ns(`ns`)
 Sets the namespace to the node.
@@ -125,7 +121,16 @@ Forces to schedule component update.
 
 ### isMounted()
 Returns whether a component is mounted to the DOM.
-* @returns {Boolean} 
+* @returns {Boolean}
+
+### setDomRef(`ref`, `node`)
+Sets the reference `ref` to a DOM representation of the `node`. It should be used in `onRender()` callback in case you need to have access to the corresponding DOM node further.
+* @param {String} `ref` the reference
+* @returns {Node} the node passed as the second param
+
+### getDomRef(`ref`)
+Gets the DOM node referenced by `ref`
+
 
 #### Example
 ```js
@@ -134,17 +139,18 @@ var InputComponent = vidom.createComponent({
             return vidom.createNode('div')
                 .attrs({ className : 'input' })
                 .children(
-                    vidom.createNode('input')
-                        .ref('control') // add "control" reference to get corresponding DOM node further
-                        .attrs({
-                            type : 'text',
-                            className : 'input__control',
-                            onFocus : this.onFocus.bind(this)
-                        });
+                    this.setDomRef( // add "control" reference to get corresponding DOM node further
+                        'control',
+                        vidom.createNode('input')
+                            .attrs({
+                                type : 'text',
+                                className : 'input__control',
+                                onFocus : this.onFocus.bind(this)
+                            }));
         },
         
         onMount : function() {
-            this.getRef('control').focus(); // use reference got in onRender()
+            this.getDomRef('control').focus(); // use reference got in onRender()
         },
         
         onUnmount : function() {
