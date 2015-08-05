@@ -18,6 +18,15 @@ describe('renderToDom', function() {
             expect(createNode('svg').ns('http://www.w3.org/2000/svg').renderToDom().namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
         });
+
+        it('should be inherited from parent', function() {
+            var domNode = createNode('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children(createNode('g').children(createNode('circle')))
+                    .renderToDom();
+
+            expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+        });
     });
 
     describe('children', function() {
@@ -146,6 +155,20 @@ describe('renderToDom', function() {
             expect(domNode.children[0].tagName).to.equal('A');
             expect(domNode.children[1].tagName).to.equal('SPAN');
             expect(domNode.children[2].tagName).to.equal('I');
+        });
+
+        it('should pass parent namespace', function() {
+            var Component = createComponent({
+                    onRender : function() {
+                        return createNode('circle');
+                    }
+                }),
+                domNode = createNode('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children(createNode('g').children(createNode(Component)))
+                    .renderToDom();
+
+            expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should render <noscript/> if onRender() returns nothing', function() {

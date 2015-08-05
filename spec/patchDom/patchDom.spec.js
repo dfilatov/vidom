@@ -116,6 +116,19 @@ describe('patchDom', function() {
 
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
+
+        it('should keep parent namespace', function() {
+            var node = createNode('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children(createNode('g').children(createNode('circle'))),
+                domNode = node.renderToDom();
+
+            node.patch(createNode('svg')
+                .ns('http://www.w3.org/2000/svg')
+                .children(createNode('g').children(createNode('path'))));
+
+            expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+        });
     });
 
     describe('appendChild', function() {
@@ -127,6 +140,19 @@ describe('patchDom', function() {
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
+        });
+
+        it('should keep parent namespace', function() {
+            var parentNode = createNode('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children(createNode('circle')),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(createNode('svg')
+                .ns('http://www.w3.org/2000/svg')
+                .children([createNode('circle'), createNode('circle')]));
+
+            expect(domNode.childNodes[1].namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
     });
 
@@ -157,6 +183,19 @@ describe('patchDom', function() {
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
+        });
+
+        it('should keep parent namespace', function() {
+            var parentNode = createNode('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children(createNode('circle').key('b')),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(createNode('svg')
+                .ns('http://www.w3.org/2000/svg')
+                .children([createNode('circle').key('a'), createNode('circle').key('b')]));
+
+            expect(domNode.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
     });
 
