@@ -10,6 +10,6 @@ module.exports = {
         newNode
     ],
     'patch' : [
-        { op : patchOps.replace, args : [oldNode, newNode] }
+        { op : patchOps.replace, args : [null, oldNode, newNode] }
     ]
 };
