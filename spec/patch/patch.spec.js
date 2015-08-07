@@ -11,6 +11,8 @@ describe('patch', function() {
     data = [
         require('./data/updateText1'),
         require('./data/updateText2'),
+        require('./data/removeText1'),
+        require('./data/removeText2'),
         require('./data/updateAttr1'),
         require('./data/updateAttr2'),
         require('./data/updateAttr3'),
@@ -26,6 +28,7 @@ describe('patch', function() {
         require('./data/replace2'),
         require('./data/replace3'),
         require('./data/replace4'),
+        require('./data/replace5'),
         require('./data/appendChild1'),
         require('./data/appendChild2'),
         require('./data/removeChild1'),

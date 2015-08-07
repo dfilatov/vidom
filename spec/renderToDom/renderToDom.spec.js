@@ -99,11 +99,12 @@ describe('renderToDom', function() {
     });
 
     describe('text', function() {
-        it('should be rendered as text node', function() {
+        it('should be rendered as wrapped text node', function() {
             var domNode = createNode().text('some text').renderToDom();
 
-            expect(domNode.nodeType).to.equal(3);
-            expect(domNode.nodeValue).to.equal('some text');
+            expect(domNode.tagName).to.equal('SPAN');
+            expect(domNode.firstChild.nodeType).to.equal(3);
+            expect(domNode.firstChild.nodeValue).to.equal('some text');
         });
     });
 
