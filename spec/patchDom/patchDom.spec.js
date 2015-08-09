@@ -5,10 +5,10 @@ var createNode = require('../../lib/createNode'),
 describe('patchDom', function() {
     describe('updateText', function() {
         it('should update node text', function() {
-            var node = createNode().text('text'),
+            var node = createNode('span').children('text'),
                 domNode = node.renderToDom();
 
-            node.patch(createNode().text('new text'));
+            node.patch(createNode('span').children('new text'));
 
             expect(domNode.textContent).to.equal('new text');
         });
