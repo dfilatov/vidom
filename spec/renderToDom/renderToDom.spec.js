@@ -100,11 +100,10 @@ describe('renderToDom', function() {
 
     describe('text', function() {
         it('should be rendered as wrapped text node', function() {
-            var domNode = createNode().text('some text').renderToDom();
+            var domNode = createNode('span').children('some text').renderToDom();
 
-            expect(domNode.tagName).to.equal('SPAN');
-            expect(domNode.firstChild.nodeType).to.equal(3);
-            expect(domNode.firstChild.nodeValue).to.equal('some text');
+            expect(domNode.childNodes.length).to.equal(1);
+            expect(domNode.textContent).to.equal('some text');
         });
     });
 

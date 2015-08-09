@@ -28,7 +28,6 @@ describe('patch', function() {
         require('./data/replace2'),
         require('./data/replace3'),
         require('./data/replace4'),
-        require('./data/replace5'),
         require('./data/appendChild1'),
         require('./data/appendChild2'),
         require('./data/removeChild1'),

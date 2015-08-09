@@ -4,7 +4,6 @@ var createNode = require('../../../lib/createNode'),
     nodeB = createNode('a').key('b'),
     nodeC = createNode('a').key('c'),
     nodeD = createNode('a').key('d'),
-    textNode = createNode(),
     parentNode = createNode('div');
 
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
     'trees' : [
         parentNode.children([
             nodeC,
-            nodeA.children(textNode.text('text')),
+            nodeA.children(createNode('div')),
             nodeD
         ]),
         createNode('div').children([
