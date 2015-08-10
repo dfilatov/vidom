@@ -12,10 +12,6 @@ Creates a virtual node with the given `tag`.
 * @param {String} `tag` the tag
 * @returns {TagNode}
 
-### vidom.createNode()
-* @returns {TextNode}
-Creates a virtual text node.
-
 ### vidom.createNode(`Component`)
 Creates a virtual node with the custom `Component`.
 * @param {Function} `Component` the component class 
@@ -39,6 +35,11 @@ Unmounts a virtual tree from the DOM.
  * @param {Object} `domNode` the container DOM node to unmount from
  * @param {Function} [`cb`] the callback which will be called when a mounted tree is unmounted from the DOM
  * @param {Function} [`cbСtx`] the context to invoke callback with
+
+### vidom.renderToString(`tree`)
+Renders the virtual `tree` to the plain string.
+* @param {Object} `tree` the root node of the given tree
+* @returns {String}
  
 ## Tag node API
 
