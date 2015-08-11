@@ -107,6 +107,14 @@ describe('renderToDom', function() {
         });
     });
 
+    describe('html', function() {
+        it('should be rendered as inner html', function() {
+            var domNode = createNode('span').html('<span></span><i></i>').renderToDom();
+
+            expect(domNode.childNodes.length).to.equal(2);
+        });
+    });
+
     describe('select', function() {
         it('should be properly rendered', function() {
             var domNode = createNode('select')
