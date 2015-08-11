@@ -12,6 +12,15 @@ describe('patchDom', function() {
 
             expect(domNode.textContent).to.equal('new text');
         });
+
+        it('should update node html', function() {
+            var node = createNode('span').html('<span></span>'),
+                domNode = node.renderToDom();
+
+            node.patch(createNode('span').html('<span></span><i></i>'));
+
+            expect(domNode.childNodes.length).to.equal(2);
+        });
     });
 
     describe('updateAttr', function() {

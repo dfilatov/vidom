@@ -97,6 +97,13 @@ describe('renderToString', function() {
         });
     });
 
+    describe('html', function() {
+        it('shouldn\'t escape html', function() {
+            expect(createNode('span').html('<span></span><i></i>').renderToString())
+                .to.equal('<span><span></span><i></i></span>');
+        });
+    });
+
     describe('select', function() {
         it('should be properly rendered', function() {
             expect(

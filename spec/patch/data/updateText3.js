@@ -3,12 +3,12 @@ var createNode = require('../../../lib/createNode'),
     node = createNode('span').children('text');
 
 module.exports = {
-    'name' : 'updateText1',
+    'name' : 'updateText3',
     'trees' : [
         node,
-        createNode('span').children('new text')
+        createNode('span').html('<span></span>')
     ],
     'patch' : [
-        { op : patchOps.updateText, args : [node, 'new text', true] }
+        { op : patchOps.updateText, args : [node, '<span></span>', false] }
     ]
 };
