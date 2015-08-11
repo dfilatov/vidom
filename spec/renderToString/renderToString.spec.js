@@ -59,6 +59,11 @@ describe('renderToString', function() {
                 .to.equal('<div style="width:100px;border-color:red;"></div>');
         });
 
+        it('should properly render camelized style', function() {
+            expect(createNode('div').attrs({ style : { borderLeftWidth : '5px' } }).renderToString())
+                .to.equal('<div style="border-left-width:5px;"></div>');
+        });
+
         it('should be rendered as data-attribute', function() {
             expect(createNode('div').attrs({ 'data-id' : '123' }).renderToString())
                 .to.equal('<div data-id="123"></div>');
