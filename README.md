@@ -92,6 +92,14 @@ vidom.createNode('div').children(vidom.createNode('span'));
 vidom.createNode('div').children('some text');
 ```
 
+### node.html(`html`)
+Sets the `html` as an inner html of a node. It can be useful if you need to insert html comes from another system.
+* @param {String} `html` html
+* @returns {TagNode} this
+```js
+vidom.createNode('div').html('<div class="btn">button</div>');
+```
+
 ## Component lifecycle API
 
 ### onRender(`attrs`, `children`)
