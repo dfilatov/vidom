@@ -58,4 +58,27 @@ describe('onMount', function() {
 
         expect(spy.calledWith(attrs)).to.be.ok();
     });
+
+    it('should be recursively called when existing dom is adopted', function() {
+        var spy1 = sinon.spy(),
+            spy2 = sinon.spy(),
+            C1 = createComponent({
+                onMount : spy1,
+                onRender : function() {
+                    return createNode('div').children(createNode(C2));
+                }
+            }),
+            C2 = createComponent({
+                onMount : spy2,
+                onRender : function() {
+                    return createNode('div');
+                }
+            });
+
+        domNode.innerHTML = '<div><div></div></div>'
+        mounter.mountToDomSync(domNode, createNode(C1));
+
+        expect(spy1.called).to.be.ok();
+        expect(spy2.called).to.be.ok();
+    });
 });

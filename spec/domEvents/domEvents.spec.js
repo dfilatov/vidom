@@ -158,6 +158,24 @@ describe('domEvents', function() {
 
             expect(spy.called).to.be.ok();
         });
+
+        it('should properly add handler when existing dom is adopted', function() {
+            var spy1 = sinon.spy(),
+                spy2 = sinon.spy();
+
+            domNode.innerHTML= '<div><div><div id="id1"></div></div></div>';
+
+            mounter.mountToDomSync(
+                domNode,
+                createNode('div').attrs({ onClick : spy1 }).children(
+                    createNode('div').attrs({ onClick : spy2 }).children(
+                        createNode('div').attrs({ id : 'id1' }))));
+
+            simulate.click(document.getElementById('id1'));
+
+            expect(spy1.called).to.be.ok();
+            expect(spy2.called).to.be.ok();
+        });
     });
 
     describe('non-bubbleable events', function() {
