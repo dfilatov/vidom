@@ -155,7 +155,7 @@ var InputComponent = vidom.createComponent({
                                 type : 'text',
                                 className : 'input__control',
                                 onFocus : this.onFocus.bind(this)
-                            }));
+                            })));
         },
         
         onMount : function() {
