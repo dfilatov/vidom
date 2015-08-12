@@ -1,8 +1,8 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    parentNode = createNode('div');
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
+const parentNode = createNode('div');
 
-module.exports = {
+export default {
     'name' : 'removeChildren1',
     'trees' : [
         parentNode.children([createNode('div'), createNode('div')]),
@@ -11,4 +11,4 @@ module.exports = {
     'patch' : [
         { op : patchOps.removeChildren, args : [parentNode] }
     ]
-};
+}

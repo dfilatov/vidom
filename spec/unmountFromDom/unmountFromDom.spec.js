@@ -1,21 +1,21 @@
-var sinon = require('sinon'),
-    createNode = require('../../lib/createNode'),
-    mounter = require('../../lib/client/mounter');
+import sinon from 'sinon';
+import createNode from '../../lib/createNode';
+import { mountToDom, unmountFromDom } from '../../lib/client/mounter';
 
-describe('unmountFromDom', function() {
+describe('unmountFromDom', () => {
     var domNode;
-    beforeEach(function() {
+    beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
 
-    afterEach(function() {
+    afterEach(() => {
         document.body.removeChild(domNode);
     });
 
-    describe('callbacks', function() {
+    describe('callbacks', () => {
         it('should properly call callback on unmount', function(done) {
-            mounter.mountToDom(domNode, createNode('div'), function() {
-                mounter.unmountFromDom(domNode, function() {
+            mountToDom(domNode, createNode('div'), () => {
+                unmountFromDom(domNode, () => {
                     expect(domNode.childNodes.length).to.equal(0);
                     done();
                 });
@@ -23,7 +23,7 @@ describe('unmountFromDom', function() {
         });
 
         it('should properly call callback if there\'s no mounted tree', function(done) {
-            mounter.unmountFromDom(domNode, function() {
+            unmountFromDom(domNode, () => {
                 done();
             });
         });

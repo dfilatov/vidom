@@ -1,10 +1,10 @@
-var createNode = require('../../../lib/createNode');
+import createNode from '../../../lib/createNode';
 
-module.exports = {
+export default {
     'name' : 'removeAttr4',
     'trees' : [
         createNode('input').attrs({ className : null }),
         createNode('input')
     ],
     'patch' : []
-};
+}

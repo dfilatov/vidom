@@ -1,8 +1,9 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    node = createNode('select');
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
 
-module.exports = {
+const node = createNode('select');
+
+export default {
     'name' : 'updateAttr5',
     'trees' : [
         node
@@ -19,4 +20,4 @@ module.exports = {
     'patch' : [
         { op : patchOps.updateAttr, args : [node, 'value', [1, 2, 4]] }
     ]
-};
+}

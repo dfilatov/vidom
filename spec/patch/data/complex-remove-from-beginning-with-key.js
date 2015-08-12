@@ -1,10 +1,11 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    parentNode = createNode('div'),
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
+
+const parentNode = createNode('div'),
     nodeA = createNode('a').key('a'),
     nodeB = createNode('a').key('b');
 
-module.exports = {
+export default {
     'name' : 'complex-remove-from-beginning-with-key',
     'trees' : [
         parentNode.children([
@@ -22,4 +23,4 @@ module.exports = {
         { op : patchOps.removeChild, args : [parentNode, nodeA] },
         { op : patchOps.removeChild, args : [parentNode, nodeB] }
     ]
-};
+}

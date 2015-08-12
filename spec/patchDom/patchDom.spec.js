@@ -1,11 +1,11 @@
-var createNode = require('../../lib/createNode'),
-    mounter = require('../../lib/client/mounter'),
-    patchOps = require('../../lib/client/patchOps');
+import createNode from '../../lib/createNode';
+import { mountToDomSync, unmountFromDomSync } from '../../lib/client/mounter';
+import patchOps from '../../lib/client/patchOps';
 
-describe('patchDom', function() {
-    describe('updateText', function() {
-        it('should update node text', function() {
-            var node = createNode('span').children('text'),
+describe('patchDom', () => {
+    describe('updateText', () => {
+        it('should update node text', () => {
+            const node = createNode('span').children('text'),
                 domNode = node.renderToDom();
 
             node.patch(createNode('span').children('new text'));
@@ -13,8 +13,8 @@ describe('patchDom', function() {
             expect(domNode.textContent).to.equal('new text');
         });
 
-        it('should update node html', function() {
-            var node = createNode('span').html('<span></span>'),
+        it('should update node html', () => {
+            const node = createNode('span').html('<span></span>'),
                 domNode = node.renderToDom();
 
             node.patch(createNode('span').html('<span></span><i></i>'));
@@ -23,9 +23,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('updateAttr', function() {
-        it('should update node attribute', function() {
-            var node = createNode('textarea').attrs({ cols : 5 }),
+    describe('updateAttr', () => {
+        it('should update node attribute', () => {
+            const node = createNode('textarea').attrs({ cols : 5 }),
                 domNode = node.renderToDom();
 
             node.patch(createNode('textarea').attrs({ cols : 3 }));
@@ -33,8 +33,8 @@ describe('patchDom', function() {
             expect(domNode.getAttribute('cols')).to.equal('3');
         });
 
-        it('should update node property', function() {
-            var node = createNode('input').attrs({ value : 'val' }),
+        it('should update node property', () => {
+            const node = createNode('input').attrs({ value : 'val' }),
                 domNode = node.renderToDom();
 
             node.patch(createNode('input').attrs({ value : 'new val' }));
@@ -42,8 +42,8 @@ describe('patchDom', function() {
             expect(domNode.value).to.equal('new val');
         });
 
-        it('should keep value of input if type is changed', function() {
-            var node = createNode('input').attrs({ type : 'text', value : 'val' }),
+        it('should keep value of input if type is changed', () => {
+            const node = createNode('input').attrs({ type : 'text', value : 'val' }),
                 domNode = node.renderToDom();
 
             node.patch(createNode('input').attrs({ type : 'checkbox', value : 'val' }));
@@ -51,8 +51,8 @@ describe('patchDom', function() {
             expect(domNode.value).to.equal('val');
         });
 
-        it('should update select children', function() {
-            var node = createNode('select')
+        it('should update select children', () => {
+            const node = createNode('select')
                     .attrs({ multiple : true, value : [1] })
                     .children([
                         createNode('option').attrs({ value : 1 }),
@@ -75,9 +75,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('removeAttr', function() {
-        it('should remove node attribute', function() {
-            var node = createNode('textarea').attrs({ disabled : true }),
+    describe('removeAttr', () => {
+        it('should remove node attribute', () => {
+            const node = createNode('textarea').attrs({ disabled : true }),
                 domNode = node.renderToDom();
 
             node.patch(createNode('textarea'));
@@ -85,8 +85,8 @@ describe('patchDom', function() {
             expect(domNode.hasAttribute('disabled')).to.equal(false);
         });
 
-        it('should remove node property', function() {
-            var node = createNode('input').attrs({ value : 'val' }),
+        it('should remove node property', () => {
+            const node = createNode('input').attrs({ value : 'val' }),
                 domNode = node.renderToDom();
 
             node.patch(createNode('input'));
@@ -94,8 +94,8 @@ describe('patchDom', function() {
             expect(domNode.value).to.equal('');
         });
 
-        it('should update select children', function() {
-            var node = createNode('select')
+        it('should update select children', () => {
+            const node = createNode('select')
                     .attrs({ value : 1 })
                     .children([
                         createNode('option').attrs({ value : 1 }),
@@ -115,9 +115,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('replace', function() {
-        it('should replace node', function() {
-            var oldNode = createNode('span'),
+    describe('replace', () => {
+        it('should replace node', () => {
+            const oldNode = createNode('span'),
                 parentNode = createNode('div').children([createNode('a'), oldNode]),
                 domNode = parentNode.renderToDom();
 
@@ -126,8 +126,8 @@ describe('patchDom', function() {
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
 
-        it('should keep parent namespace', function() {
-            var node = createNode('svg')
+        it('should keep parent namespace', () => {
+            const node = createNode('svg')
                     .ns('http://www.w3.org/2000/svg')
                     .children(createNode('g').children(createNode('circle'))),
                 domNode = node.renderToDom();
@@ -140,9 +140,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('appendChild', function() {
-        it('should append child node', function() {
-            var parentNode = createNode('div').children([createNode('a'), createNode('span')]),
+    describe('appendChild', () => {
+        it('should append child node', () => {
+            const parentNode = createNode('div').children([createNode('a'), createNode('span')]),
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(createNode('div').children([createNode('a'), createNode('span'), createNode('div')]));
@@ -151,8 +151,8 @@ describe('patchDom', function() {
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
         });
 
-        it('should keep parent namespace', function() {
-            var parentNode = createNode('svg')
+        it('should keep parent namespace', () => {
+            const parentNode = createNode('svg')
                     .ns('http://www.w3.org/2000/svg')
                     .children(createNode('circle')),
                 domNode = parentNode.renderToDom();
@@ -165,9 +165,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('removeChild', function() {
-        it('should remove child node', function() {
-            var oldNode = createNode('span'),
+    describe('removeChild', () => {
+        it('should remove child node', () => {
+            const oldNode = createNode('span'),
                 parentNode = createNode('div').children([createNode('a'), oldNode]),
                 domNode = parentNode.renderToDom(),
                 aDomNode = domNode.children[0];
@@ -179,9 +179,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('insertChild', function() {
-        it('should insert child node', function() {
-            var parentNode = createNode('div').children([createNode('a').key('a'), createNode('span').key('c')]),
+    describe('insertChild', () => {
+        it('should insert child node', () => {
+            const parentNode = createNode('div').children([createNode('a').key('a'), createNode('span').key('c')]),
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(createNode('div').children([
@@ -194,8 +194,8 @@ describe('patchDom', function() {
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
 
-        it('should keep parent namespace', function() {
-            var parentNode = createNode('svg')
+        it('should keep parent namespace', () => {
+            const parentNode = createNode('svg')
                     .ns('http://www.w3.org/2000/svg')
                     .children(createNode('circle').key('b')),
                 domNode = parentNode.renderToDom();
@@ -208,9 +208,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('moveChild', function() {
-        it('should move child node', function() {
-            var aNode = createNode('a').key('a'),
+    describe('moveChild', () => {
+        it('should move child node', () => {
+            const aNode = createNode('a').key('a'),
                 bNode = createNode('a').key('b'),
                 parentNode = createNode('div').children([aNode, bNode]),
                 domNode = parentNode.renderToDom(),
@@ -224,12 +224,12 @@ describe('patchDom', function() {
             expect(domNode.childNodes[1]).to.equal(aDomNode);
         });
 
-        it('should keep focus', function() {
-            var rootDomElement = document.createElement('div');
+        it('should keep focus', () => {
+            const rootDomElement = document.createElement('div');
 
             document.body.appendChild(rootDomElement);
 
-            mounter.mountToDomSync(rootDomElement, createNode('div').children([
+            mountToDomSync(rootDomElement, createNode('div').children([
                 createNode('div').key(1).children([
                     createNode('input').attrs({ id : 'id1' }).key(1),
                     createNode('input').key(2)
@@ -237,10 +237,10 @@ describe('patchDom', function() {
                 createNode('div').key(2)
             ]));
 
-            var activeElement = document.getElementById('id1');
+            const activeElement = document.getElementById('id1');
             activeElement.focus();
 
-            mounter.mountToDomSync(rootDomElement, createNode('div').children([
+            mountToDomSync(rootDomElement, createNode('div').children([
                 createNode('div').key(2),
                 createNode('div').key(1).children([
                     createNode('input').key(2),
@@ -254,9 +254,9 @@ describe('patchDom', function() {
         });
     });
 
-    describe('removeChildren', function() {
-        it('should remove children nodes', function() {
-            var parentNode = createNode('div').children([createNode('a'), createNode('span')]),
+    describe('removeChildren', () => {
+        it('should remove children nodes', () => {
+            const parentNode = createNode('div').children([createNode('a'), createNode('span')]),
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(createNode('div'));

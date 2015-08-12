@@ -1,13 +1,14 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    nodeA = createNode('a').key('a'),
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
+
+const nodeA = createNode('a').key('a'),
     nodeB = createNode('a').key('b'),
     nodeC = createNode('a').key('c'),
     nodeD = createNode('a').key('d'),
     nodeE = createNode('a').key('e'),
     parentNode = createNode('div');
 
-module.exports = {
+export default {
     'name' : 'complex3',
     'trees' : [
         parentNode.children([
@@ -28,4 +29,4 @@ module.exports = {
         { op : patchOps.insertChild, args : [parentNode, nodeC, nodeD] },
         { op : patchOps.appendChild, args : [parentNode, nodeE] }
     ]
-};
+}

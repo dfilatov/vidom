@@ -10,22 +10,23 @@
     "url": "git://github.com/dfilatov/vidom.git"
   },
   "devDependencies": {
+    "babelify": "6.1.3",
     "browserify": "10.2.1",
-    "phantomjs": "1.9.17",
-    "mocha": "2.2.5",
-    "sinon": "1.15.4",
     "expect.js": "0.3.1",
+    "mocha": "2.2.5",
     "mocha-phantomjs": "3.5.3",
-    "zuul": "3.0.0",
-    "simulate": "git://github.com/dfilatov/simulate.js"
+    "phantomjs": "1.9.17",
+    "simulate": "git://github.com/dfilatov/simulate.js",
+    "sinon": "1.15.4",
+    "zuul": "3.0.0"
   },
   "license": "MIT",
   "scripts": {
     "test": "zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
-    "test-local": "browserify spec/boot.js > spec/boot.build.js && mocha-phantomjs spec/runner.html",
-    "build-example": "browserify example/vidom.js > example/vidom.build.js",
-    "build-cmp": "browserify example/cmp.js > example/cmp.build.js",
-    "build-demo": "browserify demo/demo.js > demo/demo.build.js"
+    "test-local": "browserify spec/boot.js -t babelify --outfile spec/boot.build.js && mocha-phantomjs spec/runner.html",
+    "build-example": "browserify example/vidom.js -t babelify --outfile example/vidom.build.js",
+    "build-cmp": "browserify example/cmp.js -t babelify --outfile example/cmp.build.js",
+    "build-demo": "browserify demo/demo.js -t babelify --outfile demo/demo.build.js"
   }
 }

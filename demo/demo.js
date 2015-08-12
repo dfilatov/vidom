@@ -1,5 +1,6 @@
-var vidom = require('../lib/vidom'),
-    users = [
+import { createNode, mountToDom } from '../lib/vidom';
+
+const users = [
         { login : 'dmitry', online : false },
         { login : 'vitaly', online : false },
         { login : 'alexey', online : false },
@@ -16,7 +17,7 @@ var vidom = require('../lib/vidom'),
     rootDomNode = document.body.appendChild(document.createElement('div'));
 
 function updateUsersStates() {
-    users.forEach(function(user) {
+    users.forEach(user => {
         user.online = Math.random() > .5;
     });
 }
@@ -24,28 +25,22 @@ function updateUsersStates() {
 function sortUsers() {
     return users
         .slice()
-        .sort(function(user1, user2) {
+        .sort((user1, user2) => {
             return user1.online === user2.online?
                 user1.login.localeCompare(user2.login) :
                 user2.online - user1.online;
         })
-        .map(function(user) {
-            return user.login;
-        });
+        .map(user => user.login);
 }
 
 function buildTree(sortOrder) {
-    var onlineUsers = users.filter(function(user) {
-            return user.online;
-        }),
-        offlineUsers = users.filter(function(user) {
-            return !user.online;
-        });
+    const onlineUsers = users.filter(user => user.online),
+        offlineUsers = users.filter(user => !user.online);
 
-    return vidom.createNode('div')
+    return createNode('div')
         .attrs({ className : 'users' })
-        .children(users.map(function(user) {
-            return vidom.createNode('div')
+        .children(users.map(user => {
+            return createNode('div')
                 .key(user.login)
                 .attrs({
                     className : 'user' + (user.online? ' user_online' : ''),
@@ -55,7 +50,7 @@ function buildTree(sortOrder) {
                 })
                 .children(user.login);
         }).concat(
-            vidom.createNode('div')
+            createNode('div')
                 .key('__delimiter__')
                 .attrs({
                     className : 'delimiter' + (onlineUsers.length && offlineUsers.length?
@@ -68,7 +63,7 @@ function buildTree(sortOrder) {
 }
 
 function update() {
-    vidom.mountToDom(rootDomNode, buildTree(sortUsers()), function() {
+    mountToDom(rootDomNode, buildTree(sortUsers()), function() {
         updateUsersStates();
         setTimeout(update, 3000);
     });

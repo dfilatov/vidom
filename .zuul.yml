@@ -1,3 +1,5 @@
+browserify:
+  - transform: babelify
 ui: mocha-bdd
 browsers:
   - name: chrome

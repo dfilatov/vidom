@@ -1,12 +1,13 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    node = createNode('a');
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
 
-module.exports = {
+const node = createNode('a');
+
+export default {
     'name' : 'removeText2',
     'trees' : [
         node.children(''),
         createNode('a')
     ],
     'patch' : []
-};
+}

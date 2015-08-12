@@ -1,23 +1,23 @@
-var sinon = require('sinon'),
-    createNode = require('../../../lib/createNode'),
-    createComponent = require('../../../lib/createComponent'),
-    mounter = require('../../../lib/client/mounter');
+import sinon from 'sinon';
+import createNode from '../../../lib/createNode';
+import createComponent from '../../../lib/createComponent';
+import { mountToDomSync, unmountFromDomSync } from '../../../lib/client/mounter';
 
-describe('onAttrsReceive', function() {
-    var domNode;
-    beforeEach(function() {
+describe('onAttrsReceive', () => {
+    let domNode;
+    beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
 
-    afterEach(function() {
-        mounter.unmountFromDomSync(domNode);
+    afterEach(() => {
+        unmountFromDomSync(domNode);
         document.body.removeChild(domNode);
     });
 
-    it('should be called when new attrs is passed', function() {
-        var spy = sinon.spy(),
+    it('should be called when new attrs is passed', () => {
+        const spy = sinon.spy(),
             C = createComponent({
-                onRender : function() {
+                onRender() {
                     return createNode('div');
                 },
 
@@ -26,25 +26,25 @@ describe('onAttrsReceive', function() {
             oldAttrs = { id : 1 },
             newAttrs = { id : 2 };
 
-        mounter.mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
-        mounter.mountToDomSync(domNode, createNode(C).attrs(newAttrs));
+        mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
+        mountToDomSync(domNode, createNode(C).attrs(newAttrs));
 
         expect(spy.called).to.be.ok();
         expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
     });
 
-    it('shouldn\'t be called when no new attrs is passed', function() {
-        var spy = sinon.spy(),
+    it('shouldn\'t be called when no new attrs is passed', () => {
+        const spy = sinon.spy(),
             C = createComponent({
-                onRender : function() {
+                onRender() {
                     return createNode('div');
                 },
 
                 onAttrsReceive : spy
             });
 
-        mounter.mountToDomSync(domNode, createNode(C));
-        mounter.mountToDomSync(domNode, createNode(C));
+        mountToDomSync(domNode, createNode(C));
+        mountToDomSync(domNode, createNode(C));
 
         expect(spy.called).not.to.be.ok();
     });

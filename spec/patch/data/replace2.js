@@ -1,9 +1,10 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    oldNode = createNode('div'),
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
+
+const oldNode = createNode('div'),
     newNode = createNode('span');
 
-module.exports = {
+export default {
     'name' : 'replace2',
     'trees' : [
         createNode('div').children([
@@ -18,4 +19,4 @@ module.exports = {
     'patch' : [
         { op : patchOps.replace, args : [null, oldNode, newNode] }
     ]
-};
+}
