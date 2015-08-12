@@ -1,14 +1,14 @@
-var patchOps = require('../../lib/client/patchOps');
+import patchOps from '../../lib/client/patchOps';
 
-describe('patch', function() {
-    var origPatchOps = {},
-        opsLog;
+describe('patch', () => {
+    const origPatchOps = {};
+    let opsLog;
 
-    Object.keys(patchOps).forEach(function(op) {
+    Object.keys(patchOps).forEach(op => {
         origPatchOps[op] = patchOps[op];
     });
 
-    data = [
+    const data = [
         require('./data/updateText1'),
         require('./data/updateText2'),
         require('./data/updateText3'),
@@ -53,23 +53,23 @@ describe('patch', function() {
         require('./data/complex-shuffle-with-inserts-removes')
     ];
 
-    data.forEach(function(specData) {
-        beforeEach(function() {
+    data.forEach(specData => {
+        beforeEach(() => {
             opsLog = [];
-            Object.keys(patchOps).forEach(function(op) {
+            Object.keys(patchOps).forEach(op => {
                 patchOps[op] = function() {
                     opsLog.push({ op : origPatchOps[op], args : Array.prototype.slice.call(arguments) });
-                }
+                };
             });
         });
 
-        afterEach(function() {
-            Object.keys(patchOps).forEach(function(op) {
+        afterEach(() => {
+            Object.keys(patchOps).forEach(op => {
                 patchOps[op] = origPatchOps[op];
             });
-        })
+        });
 
-        it('for ' + specData.name + ' should be right', function() {
+        it('for ' + specData.name + ' should be right', () => {
             specData.trees[0].patch(specData.trees[1]);
             expect(opsLog).to.eql(specData.patch);
         });

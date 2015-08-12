@@ -1,57 +1,60 @@
-var sinon = require('sinon'),
-    createNode = require('../../lib/createNode'),
-    mounter = require('../../lib/client/mounter');
+import sinon from 'sinon';
+import createNode from '../../lib/createNode';
+import { mountToDom, unmountFromDom } from '../../lib/client/mounter';
 
-describe('mountToDom', function() {
-    var domNode;
-    beforeEach(function() {
+describe('mountToDom', () => {
+    let domNode;
+    beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
 
-    afterEach(function() {
-        document.body.removeChild(domNode);
+    afterEach(done => {
+        unmountFromDom(domNode, () => {
+            document.body.removeChild(domNode);
+            done();
+        });
     });
 
-    describe('callbacks', function() {
-        it('should properly call callback on initial mount', function(done) {
-            mounter.mountToDom(domNode, createNode('div'), function() {
+    describe('callbacks', () => {
+        it('should properly call callback on initial mount', done => {
+            mountToDom(domNode, createNode('div'), () => {
                 expect(domNode.childNodes.length).to.equal(1);
                 done();
             });
         });
 
-        it('should properly call callback after tree is remounted with diff', function(done) {
-            mounter.mountToDom(domNode, createNode('div'), function() {
-                mounter.mountToDom(domNode, createNode('span'), function() {
+        it('should properly call callback after tree is remounted with diff', done => {
+            mountToDom(domNode, createNode('div'), () => {
+                mountToDom(domNode, createNode('span'), () => {
                     expect(domNode.childNodes[0].tagName).to.equal('SPAN');
                     done();
                 });
             });
         });
 
-        it('should properly call callback after tree is remounted without diff', function(done) {
-            mounter.mountToDom(domNode, createNode('div'), function() {
-                mounter.mountToDom(domNode, createNode('div'), function() {
+        it('should properly call callback after tree is remounted without diff', done => {
+            mountToDom(domNode, createNode('div'), () => {
+                mountToDom(domNode, createNode('div'), () => {
                     done();
                 });
             });
         });
 
-        it('shouldn\'t call callback if a new tree is mounted', function(done) {
-            var spy = sinon.spy();
+        it('shouldn\'t call callback if a new tree is mounted', done => {
+            const spy = sinon.spy();
 
-            mounter.mountToDom(domNode, createNode('div'), spy);
-            mounter.mountToDom(domNode, createNode('div'), function() {
+            mountToDom(domNode, createNode('div'), spy);
+            mountToDom(domNode, createNode('div'), () => {
                 expect(spy.called).not.to.be.ok();
                 done();
             });
         });
 
-        it('shouldn\'t call callback if a tree is unmounted', function(done) {
-            var spy = sinon.spy();
+        it('shouldn\'t call callback if a tree is unmounted', done => {
+            const spy = sinon.spy();
 
-            mounter.mountToDom(domNode, createNode('div'), spy);
-            mounter.unmountFromDom(domNode, function() {
+            mountToDom(domNode, createNode('div'), spy);
+            unmountFromDom(domNode, () => {
                 expect(spy.called).not.to.be.ok();
                 done();
             });

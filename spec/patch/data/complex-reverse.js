@@ -1,12 +1,13 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    parentNode = createNode('div'),
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
+
+const parentNode = createNode('div'),
     nodeA = createNode('a').key('a'),
     nodeB = createNode('a').key('b'),
     nodeC = createNode('a').key('c'),
     nodeD = createNode('a').key('d');
 
-module.exports = {
+export default {
     'name' : 'complex-reverse',
     'trees' : [
         parentNode.children([
@@ -27,4 +28,4 @@ module.exports = {
         { op : patchOps.moveChild, args : [parentNode, nodeB, nodeD, true] },
         { op : patchOps.moveChild, args : [parentNode, nodeC, nodeD, true] }
     ]
-};
+}

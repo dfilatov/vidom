@@ -1,23 +1,23 @@
-var sinon = require('sinon'),
-    createNode = require('../../../lib/createNode'),
-    createComponent = require('../../../lib/createComponent'),
-    mounter = require('../../../lib/client/mounter');
+import sinon from 'sinon';
+import createNode from '../../../lib/createNode';
+import createComponent from '../../../lib/createComponent';
+import { mountToDomSync, unmountFromDomSync } from '../../../lib/client/mounter';
 
-describe('onUpdate', function() {
+describe('onUpdate', () => {
     var domNode;
-    beforeEach(function() {
+    beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
 
-    afterEach(function() {
-        mounter.unmountFromDomSync(domNode);
+    afterEach(() => {
+        unmountFromDomSync(domNode);
         document.body.removeChild(domNode);
     });
 
-    it('should be called after a component is updated with actual attributes', function() {
-        var spy = sinon.spy(),
+    it('should be called after a component is updated with actual attributes', () => {
+        const spy = sinon.spy(),
             C = createComponent({
-                onRender : function(attrs) {
+                onRender(attrs) {
                     return createNode('div').attrs(attrs);
                 },
 
@@ -26,17 +26,17 @@ describe('onUpdate', function() {
             oldAttrs = { id : 1 },
             newAttrs = { id : 2 };
 
-        mounter.mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
-        mounter.mountToDomSync(domNode, createNode(C).attrs(newAttrs));
+        mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
+        mountToDomSync(domNode, createNode(C).attrs(newAttrs));
 
         expect(spy.called).to.be.ok();
         expect(spy.calledWith(newAttrs)).to.be.ok();
     });
 
-    it.skip('should not be called if component isn\'t updated', function() {
-        var spy = sinon.spy(),
+    it.skip('should not be called if component isn\'t updated', () => {
+        const spy = sinon.spy(),
             C = createComponent({
-                onRender : function(attrs) {
+                onRender(attrs) {
                     return createNode('div').attrs(attrs);
                 },
 
@@ -45,8 +45,8 @@ describe('onUpdate', function() {
             oldAttrs = { id : 1 },
             newAttrs = { id : 1 };
 
-        mounter.mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
-        mounter.mountToDomSync(domNode, createNode(C).attrs(newAttrs));
+        mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
+        mountToDomSync(domNode, createNode(C).attrs(newAttrs));
 
         expect(spy.called).not.to.be.ok();
     });

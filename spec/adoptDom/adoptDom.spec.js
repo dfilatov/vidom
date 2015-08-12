@@ -1,19 +1,20 @@
-var createNode = require('../../lib/createNode'),
-    createComponent = require('../../lib/createComponent'),
-    mounter = require('../../lib/client/mounter');
+import createNode from '../../lib/createNode';
+import createComponent from '../../lib/createComponent';
+import { mountToDomSync, unmountFromDomSync } from '../../lib/client/mounter';
 
-describe('adoptDom', function() {
-    var domNode;
-    beforeEach(function() {
+describe('adoptDom', () => {
+    let domNode;
+    beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
 
-    afterEach(function() {
+    afterEach(() => {
+        unmountFromDomSync(domNode);
         document.body.removeChild(domNode);
     });
 
-    it('should properly adopt existing dom nodes', function() {
-        var firstChildNode = createNode('span'),
+    it('should properly adopt existing dom nodes', () => {
+        const firstChildNode = createNode('span'),
             secondChildNode = createNode('i'),
             tree = createNode('div').children([firstChildNode, secondChildNode]),
             treeDomNode = document.createElement('div'),
@@ -24,22 +25,22 @@ describe('adoptDom', function() {
         treeDomNode.appendChild(secondChildDomNode);
         domNode.appendChild(treeDomNode);
 
-        mounter.mountToDomSync(domNode, tree);
+        mountToDomSync(domNode, tree);
 
         expect(tree.getDomNode()).to.equal(treeDomNode);
         expect(firstChildNode.getDomNode()).to.equal(firstChildDomNode);
         expect(secondChildNode.getDomNode()).to.equal(secondChildDomNode);
     });
 
-    it('should properly adopt existing dom nodes through components', function() {
-        var spanNode = createNode('span'),
+    it('should properly adopt existing dom nodes through components', () => {
+        const spanNode = createNode('span'),
             C1 = createComponent({
-                onRender : function() {
+                onRender() {
                     return createNode(C2);
                 }
             }),
             C2 = createComponent({
-                onRender : function() {
+                onRender() {
                     return spanNode;
                 }
             }),
@@ -50,7 +51,7 @@ describe('adoptDom', function() {
         treeDomNode.appendChild(childDomNode);
         domNode.appendChild(treeDomNode);
 
-        mounter.mountToDomSync(domNode, tree);
+        mountToDomSync(domNode, tree);
 
         expect(spanNode.getDomNode()).to.equal(childDomNode);
     });

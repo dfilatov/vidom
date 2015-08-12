@@ -1,11 +1,12 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    parentNode = createNode('div'),
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
+
+const parentNode = createNode('div'),
     nodeC = createNode('a'),
     nodeD = createNode('a'),
     nodeE = createNode('a').key('e');
 
-module.exports = {
+export default {
     'name' : 'complex-insert-to-middle-without-key',
     'trees' : [
         parentNode.children([
@@ -25,4 +26,4 @@ module.exports = {
         { op : patchOps.insertChild, args : [parentNode, nodeC, nodeE] },
         { op : patchOps.insertChild, args : [parentNode, nodeD, nodeE] }
     ]
-};
+}

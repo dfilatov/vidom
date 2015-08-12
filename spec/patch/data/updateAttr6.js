@@ -1,7 +1,7 @@
-var createNode = require('../../../lib/createNode'),
-    node = createNode('select');
+import createNode from '../../../lib/createNode';
+const node = createNode('select');
 
-module.exports = {
+export default {
     'name' : 'updateAttr6',
     'trees' : [
         node
@@ -16,4 +16,4 @@ module.exports = {
             })
     ],
     'patch' : []
-};
+}

@@ -1,8 +1,9 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    node = createNode('span').children('text');
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
 
-module.exports = {
+const node = createNode('span').children('text');
+
+export default {
     'name' : 'updateText1',
     'trees' : [
         node,
@@ -11,4 +12,4 @@ module.exports = {
     'patch' : [
         { op : patchOps.updateText, args : [node, 'new text', true] }
     ]
-};
+}

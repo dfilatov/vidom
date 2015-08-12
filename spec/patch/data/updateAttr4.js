@@ -1,16 +1,17 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    node = createNode('div').attrs({
-        style : {
-            width : '100px',
-            height : '100px',
-            float : 'left',
-            borderRadius : '5px',
-            opacity : null
-        }
-    });
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
 
-module.exports = {
+const node = createNode('div').attrs({
+    style : {
+        width : '100px',
+        height : '100px',
+        float : 'left',
+        borderRadius : '5px',
+        opacity : null
+    }
+});
+
+export default {
     'name' : 'updateAttr4',
     'trees' : [
         node,
@@ -39,4 +40,4 @@ module.exports = {
             ]
         }
     ]
-};
+}

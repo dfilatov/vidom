@@ -1,8 +1,9 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    node = createNode('input').attrs({ value : 'text' });
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
 
-module.exports = {
+const node = createNode('input').attrs({ value : 'text' });
+
+export default {
     'name' : 'updateAttr1',
     'trees' : [
         node,
@@ -11,4 +12,4 @@ module.exports = {
     'patch' : [
         { op : patchOps.updateAttr, args : [node, 'value', 'new text'] }
     ]
-};
+}

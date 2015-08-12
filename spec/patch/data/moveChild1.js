@@ -1,10 +1,11 @@
-var createNode = require('../../../lib/createNode'),
-    patchOps = require('../../../lib/client/patchOps'),
-    parentNode = createNode('div'),
+import createNode from '../../../lib/createNode';
+import patchOps from '../../../lib/client/patchOps';
+
+const parentNode = createNode('div'),
     nodeA = createNode('input').key('a'),
     nodeB = createNode('input').key('b');
 
-module.exports = {
+export default {
     'name' : 'moveChild1',
     'trees' : [
         parentNode.children([
@@ -19,4 +20,4 @@ module.exports = {
     'patch' : [
         { op : patchOps.moveChild, args : [parentNode, nodeA, nodeB, true] }
     ]
-};
+}

@@ -1,111 +1,111 @@
-var createNode = require('../../lib/createNode'),
-    createComponent = require('../../lib/createComponent');
+import createNode from '../../lib/createNode';
+import createComponent from '../../lib/createComponent';
 
-describe('renderToString', function() {
-    describe('tag', function() {
-        it('should be rendered properly', function() {
+describe('renderToString', () => {
+    describe('tag', () => {
+        it('should be rendered properly', () => {
             expect(createNode('span').renderToString())
                 .to.equal('<span></span>');
         });
 
-        it('should be rendered as short tag', function() {
+        it('should be rendered as short tag', () => {
             expect(createNode('img').renderToString())
                 .to.equal('<img/>');
         });
     });
 
-    describe('ns', function() {
-        it('should be rendered with given namespace', function() {
+    describe('ns', () => {
+        it('should be rendered with given namespace', () => {
             expect(createNode('svg').ns('http://www.w3.org/2000/svg').renderToString())
                 .to.equal('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
         });
     });
 
-    describe('children', function() {
-        it('should be rendered as child nodes', function() {
+    describe('children', () => {
+        it('should be rendered as child nodes', () => {
             expect(createNode('div').children([createNode('span'), createNode('img')]).renderToString())
                 .to.equal('<div><span></span><img/></div>');
         });
     });
 
-    describe('attrs', function() {
-        it('should be rendered properly', function() {
+    describe('attrs', () => {
+        it('should be rendered properly', () => {
             expect(createNode('input').attrs({ type : 'text', id : 'id1', value : 'v1' }).renderToString())
                 .to.equal('<input type="text" id="id1" value="v1"/>');
         });
 
-        it('should be rendered properly for boolean attribues', function() {
+        it('should be rendered properly for boolean attribues', () => {
             expect(createNode('input').attrs({ checked : true, disabled : true }).renderToString())
                 .to.equal('<input checked disabled/>')
         });
 
-        it('shouldn\'t render null value', function() {
+        it('shouldn\'t render null value', () => {
             expect(createNode('input').attrs({ value : null }).renderToString())
                 .to.equal('<input/>')
         });
 
-        it('shouldn\'t render undefined value', function() {
+        it('shouldn\'t render undefined value', () => {
             expect(createNode('input').attrs({ className : undefined }).renderToString())
                 .to.equal('<input/>')
         });
 
-        it('should not be rendered if boolean attribute is false', function() {
+        it('should not be rendered if boolean attribute is false', () => {
             expect(createNode('input').attrs({ checked : false }).renderToString())
                 .to.equal('<input/>')
         });
 
-        it('should properly render style', function() {
+        it('should properly render style', () => {
             expect(createNode('div').attrs({ style : { width : '100px', 'border-color' : 'red' } }).renderToString())
                 .to.equal('<div style="width:100px;border-color:red;"></div>');
         });
 
-        it('should properly render camelized style', function() {
+        it('should properly render camelized style', () => {
             expect(createNode('div').attrs({ style : { borderLeftWidth : '5px' } }).renderToString())
                 .to.equal('<div style="border-left-width:5px;"></div>');
         });
 
-        it('should be rendered as data-attribute', function() {
+        it('should be rendered as data-attribute', () => {
             expect(createNode('div').attrs({ 'data-id' : '123' }).renderToString())
                 .to.equal('<div data-id="123"></div>');
         });
 
-        it('should be rendered as custom attribute', function() {
+        it('should be rendered as custom attribute', () => {
             expect(createNode('div').attrs({ 'custom-attr' : '123' }).renderToString())
                 .to.equal('<div custom-attr="123"></div>');
         });
 
-        it('should support alternative names', function() {
+        it('should support alternative names', () => {
             expect(createNode('div').attrs({ className : 'c1', tabIndex : 4 }).renderToString())
                 .to.equal('<div class="c1" tabindex="4"></div>');
         });
 
-        it('should properly render textarea value', function() {
+        it('should properly render textarea value', () => {
             expect(createNode('textarea').attrs({ value : 'val' }).renderToString())
                 .to.equal('<textarea>val</textarea>');
         });
     });
 
-    describe('text', function() {
-        it('should be rendered as wrapped text node', function() {
+    describe('text', () => {
+        it('should be rendered as wrapped text node', () => {
             expect(createNode('span').children('some text').renderToString())
                 .to.equal('<span>some text</span>');
         });
 
-        it('should escape html', function() {
+        it('should escape html', () => {
             expect(createNode('span').children('<&/>').renderToString())
                 .to.equal('<span>&lt;&amp;/&gt;</span>');
         });
     });
 
-    describe('html', function() {
-        it('shouldn\'t escape html', function() {
+    describe('html', () => {
+        it('shouldn\'t escape html', () => {
             expect(createNode('span').html('<span></span><i></i>').renderToString())
                 .to.equal('<span><span></span><i></i></span>');
         });
     });
 
-    describe('select', function() {
-        it('should be properly rendered', function() {
+    describe('select', () => {
+        it('should be properly rendered', () => {
             expect(
                 createNode('select')
                     .attrs({ value : 2 })
@@ -117,7 +117,7 @@ describe('renderToString', function() {
                 .to.equal('<select><option value="1"></option><option selected value="2"></option></select>');
         });
 
-        it('should be properly rendered with multiple values', function() {
+        it('should be properly rendered with multiple values', () => {
             expect(
                 createNode('select')
                     .attrs({ multiple : true, value : [2, 3] })
@@ -140,9 +140,9 @@ describe('renderToString', function() {
         });
     });
 
-    describe('component', function() {
-        it('should be rendered as component', function() {
-            var Component = createComponent({
+    describe('component', () => {
+        it('should be rendered as component', () => {
+            const Component = createComponent({
                     onRender : function(attrs, content) {
                         return createNode('div').attrs(attrs).children([
                             createNode('a'),
@@ -156,9 +156,9 @@ describe('renderToString', function() {
 
         });
 
-        it('should render <noscript/> if onRender() returns nothing', function() {
-            var Component = createComponent({
-                    onRender : function() {}
+        it('should render <noscript/> if onRender() returns nothing', () => {
+            const Component = createComponent({
+                    onRender : () => {}
                 });
 
             expect(createNode(Component).renderToString())
