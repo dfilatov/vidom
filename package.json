@@ -21,12 +21,17 @@
     "zuul": "3.0.0"
   },
   "license": "MIT",
+  "browserify": {
+    "transform": [
+      "babelify"
+    ]
+  },
   "scripts": {
     "test": "zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
-    "test-local": "browserify spec/boot.js -t babelify --outfile spec/boot.build.js && mocha-phantomjs spec/runner.html",
-    "build-example": "browserify example/vidom.js -t babelify --outfile example/vidom.build.js",
-    "build-cmp": "browserify example/cmp.js -t babelify --outfile example/cmp.build.js",
-    "build-demo": "browserify demo/demo.js -t babelify --outfile demo/demo.build.js"
+    "test-local": "browserify spec/boot.js --outfile spec/boot.build.js && mocha-phantomjs spec/runner.html",
+    "build-example": "browserify example/vidom.js --outfile example/vidom.build.js",
+    "build-cmp": "browserify example/cmp.js --outfile example/cmp.build.js",
+    "build-demo": "browserify demo/demo.js --outfile demo/demo.build.js"
   }
 }
