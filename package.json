@@ -17,6 +17,7 @@
     "babelify": "6.1.3",
     "browserify": "10.2.1",
     "expect.js": "0.3.1",
+    "jscs": "^2.1.0",
     "mocha": "2.2.5",
     "mocha-phantomjs": "3.5.3",
     "phantomjs": "1.9.17",
@@ -32,7 +33,8 @@
     ]
   },
   "scripts": {
-    "test": "zuul -- spec/boot.js",
+    "lint": "jscs lib spec/*/*",
+    "test": "npm run-script lint && zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
     "test-local": "browserify spec/boot.js --outfile spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "build-dist": "mkdir -p dist && browserify lib/vidom.js --outfile dist/vidom.js --standalone vidom && uglifyjs dist/vidom.js --mangle -o dist/vidom.min.js",
