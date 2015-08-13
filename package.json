@@ -2,7 +2,11 @@
   "name": "vidom",
   "version": "0.0.27",
   "description": "",
-  "keywords": [],
+  "keywords": [
+    "virtual",
+    "dom",
+    "component"
+  ],
   "main": "lib/vidom.js",
   "author": "Dmitry Filatov <dfilatov@yandex-team.ru>",
   "repository": {
