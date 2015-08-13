@@ -18,6 +18,7 @@
     "phantomjs": "1.9.17",
     "simulate": "git://github.com/dfilatov/simulate.js",
     "sinon": "1.15.4",
+    "uglify-js": "2.4.24",
     "zuul": "3.0.0"
   },
   "license": "MIT",
@@ -30,6 +31,7 @@
     "test": "zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
     "test-local": "browserify spec/boot.js --outfile spec/boot.build.js && mocha-phantomjs spec/runner.html",
+    "build-dist": "mkdir -p dist && browserify lib/vidom.js --outfile dist/vidom.js --standalone vidom && uglifyjs dist/vidom.js --mangle -o dist/vidom.min.js",
     "build-example": "browserify example/vidom.js --outfile example/vidom.build.js",
     "build-cmp": "browserify example/cmp.js --outfile example/cmp.build.js",
     "build-demo": "browserify demo/demo.js --outfile demo/demo.build.js"
