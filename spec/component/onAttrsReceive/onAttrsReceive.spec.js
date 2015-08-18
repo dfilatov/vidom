@@ -48,4 +48,24 @@ describe('onAttrsReceive', () => {
 
         expect(spy.called).not.to.be.ok();
     });
+
+    it('shouldn\'t add additional render if calls update()', done => {
+        const spy = sinon.spy(),
+            C = createComponent({
+                onRender() {
+                    spy.apply(this, arguments);
+                    return createNode('div');
+                },
+
+                onAttrsReceive : function() {
+                    this.update(() => {
+                        expect(spy.calledTwice).to.be.ok();
+                        done();
+                    });
+                }
+            });
+
+        mountToDomSync(domNode, createNode(C));
+        mountToDomSync(domNode, createNode(C).attrs({}));
+    });
 });
