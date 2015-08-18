@@ -11,7 +11,7 @@ Vidom is an project that implements a virtual dom builder and differ. It enables
   * [Top-level API](../../wiki/Top-Level-API)
   * [TagNode API](../../wiki/TagNode-API)
   * [ComponentNode API](../../wiki/ComponentNode-API)
-  * [Events API](../../Events-API)
+  * [DOM Events API](../../wiki/DOM-Events-API)
   * [Component lifecycle](../../wiki/Component-lifecycle)
   * [Component methods](../../wiki/Component-methods)
   * [Isomorphism](../../wiki/Isomorphism)
