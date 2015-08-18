@@ -2,6 +2,22 @@
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _createComponent = require('./createComponent');
+
+var _createComponent2 = _interopRequireDefault(_createComponent);
+
+exports['default'] = (0, _createComponent2['default'])();
+module.exports = exports['default'];
+
+},{"./createComponent":13}],2:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
@@ -177,7 +193,7 @@ exports['default'] = function (attrName) {
 
 module.exports = exports['default'];
 
-},{"../utils/dasherize":17,"../utils/escapeAttr":18,"../utils/isInArray":20}],2:[function(require,module,exports){
+},{"../utils/dasherize":18,"../utils/escapeAttr":19,"../utils/isInArray":21}],3:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -234,7 +250,7 @@ var SyntheticEvent = (function () {
 exports["default"] = SyntheticEvent;
 module.exports = exports["default"];
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -247,7 +263,7 @@ function addEventListenerToDom(domNode, type, fn, useCapture) {
 exports["default"] = addEventListenerToDom;
 module.exports = exports["default"];
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -275,15 +291,12 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-exports.addListener = addListener;
-exports.removeListener = removeListener;
-exports.removeListeners = removeListeners;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -459,7 +472,11 @@ function removeListeners(domNode) {
     }
 }
 
-},{"../getDomNodeId":8,"./SyntheticEvent":2,"./addDomEventListener":3,"./isEventSupported":6,"./removeDomEventListener":7}],6:[function(require,module,exports){
+exports.addListener = addListener;
+exports.removeListener = removeListener;
+exports.removeListeners = removeListeners;
+
+},{"../getDomNodeId":9,"./SyntheticEvent":3,"./addDomEventListener":4,"./isEventSupported":7,"./removeDomEventListener":8}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -487,7 +504,7 @@ function isEventSupported(type) {
 exports['default'] = isEventSupported;
 module.exports = exports['default'];
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -500,7 +517,7 @@ function removeEventListenerFromDom(domNode, type, fn) {
 exports["default"] = removeEventListenerFromDom;
 module.exports = exports["default"];
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -516,7 +533,7 @@ function getDomNodeId(node, onlyGet) {
 exports['default'] = getDomNodeId;
 module.exports = exports['default'];
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -623,7 +640,7 @@ function unmountFromDomSync(domNode) {
     unmount(domNode, null, null, true);
 }
 
-},{"./getDomNodeId":8,"./rafBatch":11}],10:[function(require,module,exports){
+},{"./getDomNodeId":9,"./rafBatch":12}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -685,13 +702,11 @@ function removeChildren(parentNode) {
 }
 
 function replace(parentNode, oldNode, newNode) {
-    var oldDomNode = oldNode.getDomNode(),
-        newDomNode = newNode.renderToDom(parentNode);
+    var oldDomNode = oldNode.getDomNode();
 
     oldNode.unmount();
-    oldDomNode.parentNode.replaceChild(newDomNode, oldDomNode);
+    oldDomNode.parentNode.replaceChild(newNode.renderToDom(parentNode), oldDomNode);
     newNode.mount();
-    return newDomNode;
 }
 
 function updateAttr(node, attrName, attrVal) {
@@ -729,7 +744,7 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"./domAttrsMutators":1,"./events/attrsToEvents":4,"./events/domEventManager":5}],11:[function(require,module,exports){
+},{"./domAttrsMutators":2,"./events/attrsToEvents":5,"./events/domEventManager":6}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -758,7 +773,7 @@ function rafBatch(fn) {
 exports["default"] = rafBatch;
 module.exports = exports["default"];
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -784,7 +799,7 @@ var emptyAttrs = {};
 function mountComponent() {
     this._isMounted = true;
     this._rootNode.mount();
-    this.onMount(this._attrs);
+    this.onMount(this.getAttrs());
 }
 
 function unmountComponent() {
@@ -800,7 +815,11 @@ function patchComponent(attrs, children) {
 
     if (prevAttrs !== attrs) {
         this._attrs = attrs;
-        this.isMounted() && this.onAttrsReceive(attrs || emptyAttrs, prevAttrs || emptyAttrs);
+        if (this.isMounted()) {
+            this._isUpdating = true;
+            this.onAttrsReceive(this.getAttrs(), prevAttrs || emptyAttrs);
+            this._isUpdating = false;
+        }
     }
 
     this._children = children;
@@ -824,9 +843,17 @@ function adoptComponentDom(domNode, parentNode) {
     this._rootNode.adoptDom(domNode, parentNode);
 }
 
+function getComponentDomNode() {
+    return this._rootNode.getDomNode();
+}
+
+function getComponentAttrs() {
+    return this._attrs || emptyAttrs;
+}
+
 function renderComponent() {
     this._domRefs = {};
-    return this.onRender(this._attrs || emptyAttrs, this._children) || (0, _createNode2['default'])('noscript');
+    return this.onRender(this.getAttrs(), this._children) || (0, _createNode2['default'])('noscript');
 }
 
 function updateComponent(cb, cbCtx) {
@@ -840,16 +867,12 @@ function updateComponent(cb, cbCtx) {
         this._isUpdating = true;
         (0, _clientRafBatch2['default'])(function () {
             if (_this.isMounted()) {
-                _this.updateSync();
+                _this.patch(_this._attrs, _this._children);
                 _this._isUpdating = false;
                 cb && cb.call(cbCtx || _this);
             }
         });
     }
-}
-
-function updateComponentSync() {
-    this.patch(this._attrs, this._children);
 }
 
 function isComponentMounted() {
@@ -869,11 +892,14 @@ function createComponent(props, staticProps) {
         this._attrs = attrs;
         this._children = children;
         this._domRefs = null;
-        this._rootNode = this.render();
         this._isMounted = false;
         this._isUpdating = false;
+        this.onInit();
+        this._rootNode = this.render();
     },
         ptp = {
+        constructor: res,
+        onInit: _utilsNoOp2['default'],
         mount: mountComponent,
         unmount: unmountComponent,
         onMount: _utilsNoOp2['default'],
@@ -884,13 +910,14 @@ function createComponent(props, staticProps) {
         renderToDom: renderComponentToDom,
         renderToString: renderComponentToString,
         adoptDom: adoptComponentDom,
+        getDomNode: getComponentDomNode,
         render: renderComponent,
         onRender: _utilsNoOp2['default'],
         update: updateComponent,
-        updateSync: updateComponentSync,
         patch: patchComponent,
         getDomRef: getComponentDomRef,
-        setDomRef: setComponentDomRef
+        setDomRef: setComponentDomRef,
+        getAttrs: getComponentAttrs
     };
 
     for (var i in props) {
@@ -909,7 +936,7 @@ function createComponent(props, staticProps) {
 exports['default'] = createComponent;
 module.exports = exports['default'];
 
-},{"./client/rafBatch":11,"./createNode":13,"./utils/noOp":21}],13:[function(require,module,exports){
+},{"./client/rafBatch":12,"./createNode":14,"./utils/noOp":22}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -942,7 +969,7 @@ function createNode(type) {
 exports['default'] = createNode;
 module.exports = exports['default'];
 
-},{"./nodes/ComponentNode":14,"./nodes/TagNode":15}],14:[function(require,module,exports){
+},{"./nodes/ComponentNode":15,"./nodes/TagNode":16}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -976,7 +1003,7 @@ var ComponentNode = (function () {
     _createClass(ComponentNode, [{
         key: 'getDomNode',
         value: function getDomNode() {
-            return this._instance._domNode;
+            return this._instance.getDomNode();
         }
     }, {
         key: 'key',
@@ -1035,7 +1062,8 @@ var ComponentNode = (function () {
         key: 'patch',
         value: function patch(node) {
             if (this.type !== node.type || this._component !== node._component) {
-                return _clientPatchOps2['default'].replace(this._parentNode, this, node);
+                _clientPatchOps2['default'].replace(this._parentNode, this, node);
+                return;
             }
 
             var instance = this._getInstance();
@@ -1056,7 +1084,7 @@ var ComponentNode = (function () {
 exports['default'] = ComponentNode;
 module.exports = exports['default'];
 
-},{"../client/patchOps":10}],15:[function(require,module,exports){
+},{"../client/patchOps":11}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1340,7 +1368,8 @@ var TagNode = (function () {
         key: 'patch',
         value: function patch(node) {
             if (this.type !== node.type || this._tag !== node._tag || this._ns !== node._ns) {
-                return _clientPatchOps2['default'].replace(this._parentNode, this, node);
+                _clientPatchOps2['default'].replace(this._parentNode, this, node);
+                return;
             }
 
             this._patchChildren(node);
@@ -1653,7 +1682,7 @@ function buildKeys(children, idxFrom, idxTo) {
 exports['default'] = TagNode;
 module.exports = exports['default'];
 
-},{"../client/domAttrsMutators":1,"../client/events/attrsToEvents":4,"../client/events/domEventManager":5,"../client/patchOps":10,"../utils/escapeHtml":19,"../utils/isInArray":20}],16:[function(require,module,exports){
+},{"../client/domAttrsMutators":2,"../client/events/attrsToEvents":5,"../client/events/domEventManager":6,"../client/patchOps":11,"../utils/escapeHtml":20,"../utils/isInArray":21}],17:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1666,7 +1695,7 @@ function renderToString(tree) {
 exports["default"] = renderToString;
 module.exports = exports["default"];
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1681,7 +1710,7 @@ function dasherize(str) {
 exports['default'] = dasherize;
 module.exports = exports['default'];
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1694,7 +1723,7 @@ function escapeAttr(str) {
 exports['default'] = escapeAttr;
 module.exports = exports['default'];
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1707,7 +1736,7 @@ function escapeHtml(str) {
 exports['default'] = escapeHtml;
 module.exports = exports['default'];
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1729,7 +1758,7 @@ function isInArray(arr, item) {
 exports["default"] = isInArray;
 module.exports = exports["default"];
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1740,38 +1769,45 @@ function noOp() {}
 exports["default"] = noOp;
 module.exports = exports["default"];
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
+function _interopExportWildcard(obj, defaults) { var newObj = defaults({}, obj); delete newObj['default']; return newObj; }
+
+function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _createComponent = require('./createComponent');
-
-var _createComponent2 = _interopRequireDefault(_createComponent);
 
 var _createNode = require('./createNode');
 
 var _createNode2 = _interopRequireDefault(_createNode);
 
-var _clientMounter = require('./client/mounter');
+var _createComponent = require('./createComponent');
+
+var _createComponent2 = _interopRequireDefault(_createComponent);
 
 var _renderToString = require('./renderToString');
 
 var _renderToString2 = _interopRequireDefault(_renderToString);
 
-exports.createComponent = _createComponent2['default'];
-exports.createNode = _createNode2['default'];
-exports.mountToDom = _clientMounter.mountToDom;
-exports.mountToDomSync = _clientMounter.mountToDomSync;
-exports.unmountToDom = _clientMounter.unmountToDom;
-exports.unmountToDomSync = _clientMounter.unmountToDomSync;
-exports.renderToString = _renderToString2['default'];
+var _Component = require('./Component');
 
-},{"./client/mounter":9,"./createComponent":12,"./createNode":13,"./renderToString":16}],23:[function(require,module,exports){
+var _Component2 = _interopRequireDefault(_Component);
+
+var _clientMounter = require('./client/mounter');
+
+_defaults(exports, _interopExportWildcard(_clientMounter, _defaults));
+
+exports.node = _createNode2['default'];
+exports.createComponent = _createComponent2['default'];
+exports.renderToString = _renderToString2['default'];
+exports.Component = _Component2['default'];
+
+},{"./Component":1,"./client/mounter":10,"./createComponent":13,"./createNode":14,"./renderToString":17}],24:[function(require,module,exports){
 'use strict';
 
 var _libVidom = require('../lib/vidom');
@@ -1802,14 +1838,14 @@ function buildTree(sortOrder) {
         return !user.online;
     });
 
-    return (0, _libVidom.createNode)('div').attrs({ className: 'users' }).children(users.map(function (user) {
-        return (0, _libVidom.createNode)('div').key(user.login).attrs({
+    return (0, _libVidom.node)('div').attrs({ className: 'users' }).children(users.map(function (user) {
+        return (0, _libVidom.node)('div').key(user.login).attrs({
             className: 'user' + (user.online ? ' user_online' : ''),
             style: {
                 transform: 'translateY(' + sortOrder.indexOf(user.login) * 30 + 'px)'
             }
         }).children(user.login);
-    }).concat((0, _libVidom.createNode)('div').key('__delimiter__').attrs({
+    }).concat((0, _libVidom.node)('div').key('__delimiter__').attrs({
         className: 'delimiter' + (onlineUsers.length && offlineUsers.length ? ' delimiter_visible' : ''),
         style: {
             transform: 'translateY(' + onlineUsers.length * 30 + 'px)'
@@ -1826,4 +1862,4 @@ function update() {
 
 update();
 
-},{"../lib/vidom":22}]},{},[23]);
+},{"../lib/vidom":23}]},{},[24]);

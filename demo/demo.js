@@ -1,4 +1,4 @@
-import { createNode, mountToDom } from '../lib/vidom';
+import { node, mountToDom } from '../lib/vidom';
 
 const users = [
         { login : 'dmitry', online : false },
@@ -37,10 +37,10 @@ function buildTree(sortOrder) {
     const onlineUsers = users.filter(user => user.online),
         offlineUsers = users.filter(user => !user.online);
 
-    return createNode('div')
+    return node('div')
         .attrs({ className : 'users' })
         .children(users.map(user => {
-            return createNode('div')
+            return node('div')
                 .key(user.login)
                 .attrs({
                     className : 'user' + (user.online? ' user_online' : ''),
@@ -50,7 +50,7 @@ function buildTree(sortOrder) {
                 })
                 .children(user.login);
         }).concat(
-            createNode('div')
+            node('div')
                 .key('__delimiter__')
                 .attrs({
                     className : 'delimiter' + (onlineUsers.length && offlineUsers.length?
