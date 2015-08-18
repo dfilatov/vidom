@@ -5,12 +5,14 @@
 
 Vidom is an project that implements a virtual dom builder and differ. It enables you to get a minimal set of operations (patch) needed to update a real DOM tree. It's highly inspired and based on ideas from React (http://facebook.github.io/react/docs/reconciliation.html). Its main goal is to provide as fast as possible implementation with API similar to React.
 
-  * [Tutorial](wiki/Tutorial)
-  * [Top-level API](wiki/Top-Level-API)
-  * [TagNode API](wiki/TagNode-API)
-  * [ComponentNode API](wiki/ComponentNode-API)
-  * [Events API](Events-API)
-  * [Component lifecycle](wiki/Component-lifecycle)
-  * [Component methods](wiki/Component-methods)
-  * [Isomorphism](wiki/Isomorphism)
-  * [FAQ](wiki/FAQ)
+## Documentation
+
+  * [Tutorial](../../wiki/Tutorial)
+  * [Top-level API](../../wiki/Top-Level-API)
+  * [TagNode API](../../wiki/TagNode-API)
+  * [ComponentNode API](../../wiki/ComponentNode-API)
+  * [Events API](../../Events-API)
+  * [Component lifecycle](../../wiki/Component-lifecycle)
+  * [Component methods](../../wiki/Component-methods)
+  * [Isomorphism](../../wiki/Isomorphism)
+  * [FAQ](../../wiki/FAQ)
