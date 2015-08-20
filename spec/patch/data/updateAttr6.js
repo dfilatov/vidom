@@ -1,4 +1,4 @@
-import createNode from '../../../lib/createNode';
+import createNode from '../../../src/createNode';
 const node = createNode('select');
 
 export default {

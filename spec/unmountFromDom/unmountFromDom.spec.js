@@ -1,6 +1,6 @@
 import sinon from 'sinon';
-import createNode from '../../lib/createNode';
-import { mountToDom, unmountFromDom } from '../../lib/client/mounter';
+import createNode from '../../src/createNode';
+import { mountToDom, unmountFromDom } from '../../src/client/mounter';
 
 describe('unmountFromDom', () => {
     var domNode;

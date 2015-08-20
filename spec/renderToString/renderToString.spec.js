@@ -1,5 +1,5 @@
-import createNode from '../../lib/createNode';
-import createComponent from '../../lib/createComponent';
+import createNode from '../../src/createNode';
+import createComponent from '../../src/createComponent';
 
 describe('renderToString', () => {
     describe('tag', () => {

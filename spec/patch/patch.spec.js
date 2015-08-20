@@ -1,4 +1,4 @@
-import patchOps from '../../lib/client/patchOps';
+import patchOps from '../../src/client/patchOps';
 
 describe('patch', () => {
     const origPatchOps = {};

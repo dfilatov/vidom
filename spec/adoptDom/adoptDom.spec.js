@@ -1,6 +1,6 @@
-import createNode from '../../lib/createNode';
-import createComponent from '../../lib/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../lib/client/mounter';
+import createNode from '../../src/createNode';
+import createComponent from '../../src/createComponent';
+import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
 
 describe('adoptDom', () => {
     let domNode;

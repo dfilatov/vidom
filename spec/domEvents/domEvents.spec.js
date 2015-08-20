@@ -1,9 +1,9 @@
 import sinon from 'sinon';
-import createNode from '../../lib/createNode';
-import createComponent from '../../lib/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../lib/client/mounter';
-import SyntheticEvent from '../../lib/client/events/SyntheticEvent';
-import isEventSupported from '../../lib/client/events/isEventSupported';
+import createNode from '../../src/createNode';
+import createComponent from '../../src/createComponent';
+import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
+import SyntheticEvent from '../../src/client/events/SyntheticEvent';
+import isEventSupported from '../../src/client/events/isEventSupported';
 import simulate from 'simulate';
 
 describe('domEvents', () => {

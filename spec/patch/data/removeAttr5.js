@@ -1,4 +1,4 @@
-import createNode from '../../../lib/createNode';
+import createNode from '../../../src/createNode';
 
 export default {
     'name' : 'removeAttr5',

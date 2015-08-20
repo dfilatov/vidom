@@ -1,6 +1,6 @@
-import createNode from '../../lib/createNode';
-import { mountToDomSync, unmountFromDomSync } from '../../lib/client/mounter';
-import patchOps from '../../lib/client/patchOps';
+import createNode from '../../src/createNode';
+import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
+import patchOps from '../../src/client/patchOps';
 
 describe('patchDom', () => {
     describe('updateText', () => {

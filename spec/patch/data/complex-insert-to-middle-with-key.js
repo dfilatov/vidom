@@ -1,5 +1,5 @@
-import createNode from '../../../lib/createNode';
-import patchOps from '../../../lib/client/patchOps';
+import createNode from '../../../src/createNode';
+import patchOps from '../../../src/client/patchOps';
 
 const parentNode = createNode('div'),
     nodeC = createNode('a').key('c'),
