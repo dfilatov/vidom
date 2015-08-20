@@ -13,7 +13,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * Namespaces support (e.g., SVG, MathML)
 
 ## Documentation
-
+  * [Getting started](../../wiki/Getting-started)
   * [Tutorial](../../wiki/Tutorial)
   * [Top-level API](../../wiki/Top-Level-API)
   * [TagNode API](../../wiki/TagNode-API)
