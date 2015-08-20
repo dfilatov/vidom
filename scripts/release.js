@@ -9,6 +9,9 @@ function execCommand(command) {
 
 execCommand('git pull')
     .then(function() {
+        return execCommand('npm i');
+    })
+    .then(function() {
         return vow.all([
             execCommand('npm run-script build-lib'),
             execCommand('npm run-script build-dist')
