@@ -1,5 +1,3 @@
-## ATTENTION! This project is in a progress state. Everything can be changed at any moment.
-
 # vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom) [![npm version](https://badge.fury.io/js/vidom.svg)](http://badge.fury.io/js/vidom)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)
 
