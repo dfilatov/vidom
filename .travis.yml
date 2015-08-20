@@ -3,7 +3,7 @@ node_js:
 - 0.12
 sudo: false
 script: "npm run-script lint && npm test"
-after_success: "npm run-test test-browsers"
+after_success: "npm run-script test-browsers"
 branches:
   only:
   - master
