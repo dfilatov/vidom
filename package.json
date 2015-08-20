@@ -38,9 +38,9 @@
   },
   "scripts": {
     "lint": "jscs lib spec/*/*",
-    "test": "npm run-script lint && zuul -- spec/boot.js",
+    "test": "browserify spec/boot.js --outfile spec/boot.build.js && mocha-phantomjs spec/runner.html",
+    "test-browsers": "NODE_ENV=production zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
-    "test-local": "browserify spec/boot.js --outfile spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "build-dist": "mkdir -p dist && NODE_ENV=production browserify lib/vidom.js -t babelify -t envify --outfile dist/vidom.js --standalone vidom && uglifyjs dist/vidom.js -c -m -o dist/vidom.min.js",
     "build-example": "NODE_ENV=development browserify example/vidom.js --outfile example/vidom.build.js",
     "build-cmp": "browserify example/cmp.js --outfile example/cmp.build.js",

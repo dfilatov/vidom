@@ -2,8 +2,8 @@ language: node_js
 node_js:
 - 0.12
 sudo: false
-script: "npm run-script test-local"
-after_success: "npm test"
+script: "npm run-script lint && npm test"
+after_success: "npm run-test test-browsers"
 branches:
   only:
   - master
