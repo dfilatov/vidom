@@ -1,4 +1,4 @@
-import { node, mountToDom } from '../lib/vidom';
+import { node, mountToDom } from '../src/vidom';
 
 const users = [
         { login : 'dmitry', online : false },

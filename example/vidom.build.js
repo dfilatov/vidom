@@ -1,4 +1,96 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = setTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            currentQueue[queueIndex].run();
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    clearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (!draining) {
+        setTimeout(drainQueue, 0);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+// TODO(shtylman)
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -14,7 +106,8 @@ var _createComponent2 = _interopRequireDefault(_createComponent);
 exports['default'] = (0, _createComponent2['default'])();
 module.exports = exports['default'];
 
-},{"./createComponent":13}],2:[function(require,module,exports){
+},{"./createComponent":14}],3:[function(require,module,exports){
+(function (global){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -34,6 +127,8 @@ var _utilsIsInArray2 = _interopRequireDefault(_utilsIsInArray);
 var _utilsDasherize = require('../utils/dasherize');
 
 var _utilsDasherize2 = _interopRequireDefault(_utilsDasherize);
+
+var doc = global.document;
 
 function setAttr(node, name, val) {
     if (name === 'type' && node.tagName === 'INPUT') {
@@ -122,7 +217,7 @@ function stylePropToString(name, value) {
 var defaultPropVals = {};
 function getDefaultPropVal(tag, attrName) {
     var tagAttrs = defaultPropVals[tag] || (defaultPropVals[tag] = {});
-    return attrName in tagAttrs ? tagAttrs[attrName] : tagAttrs[attrName] = document.createElement(tag)[attrName];
+    return attrName in tagAttrs ? tagAttrs[attrName] : tagAttrs[attrName] = doc.createElement(tag)[attrName];
 }
 
 var ATTR_NAMES = {
@@ -193,7 +288,8 @@ exports['default'] = function (attrName) {
 
 module.exports = exports['default'];
 
-},{"../utils/dasherize":18,"../utils/escapeAttr":19,"../utils/isInArray":21}],3:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../utils/dasherize":20,"../utils/escapeAttr":21,"../utils/isInArray":23}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -250,7 +346,7 @@ var SyntheticEvent = (function () {
 exports["default"] = SyntheticEvent;
 module.exports = exports["default"];
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -263,7 +359,7 @@ function addEventListenerToDom(domNode, type, fn, useCapture) {
 exports["default"] = addEventListenerToDom;
 module.exports = exports["default"];
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -303,7 +399,8 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
+(function (global){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -332,7 +429,7 @@ var _getDomNodeId = require('../getDomNodeId');
 
 var _getDomNodeId2 = _interopRequireDefault(_getDomNodeId);
 
-var doc = typeof document !== 'undefined' ? document : null,
+var doc = global.document,
     body = doc && doc.body,
     BUBBLEABLE_NATIVE_EVENTS = ['mouseover', 'mousemove', 'mouseout', 'mousedown', 'mouseup', 'click', 'dblclick', 'keydown', 'keypress', 'keyup', 'change', 'input', 'submit', 'focus', 'blur', 'dragstart', 'drag', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop', 'contextmenu', 'wheel', 'copy', 'cut', 'paste'],
     NON_BUBBLEABLE_NATIVE_EVENTS = ['scroll', 'load', 'error'];
@@ -468,13 +565,15 @@ exports.addListener = addListener;
 exports.removeListener = removeListener;
 exports.removeListeners = removeListeners;
 
-},{"../getDomNodeId":9,"./SyntheticEvent":3,"./addDomEventListener":4,"./isEventSupported":7,"./removeDomEventListener":8}],7:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"../getDomNodeId":10,"./SyntheticEvent":4,"./addDomEventListener":5,"./isEventSupported":8,"./removeDomEventListener":9}],8:[function(require,module,exports){
+(function (global){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
     value: true
 });
-var doc = document;
+var doc = global.document;
 
 function isEventSupported(type) {
     var eventProp = 'on' + type;
@@ -496,7 +595,8 @@ function isEventSupported(type) {
 exports['default'] = isEventSupported;
 module.exports = exports['default'];
 
-},{}],8:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -509,7 +609,7 @@ function removeEventListenerFromDom(domNode, type, fn) {
 exports["default"] = removeEventListenerFromDom;
 module.exports = exports["default"];
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -525,7 +625,7 @@ function getDomNodeId(node, onlyGet) {
 exports['default'] = getDomNodeId;
 module.exports = exports['default'];
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -632,7 +732,7 @@ function unmountFromDomSync(domNode) {
     unmount(domNode, null, null, true);
 }
 
-},{"./getDomNodeId":9,"./rafBatch":12}],11:[function(require,module,exports){
+},{"./getDomNodeId":10,"./rafBatch":13}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -736,13 +836,14 @@ exports['default'] = {
 };
 module.exports = exports['default'];
 
-},{"./domAttrsMutators":2,"./events/attrsToEvents":5,"./events/domEventManager":6}],12:[function(require,module,exports){
+},{"./domAttrsMutators":3,"./events/attrsToEvents":6,"./events/domEventManager":7}],13:[function(require,module,exports){
+(function (global){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var raf = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
+var raf = global.requestAnimationFrame || global.webkitRequestAnimationFrame || global.mozRequestAnimationFrame || function (callback) {
     return setTimeout(callback, 1000 / 60);
 };
 
@@ -765,7 +866,8 @@ function rafBatch(fn) {
 exports["default"] = rafBatch;
 module.exports = exports["default"];
 
-},{}],13:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -928,7 +1030,7 @@ function createComponent(props, staticProps) {
 exports['default'] = createComponent;
 module.exports = exports['default'];
 
-},{"./client/rafBatch":12,"./createNode":14,"./utils/noOp":22}],14:[function(require,module,exports){
+},{"./client/rafBatch":13,"./createNode":15,"./utils/noOp":24}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -961,7 +1063,7 @@ function createNode(type) {
 exports['default'] = createNode;
 module.exports = exports['default'];
 
-},{"./nodes/ComponentNode":15,"./nodes/TagNode":16}],15:[function(require,module,exports){
+},{"./nodes/ComponentNode":16,"./nodes/TagNode":17}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1076,7 +1178,8 @@ var ComponentNode = (function () {
 exports['default'] = ComponentNode;
 module.exports = exports['default'];
 
-},{"../client/patchOps":11}],16:[function(require,module,exports){
+},{"../client/patchOps":12}],17:[function(require,module,exports){
+(function (process){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1110,6 +1213,10 @@ var _utilsEscapeHtml2 = _interopRequireDefault(_utilsEscapeHtml);
 var _utilsIsInArray = require('../utils/isInArray');
 
 var _utilsIsInArray2 = _interopRequireDefault(_utilsIsInArray);
+
+var _utilsConsole = require('../utils/console');
+
+var _utilsConsole2 = _interopRequireDefault(_utilsConsole);
 
 var doc = typeof document !== 'undefined' ? document : null,
     SHORT_TAGS = {
@@ -1359,6 +1466,10 @@ var TagNode = (function () {
     }, {
         key: 'patch',
         value: function patch(node) {
+            if (this === node) {
+                return;
+            }
+
             if (this.type !== node.type || this._tag !== node._tag || this._ns !== node._ns) {
                 _clientPatchOps2['default'].replace(this._parentNode, this, node);
                 return;
@@ -1375,7 +1486,7 @@ var TagNode = (function () {
             var childrenA = this._children,
                 childrenB = node._children;
 
-            if (!childrenA && !childrenB) {
+            if (childrenA === childrenB) {
                 return;
             }
 
@@ -1384,9 +1495,7 @@ var TagNode = (function () {
 
             if (isChildrenBText) {
                 if (isChildrenAText) {
-                    if (childrenA !== childrenB) {
-                        _clientPatchOps2['default'].updateText(this, childrenB, node._escapeChildren);
-                    }
+                    _clientPatchOps2['default'].updateText(this, childrenB, node._escapeChildren);
                     return;
                 }
 
@@ -1539,6 +1648,10 @@ var TagNode = (function () {
             var attrsA = this._attrs,
                 attrsB = node._attrs;
 
+            if (attrsA === attrsB) {
+                return;
+            }
+
             var attrName = undefined,
                 attrAVal = undefined,
                 attrBVal = undefined,
@@ -1583,6 +1696,10 @@ var TagNode = (function () {
     }, {
         key: '_patchAttrArr',
         value: function _patchAttrArr(attrName, arrA, arrB) {
+            if (arrA === arrB) {
+                return;
+            }
+
             var lenA = arrA.length;
             var hasDiff = false;
 
@@ -1603,6 +1720,10 @@ var TagNode = (function () {
     }, {
         key: '_patchAttrObj',
         value: function _patchAttrObj(attrName, objA, objB) {
+            if (objA === objB) {
+                return;
+            }
+
             var hasDiff = false,
                 diffObj = {};
 
@@ -1655,7 +1776,41 @@ function processChildren(children) {
 
     var typeOfChildren = typeof children;
 
-    return typeOfChildren === 'object' ? Array.isArray(children) ? children : [children] : typeOfChildren === 'string' ? children : children.toString();
+    if (typeOfChildren === 'object') {
+        var res = Array.isArray(children) ? children : [children];
+
+        if (process.env.NODE_ENV !== "production") {
+            checkChildren(res);
+        }
+
+        return res;
+    }
+
+    return typeOfChildren === 'string' ? children : children.toString();
+}
+
+function checkChildren(children) {
+    var keys = {},
+        len = children.length;
+
+    var i = 0,
+        child = undefined;
+
+    while (i < len) {
+        child = children[i++];
+
+        if (typeof child !== 'object') {
+            _utilsConsole2['default'].error('Error! You mustn\'t use simple child in case of multiple children.');
+        } else if (child._key == null) {
+            if (len > 1) {
+                _utilsConsole2['default'].warn('Warning! You\'re using children without keys.');
+            }
+        } else if (child._key in keys) {
+            _utilsConsole2['default'].error('Error! Childrens\' keys must be unique across the children');
+        } else {
+            keys[child._key] = true;
+        }
+    }
 }
 
 function buildKeys(children, idxFrom, idxTo) {
@@ -1674,7 +1829,8 @@ function buildKeys(children, idxFrom, idxTo) {
 exports['default'] = TagNode;
 module.exports = exports['default'];
 
-},{"../client/domAttrsMutators":2,"../client/events/attrsToEvents":5,"../client/events/domEventManager":6,"../client/patchOps":11,"../utils/escapeHtml":20,"../utils/isInArray":21}],17:[function(require,module,exports){
+}).call(this,require('_process'))
+},{"../client/domAttrsMutators":3,"../client/events/attrsToEvents":6,"../client/events/domEventManager":7,"../client/patchOps":12,"../utils/console":19,"../utils/escapeHtml":22,"../utils/isInArray":23,"_process":1}],18:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1687,7 +1843,36 @@ function renderToString(tree) {
 exports["default"] = renderToString;
 module.exports = exports["default"];
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
+(function (global){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+    value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _noOp = require('./noOp');
+
+var _noOp2 = _interopRequireDefault(_noOp);
+
+var globalConsole = global.console,
+    console = {};
+
+['log', 'info', 'warn', 'error'].forEach(function (name) {
+    console[name] = globalConsole ? globalConsole[name] ? function () {
+        globalConsole[name].apply(globalConsole, arguments);
+    } : function () {
+        globalConsole.log.apply(globalConsole, arguments);
+    } : _noOp2['default'];
+});
+
+exports['default'] = console;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./noOp":24}],20:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1702,7 +1887,7 @@ function dasherize(str) {
 exports['default'] = dasherize;
 module.exports = exports['default'];
 
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1715,7 +1900,7 @@ function escapeAttr(str) {
 exports['default'] = escapeAttr;
 module.exports = exports['default'];
 
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1728,7 +1913,7 @@ function escapeHtml(str) {
 exports['default'] = escapeHtml;
 module.exports = exports['default'];
 
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1750,7 +1935,7 @@ function isInArray(arr, item) {
 exports["default"] = isInArray;
 module.exports = exports["default"];
 
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -1761,7 +1946,8 @@ function noOp() {}
 exports["default"] = noOp;
 module.exports = exports["default"];
 
-},{}],23:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
+(function (process){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -1790,6 +1976,14 @@ var _Component = require('./Component');
 
 var _Component2 = _interopRequireDefault(_Component);
 
+var _utilsConsole = require('./utils/console');
+
+var _utilsConsole2 = _interopRequireDefault(_utilsConsole);
+
+if (process.env.NODE_ENV !== "production") {
+    _utilsConsole2['default'].info('You\'re using dev version of vidom');
+}
+
 var _clientMounter = require('./client/mounter');
 
 _defaults(exports, _interopExportWildcard(_clientMounter, _defaults));
@@ -1799,13 +1993,14 @@ exports.createComponent = _createComponent2['default'];
 exports.renderToString = _renderToString2['default'];
 exports.Component = _Component2['default'];
 
-},{"./Component":1,"./client/mounter":10,"./createComponent":13,"./createNode":14,"./renderToString":17}],24:[function(require,module,exports){
+}).call(this,require('_process'))
+},{"./Component":2,"./client/mounter":11,"./createComponent":14,"./createNode":15,"./renderToString":18,"./utils/console":19,"_process":1}],26:[function(require,module,exports){
 'use strict';
 
-var _libVidom = require('../lib/vidom');
+var _srcVidom = require('../src/vidom');
 
 var root1DomNode = document.getElementById('root1');
 
-(0, _libVidom.mountToDom)(root1DomNode, (0, _libVidom.node)('div'));
+(0, _srcVidom.mountToDom)(root1DomNode, (0, _srcVidom.node)('div').children('!!!!!!'));
 
-},{"../lib/vidom":23}]},{},[24]);
+},{"../src/vidom":25}]},{},[26]);

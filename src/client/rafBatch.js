@@ -1,6 +1,6 @@
-const raf = window.requestAnimationFrame ||
-    window.webkitRequestAnimationFrame ||
-    window.mozRequestAnimationFrame ||
+const raf = global.requestAnimationFrame ||
+    global.webkitRequestAnimationFrame ||
+    global.mozRequestAnimationFrame ||
     function(callback) {
         return setTimeout(callback, 1000 / 60);
     };

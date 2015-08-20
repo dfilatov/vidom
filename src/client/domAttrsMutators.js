@@ -2,6 +2,8 @@ import escapeAttr from '../utils/escapeAttr';
 import isInArray from '../utils/isInArray';
 import dasherize from '../utils/dasherize';
 
+const doc = global.document;
+
 function setAttr(node, name, val) {
     if(name === 'type' && node.tagName === 'INPUT') {
         const value = node.value; // value will be lost in IE if type is changed
@@ -95,7 +97,7 @@ function getDefaultPropVal(tag, attrName) {
     let tagAttrs = defaultPropVals[tag] || (defaultPropVals[tag] = {});
     return attrName in tagAttrs?
         tagAttrs[attrName] :
-        tagAttrs[attrName] = document.createElement(tag)[attrName];
+        tagAttrs[attrName] = doc.createElement(tag)[attrName];
 }
 
 const ATTR_NAMES = {

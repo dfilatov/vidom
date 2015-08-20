@@ -1,4 +1,4 @@
-const doc = document;
+const doc = global.document;
 
 function isEventSupported(type) {
     const eventProp = 'on' + type;

@@ -4,7 +4,7 @@ import isEventSupported from './isEventSupported';
 import SyntheticEvent from './SyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
 
-const doc = typeof document !== 'undefined'? document : null,
+const doc = global.document,
     body = doc && doc.body,
     BUBBLEABLE_NATIVE_EVENTS = [
         'mouseover', 'mousemove', 'mouseout', 'mousedown', 'mouseup',

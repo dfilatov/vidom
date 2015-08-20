@@ -2,10 +2,10 @@ import createNode from './createNode';
 import createComponent from './createComponent';
 import renderToString from './renderToString';
 import Component from './Component';
-import console from 'console';
+import console from './utils/console';
 
 if(process.env.NODE_ENV !== "production") {
-    console.log('You\'re using dev version of vidom');
+    console.info('You\'re using dev version of Vidom');
 }
 
 export * from './client/mounter';
