@@ -4,7 +4,7 @@ var vow = require('vow'),
     version = process.argv.slice(2)[0] || 'patch';
 
 function execCommand(command) {
-    vowNode.invoke(childProcess.exec, command);
+    return vowNode.invoke(childProcess.exec, command);
 }
 
 execCommand('git pull')
