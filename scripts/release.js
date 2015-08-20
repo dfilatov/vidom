@@ -13,6 +13,8 @@ vowNode.invoke(npm.load)
             return vowNode.invoke(npm.commands.version, [version]);
         }).then(function() {
             return vowNode.invoke(childProcess.exec, 'git push --follow-tags');
+        }).then(function() {
+            return vowNode.invoke(npm.commands.publish);
         });
     })
     .done();
