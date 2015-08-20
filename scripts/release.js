@@ -4,7 +4,10 @@ var npm = require('npm'),
     childProcess = require('child_process'),
     version = process.argv.slice(2)[0] || 'patch';
 
-vowNode.invoke(npm.load)
+vowNode.invoke(childProcess.exec, 'git pull')
+    .then(function() {
+        vowNode.invoke(npm.load);
+    })
     .then(function(npm) {
         return vow.all([
             vowNode.invoke(npm.commands.runScript, ['build-lib']),
