@@ -6,7 +6,7 @@ var npm = require('npm'),
 
 vowNode.invoke(childProcess.exec, 'git pull')
     .then(function() {
-        vowNode.invoke(npm.load);
+        return vowNode.invoke(npm.load);
     })
     .then(function(npm) {
         return vow.all([
