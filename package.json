@@ -15,6 +15,7 @@
     "url": "git://github.com/dfilatov/vidom.git"
   },
   "devDependencies": {
+    "babel": "5.8.21",
     "babelify": "6.1.3",
     "browserify": "10.2.1",
     "envify": "3.4.0",
@@ -36,7 +37,7 @@
     "test": "browserify spec/boot.js -t babelify -o spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "test-browsers": "NODE_ENV=production zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
-    "build-lib": "rm -rf lib && mkdir -p lib && browserify src/vidom.js -t babelify -o lib/vidom.js",
+    "build-lib": "rm -rf lib && mkdir -p lib && babel src --out-dir lib",
     "build-dist": "rm -rf dist && mkdir -p dist && NODE_ENV=production browserify src/vidom.js -t babelify -t envify -o dist/vidom.js --standalone vidom && uglifyjs dist/vidom.js -c -m -o dist/vidom.min.js",
     "build-example": "browserify example/vidom.js -t babelify -o example/vidom.build.js",
     "build-demo": "browserify demo/demo.js -t babelify -o demo/demo.build.js",
