@@ -9,6 +9,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * API to build your own high-level components
   * Server-side rendering with the ability to reuse existing DOM in the browsers also known as isomorphism.
   * Namespaces support (e.g., SVG, MathML)
+  * Small footprint, about 6Kb after gzip
 
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
