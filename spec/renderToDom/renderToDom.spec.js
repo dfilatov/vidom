@@ -45,12 +45,11 @@ describe('renderToDom', () => {
 
             expect(domNode.getAttribute('cols')).to.equal('5');
             expect(domNode.getAttribute('rows')).to.equal('2');
-            expect(domNode.getAttribute('disabled')).to.equal('true');
+            expect(domNode.hasAttribute('disabled')).to.equal(true);
         });
 
         it('should be rendered as properties', () => {
-            const domNode = createNode('input').attrs({ checked : true }).renderToDom();
-
+            const domNode = createNode('input').attrs({ type : 'radio', checked : true }).renderToDom();
             expect(domNode.checked).to.equal(true);
         });
 

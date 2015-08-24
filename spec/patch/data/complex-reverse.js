@@ -10,13 +10,13 @@ const parentNode = createNode('div'),
 export default {
     'name' : 'complex-reverse',
     'trees' : [
-        parentNode.children([
+        createNode('div').children([
             nodeA,
             nodeB,
             nodeC,
             nodeD
         ]),
-        createNode('div').children([
+        parentNode.children([
             createNode('a').key('d'),
             createNode('a').key('c'),
             createNode('a').key('b'),

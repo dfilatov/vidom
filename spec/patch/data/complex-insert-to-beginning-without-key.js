@@ -9,11 +9,11 @@ const nodeA = createNode('a'),
 export default {
     'name' : 'complex-insert-to-beginning-without-key',
     'trees' : [
-        parentNode.children([
+        createNode('div').children([
             createNode('a').key('c'),
             createNode('a').key('d')
         ]),
-        createNode('div').children([
+        parentNode.children([
             nodeA,
             nodeB,
             nodeC,

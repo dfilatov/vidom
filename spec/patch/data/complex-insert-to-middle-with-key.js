@@ -9,12 +9,12 @@ const parentNode = createNode('div'),
 export default {
     'name' : 'complex-insert-to-middle-with-key',
     'trees' : [
-        parentNode.children([
+        createNode('div').children([
             createNode('a').key('a'),
             createNode('a').key('b'),
             createNode('a').key('e')
         ]),
-        createNode('div').children([
+        parentNode.children([
             createNode('a').key('a'),
             createNode('a').key('b'),
             nodeC,

@@ -8,13 +8,13 @@ const nodeC = createNode('a').key('c'),
 export default {
     'name' : 'complex-remove-from-ending-with-key',
     'trees' : [
-        parentNode.children([
+        createNode('div').children([
             createNode('a').key('a'),
             createNode('a').key('b'),
             nodeC,
             nodeD
         ]),
-        createNode('div').children([
+        parentNode.children([
             createNode('a').key('a'),
             createNode('a').key('b')
         ])

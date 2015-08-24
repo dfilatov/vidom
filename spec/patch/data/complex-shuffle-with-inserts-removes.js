@@ -13,13 +13,13 @@ const nodeA = createNode('a').key('a'),
 export default {
     'name' : 'complex-shuffle-with-inserts-removes',
     'trees' : [
-        parentNode.children([
+        createNode('div').children([
             nodeA,
             nodeB,
             nodeC,
             nodeD
         ]),
-        createNode('div').children([
+        parentNode.children([
             nodeE,
             createNode('a').key('b'),
             nodeF,

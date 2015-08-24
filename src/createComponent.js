@@ -17,7 +17,7 @@ function unmountComponent() {
     this.onUnmount();
 }
 
-function patchComponent(attrs, children) {
+function patchComponent(attrs, children, parentNode) {
     let prevRootNode = this._rootNode,
         prevAttrs = this._attrs;
 
@@ -34,7 +34,7 @@ function patchComponent(attrs, children) {
 
     if(this.isMounted()) {
         this._rootNode = this.render();
-        prevRootNode.patch(this._rootNode);
+        prevRootNode.patch(this._rootNode, parentNode);
         this.onUpdate(attrs);
     }
 }

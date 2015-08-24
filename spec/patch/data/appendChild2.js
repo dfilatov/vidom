@@ -8,8 +8,8 @@ const node1 = createNode('div'),
 export default {
     'name' : 'appendChild2',
     'trees' : [
-        parentNode,
-        createNode('div').children([
+        createNode('div'),
+        parentNode.children([
             node1,
             node2
         ])
