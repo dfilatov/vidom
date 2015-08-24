@@ -1,7 +1,7 @@
 # vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom) [![npm version](https://badge.fury.io/js/vidom.svg)](http://badge.fury.io/js/vidom)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)
 
-Vidom is just a library to build UI. It's highly inspired and based on ideas from [React](https://facebook.github.io/react/). Its main goal is to provide as fast as possible lightweight implementation with API similar to React. See [benchmark](http://vdom-benchmark.github.io/vdom-benchmark/).
+Vidom is just a library to build UI. It's highly inspired and based on ideas from [React](https://facebook.github.io/react/). Its main goal is to provide as fast as possible lightweight implementation with API similar to React. See corresponding [benchmark](http://vdom-benchmark.github.io/vdom-benchmark/).
 
 ## Main features
   * Fast virtual DOM builder and patcher under the hood
