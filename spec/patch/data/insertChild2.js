@@ -8,14 +8,14 @@ const newNode = createNode('input').key('a'),
 export default {
     'name' : 'insertChild2',
     'trees' : [
-        parentNode.children([
-            createNode('span'),
-            beforeNode
-        ]),
         createNode('div').children([
             createNode('span'),
-            newNode,
             createNode('input')
+        ]),
+        parentNode.children([
+            createNode('span'),
+            newNode,
+            beforeNode
         ])
     ],
     'patch' : [

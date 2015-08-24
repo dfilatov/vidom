@@ -2,6 +2,8 @@ import domAttrsMutators from './domAttrsMutators';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
 
+const doc = global.document;
+
 function appendChild(parentNode, childNode) {
     parentNode.getDomNode().appendChild(childNode.renderToDom(parentNode));
     childNode.mount();
@@ -21,7 +23,8 @@ function removeChild(parentNode, childNode) {
 function moveChild(parentNode, childNode, toChildNode, after) {
     const parentDomNode = parentNode.getDomNode(),
         childDomNode = childNode.getDomNode(),
-        toChildDomNode = toChildNode.getDomNode();
+        toChildDomNode = toChildNode.getDomNode(),
+        activeDomNode = doc.activeElement;
 
     if(after) {
         const nextSiblingDomNode = toChildDomNode.nextSibling;
@@ -31,6 +34,10 @@ function moveChild(parentNode, childNode, toChildNode, after) {
     }
     else {
         parentDomNode.insertBefore(childDomNode, toChildDomNode);
+    }
+
+    if(doc.activeElement !== activeDomNode) {
+        activeDomNode.focus();
     }
 }
 

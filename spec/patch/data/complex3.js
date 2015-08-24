@@ -11,13 +11,13 @@ const nodeA = createNode('a').key('a'),
 export default {
     'name' : 'complex3',
     'trees' : [
-        parentNode.children([
-            nodeD,
-            createNode('a').key('b')
-        ]),
         createNode('div').children([
+            nodeD,
+            nodeB
+        ]),
+        parentNode.children([
             nodeA,
-            nodeB,
+            createNode('a').key('b'),
             nodeC,
             createNode('a').key('d'),
             nodeE

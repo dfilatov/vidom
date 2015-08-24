@@ -5,9 +5,11 @@ import ATTRS_TO_EVENTS from '../client/events/attrsToEvents';
 import escapeHtml from '../utils/escapeHtml';
 import isInArray from '../utils/isInArray';
 import console from '../utils/console';
+import { isTrident } from '../client/browsers';
+import createElement from '../client/utils/createElement';
+import createElementByHtml from '../client/utils/createElementByHtml';
 
-const doc = typeof document !== 'undefined'? document : null,
-    SHORT_TAGS = {
+const SHORT_TAGS = {
         area : true,
         base : true,
         br : true,
@@ -76,8 +78,15 @@ class TagNode {
             this._ns || (this._ns = parentNode._ns);
         }
 
+        const children = this._children;
+
+        if(isTrident && children && typeof children !== 'string') {
+            const domNode = createElementByHtml(this.renderToString(), this._tag, this._ns);
+            this.adoptDom(domNode, parentNode);
+            return domNode;
+        }
+
         const domNode = createElement(this._ns, this._tag),
-            children = this._children,
             attrs = this._attrs;
 
         if(children) {
@@ -144,7 +153,7 @@ class TagNode {
                         }
                     }
 
-                    if(attrHtml = domAttrsMutators(name).toString(name, value)) {
+                    if(!ATTRS_TO_EVENTS[name] && (attrHtml = domAttrsMutators(name).toString(name, value))) {
                         res += ' ' + attrHtml;
                     }
                 }
@@ -244,20 +253,25 @@ class TagNode {
         this._parentNode = null;
     }
 
-    patch(node) {
+    patch(node, parentNode) {
         if(this === node) {
             return;
         }
 
+        if(parentNode) {
+            node._parentNode = parentNode;
+            node._ns || (node._ns = parentNode._ns);
+        }
+
         if(this.type !== node.type || this._tag !== node._tag || this._ns !== node._ns) {
-            patchOps.replace(this._parentNode, this, node);
+            patchOps.replace(parentNode || null, this, node);
             return;
         }
 
+        this._domNode && (node._domNode = this._domNode);
+
         this._patchChildren(node);
         this._patchAttrs(node);
-
-        this._domNode && (node._domNode = this._domNode);
     }
 
     _patchChildren(node) {
@@ -302,7 +316,7 @@ class TagNode {
         if(isChildrenAText || !childrenA || !childrenA.length) {
             let iB = 0;
             while(iB < childrenBLen) {
-                patchOps.appendChild(this, childrenB[iB++]);
+                patchOps.appendChild(node, childrenB[iB++]);
             }
             return;
         }
@@ -310,7 +324,7 @@ class TagNode {
         const childrenALen = childrenA.length;
 
         if(childrenALen === 1 && childrenBLen === 1) {
-            childrenA[0].patch(childrenB[0]);
+            childrenA[0].patch(childrenB[0], node);
             return;
         }
 
@@ -341,33 +355,33 @@ class TagNode {
                 updateRightIdxA = true;
             }
             else if(leftChildAKey === leftChildBKey) {
-                leftChildA.patch(leftChildB);
+                leftChildA.patch(leftChildB, node);
                 updateLeftIdxA = true;
                 updateLeftIdxB = true;
             }
             else if(rightChildAKey === rightChildBKey) {
-                rightChildA.patch(rightChildB);
+                rightChildA.patch(rightChildB, node);
                 updateRightIdxA = true;
                 updateRightIdxB = true;
             }
             else if(leftChildAKey != null && leftChildAKey === rightChildBKey) {
-                moveChild(this, leftChildA, rightChildA, true);
-                leftChildA.patch(rightChildB);
+                patchOps.moveChild(node, leftChildA, rightChildA, true);
+                leftChildA.patch(rightChildB, node);
                 updateLeftIdxA = true;
                 updateRightIdxB = true;
             }
             else if(rightChildAKey != null && rightChildAKey === leftChildBKey) {
-                moveChild(this, rightChildA, leftChildA, false);
-                rightChildA.patch(leftChildB);
+                patchOps.moveChild(node, rightChildA, leftChildA, false);
+                rightChildA.patch(leftChildB, node);
                 updateRightIdxA = true;
                 updateLeftIdxB = true;
             }
             else if(leftChildAKey != null && leftChildBKey == null) {
-                patchOps.insertChild(this, leftChildB, leftChildA);
+                patchOps.insertChild(node, leftChildB, leftChildA);
                 updateLeftIdxB = true;
             }
             else if(leftChildAKey == null && leftChildBKey != null) {
-                patchOps.removeChild(this, leftChildA);
+                patchOps.removeChild(node, leftChildA);
                 updateLeftIdxA = true;
             }
             else {
@@ -375,11 +389,11 @@ class TagNode {
                 if((foundAChildIdx = childrenAKeys[leftChildBKey]) != null) {
                     foundAChild = childrenA[foundAChildIdx];
                     childrenAIndicesToSkip[foundAChildIdx] = true;
-                    moveChild(this, foundAChild, leftChildA, false);
-                    foundAChild.patch(leftChildB);
+                    patchOps.moveChild(node, foundAChild, leftChildA, false);
+                    foundAChild.patch(leftChildB, node);
                 }
                 else {
-                    patchOps.insertChild(this, leftChildB, leftChildA);
+                    patchOps.insertChild(node, leftChildB, leftChildA);
                 }
                 updateLeftIdxB = true;
             }
@@ -419,15 +433,15 @@ class TagNode {
 
         while(leftIdxA <= rightIdxA) {
             if(!childrenAIndicesToSkip[leftIdxA]) {
-                patchOps.removeChild(this, childrenA[leftIdxA]);
+                patchOps.removeChild(node, childrenA[leftIdxA]);
             }
             ++leftIdxA;
         }
 
         while(leftIdxB <= rightIdxB) {
             rightIdxB < childrenBLen - 1?
-                patchOps.insertChild(this, childrenB[leftIdxB], childrenB[rightIdxB + 1]) :
-                patchOps.appendChild(this, childrenB[leftIdxB]);
+                patchOps.insertChild(node, childrenB[leftIdxB], childrenB[rightIdxB + 1]) :
+                patchOps.appendChild(node, childrenB[leftIdxB]);
             ++leftIdxB;
         }
     }
@@ -531,28 +545,6 @@ class TagNode {
         }
 
         hasDiff && patchOps.updateAttr(this, attrName, diffObj);
-    }
-}
-
-let elementProtos = {};
-function createElement(ns, tag) {
-    let baseElement;
-    if(ns) {
-        const key = ns + ':' + tag;
-        baseElement = elementProtos[key] || (elementProtos[key] = doc.createElementNS(ns, tag));
-    }
-    else {
-        baseElement = elementProtos[tag] || (elementProtos[tag] = doc.createElement(tag));
-    }
-
-    return baseElement.cloneNode();
-}
-
-function moveChild(parentNode, childNode, toChildNode, after) {
-    const activeElement = doc.activeElement;
-    patchOps.moveChild(parentNode, childNode, toChildNode, after);
-    if(doc.activeElement !== activeElement) {
-        activeElement.focus();
     }
 }
 

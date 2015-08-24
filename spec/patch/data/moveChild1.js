@@ -8,11 +8,11 @@ const parentNode = createNode('div'),
 export default {
     'name' : 'moveChild1',
     'trees' : [
-        parentNode.children([
+        createNode('div').children([
             nodeA,
             nodeB
         ]),
-        createNode('div').children([
+        parentNode.children([
             createNode('input').key('b'),
             createNode('input').key('a')
         ])

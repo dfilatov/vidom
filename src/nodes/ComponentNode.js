@@ -61,15 +61,15 @@ class ComponentNode {
         this._parentNode = null;
     }
 
-    patch(node) {
+    patch(node, parentNode) {
         if(this.type !== node.type || this._component !== node._component) {
-            patchOps.replace(this._parentNode, this, node);
+            patchOps.replace(this._parentNode, this, parentNode);
             return;
         }
 
         let instance = this._getInstance();
 
-        instance.patch(node._attrs, node._children);
+        instance.patch(node._attrs, node._children, parentNode);
         node._instance = instance;
     }
 
