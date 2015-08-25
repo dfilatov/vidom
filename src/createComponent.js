@@ -1,6 +1,7 @@
 import noOp from './utils/noOp';
 import rafBatch from './client/rafBatch';
 import createNode from './createNode';
+import console from './utils/console';
 
 const emptyAttrs = {};
 
@@ -33,10 +34,25 @@ function patchComponent(attrs, children, parentNode) {
     this._children = children;
 
     if(this.isMounted()) {
-        this._rootNode = this.render();
-        prevRootNode.patch(this._rootNode, parentNode);
-        this.onUpdate(attrs);
+        const shouldUpdate = this.shouldUpdate(this.getAttrs(), prevAttrs || emptyAttrs);
+
+        if(process.env.NODE_ENV !== "production") {
+            const shouldUpdateResType = typeof shouldUpdate;
+            if(shouldUpdateResType !== 'boolean') {
+                console.warn(`Warning! Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
+            }
+        }
+
+        if(shouldUpdate) {
+            this._rootNode = this.render();
+            prevRootNode.patch(this._rootNode, parentNode);
+            this.onUpdate(attrs);
+        }
     }
+}
+
+function shouldComponentUpdate(attrs, prevAttrs) {
+    return true;
 }
 
 function renderComponentToDom(parentNode) {
@@ -113,6 +129,7 @@ function createComponent(props, staticProps) {
             onMount : noOp,
             onUnmount : noOp,
             onAttrsReceive : noOp,
+            shouldUpdate : shouldComponentUpdate,
             onUpdate : noOp,
             isMounted : isComponentMounted,
             renderToDom : renderComponentToDom,
