@@ -5,7 +5,7 @@ import ATTRS_TO_EVENTS from '../client/events/attrsToEvents';
 import escapeHtml from '../utils/escapeHtml';
 import isInArray from '../utils/isInArray';
 import console from '../utils/console';
-import { isTrident } from '../client/browsers';
+import { isTrident, isEdge } from '../client/browsers';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
 
@@ -27,7 +27,8 @@ const SHORT_TAGS = {
         source : true,
         track : true,
         wbr : true
-    };
+    },
+    USE_DOM_STRINGS = isTrident || isEdge;
 
 class TagNode {
     constructor(tag) {
@@ -80,7 +81,7 @@ class TagNode {
 
         const children = this._children;
 
-        if(isTrident && children && typeof children !== 'string') {
+        if(USE_DOM_STRINGS && children && typeof children !== 'string') {
             const domNode = createElementByHtml(this.renderToString(), this._tag, this._ns);
             this.adoptDom(domNode, parentNode);
             return domNode;
