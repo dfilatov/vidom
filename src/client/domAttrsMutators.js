@@ -36,7 +36,7 @@ function setPropWithCheck(node, name, val) {
 }
 
 function removeAttr(node, name) {
-    node.removeAttribute(name);
+    node.removeAttribute(ATTR_NAMES[name] || name);
 }
 
 function removeProp(node, name) {
