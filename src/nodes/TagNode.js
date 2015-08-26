@@ -550,7 +550,7 @@ class TagNode {
 }
 
 function processChildren(children) {
-    if(!children) {
+    if(children == null) {
         return null;
     }
 
