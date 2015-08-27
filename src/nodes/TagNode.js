@@ -40,7 +40,6 @@ class TagNode {
         this._attrs = null;
         this._children = null;
         this._escapeChildren = true;
-        this._parentNode = null;
     }
 
     getDomNode() {
@@ -74,9 +73,8 @@ class TagNode {
     }
 
     renderToDom(parentNode) {
-        if(parentNode) {
-            this._parentNode = parentNode;
-            this._ns || (this._ns = parentNode._ns);
+        if(!this._ns && parentNode && parentNode._ns) {
+            this._ns = parentNode._ns;
         }
 
         const children = this._children;
@@ -190,9 +188,8 @@ class TagNode {
     }
 
     adoptDom(domNode, parentNode) {
-        if(parentNode) {
-            this._parentNode = parentNode;
-            this._ns || (this._ns = parentNode._ns);
+        if(!this._ns && parentNode && parentNode._ns) {
+            this._ns = parentNode._ns;
         }
 
         this._domNode = domNode;
@@ -251,7 +248,6 @@ class TagNode {
         removeListeners(this._domNode);
 
         this._domNode = null;
-        this._parentNode = null;
     }
 
     patch(node, parentNode) {
@@ -259,9 +255,8 @@ class TagNode {
             return;
         }
 
-        if(parentNode) {
-            node._parentNode = parentNode;
-            node._ns || (node._ns = parentNode._ns);
+        if(!node._ns && parentNode && parentNode._ns) {
+            node._ns = parentNode._ns;
         }
 
         if(this.type !== node.type || this._tag !== node._tag || this._ns !== node._ns) {
@@ -559,7 +554,7 @@ function processChildren(children) {
     if(typeOfChildren === 'object') {
         const res = Array.isArray(children)? children : [children];
 
-        if(process.env.NODE_ENV !== "production") {
+        if(process.env.NODE_ENV !== 'production') {
             checkChildren(res);
         }
 

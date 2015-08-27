@@ -36,7 +36,7 @@ function patchComponent(attrs, children, parentNode) {
     if(this.isMounted()) {
         const shouldUpdate = this.shouldUpdate(this.getAttrs(), prevAttrs || emptyAttrs);
 
-        if(process.env.NODE_ENV !== "production") {
+        if(process.env.NODE_ENV !== 'production') {
             const shouldUpdateResType = typeof shouldUpdate;
             if(shouldUpdateResType !== 'boolean') {
                 console.warn(`Warning! Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);

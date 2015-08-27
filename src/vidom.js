@@ -4,7 +4,7 @@ import renderToString from './renderToString';
 import Component from './Component';
 import console from './utils/console';
 
-if(process.env.NODE_ENV !== "production") {
+if(process.env.NODE_ENV !== 'production') {
     console.info('You\'re using dev version of Vidom');
 }
 

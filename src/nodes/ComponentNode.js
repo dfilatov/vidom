@@ -9,7 +9,6 @@ class ComponentNode {
         this._instance = null;
         this._children = null;
         this._ns = null;
-        this._parentNode = null;
     }
 
     getDomNode() {
@@ -32,9 +31,8 @@ class ComponentNode {
     }
 
     renderToDom(parentNode) {
-        if(parentNode) {
-            this._parentNode = parentNode;
-            this._ns || (this._ns = parentNode._ns);
+        if(!this._ns && parentNode && parentNode._ns) {
+            this._ns = parentNode._ns;
         }
 
         return this._domNode = this._getInstance().renderToDom(this);
@@ -57,13 +55,19 @@ class ComponentNode {
             this._instance.unmount();
             this._instance = null;
         }
-
-        this._parentNode = null;
     }
 
     patch(node, parentNode) {
+        if(this === node) {
+            return;
+        }
+
+        if(!node._ns && parentNode && parentNode._ns) {
+            node._ns = parentNode._ns;
+        }
+
         if(this.type !== node.type || this._component !== node._component) {
-            patchOps.replace(this._parentNode, this, parentNode);
+            patchOps.replace(parentNode || null, this, node);
             return;
         }
 
