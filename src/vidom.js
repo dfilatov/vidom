@@ -1,6 +1,7 @@
 import createNode from './createNode';
 import createComponent from './createComponent';
 import renderToString from './renderToString';
+import normalizeChildren from './normalizeChildren';
 import Component from './Component';
 import console from './utils/console';
 
@@ -14,5 +15,6 @@ export {
     createNode as node,
     createComponent,
     renderToString,
+    normalizeChildren,
     Component
 }

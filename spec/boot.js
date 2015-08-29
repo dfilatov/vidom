@@ -1,6 +1,7 @@
 import expect from 'expect.js';
 import './renderToDom/renderToDom.spec.js';
 import './renderToString/renderToString.spec.js';
+import './normalizeChildren/normalizeChildren.spec.js';
 import './patch/patch.spec.js';
 import './patchDom/patchDom.spec.js';
 import './adoptDom/adoptDom.spec.js';
