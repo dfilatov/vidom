@@ -1,7 +1,7 @@
 import normalizeChildren from '../../src/normalizeChildren';
 import createNode from '../../src/createNode';
 
-describe('renderToString', () => {
+describe('normalizeChildren', () => {
     it('should skip null and undefined children', () => {
         const node1 = createNode('a'),
             node2 = createNode('b');
@@ -22,5 +22,12 @@ describe('renderToString', () => {
     it('should create <span/> nodes for strings and numbers', () => {
         expect(normalizeChildren(['str', 0]))
             .to.be.eql([createNode('span').children('str'), createNode('span').children(0)]);
+    });
+
+    it('should make array for only child', () => {
+        const node = createNode('a');
+
+        expect(normalizeChildren(node))
+            .to.be.eql([node]);
     });
 });

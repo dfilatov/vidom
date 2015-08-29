@@ -1,6 +1,10 @@
 import createNode from './createNode';
 
 function normalizeChildren(children) {
+    if(!Array.isArray(children)) {
+        children = [children];
+    }
+
     let res = [],
         i = 0,
         len = children.length,
