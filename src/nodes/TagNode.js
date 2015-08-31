@@ -579,11 +579,11 @@ function checkChildren(children) {
         if(typeof child !== 'object') {
             console.error('Error! You mustn\'t use simple child in case of multiple children.');
         }
-        else if(child._key == null) {
-            if(len > 1) {
-                console.warn('Warning! You\'re using children without keys.');
-            }
-        }
+        //else if(child._key == null) {
+        //    if(len > 1) {
+        //        console.warn('Warning! You\'re using children without keys.');
+        //    }
+        //}
         else if(child._key in keys) {
             console.error('Error! Childrens\' keys must be unique across the children');
         }
