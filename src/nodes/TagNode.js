@@ -584,11 +584,13 @@ function checkChildren(children) {
         //        console.warn('Warning! You\'re using children without keys.');
         //    }
         //}
-        else if(child._key in keys) {
-            console.error('Error! Childrens\' keys must be unique across the children');
-        }
-        else {
-            keys[child._key] = true;
+        else if(child._key != null) {
+            if(child._key in keys) {
+                console.error('Error! Childrens\' keys must be unique across the children');
+            }
+            else {
+                keys[child._key] = true;
+            }
         }
     }
 }
