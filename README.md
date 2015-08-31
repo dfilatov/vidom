@@ -20,6 +20,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [DOM Events API](../../wiki/DOM-Events-API)
   * [Component lifecycle](../../wiki/Component-lifecycle)
   * [Component methods](../../wiki/Component-methods)
+  * [JSX](../../wiki/JSX)
   * [Isomorphism](../../wiki/Isomorphism)
   * [FAQ](../../wiki/FAQ)
  
