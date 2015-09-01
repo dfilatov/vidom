@@ -1,4 +1,4 @@
-import domAttrsMutators from './domAttrsMutators';
+import domAttrs from './domAttrs';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
 
@@ -67,7 +67,7 @@ function updateAttr(node, attrName, attrVal) {
 
     ATTRS_TO_EVENTS[attrName]?
         addListener(domNode, ATTRS_TO_EVENTS[attrName], attrVal) :
-        domAttrsMutators(attrName).set(domNode, attrName, attrVal);
+        domAttrs(attrName).set(domNode, attrName, attrVal);
 }
 
 function removeAttr(node, attrName) {
@@ -75,7 +75,7 @@ function removeAttr(node, attrName) {
 
     ATTRS_TO_EVENTS[attrName]?
         removeListener(domNode, ATTRS_TO_EVENTS[attrName]) :
-        domAttrsMutators(attrName).remove(domNode, attrName);
+        domAttrs(attrName).remove(domNode, attrName);
 }
 
 function updateText(node, text, escape) {

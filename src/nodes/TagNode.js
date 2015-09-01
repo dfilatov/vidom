@@ -1,5 +1,5 @@
 import patchOps from '../client/patchOps';
-import domAttrsMutators from '../client/domAttrsMutators';
+import domAttrs from '../client/domAttrs';
 import { addListener, removeListener, removeListeners } from '../client/events/domEventManager';
 import ATTRS_TO_EVENTS from '../client/events/attrsToEvents';
 import escapeHtml from '../utils/escapeHtml';
@@ -110,7 +110,7 @@ class TagNode {
                 (value = attrs[name]) != null &&
                     (ATTRS_TO_EVENTS[name]?
                         addListener(domNode, ATTRS_TO_EVENTS[name], value) :
-                        domAttrsMutators(name).set(domNode, name, value));
+                        domAttrs(name).set(domNode, name, value));
             }
         }
 
@@ -147,12 +147,12 @@ class TagNode {
 
                             case 'option':
                                 if(ctx.multiple? isInArray(ctx.value, value) : ctx.value === value) {
-                                    res += ' ' + domAttrsMutators('selected').toString('selected', true);
+                                    res += ' ' + domAttrs('selected').toString('selected', true);
                                 }
                         }
                     }
 
-                    if(!ATTRS_TO_EVENTS[name] && (attrHtml = domAttrsMutators(name).toString(name, value))) {
+                    if(!ATTRS_TO_EVENTS[name] && (attrHtml = domAttrs(name).toString(name, value))) {
                         res += ' ' + attrHtml;
                     }
                 }
