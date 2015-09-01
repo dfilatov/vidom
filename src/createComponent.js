@@ -77,8 +77,16 @@ function getComponentAttrs() {
 
 function renderComponent() {
     this._domRefs = {};
-    return this.onRender(this.getAttrs(), this._children) ||
-        createNode('noscript');
+
+    const renderRes = this.onRender(this.getAttrs(), this._children) || createNode('noscript');
+
+    if(process.env.NODE_ENV !== 'production') {
+        if(typeof renderRes !== 'object' || Array.isArray(renderRes)) {
+            console.error('Error! Component#onRender must return a single node object on the top level');
+        }
+    }
+
+    return renderRes;
 }
 
 function updateComponent(cb, cbCtx) {
