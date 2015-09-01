@@ -1,6 +1,7 @@
 import escapeAttr from '../utils/escapeAttr';
 import isInArray from '../utils/isInArray';
 import dasherize from '../utils/dasherize';
+import console from '../utils/console';
 
 const doc = global.document;
 
@@ -20,6 +21,14 @@ function setProp(node, name, val) {
 }
 
 function setObjProp(node, name, val) {
+    if(process.env.NODE_ENV !== 'production') {
+        const typeOfVal = typeof val;
+        if(typeOfVal !== 'object') {
+            console.error(`"${name}" attribute expects an object as a value, not a ${typeOfVal}`);
+            return;
+        }
+    }
+
     const prop = node[name];
     for(let i in val) {
         prop[i] = val[i] == null? '' : val[i];
