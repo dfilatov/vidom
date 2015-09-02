@@ -14,7 +14,7 @@ describe('onUpdate', () => {
         document.body.removeChild(domNode);
     });
 
-    it('should be called after a component is updated with actual attributes', () => {
+    it('should be called after a component is updated with actual and previous attributes', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onRender(attrs) {
@@ -30,7 +30,7 @@ describe('onUpdate', () => {
         mountToDomSync(domNode, createNode(C).attrs(newAttrs));
 
         expect(spy.called).to.be.ok();
-        expect(spy.calledWith(newAttrs)).to.be.ok();
+        expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
     });
 
     it.skip('should not be called if component isn\'t updated', () => {
