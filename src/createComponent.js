@@ -8,7 +8,7 @@ const emptyAttrs = {};
 function mountComponent() {
     this._isMounted = true;
     this._rootNode.mount();
-    this.onMount(this.getAttrs());
+    this.onMount(this._attrs);
 }
 
 function unmountComponent() {
@@ -19,6 +19,8 @@ function unmountComponent() {
 }
 
 function patchComponent(attrs, children, parentNode) {
+    attrs || (attrs = emptyAttrs);
+
     let prevRootNode = this._rootNode,
         prevAttrs = this._attrs;
 
@@ -26,7 +28,7 @@ function patchComponent(attrs, children, parentNode) {
         this._attrs = attrs;
         if(this.isMounted()) {
             this._isUpdating = true;
-            this.onAttrsReceive(this.getAttrs(), prevAttrs || emptyAttrs);
+            this.onAttrsReceive(attrs, prevAttrs);
             this._isUpdating = false;
         }
     }
@@ -34,7 +36,7 @@ function patchComponent(attrs, children, parentNode) {
     this._children = children;
 
     if(this.isMounted()) {
-        const shouldUpdate = this.shouldUpdate(this.getAttrs(), prevAttrs || emptyAttrs);
+        const shouldUpdate = this.shouldUpdate(attrs, prevAttrs);
 
         if(process.env.NODE_ENV !== 'production') {
             const shouldUpdateResType = typeof shouldUpdate;
@@ -46,7 +48,7 @@ function patchComponent(attrs, children, parentNode) {
         if(shouldUpdate) {
             this._rootNode = this.render();
             prevRootNode.patch(this._rootNode, parentNode);
-            this.onUpdate(attrs);
+            this.onUpdate(attrs, prevAttrs);
         }
     }
 }
@@ -72,13 +74,13 @@ function getComponentDomNode() {
 }
 
 function getComponentAttrs() {
-    return this._attrs || emptyAttrs;
+    return this._attrs;
 }
 
 function renderComponent() {
     this._domRefs = {};
 
-    const renderRes = this.onRender(this.getAttrs(), this._children) || createNode('noscript');
+    const renderRes = this.onRender(this._attrs, this._children) || createNode('noscript');
 
     if(process.env.NODE_ENV !== 'production') {
         if(typeof renderRes !== 'object' || Array.isArray(renderRes)) {
@@ -121,7 +123,7 @@ function getComponentDomRef(ref) {
 
 function createComponent(props, staticProps) {
     const res = function(attrs, children) {
-            this._attrs = attrs;
+            this._attrs = attrs || emptyAttrs;
             this._children = children;
             this._domRefs = null;
             this._isMounted = false;
