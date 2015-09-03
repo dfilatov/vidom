@@ -19,7 +19,7 @@ function unmountComponent() {
 }
 
 function patchComponent(attrs, children, parentNode) {
-    attrs || (attrs = emptyAttrs);
+    attrs = this._buildAttrs(attrs);
 
     let prevRootNode = this._rootNode,
         prevAttrs = this._attrs;
@@ -121,14 +121,47 @@ function getComponentDomRef(ref) {
         null;
 }
 
+function getComponentDefaultAttrs() {
+    return emptyAttrs;
+}
+
+function buildComponentAttrs(attrs) {
+    if(this._attrs && (attrs === this._attrs)) {
+        return attrs;
+    }
+
+    const cons = this.constructor,
+        defaultAttrs = cons._defaultAttrs || (cons._defaultAttrs = cons.getDefaultAttrs());
+
+    if(!attrs) {
+        return defaultAttrs;
+    }
+
+    if(defaultAttrs === emptyAttrs) {
+        return attrs;
+    }
+
+    const res = {};
+
+    for(let i in defaultAttrs) {
+        res[i] = defaultAttrs[i];
+    }
+
+    for(let i in attrs) {
+        res[i] = attrs[i];
+    }
+
+    return res;
+}
+
 function createComponent(props, staticProps) {
     const res = function(attrs, children) {
-            this._attrs = attrs || emptyAttrs;
+            this._attrs = this._buildAttrs(attrs);
             this._children = children;
             this._domRefs = null;
             this._isMounted = false;
             this._isUpdating = false;
-            this.onInit();
+            this.onInit(this._attrs);
             this._rootNode = this.render();
         },
         ptp = {
@@ -152,7 +185,8 @@ function createComponent(props, staticProps) {
             patch : patchComponent,
             getDomRef : getComponentDomRef,
             setDomRef : setComponentDomRef,
-            getAttrs : getComponentAttrs
+            getAttrs : getComponentAttrs,
+            _buildAttrs : buildComponentAttrs
         };
 
     for(let i in props) {
@@ -160,6 +194,8 @@ function createComponent(props, staticProps) {
     }
 
     res.prototype = ptp;
+
+    res.getDefaultAttrs = getComponentDefaultAttrs;
 
     for(let i in staticProps) {
         res[i] = staticProps[i];
