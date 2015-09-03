@@ -1,5 +1,6 @@
 describe('component', () => {
-    require('./onInit/onInit.spec.js');
+    require('./getDefaultAttrs/getDefaultAttrs.spec.js');
+    require('./onMount/onMount.spec.js');
     require('./onMount/onMount.spec.js');
     require('./onAttrsReceive/onAttrsReceive.spec.js');
     require('./shouldUpdate/shouldUpdate.spec.js');
