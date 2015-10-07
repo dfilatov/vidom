@@ -1,5 +1,3 @@
-import addDomEventListener from './addDomEventListener';
-import removeDomEventListener from './removeDomEventListener';
 import isEventSupported from './isEventSupported';
 import SyntheticEvent from './SyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
@@ -72,14 +70,12 @@ if(body) {
                 isEventSupported(focusEvents[type])?
                     function() {
                         const type = this.type;
-                        addDomEventListener(
-                            body,
+                        body.addEventListener(
                             focusEvents[type],
                             e => { globalEventListener(e, type); });
                     } :
                     function() {
-                        addDomEventListener(
-                            body,
+                        body.addEventListener(
                             this.type,
                             globalEventListener,
                             true);
@@ -105,7 +101,7 @@ function addListener(domNode, type, listener) {
         if(!cfg.set) {
             cfg.setup?
                 cfg.setup() :
-                cfg.bubbles && addDomEventListener(body, type, globalEventListener, false);
+                cfg.bubbles && body.addEventListener(type, globalEventListener, false);
             cfg.set = true;
         }
 
@@ -115,7 +111,7 @@ function addListener(domNode, type, listener) {
         if(!listeners[type]) {
             cfg.bubbles?
                 ++cfg.listenersCounter :
-                addDomEventListener(domNode, type, eventListener, false);
+                domNode.addEventListener(type, eventListener, false);
         }
 
         listeners[type] = listener;
@@ -136,7 +132,7 @@ function removeListener(domNode, type) {
             if(cfg) {
                 cfg.bubbles?
                     --cfg.listenersCounter :
-                    removeDomEventListener(domNode, type, eventListener);
+                    domNode.removeEventListener(type, eventListener);
             }
         }
     }
