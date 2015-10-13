@@ -48,6 +48,12 @@ describe('renderToDom', () => {
             expect(domNode.hasAttribute('disabled')).to.equal(true);
         });
 
+        it('shouldn\'t render falsy boolean attribute', () => {
+            const domNode = createNode('textarea').attrs({ disabled : false }).renderToDom();
+
+            expect(domNode.hasAttribute('disabled')).to.equal(false);
+        });
+
         it('should be rendered as properties', () => {
             const domNode = createNode('input').attrs({ type : 'radio', checked : true }).renderToDom();
             expect(domNode.checked).to.equal(true);

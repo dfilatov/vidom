@@ -16,6 +16,15 @@ function setAttr(node, name, val) {
     }
 }
 
+function setBooleanAttr(node, name, val) {
+    if(val) {
+        setAttr(node, name, val);
+    }
+    else {
+        removeAttr(node, name);
+    }
+}
+
 function setProp(node, name, val) {
     node[name] = val;
 }
@@ -133,7 +142,7 @@ const ATTR_NAMES = {
         toString : attrToString
     },
     BOOLEAN_ATTR_CFG = {
-        set : setAttr,
+        set : setBooleanAttr,
         remove : removeAttr,
         toString : booleanAttrToString
     },
