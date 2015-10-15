@@ -35,21 +35,19 @@ function patchComponent(attrs, children, parentNode) {
 
     this._children = children;
 
-    if(this.isMounted()) {
-        const shouldUpdate = this.shouldUpdate(attrs, prevAttrs);
+    const shouldUpdate = this.shouldUpdate(attrs, prevAttrs);
 
-        if(process.env.NODE_ENV !== 'production') {
-            const shouldUpdateResType = typeof shouldUpdate;
-            if(shouldUpdateResType !== 'boolean') {
-                console.warn(`Warning! Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
-            }
+    if(process.env.NODE_ENV !== 'production') {
+        const shouldUpdateResType = typeof shouldUpdate;
+        if(shouldUpdateResType !== 'boolean') {
+            console.warn(`Warning! Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
         }
+    }
 
-        if(shouldUpdate) {
-            this._rootNode = this.render();
-            prevRootNode.patch(this._rootNode, parentNode);
-            this.onUpdate(attrs, prevAttrs);
-        }
+    if(shouldUpdate) {
+        this._rootNode = this.render();
+        prevRootNode.patch(this._rootNode, parentNode);
+        this.isMounted() && this.onUpdate(attrs, prevAttrs);
     }
 }
 

@@ -1,16 +1,16 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('select');
+const node = createNode('select').attrs({
+        multiple : true,
+        value : [1, 2, 3]
+    }),
+    rootNode = node._getInstance()._rootNode;
 
 export default {
     'name' : 'updateAttr5',
     'trees' : [
-        node
-            .attrs({
-                multiple : true,
-                value : [1, 2, 3]
-            }),
+        node,
         createNode('select')
             .attrs({
                 multiple : true,
@@ -18,6 +18,6 @@ export default {
             })
     ],
     'patch' : [
-        { op : patchOps.updateAttr, args : [node, 'value', [1, 2, 4]] }
+        { op : patchOps.updateAttr, args : [rootNode, 'value', [1, 2, 4]] }
     ]
 }
