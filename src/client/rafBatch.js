@@ -22,3 +22,5 @@ function rafBatch(fn) {
 }
 
 export default rafBatch;
+
+export { applyBatch };

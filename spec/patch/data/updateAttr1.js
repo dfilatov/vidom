@@ -1,15 +1,15 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('input').attrs({ value : 'text' });
+const node = createNode('div').attrs({ id : 'id1' });
 
 export default {
     'name' : 'updateAttr1',
     'trees' : [
         node,
-        createNode('input').attrs({ value : 'new text' })
+        createNode('div').attrs({ id : 'id2' })
     ],
     'patch' : [
-        { op : patchOps.updateAttr, args : [node, 'value', 'new text'] }
+        { op : patchOps.updateAttr, args : [node, 'id', 'id2'] }
     ]
 }
