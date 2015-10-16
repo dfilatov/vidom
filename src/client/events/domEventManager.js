@@ -21,29 +21,41 @@ const listenersStorage = {},
 function globalEventListener(e, type) {
     type || (type = e.type);
 
-    const cfg = eventsCfg[type];
+    const cfg = eventsCfg[type],
+        listenersToInvoke = [];
 
     let target = e.target,
         listenersCount = cfg.listenersCounter,
         listeners,
         listener,
-        domNodeId,
-        event;
+        domNodeId;
 
     while(listenersCount > 0 && target !== body) {
         if(domNodeId = getDomNodeId(target, true)) {
             listeners = listenersStorage[domNodeId];
             if(listeners && (listener = listeners[type])) {
-                listener(event || (event = new SyntheticEvent(type, e)));
-                if(event.isPropagationStopped()) {
-                    break;
-                }
+                listenersToInvoke.push(listener);
                 --listenersCount;
             }
         }
 
         target = target.parentNode;
     }
+
+    if(listenersToInvoke.length) {
+        const event = new SyntheticEvent(type, e),
+            len = listenersToInvoke.length;
+
+        let i = 0;
+
+        while(i < len) {
+            listenersToInvoke[i++](event);
+            if(event.isPropagationStopped()) {
+                break;
+            }
+        }
+    }
+
 }
 
 function eventListener(e) {
