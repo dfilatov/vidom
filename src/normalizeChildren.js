@@ -1,6 +1,11 @@
 import createNode from './createNode';
 
 function normalizeChildren(children) {
+    const typeOfChildren = typeof children;
+    if(typeOfChildren !== 'object') {
+        return children;
+    }
+
     if(!Array.isArray(children)) {
         children = [children];
     }
