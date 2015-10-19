@@ -24,7 +24,12 @@ describe('normalizeChildren', () => {
             .to.be.eql([createNode('span').children('str'), createNode('span').children(0)]);
     });
 
-    it('should make array for only child', () => {
+    it('should do nothing for only simple child', () => {
+        expect(normalizeChildren('test'))
+            .to.be.eql('test');
+    });
+
+    it('should make array for only node child', () => {
         const node = createNode('a');
 
         expect(normalizeChildren(node))
