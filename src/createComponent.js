@@ -7,14 +7,12 @@ const emptyAttrs = {};
 
 function mountComponent() {
     this._isMounted = true;
-    this._rootNode.mount();
     this.onMount(this._attrs);
 }
 
 function unmountComponent() {
     this._isMounted = false;
     this._domRefs = null;
-    this._rootNode.unmount();
     this.onUnmount();
 }
 
@@ -105,6 +103,10 @@ function updateComponent(cb, cbCtx) {
     }
 }
 
+function getComponentRootNode() {
+    return this._rootNode;
+}
+
 function isComponentMounted() {
     return this._isMounted;
 }
@@ -177,6 +179,7 @@ function createComponent(props, staticProps) {
             renderToString : renderComponentToString,
             adoptDom : adoptComponentDom,
             getDomNode : getComponentDomNode,
+            getRootNode : getComponentRootNode,
             render : renderComponent,
             onRender : noOp,
             update : updateComponent,
