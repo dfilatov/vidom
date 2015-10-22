@@ -1,5 +1,3 @@
-import patchOps from '../client/patchOps';
-
 class ComponentNode {
     constructor(component) {
         this.type = ComponentNode;
@@ -47,11 +45,13 @@ class ComponentNode {
     }
 
     mount() {
+        this._instance.getRootNode().mount();
         this._instance.mount();
     }
 
     unmount() {
         if(this._instance) {
+            this._instance.getRootNode().unmount();
             this._instance.unmount();
             this._instance = null;
         }
@@ -66,15 +66,22 @@ class ComponentNode {
             node._ns = parentNode._ns;
         }
 
-        if(this.type !== node.type || this._component !== node._component) {
-            patchOps.replace(parentNode || null, this, node);
-            return;
+        const instance = this._getInstance();
+
+        if(this.type === node.type) {
+            if(this._component === node._component) {
+                instance.patch(node._attrs, node._children, parentNode);
+                node._instance = instance;
+            }
+            else {
+                instance.unmount();
+                instance.getRootNode().patch(node._getInstance().getRootNode(), parentNode);
+            }
         }
-
-        let instance = this._getInstance();
-
-        instance.patch(node._attrs, node._children, parentNode);
-        node._instance = instance;
+        else {
+            instance.unmount();
+            instance.getRootNode().patch(node, parentNode);
+        }
     }
 
     _getInstance() {
