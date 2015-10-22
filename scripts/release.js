@@ -1,6 +1,7 @@
 var vow = require('vow'),
     vowNode = require('vow-node'),
     childProcess = require('child_process'),
+    fs = require('fs'),
     version = process.argv.slice(2)[0] || 'patch';
 
 function execCommand(command) {
@@ -25,5 +26,11 @@ execCommand('git pull')
     })
     .then(function() {
         return execCommand('npm publish');
+    })
+    .then(function() {
+        return vowNode.invoke(fs.readFile, 'package.json', 'utf8');
+    })
+    .then(function(content) {
+        console.log('version ' + JSON.parse(content).version + ' has just been released');
     })
     .done();
