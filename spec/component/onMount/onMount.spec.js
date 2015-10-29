@@ -81,4 +81,17 @@ describe('onMount', () => {
         expect(spy1.called).to.be.ok();
         expect(spy2.called).to.be.ok();
     });
+
+    it('should be called on component replacing', () => {
+        const spy = sinon.spy(),
+            C1 = createComponent(),
+            C2 = createComponent({
+                onMount : spy
+            });
+
+        mountToDomSync(domNode, createNode(C1));
+        mountToDomSync(domNode, createNode(C2));
+
+        expect(spy.called).to.be.ok();
+    });
 });

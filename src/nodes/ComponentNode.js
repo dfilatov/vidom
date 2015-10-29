@@ -75,7 +75,9 @@ class ComponentNode {
             }
             else {
                 instance.unmount();
-                instance.getRootNode().patch(node._getInstance().getRootNode(), parentNode);
+                const newInstance = node._getInstance();
+                instance.getRootNode().patch(newInstance.getRootNode(), parentNode);
+                newInstance.mount();
             }
         }
         else {
