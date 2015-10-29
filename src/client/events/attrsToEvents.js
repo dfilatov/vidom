@@ -3,7 +3,7 @@ export default {
     onMouseMove : 'mousemove',
     onMouseOut : 'mouseout',
     onMouseDown : 'mousedown',
-    onMouseUp : 'mousedown',
+    onMouseUp : 'mouseup',
     onClick : 'click',
     onDblClick : 'dblclick',
     onKeyDown : 'keydown',
