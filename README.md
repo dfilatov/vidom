@@ -11,7 +11,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * Namespaces support (e.g., SVG, MathML)
   * No extra markup in the result HTML
   * JSX support via babel plugin
-  * Small footprint, about 6KB after gzip
+  * Small footprint, about 7KB after gzip
 
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
