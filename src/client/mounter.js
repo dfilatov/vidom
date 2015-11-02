@@ -11,13 +11,13 @@ function mount(domNode, tree, cb, cbCtx, syncMode) {
 
     if(mounted && mounted.tree) {
         mountId = ++mounted.id;
-        const patchFn = function() {
-                if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
-                    mounted.tree.patch(tree);
-                    mounted.tree = tree;
-                    callCb(cb, cbCtx);
-                }
-            };
+        const patchFn = () => {
+            if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
+                mounted.tree.patch(tree);
+                mounted.tree = tree;
+                callCb(cb, cbCtx);
+            }
+        };
         syncMode? patchFn() : rafBatch(patchFn);
     }
     else {
@@ -31,14 +31,14 @@ function mount(domNode, tree, cb, cbCtx, syncMode) {
             callCb(cb, cbCtx);
         }
         else {
-            const renderFn = function() {
-                    if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
-                        mountedNodes[domNodeId].tree = tree;
-                        domNode.appendChild(tree.renderToDom());
-                        tree.mount();
-                        callCb(cb, cbCtx);
-                    }
-                };
+            const renderFn = () => {
+                if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
+                    mountedNodes[domNodeId].tree = tree;
+                    domNode.appendChild(tree.renderToDom());
+                    tree.mount();
+                    callCb(cb, cbCtx);
+                }
+            };
 
             syncMode? renderFn() : rafBatch(renderFn);
         }
@@ -51,7 +51,7 @@ function unmount(domNode, cb, cbCtx, syncMode) {
 
     if(mounted) {
         const mountId = ++mounted.id,
-            unmountFn = function() {
+            unmountFn = () => {
                 mounted = mountedNodes[domNodeId];
                 if(mounted && mounted.id === mountId) {
                     mounted.tree && mounted.tree.unmount();

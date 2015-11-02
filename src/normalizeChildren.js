@@ -1,6 +1,6 @@
 import createNode from './createNode';
 
-function normalizeChildren(children) {
+export default function normalizeChildren(children) {
     const typeOfChildren = typeof children;
     if(typeOfChildren !== 'object') {
         return children;
@@ -31,5 +31,3 @@ function normalizeChildren(children) {
 
     return res;
 }
-
-export default normalizeChildren;

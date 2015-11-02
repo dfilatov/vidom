@@ -30,7 +30,7 @@ const SHORT_TAGS = {
     },
     USE_DOM_STRINGS = isTrident || isEdge;
 
-class TagNode {
+export default class TagNode {
     constructor(tag) {
         this.type = TagNode;
         this._tag = tag;
@@ -607,5 +607,3 @@ function buildKeys(children, idxFrom, idxTo) {
 
     return res;
 }
-
-export default TagNode;

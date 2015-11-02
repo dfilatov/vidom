@@ -1,4 +1,4 @@
-class ComponentNode {
+export default class ComponentNode {
     constructor(component) {
         this.type = ComponentNode;
         this._component = component;
@@ -90,5 +90,3 @@ class ComponentNode {
         return this._instance || (this._instance = new this._component(this._attrs, this._children));
     }
 }
-
-export default ComponentNode;

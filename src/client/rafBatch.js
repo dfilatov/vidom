@@ -1,9 +1,9 @@
 const raf = global.requestAnimationFrame ||
     global.webkitRequestAnimationFrame ||
     global.mozRequestAnimationFrame ||
-    function(callback) {
-        return setTimeout(callback, 1000 / 60);
-    };
+    (callback => {
+        setTimeout(callback, 1000 / 60);
+    });
 
 let batch = [];
 
@@ -17,10 +17,8 @@ function applyBatch() {
     batch = [];
 }
 
-function rafBatch(fn) {
+export default (fn) => {
     batch.push(fn) === 1 && raf(applyBatch);
 }
-
-export default rafBatch;
 
 export { applyBatch };

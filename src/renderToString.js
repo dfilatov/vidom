@@ -1,5 +1,1 @@
-function renderToString(tree) {
-    return tree.renderToString();
-}
-
-export default renderToString;
+export default tree => tree.renderToString();

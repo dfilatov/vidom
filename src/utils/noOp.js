@@ -1,3 +1,1 @@
-function noOp() {}
-
-export default noOp;
+export default () => {};
