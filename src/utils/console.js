@@ -6,7 +6,7 @@ const globalConsole = global.console,
 ['log', 'info', 'warn', 'error'].forEach(function(name) {
     console[name] = globalConsole?
         globalConsole[name]?
-            (arg1, arg2, arg3, arg4, arg5) => { // IE9: console methods aren't functions
+            function(arg1, arg2, arg3, arg4, arg5) { // IE9: console methods aren't functions
                 switch(arguments.length) {
                     case 1:
                         globalConsole[name](arg1);
@@ -29,7 +29,7 @@ const globalConsole = global.console,
                     break;
                 }
             } :
-            () => {
+            function() {
                 globalConsole.log.apply(globalConsole, arguments);
             } :
         noOp;

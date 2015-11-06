@@ -58,6 +58,11 @@ export default class TagNode {
 
     attrs(attrs) {
         this._attrs = attrs;
+
+        if(process.env.NODE_ENV !== 'production') {
+            checkAttrs(attrs);
+        }
+
         return this;
     }
 
@@ -606,4 +611,12 @@ function buildKeys(children, idxFrom, idxTo) {
     }
 
     return res;
+}
+
+function checkAttrs(attrs) {
+    for(let name in attrs) {
+        if(name.substr(0, 2) === 'on' && !ATTRS_TO_EVENTS[name]) {
+            console.error(`Error! You\'re trying to add unsupported event listener "${name}"`);
+        }
+    }
 }
