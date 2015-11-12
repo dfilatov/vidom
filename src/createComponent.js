@@ -25,13 +25,18 @@ function patchComponent(attrs, children, parentNode) {
     if(prevAttrs !== attrs) {
         this._attrs = attrs;
         if(this.isMounted()) {
+            const isUpdating = this._isUpdating;
             this._isUpdating = true;
             this.onAttrsReceive(attrs, prevAttrs);
-            this._isUpdating = false;
+            this._isUpdating = isUpdating;
         }
     }
 
     this._children = children;
+
+    if(this._isUpdating) {
+        return;
+    }
 
     const shouldUpdate = this.shouldUpdate(attrs, prevAttrs);
 
@@ -95,8 +100,8 @@ function updateComponent(cb, cbCtx) {
         this._isUpdating = true;
         rafBatch(() => {
             if(this.isMounted()) {
-                this.patch(this._attrs, this._children);
                 this._isUpdating = false;
+                this.patch(this._attrs, this._children);
                 cb && cb.call(cbCtx || this);
             }
         });
