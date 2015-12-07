@@ -54,7 +54,7 @@ describe('patch', () => {
         require('./data/complex-shuffle-with-inserts-removes')
     ];
 
-    data.forEach(specData => {
+    data.forEach(({ default : specData }) => {
         beforeEach(() => {
             opsLog = [];
             Object.keys(patchOps).forEach(op => {
