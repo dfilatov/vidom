@@ -29,7 +29,7 @@
     "uglify-js": "2.4.24",
     "vow": "0.4.10",
     "vow-node": "0.3.0",
-    "zuul": "3.0.0"
+    "zuul": "3.8.0"
   },
   "license": "MIT",
   "scripts": {
