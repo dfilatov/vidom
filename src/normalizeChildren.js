@@ -1,32 +1,100 @@
 import createNode from './createNode';
 
-export default function normalizeChildren(children) {
+function normalizeChildren(children) {
+    if(children == null) {
+        return null;
+    }
+
     const typeOfChildren = typeof children;
     if(typeOfChildren !== 'object') {
-        return children;
+        return typeOfChildren === 'string'? children : children.toString();
     }
 
     if(!Array.isArray(children)) {
-        children = [children];
+        return children;
     }
 
-    let res = [],
+    if(!children.length) {
+        return null;
+    }
+
+    let res = children,
         i = 0,
         len = children.length,
+        allSkipped = true,
         child;
 
     while(i < len) {
-        child = children[i];
-        if(Array.isArray(child)) {
-            res = res.concat(normalizeChildren(child));
+        child = normalizeChildren(children[i]);
+        if(child === null) {
+            if(res !== null) {
+                if(allSkipped) {
+                    res = null;
+                }
+                else if(res === children) {
+                    res = children.slice(0, i);
+                }
+            }
         }
-        else if(child != null) {
-            const typeOfChild = typeof child;
-            res.push(typeOfChild === 'object'?
-                child :
-                createNode('span').children(typeOfChild === 'string'? child : child.toString()));
+        else {
+            if(res === null) {
+                res = child;
+            }
+            else if(Array.isArray(child)) {
+                res = allSkipped?
+                    child :
+                    (res === children?
+                        res.slice(0, i) :
+                        (Array.isArray(res)? res : [res])).concat(child);
+            }
+            else if(typeof child === 'object' && children[i] === child) {
+                if(res !== children) {
+                    res = join(res, child);
+                }
+            }
+            else {
+                if(res === children) {
+                    if(allSkipped) {
+                        res = child;
+                        ++i;
+                        continue;
+                    }
+
+                    res = res.slice(0, i);
+                }
+
+                res = join(res, child);
+            }
+
+            allSkipped = false;
         }
+
         ++i;
+    }
+
+    return res;
+}
+
+function toNode(obj) {
+    return typeof obj === 'object'? obj : createNode('span').children(obj);
+}
+
+function join(objA, objB) {
+    if(Array.isArray(objA)) {
+        objA.push(toNode(objB));
+        return objA;
+    }
+
+    return [
+        toNode(objA),
+        toNode(objB)
+    ];
+}
+
+export default function(children) {
+    let res = normalizeChildren(children);
+    if(res !== null && typeof res === 'object' && !Array.isArray(res)) {
+        res = [res];
     }
 
     return res;
