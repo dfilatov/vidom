@@ -1,7 +1,7 @@
 import normalizeChildren from '../../src/normalizeChildren';
 import createNode from '../../src/createNode';
 
-describe.only('normalizeChildren', () => {
+describe('normalizeChildren', () => {
     it('should return null if children are null', () => {
         expect(normalizeChildren(null))
             .to.be.equal(null);

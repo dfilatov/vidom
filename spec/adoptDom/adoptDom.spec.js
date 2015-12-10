@@ -55,4 +55,20 @@ describe('adoptDom', () => {
 
         expect(spanNode.getDomNode()).to.equal(childDomNode);
     });
+
+    it('should properly adopt existing dom nodes through function components', () => {
+        const spanNode = createNode('span'),
+            C1 = () => createNode(C2),
+            C2 = () => spanNode,
+            tree = createNode('div').children(createNode(C1)),
+            treeDomNode = document.createElement('div'),
+            childDomNode = document.createElement('span');
+
+        treeDomNode.appendChild(childDomNode);
+        domNode.appendChild(treeDomNode);
+
+        mountToDomSync(domNode, tree);
+
+        expect(spanNode.getDomNode()).to.equal(childDomNode);
+    });
 });
