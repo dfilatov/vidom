@@ -1,5 +1,6 @@
 import TagNode from './nodes/TagNode';
 import ComponentNode from './nodes/ComponentNode';
+import FunctionComponentNode from './nodes/FunctionComponentNode';
 import Input from './components/Input';
 import Textarea from './components/Textarea';
 import Select from './components/Select';
@@ -18,7 +19,9 @@ function createNode(type) {
                 new TagNode(type);
 
         case 'function':
-            return new ComponentNode(type);
+            return type.__vidom__component__?
+                new ComponentNode(type) :
+                new FunctionComponentNode(type);
 
         default:
             throw Error('unsupported node type: ' + typeof type);

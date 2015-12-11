@@ -207,6 +207,8 @@ function createComponent(props, staticProps) {
         res[i] = staticProps[i];
     }
 
+    res.__vidom__component__ = true;
+
     return res;
 }
 

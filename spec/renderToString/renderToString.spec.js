@@ -153,13 +153,33 @@ describe('renderToString', () => {
 
             expect(createNode(Component).attrs({ id : 'id1' }).children(createNode('i')).renderToString())
                 .to.equal('<div id="id1"><a></a><span></span><i></i></div>')
-
         });
 
         it('should render <noscript/> if onRender() returns nothing', () => {
             const Component = createComponent({
                     onRender : () => {}
                 });
+
+            expect(createNode(Component).renderToString())
+                .to.equal('<noscript></noscript>');
+        });
+    });
+
+    describe('functional component', () => {
+        it('should be rendered as component', () => {
+            const Component = (attrs, content) => {
+                    return createNode('div').attrs(attrs).children([
+                        createNode('a'),
+                        createNode('span')
+                    ].concat(content));
+                };
+
+            expect(createNode(Component).attrs({ id : 'id1' }).children(createNode('i')).renderToString())
+                .to.equal('<div id="id1"><a></a><span></span><i></i></div>')
+        });
+
+        it('should render <noscript/> if returns nothing', () => {
+            const Component = () => {};
 
             expect(createNode(Component).renderToString())
                 .to.equal('<noscript></noscript>');

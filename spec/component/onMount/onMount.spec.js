@@ -94,4 +94,36 @@ describe('onMount', () => {
 
         expect(spy.called).to.be.ok();
     });
+
+    it('should be called if node replaced with component', () => {
+        const spy = sinon.spy(),
+            C = createComponent({
+                onRender() {
+                    return createNode('div');
+                },
+
+                onMount : spy
+            });
+
+        mountToDomSync(domNode, createNode('div'));
+        mountToDomSync(domNode, createNode(C));
+
+        expect(spy.called).to.be.ok();
+    });
+
+    it('should be called if function component replaced with component', () => {
+        const spy = sinon.spy(),
+            C = createComponent({
+                onRender() {
+                    return createNode('div');
+                },
+
+                onMount : spy
+            });
+
+        mountToDomSync(domNode, createNode(() => createNode('div')));
+        mountToDomSync(domNode, createNode(C));
+
+        expect(spy.called).to.be.ok();
+    });
 });

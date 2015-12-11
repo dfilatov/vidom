@@ -8,6 +8,8 @@ import console from '../utils/console';
 import { isTrident, isEdge } from '../client/browsers';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
+import ComponentNode from './ComponentNode';
+import FunctionComponentNode from './FunctionComponentNode';
 
 const SHORT_TAGS = {
         area : true,
@@ -264,7 +266,25 @@ export default class TagNode {
             node._ns = parentNode._ns;
         }
 
-        if(this.type !== node.type || this._tag !== node._tag || this._ns !== node._ns) {
+        if(this.type !== node.type) {
+            switch(node.type) {
+                case ComponentNode:
+                    const instance = node._getInstance();
+                    this.patch(instance.getRootNode(), parentNode);
+                    instance.mount();
+                break;
+
+                case FunctionComponentNode:
+                    this.patch(node._getRootNode(), parentNode);
+                break;
+
+                default:
+                    patchOps.replace(parentNode || null, this, node);
+            }
+            return;
+        }
+
+        if(this._tag !== node._tag || this._ns !== node._ns) {
             patchOps.replace(parentNode || null, this, node);
             return;
         }

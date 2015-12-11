@@ -1,11 +1,7 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
 
-const C1 = createComponent({
-        onRender() {
-            return createNode('div');
-        }
-    }),
+const C1 = () => createNode('div'),
     C2 = createComponent({
         onRender() {
             return createNode('div');
@@ -15,7 +11,7 @@ const C1 = createComponent({
     newNode = createNode(C2);
 
 export default {
-    'name' : 'replace5',
+    'name' : 'replace7',
     'trees' : [
         oldNode,
         newNode

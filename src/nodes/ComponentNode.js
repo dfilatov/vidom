@@ -33,7 +33,7 @@ export default class ComponentNode {
             this._ns = parentNode._ns;
         }
 
-        return this._domNode = this._getInstance().renderToDom(this);
+        return this._getInstance().renderToDom(this);
     }
 
     renderToString(ctx) {

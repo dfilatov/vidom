@@ -193,4 +193,40 @@ describe('renderToDom', () => {
             expect(domNode.tagName).to.equal('NOSCRIPT');
         });
     });
+
+    describe('functional component', () => {
+        it('should be rendered as component', () => {
+            const Component = (attrs, content) => {
+                    return createNode('div').attrs(attrs).children([
+                        createNode('a'),
+                        createNode('span')
+                    ].concat(content));
+                },
+                domNode = createNode(Component).attrs({ id : 'id1' }).children(createNode('i')).renderToDom();
+
+            expect(domNode.tagName).to.equal('DIV');
+            expect(domNode.getAttribute('id')).to.equal('id1');
+            expect(domNode.children.length).to.equal(3);
+            expect(domNode.children[0].tagName).to.equal('A');
+            expect(domNode.children[1].tagName).to.equal('SPAN');
+            expect(domNode.children[2].tagName).to.equal('I');
+        });
+
+        it('should pass parent namespace', () => {
+            const Component = () => createNode('circle'),
+                domNode = createNode('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children(createNode('g').children(createNode(Component)))
+                    .renderToDom();
+
+            expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+        });
+
+        it('should render <noscript/> if onRender() returns nothing', () => {
+            const Component = () => {},
+                domNode = createNode(Component).renderToDom();
+
+            expect(domNode.tagName).to.equal('NOSCRIPT');
+        });
+    });
 });
