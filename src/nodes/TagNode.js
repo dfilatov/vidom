@@ -69,11 +69,25 @@ export default class TagNode {
     }
 
     children(children) {
+        if(process.env.NODE_ENV !== 'production') {
+            if(this._children !== null) {
+                console.warn(
+                    'Warning! You\'re trying to set children or html more than once or pass both children and html');
+            }
+        }
+
         this._children = processChildren(children);
         return this;
     }
 
     html(html) {
+        if(process.env.NODE_ENV !== 'production') {
+            if(this._children !== null) {
+                console.warn(
+                    'Warning! You\'re trying to set children or html more than once or pass both children and html');
+            }
+        }
+
         this._children = html;
         this._escapeChildren = false;
         return this;
@@ -604,11 +618,6 @@ function checkChildren(children) {
         if(typeof child !== 'object') {
             console.error('Error! You mustn\'t use simple child in case of multiple children.');
         }
-        //else if(child._key == null) {
-        //    if(len > 1) {
-        //        console.warn('Warning! You\'re using children without keys.');
-        //    }
-        //}
         else if(child._key != null) {
             if(child._key in keys) {
                 console.error('Error! Childrens\' keys must be unique across the children');
