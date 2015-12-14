@@ -71,8 +71,7 @@ export default class TagNode {
     children(children) {
         if(process.env.NODE_ENV !== 'production') {
             if(this._children !== null) {
-                console.warn(
-                    'Warning! You\'re trying to set children or html more than once or pass both children and html');
+                console.warn('You\'re trying to set children or html more than once or pass both children and html');
             }
         }
 
@@ -83,8 +82,7 @@ export default class TagNode {
     html(html) {
         if(process.env.NODE_ENV !== 'production') {
             if(this._children !== null) {
-                console.warn(
-                    'Warning! You\'re trying to set children or html more than once or pass both children and html');
+                console.warn('You\'re trying to set children or html more than once or pass both children and html');
             }
         }
 
@@ -616,11 +614,11 @@ function checkChildren(children) {
         child = children[i++];
 
         if(typeof child !== 'object') {
-            console.error('Error! You mustn\'t use simple child in case of multiple children.');
+            console.error('You mustn\'t use simple child in case of multiple children.');
         }
         else if(child._key != null) {
             if(child._key in keys) {
-                console.error('Error! Childrens\' keys must be unique across the children');
+                console.error('Childrens\' keys must be unique across the children');
             }
             else {
                 keys[child._key] = true;
@@ -645,7 +643,7 @@ function buildKeys(children, idxFrom, idxTo) {
 function checkAttrs(attrs) {
     for(let name in attrs) {
         if(name.substr(0, 2) === 'on' && !ATTRS_TO_EVENTS[name]) {
-            console.error(`Error! You\'re trying to add unsupported event listener "${name}"`);
+            console.error(`You\'re trying to add unsupported event listener "${name}"`);
         }
     }
 }

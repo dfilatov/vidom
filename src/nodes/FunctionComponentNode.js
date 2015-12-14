@@ -78,7 +78,7 @@ export default class FunctionComponentNode {
 
         if(process.env.NODE_ENV !== 'production') {
             if(typeof renderRes !== 'object' || Array.isArray(renderRes)) {
-                console.error('Error! Functional component must return a single node object on the top level');
+                console.error('Functional component must return a single node object on the top level');
             }
         }
 

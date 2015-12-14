@@ -43,7 +43,7 @@ function patchComponent(attrs, children, parentNode) {
     if(process.env.NODE_ENV !== 'production') {
         const shouldUpdateResType = typeof shouldUpdate;
         if(shouldUpdateResType !== 'boolean') {
-            console.warn(`Warning! Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
+            console.warn(`Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
         }
     }
 
@@ -85,7 +85,7 @@ function renderComponent() {
 
     if(process.env.NODE_ENV !== 'production') {
         if(typeof renderRes !== 'object' || Array.isArray(renderRes)) {
-            console.error('Error! Component#onRender must return a single node object on the top level');
+            console.error('Component#onRender must return a single node object on the top level');
         }
     }
 
