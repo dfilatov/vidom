@@ -3,7 +3,7 @@ import noOp from './noOp';
 const globalConsole = global.console,
     console = {},
     PREFIXES = {
-        log  : '',
+        log : '',
         info : '',
         warn : 'Warning!',
         error : 'Error!'
