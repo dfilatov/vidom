@@ -36,7 +36,7 @@
   },
   "license": "MIT",
   "scripts": {
-    "lint": "jscs src spec/*/*",
+    "pretest": "jscs src spec/*/*",
     "test": "browserify spec/boot.js -t babelify -o spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "test-browsers": "NODE_ENV=production zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
