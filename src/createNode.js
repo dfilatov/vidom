@@ -4,6 +4,7 @@ import FunctionComponentNode from './nodes/FunctionComponentNode';
 import Input from './components/Input';
 import Textarea from './components/Textarea';
 import Select from './components/Select';
+import console from './utils/console';
 
 const WRAPPER_COMPONENTS = {
     input : Input,
@@ -11,7 +12,7 @@ const WRAPPER_COMPONENTS = {
     select : Select
 };
 
-function createNode(type) {
+export default function(type) {
     switch(typeof type) {
         case 'string':
             return WRAPPER_COMPONENTS[type]?
@@ -24,8 +25,8 @@ function createNode(type) {
                 new FunctionComponentNode(type);
 
         default:
-            throw Error('unsupported node type: ' + typeof type);
+            if(process.env.NODE_ENV !== 'production') {
+                console.error('Unsupported type of node');
+            }
     }
 }
-
-export default createNode;

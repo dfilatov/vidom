@@ -1,4 +1,4 @@
-import normalizeChildren from '../../src/normalizeChildren';
+import normalizeChildren from '../../src/utils/normalizeChildren';
 import createNode from '../../src/createNode';
 
 describe('normalizeChildren', () => {

@@ -1,4 +1,4 @@
-import createNode from './createNode';
+import createNode from '../createNode';
 
 function normalizeChildren(children) {
     if(children == null) {
