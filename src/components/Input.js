@@ -16,7 +16,7 @@ export default createComponent({
                 // attrs could be changed during applyBatch()
                 attrs = this.getAttrs();
                 const control = this.getDomRef('control');
-                if(control.value !== attrs.value) {
+                if(('value' in attrs) && control.value !== attrs.value) {
                     control.value = attrs.value;
                 }
             }
@@ -34,7 +34,7 @@ export default createComponent({
                 // attrs could be changed during applyBatch()
                 attrs = this.getAttrs();
                 const control = this.getDomRef('control');
-                if(control.checked !== attrs.checked) {
+                if(('checked' in attrs) && control.checked !== attrs.checked) {
                     control.checked = attrs.checked;
                 }
             }

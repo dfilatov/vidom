@@ -16,7 +16,7 @@ export default createComponent({
                 // attrs could be changed during applyBatch()
                 attrs = this.getAttrs();
                 const control = this.getDomRef('control');
-                if(control.value !== attrs.value) {
+                if(('value' in attrs) && control.value !== attrs.value) {
                     control.value = attrs.value;
                 }
             }
