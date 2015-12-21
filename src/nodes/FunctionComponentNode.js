@@ -1,11 +1,13 @@
 import TagNode from './TagNode';
 
+const emptyAttrs = {};
+
 export default class FunctionComponentNode {
     constructor(component) {
         this.type = FunctionComponentNode;
         this._component = component;
         this._key = null;
-        this._attrs = null;
+        this._attrs = emptyAttrs;
         this._rootNode = null;
         this._children = null;
         this._ns = null;
