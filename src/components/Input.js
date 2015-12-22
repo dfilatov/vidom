@@ -42,13 +42,20 @@ export default createComponent({
     },
 
     onRender(attrs) {
-        const controlAttrs = { ...attrs, onChange : null };
+        let controlAttrs;
 
-        if(attrs.type === 'checkbox' || attrs.type === 'radio') {
-            controlAttrs.onClick = this.onClick;
+        if(attrs.type === 'file') {
+            controlAttrs = attrs;
         }
         else {
-            controlAttrs.onInput = this.onInput;
+            controlAttrs = { ...attrs, onChange : null };
+
+            if(attrs.type === 'checkbox' || attrs.type === 'radio') {
+                controlAttrs.onClick = this.onClick;
+            }
+            else {
+                controlAttrs.onInput = this.onInput;
+            }
         }
 
         return this.setDomRef(
