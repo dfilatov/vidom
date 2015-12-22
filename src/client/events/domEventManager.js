@@ -3,7 +3,6 @@ import SyntheticEvent from './SyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
 
 const doc = global.document,
-    body = doc && doc.body,
     BUBBLEABLE_NATIVE_EVENTS = [
         'mouseover', 'mousemove', 'mouseout', 'mousedown', 'mouseup',
         'click', 'dblclick', 'keydown', 'keypress', 'keyup',
@@ -30,7 +29,7 @@ function globalEventListener(e, type) {
         listener,
         domNodeId;
 
-    while(listenersCount > 0 && target !== body) {
+    while(listenersCount > 0 && target !== doc) {
         if(domNodeId = getDomNodeId(target, true)) {
             listeners = listenersStorage[domNodeId];
             if(listeners && (listener = listeners[type])) {
@@ -62,7 +61,7 @@ function eventListener(e) {
     listenersStorage[getDomNodeId(e.target)][e.type](new SyntheticEvent(e.type, e));
 }
 
-if(body) {
+if(doc) {
     const focusEvents = {
         focus : 'focusin',
         blur : 'focusout'
@@ -82,12 +81,12 @@ if(body) {
                 isEventSupported(focusEvents[type])?
                     function() {
                         const type = this.type;
-                        body.addEventListener(
+                        doc.addEventListener(
                             focusEvents[type],
                             e => { globalEventListener(e, type); });
                     } :
                     function() {
-                        body.addEventListener(
+                        doc.addEventListener(
                             this.type,
                             globalEventListener,
                             true);
@@ -108,12 +107,11 @@ if(body) {
 
 function addListener(domNode, type, listener) {
     const cfg = eventsCfg[type];
-
     if(cfg) {
         if(!cfg.set) {
             cfg.setup?
                 cfg.setup() :
-                cfg.bubbles && body.addEventListener(type, globalEventListener, false);
+                cfg.bubbles && doc.addEventListener(type, globalEventListener, false);
             cfg.set = true;
         }
 
