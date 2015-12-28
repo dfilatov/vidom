@@ -59,5 +59,21 @@ describe('mountToDom', () => {
                 done();
             });
         });
+
+        it('shouldn\'t try to mount a tree to non-element nodes', done => {
+            domNode.appendChild(document.createTextNode('test'));
+            mountToDom(domNode, createNode('div'), () => {
+                expect(domNode.childNodes.length).to.equal(2);
+
+                // Ensure that the first node is our text node
+                expect(domNode.childNodes[0].nodeType).to.equal(Node.TEXT_NODE);
+                expect(domNode.childNodes[0].nodeValue).to.equal('test');
+
+                // Ensure that the second node is div from virtual tree
+                expect(domNode.childNodes[1].tagName.toLowerCase()).to.equal('div');
+
+                done();
+            });
+        });
     });
 });
