@@ -59,5 +59,10 @@ describe('mountToDom', () => {
                 done();
             });
         });
+
+        it('shouldn\'t try to mount a tree to non-element nodes', done => {
+            domNode.appendChild(document.createTextNode('test'));
+            mountToDom(domNode, createNode('div').children(createNode('span')), done);
+        });
     });
 });

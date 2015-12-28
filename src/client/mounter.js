@@ -23,7 +23,7 @@ function mount(domNode, tree, cb, cbCtx, syncMode) {
     else {
         mountedNodes[domNodeId] = { tree : null, id : mountId = ++counter };
 
-        let existingDom = domNode.firstChild;
+        let existingDom = domNode.firstElementChild;
         if(existingDom) {
             mountedNodes[domNodeId].tree = tree;
             tree.adoptDom(existingDom);
