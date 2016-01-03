@@ -58,7 +58,10 @@ function removeAttr(node, name) {
 }
 
 function removeProp(node, name) {
-    if(name === 'value' && node.tagName === 'SELECT') {
+    if(name === 'style') {
+        node[name].cssText = '';
+    }
+    else if(name === 'value' && node.tagName === 'SELECT') {
         removeSelectValue(node);
     }
     else {
