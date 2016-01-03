@@ -54,9 +54,13 @@ function unmount(domNode, cb, cbCtx, syncMode) {
             unmountFn = () => {
                 mounted = mountedNodes[domNodeId];
                 if(mounted && mounted.id === mountId) {
-                    mounted.tree && mounted.tree.unmount();
                     delete mountedNodes[domNodeId];
-                    domNode.innerHTML = '';
+                    const tree = mounted.tree;
+                    if(tree) {
+                        const treeDomNode = tree.getDomNode();
+                        tree.unmount();
+                        domNode.removeChild(treeDomNode);
+                    }
                     callCb(cb, cbCtx);
                 }
             };
