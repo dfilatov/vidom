@@ -94,6 +94,14 @@ describe('patchDom', () => {
             expect(domNode.value).to.equal('');
         });
 
+        it('should remove style node property', () => {
+            const node = createNode('div').attrs({ style : { width : '20px' } }),
+                domNode = node.renderToDom();
+
+            node.patch(createNode('div'));
+            expect(domNode.style).to.eql(document.createElement('div').style);
+        });
+
         it('should update select children', () => {
             const node = createNode('select')
                     .attrs({ value : 1 })
