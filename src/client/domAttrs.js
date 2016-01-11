@@ -168,6 +168,7 @@ const ATTR_NAMES = {
         loop : DEFAULT_PROP_CFG,
         multiple : BOOLEAN_PROP_CFG,
         muted : DEFAULT_PROP_CFG,
+        open: BOOLEAN_ATTR_CFG,
         readOnly : BOOLEAN_PROP_CFG,
         selected : BOOLEAN_PROP_CFG,
         srcDoc : DEFAULT_PROP_CFG,
