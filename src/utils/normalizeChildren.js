@@ -22,7 +22,8 @@ function normalizeChildren(children) {
         i = 0,
         len = children.length,
         allSkipped = true,
-        child;
+        child,
+        isChildObject;
 
     while(i < len) {
         child = normalizeChildren(children[i]);
@@ -47,23 +48,27 @@ function normalizeChildren(children) {
                         res.slice(0, i) :
                         (Array.isArray(res)? res : [res])).concat(child);
             }
-            else if(typeof child === 'object' && children[i] === child) {
-                if(res !== children) {
-                    res = join(res, child);
-                }
-            }
             else {
-                if(res === children) {
-                    if(allSkipped) {
-                        res = child;
-                        ++i;
-                        continue;
+                isChildObject = typeof child === 'object';
+
+                if(isChildObject && children[i] === child) {
+                    if(res !== children) {
+                        res = join(res, child);
+                    }
+                }
+                else {
+                    if(res === children) {
+                        if(allSkipped && isChildObject) {
+                            res = child;
+                            ++i;
+                            continue;
+                        }
+
+                        res = res.slice(0, i);
                     }
 
-                    res = res.slice(0, i);
+                    res = join(res, child);
                 }
-
-                res = join(res, child);
             }
 
             allSkipped = false;
@@ -93,6 +98,7 @@ function join(objA, objB) {
 
 export default function(children) {
     let res = normalizeChildren(children);
+
     if(res !== null && typeof res === 'object' && !Array.isArray(res)) {
         res = [res];
     }

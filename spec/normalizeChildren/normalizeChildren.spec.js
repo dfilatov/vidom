@@ -51,6 +51,11 @@ describe('normalizeChildren', () => {
             .to.be.eql('test');
     });
 
+    it('should properly skip null after strings', () => {
+        expect(normalizeChildren(['test', null]))
+            .to.be.eql([createNode('span').children('test')]);
+    });
+
     it('should make array for only node child', () => {
         const node = createNode('a');
 
