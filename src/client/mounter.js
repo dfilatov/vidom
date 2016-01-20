@@ -1,5 +1,6 @@
 import getDomNodeId from './getDomNodeId';
 import rafBatch from './rafBatch';
+import emptyObj from '../utils/emptyObj';
 
 const mountedNodes = {};
 let counter = 0;

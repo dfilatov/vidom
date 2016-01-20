@@ -1,16 +1,16 @@
 import TagNode from './TagNode';
-
-const emptyAttrs = {};
+import emptyObj from '../utils/emptyObj';
 
 export default class FunctionComponentNode {
     constructor(component) {
         this.type = FunctionComponentNode;
         this._component = component;
         this._key = null;
-        this._attrs = emptyAttrs;
+        this._attrs = emptyObj;
         this._rootNode = null;
         this._children = null;
         this._ns = null;
+        this._ctx = emptyObj;
     }
 
     getDomNode() {
@@ -29,6 +29,11 @@ export default class FunctionComponentNode {
 
     children(children) {
         this._children = children;
+        return this;
+    }
+
+    ctx(ctx) {
+        this._ctx = ctx;
         return this;
     }
 
@@ -76,14 +81,16 @@ export default class FunctionComponentNode {
             return this._rootNode;
         }
 
-        const renderRes = this._component(this._attrs, this._children) || new TagNode('noscript');
+        const rootNode = this._component(this._attrs, this._children, this._ctx) || new TagNode('noscript');
 
         if(process.env.NODE_ENV !== 'production') {
-            if(typeof renderRes !== 'object' || Array.isArray(renderRes)) {
+            if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
                 console.error('Function component must return a single node object on the top level');
             }
         }
 
-        return this._rootNode = renderRes;
+        rootNode.ctx(this._ctx);
+
+        return this._rootNode = rootNode;
     }
 }

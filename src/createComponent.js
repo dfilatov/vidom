@@ -2,8 +2,7 @@ import noOp from './utils/noOp';
 import rafBatch from './client/rafBatch';
 import createNode from './createNode';
 import console from './utils/console';
-
-const emptyAttrs = {};
+import emptyObj from './utils/emptyObj';
 
 function mountComponent() {
     this._isMounted = true;
@@ -16,7 +15,7 @@ function unmountComponent() {
     this.onUnmount();
 }
 
-function patchComponent(attrs, children, parentNode) {
+function patchComponent(attrs, children, ctx, parentNode) {
     attrs = this._buildAttrs(attrs);
 
     let prevRootNode = this._rootNode,
@@ -33,6 +32,7 @@ function patchComponent(attrs, children, parentNode) {
     }
 
     this._children = children;
+    this._ctx = ctx;
 
     if(this._isUpdating) {
         return;
@@ -78,18 +78,30 @@ function getComponentAttrs() {
     return this._attrs;
 }
 
+function requestChildContext() {
+    return emptyObj;
+}
+
 function renderComponent() {
     this._domRefs = {};
 
-    const renderRes = this.onRender(this._attrs, this._children) || createNode('noscript');
+    const rootNode = this.onRender(this._attrs, this._children) || createNode('noscript');
 
     if(process.env.NODE_ENV !== 'production') {
-        if(typeof renderRes !== 'object' || Array.isArray(renderRes)) {
+        if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
             console.error('Component#onRender must return a single node object on the top level');
         }
     }
 
-    return renderRes;
+    const childCtx = this.onRequestChildContext(this._attrs);
+
+    rootNode.ctx(childCtx === emptyObj?
+        this._ctx :
+        this._ctx === emptyObj?
+            childCtx :
+            { ...this._ctx, ...childCtx });
+
+    return rootNode;
 }
 
 function updateComponent(cb, cbCtx) {
@@ -126,8 +138,12 @@ function getComponentDomRef(ref) {
         null;
 }
 
+function getComponentContext() {
+    return this._ctx;
+}
+
 function getComponentDefaultAttrs() {
-    return emptyAttrs;
+    return emptyObj;
 }
 
 function buildComponentAttrs(attrs) {
@@ -142,7 +158,7 @@ function buildComponentAttrs(attrs) {
         return defaultAttrs;
     }
 
-    if(defaultAttrs === emptyAttrs) {
+    if(defaultAttrs === emptyObj) {
         return attrs;
     }
 
@@ -160,9 +176,10 @@ function buildComponentAttrs(attrs) {
 }
 
 function createComponent(props, staticProps) {
-    const res = function(attrs, children) {
+    const res = function(attrs, children, ctx) {
             this._attrs = this._buildAttrs(attrs);
             this._children = children;
+            this._ctx = ctx;
             this._domRefs = null;
             this._isMounted = false;
             this._isUpdating = false;
@@ -192,6 +209,8 @@ function createComponent(props, staticProps) {
             getDomRef : getComponentDomRef,
             setDomRef : setComponentDomRef,
             getAttrs : getComponentAttrs,
+            onRequestChildContext : requestChildContext,
+            getContext : getComponentContext,
             _buildAttrs : buildComponentAttrs
         };
 
