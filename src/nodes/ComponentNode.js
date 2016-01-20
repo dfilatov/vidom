@@ -1,3 +1,5 @@
+import emptyObj from '../utils/emptyObj';
+
 export default class ComponentNode {
     constructor(component) {
         this.type = ComponentNode;
@@ -7,6 +9,7 @@ export default class ComponentNode {
         this._instance = null;
         this._children = null;
         this._ns = null;
+        this._ctx = emptyObj;
     }
 
     getDomNode() {
@@ -25,6 +28,11 @@ export default class ComponentNode {
 
     children(children) {
         this._children = children;
+        return this;
+    }
+
+    ctx(ctx) {
+        this._ctx = ctx;
         return this;
     }
 
@@ -70,7 +78,7 @@ export default class ComponentNode {
 
         if(this.type === node.type) {
             if(this._component === node._component) {
-                instance.patch(node._attrs, node._children, parentNode);
+                instance.patch(node._attrs, node._children, node._ctx, parentNode);
                 node._instance = instance;
             }
             else {
@@ -87,6 +95,6 @@ export default class ComponentNode {
     }
 
     _getInstance() {
-        return this._instance || (this._instance = new this._component(this._attrs, this._children));
+        return this._instance || (this._instance = new this._component(this._attrs, this._children, this._ctx));
     }
 }

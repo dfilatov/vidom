@@ -5,6 +5,7 @@ import ATTRS_TO_EVENTS from '../client/events/attrsToEvents';
 import escapeHtml from '../utils/escapeHtml';
 import isInArray from '../utils/isInArray';
 import console from '../utils/console';
+import emptyObj from '../utils/emptyObj';
 import { isTrident, isEdge } from '../client/browsers';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
@@ -42,6 +43,7 @@ export default class TagNode {
         this._attrs = null;
         this._children = null;
         this._escapeChildren = true;
+        this._ctx = emptyObj;
     }
 
     getDomNode() {
@@ -76,6 +78,25 @@ export default class TagNode {
         }
 
         this._children = processChildren(children);
+        return this;
+    }
+
+    ctx(ctx) {
+        if(ctx !== emptyObj) {
+            this._ctx = ctx;
+
+            const children = this._children;
+
+            if(children && typeof children !== 'string') {
+                const len = children.length;
+                let i = 0;
+
+                while(i < len) {
+                    children[i++].ctx(ctx);
+                }
+            }
+        }
+
         return this;
     }
 
