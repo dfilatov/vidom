@@ -93,7 +93,7 @@ function renderComponent() {
         }
     }
 
-    const childCtx = this.onRequestChildContext(this._attrs);
+    const childCtx = this.onChildContextRequest(this._attrs);
 
     rootNode.ctx(childCtx === emptyObj?
         this._ctx :
@@ -209,7 +209,7 @@ function createComponent(props, staticProps) {
             getDomRef : getComponentDomRef,
             setDomRef : setComponentDomRef,
             getAttrs : getComponentAttrs,
-            onRequestChildContext : requestChildContext,
+            onChildContextRequest : requestChildContext,
             getContext : getComponentContext,
             _buildAttrs : buildComponentAttrs
         };

@@ -26,7 +26,7 @@ describe('context', () => {
 
     it('should be passed through tree', done => {
         const C1 = createComponent({
-                onRequestChildContext() {
+                onChildContextRequest() {
                     return { prop : 'val' };
                 },
 
@@ -54,7 +54,7 @@ describe('context', () => {
 
     it('should be merged through tree', done => {
         const C1 = createComponent({
-                onRequestChildContext() {
+                onChildContextRequest() {
                     return { prop1 : 'val1' };
                 },
 
@@ -63,7 +63,7 @@ describe('context', () => {
                 }
             }),
             C2 = createComponent({
-                onRequestChildContext() {
+                onChildContextRequest() {
                     return { prop2 : 'val2' };
                 },
 
@@ -98,7 +98,7 @@ describe('context', () => {
 
     it('shouldn\'t be polluted for sibling nodes', done => {
         const C1 = createComponent({
-                onRequestChildContext() {
+                onChildContextRequest() {
                     return { prop1 : 'val1' };
                 },
 
@@ -107,7 +107,7 @@ describe('context', () => {
                 }
             }),
             C2 = createComponent({
-                onRequestChildContext() {
+                onChildContextRequest() {
                     return { prop2 : 'val2' };
                 }
             }),
@@ -126,7 +126,7 @@ describe('context', () => {
 
     it('shouldn\'t be updated after patching', done => {
         const C1 = createComponent({
-                onRequestChildContext(attrs) {
+                onChildContextRequest(attrs) {
                     return { prop1 : attrs.prop };
                 },
 
@@ -135,7 +135,7 @@ describe('context', () => {
                 }
             }),
             C2 = createComponent({
-                onRequestChildContext(attrs) {
+                onChildContextRequest(attrs) {
                     return { prop2 : attrs.prop };
                 },
 
