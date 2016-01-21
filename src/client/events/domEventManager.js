@@ -29,7 +29,7 @@ function globalEventListener(e, type) {
         listener,
         domNodeId;
 
-    while(listenersCount > 0 && target !== doc) {
+    while(listenersCount > 0 && target && target !== doc) {
         if(domNodeId = getDomNodeId(target, true)) {
             listeners = listenersStorage[domNodeId];
             if(listeners && (listener = listeners[type])) {
