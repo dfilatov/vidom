@@ -182,7 +182,7 @@ export default class TagNode {
                                 continue;
 
                             case 'select':
-                                this.ctx({ value : value, multiple : attrs.multiple });
+                                this.ctx({ value, multiple : attrs.multiple });
                                 continue;
 
                             case 'option':
