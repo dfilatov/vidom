@@ -62,8 +62,8 @@ function renderComponentToDom(parentNode) {
     return this._rootNode.renderToDom(parentNode);
 }
 
-function renderComponentToString(ctx) {
-    return this._rootNode.renderToString(ctx);
+function renderComponentToString() {
+    return this._rootNode.renderToString();
 }
 
 function adoptComponentDom(domNode, parentNode) {

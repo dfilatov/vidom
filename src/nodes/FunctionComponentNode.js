@@ -45,8 +45,8 @@ export default class FunctionComponentNode {
         return this._getRootNode().renderToDom(this);
     }
 
-    renderToString(ctx) {
-        return this._getRootNode().renderToString(ctx);
+    renderToString() {
+        return this._getRootNode().renderToString();
     }
 
     adoptDom(domNode, parentNode) {

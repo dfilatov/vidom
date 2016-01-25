@@ -44,8 +44,8 @@ export default class ComponentNode {
         return this._getInstance().renderToDom(this);
     }
 
-    renderToString(ctx) {
-        return this._getInstance().renderToString(ctx);
+    renderToString() {
+        return this._getInstance().renderToString();
     }
 
     adoptDom(domNode, parentNode) {

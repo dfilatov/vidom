@@ -157,7 +157,7 @@ export default class TagNode {
         return this._domNode = domNode;
     }
 
-    renderToString(ctx) {
+    renderToString() {
         const tag = this._tag,
             ns = this._ns,
             attrs = this._attrs;
@@ -182,11 +182,11 @@ export default class TagNode {
                                 continue;
 
                             case 'select':
-                                ctx = { value : value, multiple : attrs.multiple };
+                                this.ctx({ value : value, multiple : attrs.multiple });
                                 continue;
 
                             case 'option':
-                                if(ctx.multiple? isInArray(ctx.value, value) : ctx.value === value) {
+                                if(this._ctx.multiple? isInArray(this._ctx.value, value) : this._ctx.value === value) {
                                     res += ' ' + domAttrs('selected').toString('selected', true);
                                 }
                         }
@@ -216,7 +216,7 @@ export default class TagNode {
                     const len = children.length;
 
                     while(i < len) {
-                        res += children[i++].renderToString(ctx);
+                        res += children[i++].renderToString();
                     }
                 }
             }
