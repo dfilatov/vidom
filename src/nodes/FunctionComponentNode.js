@@ -1,41 +1,41 @@
 import TagNode from './TagNode';
 import emptyObj from '../utils/emptyObj';
 
-export default class FunctionComponentNode {
-    constructor(component) {
-        this.type = FunctionComponentNode;
-        this._component = component;
-        this._key = null;
-        this._attrs = emptyObj;
-        this._rootNode = null;
-        this._children = null;
-        this._ns = null;
-        this._ctx = emptyObj;
-    }
+export default function FunctionComponentNode(component) {
+    this.type = FunctionComponentNode;
+    this._component = component;
+    this._key = null;
+    this._attrs = emptyObj;
+    this._rootNode = null;
+    this._children = null;
+    this._ns = null;
+    this._ctx = emptyObj;
+}
 
+FunctionComponentNode.prototype = {
     getDomNode() {
         return this._rootNode.getDomNode();
-    }
+    },
 
     key(key) {
         this._key = key;
         return this;
-    }
+    },
 
     attrs(attrs) {
         this._attrs = attrs;
         return this;
-    }
+    },
 
     children(children) {
         this._children = children;
         return this;
-    }
+    },
 
     ctx(ctx) {
         this._ctx = ctx;
         return this;
-    }
+    },
 
     renderToDom(parentNode) {
         if(!this._ns && parentNode && parentNode._ns) {
@@ -43,26 +43,26 @@ export default class FunctionComponentNode {
         }
 
         return this._getRootNode().renderToDom(this);
-    }
+    },
 
     renderToString() {
         return this._getRootNode().renderToString();
-    }
+    },
 
     adoptDom(domNode, parentNode) {
         this._getRootNode().adoptDom(domNode, parentNode);
-    }
+    },
 
     mount() {
         this._getRootNode().mount();
-    }
+    },
 
     unmount() {
         if(this._rootNode) {
             this._rootNode.unmount();
             this._rootNode = null;
         }
-    }
+    },
 
     patch(node, parentNode) {
         if(this === node) {
@@ -74,7 +74,7 @@ export default class FunctionComponentNode {
         }
 
         this._getRootNode().patch(this.type === node.type? node._getRootNode() : node, parentNode);
-    }
+    },
 
     _getRootNode() {
         if(this._rootNode) {
@@ -93,4 +93,4 @@ export default class FunctionComponentNode {
 
         return this._rootNode = rootNode;
     }
-}
+};

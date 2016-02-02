@@ -33,32 +33,32 @@ const SHORT_TAGS = {
     },
     USE_DOM_STRINGS = isTrident || isEdge;
 
-export default class TagNode {
-    constructor(tag) {
-        this.type = TagNode;
-        this._tag = tag;
-        this._domNode = null;
-        this._key = null;
-        this._ns = null;
-        this._attrs = null;
-        this._children = null;
-        this._escapeChildren = true;
-        this._ctx = emptyObj;
-    }
+export default function TagNode(tag) {
+    this.type = TagNode;
+    this._tag = tag;
+    this._domNode = null;
+    this._key = null;
+    this._ns = null;
+    this._attrs = null;
+    this._children = null;
+    this._escapeChildren = true;
+    this._ctx = emptyObj;
+}
 
+TagNode.prototype = {
     getDomNode() {
         return this._domNode;
-    }
+    },
 
     key(key) {
         this._key = key;
         return this;
-    }
+    },
 
     ns(ns) {
         this._ns = ns;
         return this;
-    }
+    },
 
     attrs(attrs) {
         this._attrs = attrs;
@@ -68,7 +68,7 @@ export default class TagNode {
         }
 
         return this;
-    }
+    },
 
     children(children) {
         if(process.env.NODE_ENV !== 'production') {
@@ -79,7 +79,7 @@ export default class TagNode {
 
         this._children = processChildren(children);
         return this;
-    }
+    },
 
     ctx(ctx) {
         if(ctx !== emptyObj) {
@@ -98,7 +98,7 @@ export default class TagNode {
         }
 
         return this;
-    }
+    },
 
     html(html) {
         if(process.env.NODE_ENV !== 'production') {
@@ -110,7 +110,7 @@ export default class TagNode {
         this._children = html;
         this._escapeChildren = false;
         return this;
-    }
+    },
 
     renderToDom(parentNode) {
         if(!this._ns && parentNode && parentNode._ns) {
@@ -155,7 +155,7 @@ export default class TagNode {
         }
 
         return this._domNode = domNode;
-    }
+    },
 
     renderToString() {
         const tag = this._tag,
@@ -225,7 +225,7 @@ export default class TagNode {
         }
 
         return res;
-    }
+    },
 
     adoptDom(domNode, parentNode) {
         if(!this._ns && parentNode && parentNode._ns) {
@@ -258,7 +258,7 @@ export default class TagNode {
                 }
             }
         }
-    }
+    },
 
     mount() {
         const children = this._children;
@@ -271,7 +271,7 @@ export default class TagNode {
                 children[i++].mount();
             }
         }
-    }
+    },
 
     unmount() {
         const children = this._children;
@@ -288,7 +288,7 @@ export default class TagNode {
         removeListeners(this._domNode);
 
         this._domNode = null;
-    }
+    },
 
     patch(node, parentNode) {
         if(this === node) {
@@ -326,7 +326,7 @@ export default class TagNode {
 
         this._patchChildren(node);
         this._patchAttrs(node);
-    }
+    },
 
     _patchChildren(node) {
         const childrenA = this._children,
@@ -498,7 +498,7 @@ export default class TagNode {
                 patchOps.appendChild(node, childrenB[leftIdxB]);
             ++leftIdxB;
         }
-    }
+    },
 
     _patchAttrs(node) {
         const attrsA = this._attrs,
@@ -550,7 +550,7 @@ export default class TagNode {
                 }
             }
         }
-    }
+    },
 
     _patchAttrArr(attrName, arrA, arrB) {
         if(arrA === arrB) {
@@ -574,7 +574,7 @@ export default class TagNode {
         }
 
         hasDiff && patchOps.updateAttr(this, attrName, arrB);
-    }
+    },
 
     _patchAttrObj(attrName, objA, objB) {
         if(objA === objB) {
@@ -600,7 +600,7 @@ export default class TagNode {
 
         hasDiff && patchOps.updateAttr(this, attrName, diffObj);
     }
-}
+};
 
 function processChildren(children) {
     if(children == null) {

@@ -1,13 +1,13 @@
-class SyntheticEvent {
-    constructor(type, nativeEvent) {
-        this.type = type;
-        this.target = nativeEvent.target;
-        this.nativeEvent = nativeEvent;
+export default function SyntheticEvent(type, nativeEvent) {
+    this.type = type;
+    this.target = nativeEvent.target;
+    this.nativeEvent = nativeEvent;
 
-        this._isPropagationStopped = false;
-        this._isDefaultPrevented = false;
-    }
+    this._isPropagationStopped = false;
+    this._isDefaultPrevented = false;
+}
 
+SyntheticEvent.prototype = {
     stopPropagation() {
         this._isPropagationStopped = true;
 
@@ -15,11 +15,11 @@ class SyntheticEvent {
         nativeEvent.stopPropagation?
             nativeEvent.stopPropagation() :
             nativeEvent.cancelBubble = true;
-    }
+    },
 
     isPropagationStopped() {
         return this._isPropagationStopped;
-    }
+    },
 
     preventDefault() {
         this._isDefaultPrevented = true;
@@ -28,11 +28,9 @@ class SyntheticEvent {
         nativeEvent.preventDefault?
             nativeEvent.preventDefault() :
             nativeEvent.returnValue = false;
-    }
+    },
 
     isDefaultPrevented() {
         return this._isDefaultPrevented;
     }
-}
-
-export default SyntheticEvent;
+};

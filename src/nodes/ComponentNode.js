@@ -1,40 +1,40 @@
 import emptyObj from '../utils/emptyObj';
 
-export default class ComponentNode {
-    constructor(component) {
-        this.type = ComponentNode;
-        this._component = component;
-        this._key = null;
-        this._attrs = null;
-        this._instance = null;
-        this._children = null;
-        this._ns = null;
-        this._ctx = emptyObj;
-    }
+export default function ComponentNode(component) {
+    this.type = ComponentNode;
+    this._component = component;
+    this._key = null;
+    this._attrs = null;
+    this._instance = null;
+    this._children = null;
+    this._ns = null;
+    this._ctx = emptyObj;
+}
 
+ComponentNode.prototype = {
     getDomNode() {
         return this._instance.getDomNode();
-    }
+    },
 
     key(key) {
         this._key = key;
         return this;
-    }
+    },
 
     attrs(attrs) {
         this._attrs = attrs;
         return this;
-    }
+    },
 
     children(children) {
         this._children = children;
         return this;
-    }
+    },
 
     ctx(ctx) {
         this._ctx = ctx;
         return this;
-    }
+    },
 
     renderToDom(parentNode) {
         if(!this._ns && parentNode && parentNode._ns) {
@@ -42,20 +42,20 @@ export default class ComponentNode {
         }
 
         return this._getInstance().renderToDom(this);
-    }
+    },
 
     renderToString() {
         return this._getInstance().renderToString();
-    }
+    },
 
     adoptDom(domNode, parentNode) {
         this._getInstance().adoptDom(domNode, parentNode);
-    }
+    },
 
     mount() {
         this._instance.getRootNode().mount();
         this._instance.mount();
-    }
+    },
 
     unmount() {
         if(this._instance) {
@@ -63,7 +63,7 @@ export default class ComponentNode {
             this._instance.unmount();
             this._instance = null;
         }
-    }
+    },
 
     patch(node, parentNode) {
         if(this === node) {
@@ -92,9 +92,9 @@ export default class ComponentNode {
             instance.unmount();
             instance.getRootNode().patch(node, parentNode);
         }
-    }
+    },
 
     _getInstance() {
         return this._instance || (this._instance = new this._component(this._attrs, this._children, this._ctx));
     }
-}
+};
