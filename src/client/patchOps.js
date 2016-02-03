@@ -80,9 +80,17 @@ function removeAttr(node, attrName) {
 
 function updateText(node, text, escape) {
     const domNode = node.getDomNode();
-    escape?
-        domNode.textContent = text :
+
+    if(escape) {
+        const firstChild = domNode.firstChild;
+
+        firstChild?
+            firstChild.nodeValue = text :
+            domNode.textContent = text;
+    }
+    else {
         domNode.innerHTML = text;
+    }
 }
 
 function removeText(parentNode) {
