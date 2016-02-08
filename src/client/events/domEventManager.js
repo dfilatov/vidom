@@ -20,20 +20,25 @@ const listenersStorage = {},
 function globalEventListener(e, type) {
     type || (type = e.type);
 
-    const cfg = eventsCfg[type],
-        listenersToInvoke = [];
+    const cfg = eventsCfg[type];
 
     let target = e.target,
         listenersCount = cfg.listenersCounter,
         listeners,
         listener,
+        listenersToInvoke,
         domNodeId;
 
     while(listenersCount > 0 && target && target !== doc) {
         if(domNodeId = getDomNodeId(target, true)) {
             listeners = listenersStorage[domNodeId];
             if(listeners && (listener = listeners[type])) {
-                listenersToInvoke.push(listener);
+                if(listenersToInvoke) {
+                    listenersToInvoke.push(listener);
+                }
+                else {
+                    listenersToInvoke = [listener];
+                }
                 --listenersCount;
             }
         }
@@ -41,7 +46,7 @@ function globalEventListener(e, type) {
         target = target.parentNode;
     }
 
-    if(listenersToInvoke.length) {
+    if(listenersToInvoke) {
         const event = new SyntheticEvent(type, e),
             len = listenersToInvoke.length;
 
