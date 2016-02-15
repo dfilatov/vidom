@@ -7,7 +7,7 @@ function normalizeChildren(children) {
 
     const typeOfChildren = typeof children;
     if(typeOfChildren !== 'object') {
-        return typeOfChildren === 'string'? children : children.toString();
+        return typeOfChildren === 'string'? children || null : '' + children;
     }
 
     if(!Array.isArray(children)) {
@@ -60,6 +60,7 @@ function normalizeChildren(children) {
                     if(res === children) {
                         if(allSkipped && isChildObject) {
                             res = child;
+                            allSkipped = false;
                             ++i;
                             continue;
                         }

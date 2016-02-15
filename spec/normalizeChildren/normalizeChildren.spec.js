@@ -34,6 +34,14 @@ describe('normalizeChildren', () => {
             .to.be.eql([node1, node2, node3]);
     });
 
+    it('should skip null while flattening', () => {
+        const node1 = createNode('a'),
+            node2 = createNode('b');
+
+        expect(normalizeChildren([[null, node1], [node2]]))
+            .to.be.eql([node1, node2]);
+    });
+
     it('should create <span/> nodes for strings, numbers and booleans', () => {
         const node = createNode('a');
 
