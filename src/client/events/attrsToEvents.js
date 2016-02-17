@@ -4,6 +4,8 @@ export default {
     onMouseOut : 'mouseout',
     onMouseDown : 'mousedown',
     onMouseUp : 'mouseup',
+    onMouseEnter : 'mouseenter',
+    onMouseLeave : 'mouseleave',
     onClick : 'click',
     onDblClick : 'dblclick',
     onKeyDown : 'keydown',
