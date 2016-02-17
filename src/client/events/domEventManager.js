@@ -11,6 +11,7 @@ const doc = global.document,
         'contextmenu', 'wheel', 'copy', 'cut', 'paste'
     ],
     NON_BUBBLEABLE_NATIVE_EVENTS = [
+        'mouseenter', 'mouseleave',
         'scroll', 'load', 'error'
     ];
 
