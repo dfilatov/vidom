@@ -1,6 +1,7 @@
 import getDomNodeId from './getDomNodeId';
 import rafBatch from './rafBatch';
 import emptyObj from '../utils/emptyObj';
+import globalHook from '../globalHook';
 
 const mountedNodes = {};
 let counter = 0;
@@ -30,6 +31,9 @@ function mount(domNode, tree, cb, cbCtx, syncMode) {
             tree.adoptDom(existingDom);
             tree.mount();
             callCb(cb, cbCtx);
+            if(process.env.NODE_ENV !== 'production') {
+                globalHook.emit('mount', tree);
+            }
         }
         else {
             const renderFn = () => {
@@ -38,6 +42,9 @@ function mount(domNode, tree, cb, cbCtx, syncMode) {
                     domNode.appendChild(tree.renderToDom());
                     tree.mount();
                     callCb(cb, cbCtx);
+                    if(process.env.NODE_ENV !== 'production') {
+                        globalHook.emit('mount', tree);
+                    }
                 }
             };
 
@@ -63,6 +70,9 @@ function unmount(domNode, cb, cbCtx, syncMode) {
                         domNode.removeChild(treeDomNode);
                     }
                     callCb(cb, cbCtx);
+                    if(process.env.NODE_ENV !== 'production') {
+                        tree && globalHook.emit('unmount', tree);
+                    }
                 }
             };
 
@@ -93,4 +103,19 @@ export function unmountFromDom(domNode, cb, cbCtx) {
 
 export function unmountFromDomSync(domNode) {
     unmount(domNode, null, null, true);
+}
+
+export function getMountedRootNodes() {
+    const res = [];
+    let id,
+        mountedNode;
+
+    for(let id in mountedNodes) {
+        mountedNode = mountedNodes[id];
+        if(mountedNode.tree) {
+            res.push(mountedNode.tree);
+        }
+    }
+
+    return res;
 }
