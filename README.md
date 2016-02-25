@@ -26,6 +26,9 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [JSX](../../wiki/JSX)
   * [Isomorphism](../../wiki/Isomorphism)
   * [FAQ](../../wiki/FAQ)
+
+## Related projects
+  * [Vidom inspector](https://github.com/dfilatov/vidom-inspector) developer tool which helps debug vidom-based applications
  
 ## Examples
   * [TodoMVC](http://dfilatov.github.io/vidom-todomvc/) ([source](https://github.com/dfilatov/vidom-todomvc))
