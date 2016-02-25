@@ -3,6 +3,7 @@ import rafBatch from './client/rafBatch';
 import createNode from './createNode';
 import console from './utils/console';
 import emptyObj from './utils/emptyObj';
+import globalHook from './globalHook';
 
 function mountComponent() {
     this._isMounted = true;
@@ -113,8 +114,12 @@ function updateComponent(cb, cbCtx) {
         rafBatch(() => {
             if(this.isMounted()) {
                 this._isUpdating = false;
+                var prevRootNode = this._rootNode;
                 this.patch(this._attrs, this._children);
                 cb && cb.call(cbCtx || this);
+                if(process.env.NODE_ENV !== 'production') {
+                    globalHook.emit('replace', prevRootNode, this._rootNode);
+                }
             }
         });
     }
