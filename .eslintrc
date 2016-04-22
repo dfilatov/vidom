@@ -1,0 +1,31 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "no-multi-spaces": "error",
+    "no-trailing-spaces": "error",
+    "curly": ["error", "all"],
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "no-mixed-spaces-and-tabs": "error",
+    "key-spacing": [
+      "error",
+      {
+        "beforeColon": true,
+        "afterColon": true
+      }
+    ],
+    "array-bracket-spacing": ["error", "never"],
+    "computed-property-spacing": ["error", "never"],
+    "space-before-function-paren": ["error", "never"]
+  }
+}
