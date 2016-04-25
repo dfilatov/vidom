@@ -1,4 +1,3 @@
-import sinon from 'sinon';
 import createNode from '../../src/createNode';
 import { mountToDom, unmountFromDom } from '../../src/client/mounter';
 

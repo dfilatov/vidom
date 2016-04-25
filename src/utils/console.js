@@ -17,23 +17,23 @@ const globalConsole = global.console,
                 switch(arguments.length) {
                     case 1:
                         globalConsole[name](arg0, arg1);
-                    break;
+                        break;
 
                     case 2:
                         globalConsole[name](arg0, arg1, arg2);
-                    break;
+                        break;
 
                     case 3:
                         globalConsole[name](arg0, arg1, arg2, arg3);
-                    break;
+                        break;
 
                     case 4:
                         globalConsole[name](arg0, arg1, arg2, arg3, arg4);
-                    break;
+                        break;
 
                     case 5:
                         globalConsole[name](arg0, arg1, arg2, arg3, arg4, arg5);
-                    break;
+                        break;
                 }
             } :
             function() {

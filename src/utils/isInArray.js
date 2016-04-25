@@ -6,7 +6,6 @@ export default (arr, item) => {
         if(arr[i++] == item) {
             return true;
         }
-
     }
 
     return false;

@@ -1,6 +1,5 @@
 import sinon from 'sinon';
 import createNode from '../../src/createNode';
-import createComponent from '../../src/createComponent';
 import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
 import SyntheticEvent from '../../src/client/events/SyntheticEvent';
 import isEventSupported from '../../src/client/events/isEventSupported';

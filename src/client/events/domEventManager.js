@@ -60,7 +60,6 @@ function globalEventListener(e, type) {
             }
         }
     }
-
 }
 
 function eventListener(e) {

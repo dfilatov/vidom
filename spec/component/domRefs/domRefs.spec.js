@@ -14,19 +14,19 @@ describe('dom refs', () => {
     });
 
     it('should point to the right DOM element', function(done) {
-        var C = createComponent({
-                onRender() {
-                    return createNode('div').children([
-                        createNode('div'),
-                        this.setDomRef('control', createNode('span').attrs({ id : 'id1' }))
-                    ]);
-                },
+        const C = createComponent({
+            onRender() {
+                return createNode('div').children([
+                    createNode('div'),
+                    this.setDomRef('control', createNode('span').attrs({ id : 'id1' }))
+                ]);
+            },
 
-                onMount() {
-                    expect(this.getDomRef('control')).to.be.equal(document.getElementById('id1'));
-                    done();
-                }
-            });
+            onMount() {
+                expect(this.getDomRef('control')).to.be.equal(document.getElementById('id1'));
+                done();
+            }
+        });
 
         mountToDomSync(domNode, createNode(C));
     });

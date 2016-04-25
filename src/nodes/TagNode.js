@@ -1,6 +1,6 @@
 import patchOps from '../client/patchOps';
 import domAttrs from '../client/domAttrs';
-import { addListener, removeListener, removeListeners } from '../client/events/domEventManager';
+import { addListener, removeListeners } from '../client/events/domEventManager';
 import ATTRS_TO_EVENTS from '../client/events/attrsToEvents';
 import escapeHtml from '../utils/escapeHtml';
 import isInArray from '../utils/isInArray';
@@ -305,11 +305,11 @@ TagNode.prototype = {
                     const instance = node._getInstance();
                     this.patch(instance.getRootNode(), parentNode);
                     instance.mount();
-                break;
+                    break;
 
                 case FunctionComponentNode:
                     this.patch(node._getRootNode(), parentNode);
-                break;
+                    break;
 
                 default:
                     patchOps.replace(parentNode || null, this, node);
@@ -440,14 +440,14 @@ TagNode.prototype = {
             }
             else {
                 childrenAKeys || (childrenAKeys = buildKeys(childrenA, leftIdxA, rightIdxA));
-                if((foundAChildIdx = childrenAKeys[leftChildBKey]) != null) {
+                if((foundAChildIdx = childrenAKeys[leftChildBKey]) == null) {
+                    patchOps.insertChild(node, leftChildB, leftChildA);
+                }
+                else {
                     foundAChild = childrenA[foundAChildIdx];
                     childrenAIndicesToSkip[foundAChildIdx] = true;
                     patchOps.moveChild(node, foundAChild, leftChildA, false);
                     foundAChild.patch(leftChildB, node);
-                }
-                else {
-                    patchOps.insertChild(node, leftChildB, leftChildA);
                 }
                 updateLeftIdxB = true;
             }
@@ -514,7 +514,7 @@ TagNode.prototype = {
         if(attrsB) {
             for(attrName in attrsB) {
                 attrBVal = attrsB[attrName];
-                if(!attrsA || ((attrAVal = attrsA[attrName]) == null)) {
+                if(!attrsA || (attrAVal = attrsA[attrName]) == null) {
                     if(attrBVal != null) {
                         patchOps.updateAttr(this, attrName, attrBVal);
                     }
@@ -545,7 +545,7 @@ TagNode.prototype = {
 
         if(attrsA) {
             for(attrName in attrsA) {
-                if((!attrsB || !(attrName in attrsB)) && ((attrAVal = attrsA[attrName]) != null)) {
+                if((!attrsB || !(attrName in attrsB)) && (attrAVal = attrsA[attrName]) != null) {
                     patchOps.removeAttr(this, attrName);
                 }
             }
@@ -560,10 +560,7 @@ TagNode.prototype = {
         const lenA = arrA.length;
         let hasDiff = false;
 
-        if(lenA !== arrB.length) {
-            hasDiff = true;
-        }
-        else {
+        if(lenA === arrB.length) {
             let i = 0;
             while(!hasDiff && i < lenA) {
                 if(arrA[i] != arrB[i]) {
@@ -571,6 +568,9 @@ TagNode.prototype = {
                 }
                 ++i;
             }
+        }
+        else {
+            hasDiff = true;
         }
 
         hasDiff && patchOps.updateAttr(this, attrName, arrB);

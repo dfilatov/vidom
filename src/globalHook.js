@@ -7,7 +7,7 @@ hook.getRootNodes = getMountedRootNodes;
 
 if(process.env.NODE_ENV !== 'production') {
     if(typeof window !== 'undefined') {
-        window.__vidom__hook__ = hook;
+        window['__vidom__hook__'] = hook;
     }
 }
 

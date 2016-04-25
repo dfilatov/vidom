@@ -36,8 +36,7 @@ function normalizeChildren(children) {
                     res = children.slice(0, i);
                 }
             }
-        }
-        else {
+        } else {
             if(res === null) {
                 res = child;
             }
@@ -46,7 +45,7 @@ function normalizeChildren(children) {
                     child :
                     (res === children?
                         res.slice(0, i) :
-                        (Array.isArray(res)? res : [res])).concat(child);
+                        Array.isArray(res)? res : [res]).concat(child);
             }
             else {
                 isChildObject = typeof child === 'object';

@@ -55,7 +55,7 @@ function patchComponent(attrs, children, ctx, parentNode) {
     }
 }
 
-function shouldComponentUpdate(attrs, prevAttrs) {
+function shouldComponentUpdate() {
     return true;
 }
 
@@ -152,7 +152,7 @@ function getComponentDefaultAttrs() {
 }
 
 function buildComponentAttrs(attrs) {
-    if(this._attrs && (attrs === this._attrs)) {
+    if(this._attrs && attrs === this._attrs) {
         return attrs;
     }
 
@@ -231,7 +231,7 @@ function createComponent(props, staticProps) {
         res[i] = staticProps[i];
     }
 
-    res.__vidom__component__ = true;
+    res['__vidom__component__'] = true;
 
     return res;
 }

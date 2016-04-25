@@ -7,7 +7,7 @@ const doc = global.document,
 let helperDomNode;
 
 function createElementByHtml(html, tag, ns) {
-    helperDomNode || (helperDomNode = document.createElement('div'));
+    helperDomNode || (helperDomNode = doc.createElement('div'));
 
     if(!ns || !TOP_LEVEL_NS_TAGS[ns] || TOP_LEVEL_NS_TAGS[ns] === tag) {
         helperDomNode.innerHTML = html;

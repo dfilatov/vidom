@@ -1,6 +1,5 @@
 import createNode from '../../src/createNode';
-import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
-import patchOps from '../../src/client/patchOps';
+import { mountToDomSync } from '../../src/client/mounter';
 
 describe('patchDom', () => {
     describe('updateText', () => {
@@ -252,7 +251,7 @@ describe('patchDom', () => {
                 createNode('div').key(2),
                 createNode('div').key(1).children([
                     createNode('input').key(2),
-                    createNode('input').attrs({ id : 'id1' }).key(1),
+                    createNode('input').attrs({ id : 'id1' }).key(1)
                 ])
             ]));
 

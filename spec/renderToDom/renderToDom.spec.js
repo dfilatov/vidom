@@ -123,12 +123,12 @@ describe('renderToDom', () => {
     describe('select', () => {
         it('should be properly rendered', () => {
             const domNode = createNode('select')
-                    .attrs({ value : 2 })
-                    .children([
-                            createNode('option').attrs({ value : 1 }),
-                            createNode('option').attrs({ value : 2 })
-                        ])
-                        .renderToDom();
+                .attrs({ value : 2 })
+                .children([
+                    createNode('option').attrs({ value : 1 }),
+                    createNode('option').attrs({ value : 2 })
+                ])
+                .renderToDom();
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(true);
@@ -136,13 +136,13 @@ describe('renderToDom', () => {
 
         it('should be properly rendered with multiple values', () => {
             const domNode = createNode('select')
-                    .attrs({ multiple : true, value : [2, 3] })
-                    .children([
-                            createNode('option').attrs({ value : 1 }),
-                            createNode('option').attrs({ value : 2 }),
-                            createNode('option').attrs({ value : 3 })
-                        ])
-                        .renderToDom();
+                .attrs({ multiple : true, value : [2, 3] })
+                .children([
+                    createNode('option').attrs({ value : 1 }),
+                    createNode('option').attrs({ value : 2 }),
+                    createNode('option').attrs({ value : 3 })
+                ])
+                .renderToDom();
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(true);

@@ -1,6 +1,5 @@
 import getDomNodeId from './getDomNodeId';
 import rafBatch from './rafBatch';
-import emptyObj from '../utils/emptyObj';
 import globalHook from '../globalHook';
 
 const mountedNodes = {};
@@ -107,8 +106,7 @@ export function unmountFromDomSync(domNode) {
 
 export function getMountedRootNodes() {
     const res = [];
-    let id,
-        mountedNode;
+    let mountedNode;
 
     for(let id in mountedNodes) {
         mountedNode = mountedNodes[id];

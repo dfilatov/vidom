@@ -9,7 +9,6 @@
   "rules": {
     "no-multi-spaces": "error",
     "no-trailing-spaces": "error",
-    "curly": ["error", "all"],
     "no-multiple-empty-lines": [
       "error",
       {
@@ -17,6 +16,15 @@
       }
     ],
     "no-mixed-spaces-and-tabs": "error",
+    "no-extra-parens": "error",
+    "no-unreachable": "error",
+    "no-lonely-if": "error",
+    "no-unneeded-ternary": "error",
+    "no-empty": "error",
+    "no-with": "error",
+    "no-unused-vars": "error",
+    "no-negated-condition": "error",
+    "curly": ["error", "all"],
     "key-spacing": [
       "error",
       {
@@ -26,6 +34,22 @@
     ],
     "array-bracket-spacing": ["error", "never"],
     "computed-property-spacing": ["error", "never"],
-    "space-before-function-paren": ["error", "never"]
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "operator-linebreak": ["error", "after"],
+    "block-spacing": "error",
+    "space-before-function-paren": ["error", "never"],
+    "space-before-blocks": "error",
+    "space-in-parens": "error",
+    "padded-blocks": ["error", "never"],
+    "camelcase": "error",
+    "comma-dangle": ["error", "never"],
+    "comma-style": ["error", "last"],
+    "yoda": "error"
   }
 }
