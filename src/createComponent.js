@@ -83,6 +83,29 @@ function requestChildContext() {
     return emptyObj;
 }
 
+function requestInitialComponentState() {
+    return emptyObj;
+}
+
+function setComponentState(state) {
+    this._prevState = this._state;
+    this._state = { ...this._state, ...state };
+
+    this.update(updateComponentPrevState);
+}
+
+function updateComponentPrevState() {
+    this._prevState = this._state;
+}
+
+function getComponentState() {
+    return this._state;
+}
+
+function getComponentPrevState() {
+    return this._prevState;
+}
+
 function renderComponent() {
     this._domRefs = {};
 
@@ -188,11 +211,14 @@ function createComponent(props, staticProps) {
             this._domRefs = null;
             this._isMounted = false;
             this._isUpdating = false;
+            this._state = this.onInitialStateRequest(this._attrs);
+            this._prevState = this._state;
             this.onInit(this._attrs);
             this._rootNode = this.render();
         },
         ptp = {
             constructor : res,
+            onInitialStateRequest : requestInitialComponentState,
             onInit : noOp,
             mount : mountComponent,
             unmount : unmountComponent,
@@ -202,6 +228,9 @@ function createComponent(props, staticProps) {
             shouldUpdate : shouldComponentUpdate,
             onUpdate : noOp,
             isMounted : isComponentMounted,
+            getState : getComponentState,
+            getPrevState : getComponentPrevState,
+            setState : setComponentState,
             renderToDom : renderComponentToDom,
             renderToString : renderComponentToString,
             adoptDom : adoptComponentDom,

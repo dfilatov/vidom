@@ -7,4 +7,5 @@ describe('component', () => {
     require('./onUpdate/onUpdate.spec.js');
     require('./context/context.spec.js');
     require('./domRefs/domRefs.spec.js');
+    require('./state/state.spec.js');
 });
