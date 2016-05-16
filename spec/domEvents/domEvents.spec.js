@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import createNode from '../../src/createNode';
 import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
-import SyntheticEvent from '../../src/client/events/SyntheticEvent';
 import isEventSupported from '../../src/client/events/isEventSupported';
 import simulate from 'simulate';
 
@@ -55,7 +54,6 @@ describe('domEvents', () => {
 
             const e = spy.args[0][0];
 
-            expect(e).to.be.an(SyntheticEvent);
             expect(e.type).to.be.equal('click');
             expect(e.nativeEvent.type).to.be.equal('click');
         });
@@ -208,7 +206,6 @@ describe('domEvents', () => {
 
             const e = spy.args[0][0];
 
-            expect(e).to.be.an(SyntheticEvent);
             expect(e.type).to.be.equal('scroll');
         });
 
@@ -244,6 +241,39 @@ describe('domEvents', () => {
 
             expect(spy1.called).not.to.be.ok();
             expect(spy2.called).to.be.ok();
+        });
+
+        it('should properly reuse SyntheticEvent object', () => {
+            const spy = sinon.spy();
+
+            mountToDomSync(
+                domNode,
+                createNode('div')
+                    .attrs({ id : 'id1', onClick : spy })
+                    .children(createNode('div').attrs({ id : 'id2', onClick : spy })));
+
+            simulate.click(document.getElementById('id1'));
+            simulate.click(document.getElementById('id2'));
+
+            expect(spy.args[0][0]).to.equal(spy.args[1][0]);
+            expect(spy.args[1][0].target).to.equal(document.getElementById('id2'));
+        });
+
+        it('shouldn\'t reuse persisted SyntheticEvent object', () => {
+            const spy = sinon.spy();
+
+            mountToDomSync(
+                domNode,
+                createNode('div')
+                    .attrs({
+                        id : 'id1',
+                        onClick : e => { e.persist(); spy(e); }
+                    }));
+
+            simulate.click(document.getElementById('id1'));
+            simulate.click(document.getElementById('id1'));
+
+            expect(spy.args[0][0]).not.to.equal(spy.args[1][0]);
         });
     });
 });
