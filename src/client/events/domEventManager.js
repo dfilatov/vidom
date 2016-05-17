@@ -1,5 +1,5 @@
 import isEventSupported from './isEventSupported';
-import SyntheticEvent from './SyntheticEvent';
+import createSyntheticEvent from './createSyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
 
 const doc = global.document,
@@ -48,7 +48,7 @@ function globalEventListener(e, type) {
     }
 
     if(listenersToInvoke) {
-        const event = new SyntheticEvent(type, e),
+        const event = createSyntheticEvent(type, e),
             len = listenersToInvoke.length;
 
         let i = 0;
@@ -63,7 +63,7 @@ function globalEventListener(e, type) {
 }
 
 function eventListener(e) {
-    listenersStorage[getDomNodeId(e.target)][e.type](new SyntheticEvent(e.type, e));
+    listenersStorage[getDomNodeId(e.target)][e.type](createSyntheticEvent(e.type, e));
 }
 
 if(doc) {
