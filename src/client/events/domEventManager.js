@@ -5,7 +5,8 @@ import getDomNodeId from '../getDomNodeId';
 const doc = global.document,
     BUBBLEABLE_NATIVE_EVENTS = [
         'mouseover', 'mousemove', 'mouseout', 'mousedown', 'mouseup',
-        'click', 'dblclick', 'keydown', 'keypress', 'keyup',
+        'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'touchcancel',
+        'keydown', 'keypress', 'keyup',
         'change', 'input', 'submit', 'focus', 'blur',
         'dragstart', 'drag', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop',
         'contextmenu', 'wheel', 'copy', 'cut', 'paste'
