@@ -1,5 +1,9 @@
 import patchOps from '../client/patchOps';
 import domAttrs from '../client/domAttrs';
+import domOps from '../client/domOps';
+import normalizeNs from './utils/normalizeNs';
+import checkChildren from './utils/checkChildren';
+import patchChildren from './utils/patchChildren';
 import { addListener, removeListeners } from '../client/events/domEventManager';
 import ATTRS_TO_EVENTS from '../client/events/attrsToEvents';
 import escapeHtml from '../utils/escapeHtml';
@@ -113,15 +117,13 @@ TagNode.prototype = {
     },
 
     renderToDom(parentNode) {
-        if(!this._ns && parentNode && parentNode._ns) {
-            this._ns = parentNode._ns;
-        }
+        normalizeNs(this, parentNode);
 
         const children = this._children;
 
         if(USE_DOM_STRINGS && children && typeof children !== 'string') {
             const domNode = createElementByHtml(this.renderToString(), this._tag, this._ns);
-            this.adoptDom(domNode, parentNode);
+            this.adoptDom([domNode], 0, parentNode);
             return domNode;
         }
 
@@ -139,7 +141,7 @@ TagNode.prototype = {
                 const len = children.length;
 
                 while(i < len) {
-                    domNode.appendChild(children[i++].renderToDom(this));
+                    domOps.append(domNode, children[i++].renderToDom(this));
                 }
             }
         }
@@ -161,7 +163,6 @@ TagNode.prototype = {
         const tag = this._tag,
             ns = this._ns,
             attrs = this._attrs;
-
         let children = this._children,
             res = '<' + tag;
 
@@ -227,14 +228,11 @@ TagNode.prototype = {
         return res;
     },
 
-    adoptDom(domNode, parentNode) {
-        if(!this._ns && parentNode && parentNode._ns) {
-            this._ns = parentNode._ns;
-        }
+    adoptDom(domNodes, domIdx, parentNode) {
+        normalizeNs(this, parentNode);
 
-        this._domNode = domNode;
-
-        const attrs = this._attrs,
+        const domNode = this._domNode = domNodes[domIdx],
+            attrs = this._attrs,
             children = this._children;
 
         if(attrs) {
@@ -252,12 +250,15 @@ TagNode.prototype = {
 
             if(len) {
                 const domChildren = domNode.childNodes;
+                let domChildIdx = 0;
+
                 while(i < len) {
-                    children[i].adoptDom(domChildren[i], this);
-                    ++i;
+                    domChildIdx = children[i++].adoptDom(domChildren, domChildIdx, this);
                 }
             }
         }
+
+        return domIdx + 1;
     },
 
     mount() {
@@ -295,37 +296,33 @@ TagNode.prototype = {
             return;
         }
 
-        if(!node._ns && parentNode && parentNode._ns) {
-            node._ns = parentNode._ns;
+        normalizeNs(node, parentNode);
+
+        switch(node.type) {
+            case TagNode:
+                if(this._tag !== node._tag || this._ns !== node._ns) {
+                    patchOps.replace(parentNode, this, node);
+                }
+                else {
+                    node._domNode = this._domNode;
+                    this._patchChildren(node);
+                    this._patchAttrs(node);
+                }
+                break;
+
+            case ComponentNode:
+                const instance = node._getInstance();
+                this.patch(instance.getRootNode(), parentNode);
+                instance.mount();
+                break;
+
+            case FunctionComponentNode:
+                this.patch(node._getRootNode(), parentNode);
+                break;
+
+            default:
+                patchOps.replace(parentNode, this, node);
         }
-
-        if(this.type !== node.type) {
-            switch(node.type) {
-                case ComponentNode:
-                    const instance = node._getInstance();
-                    this.patch(instance.getRootNode(), parentNode);
-                    instance.mount();
-                    break;
-
-                case FunctionComponentNode:
-                    this.patch(node._getRootNode(), parentNode);
-                    break;
-
-                default:
-                    patchOps.replace(parentNode || null, this, node);
-            }
-            return;
-        }
-
-        if(this._tag !== node._tag || this._ns !== node._ns) {
-            patchOps.replace(parentNode || null, this, node);
-            return;
-        }
-
-        this._domNode && (node._domNode = this._domNode);
-
-        this._patchChildren(node);
-        this._patchAttrs(node);
     },
 
     _patchChildren(node) {
@@ -365,139 +362,18 @@ TagNode.prototype = {
             patchOps.removeText(this);
         }
 
-        const childrenBLen = childrenB.length;
-
         if(isChildrenAText || !childrenA || !childrenA.length) {
+            const childrenBLen = childrenB.length;
             let iB = 0;
+
             while(iB < childrenBLen) {
                 patchOps.appendChild(node, childrenB[iB++]);
             }
+
             return;
         }
 
-        const childrenALen = childrenA.length;
-
-        if(childrenALen === 1 && childrenBLen === 1) {
-            childrenA[0].patch(childrenB[0], node);
-            return;
-        }
-
-        let leftIdxA = 0,
-            rightIdxA = childrenALen - 1,
-            leftChildA = childrenA[leftIdxA],
-            leftChildAKey = leftChildA._key,
-            rightChildA = childrenA[rightIdxA],
-            rightChildAKey = rightChildA._key,
-            leftIdxB = 0,
-            rightIdxB = childrenBLen - 1,
-            leftChildB = childrenB[leftIdxB],
-            leftChildBKey = leftChildB._key,
-            rightChildB = childrenB[rightIdxB],
-            rightChildBKey = rightChildB._key,
-            updateLeftIdxA = false,
-            updateRightIdxA = false,
-            updateLeftIdxB = false,
-            updateRightIdxB = false,
-            childrenAIndicesToSkip = {},
-            childrenAKeys, foundAChildIdx, foundAChild;
-
-        while(leftIdxA <= rightIdxA && leftIdxB <= rightIdxB) {
-            if(childrenAIndicesToSkip[leftIdxA]) {
-                updateLeftIdxA = true;
-            }
-            else if(childrenAIndicesToSkip[rightIdxA]) {
-                updateRightIdxA = true;
-            }
-            else if(leftChildAKey === leftChildBKey) {
-                leftChildA.patch(leftChildB, node);
-                updateLeftIdxA = true;
-                updateLeftIdxB = true;
-            }
-            else if(rightChildAKey === rightChildBKey) {
-                rightChildA.patch(rightChildB, node);
-                updateRightIdxA = true;
-                updateRightIdxB = true;
-            }
-            else if(leftChildAKey != null && leftChildAKey === rightChildBKey) {
-                patchOps.moveChild(node, leftChildA, rightChildA, true);
-                leftChildA.patch(rightChildB, node);
-                updateLeftIdxA = true;
-                updateRightIdxB = true;
-            }
-            else if(rightChildAKey != null && rightChildAKey === leftChildBKey) {
-                patchOps.moveChild(node, rightChildA, leftChildA, false);
-                rightChildA.patch(leftChildB, node);
-                updateRightIdxA = true;
-                updateLeftIdxB = true;
-            }
-            else if(leftChildAKey != null && leftChildBKey == null) {
-                patchOps.insertChild(node, leftChildB, leftChildA);
-                updateLeftIdxB = true;
-            }
-            else if(leftChildAKey == null && leftChildBKey != null) {
-                patchOps.removeChild(node, leftChildA);
-                updateLeftIdxA = true;
-            }
-            else {
-                childrenAKeys || (childrenAKeys = buildKeys(childrenA, leftIdxA, rightIdxA));
-                if((foundAChildIdx = childrenAKeys[leftChildBKey]) == null) {
-                    patchOps.insertChild(node, leftChildB, leftChildA);
-                }
-                else {
-                    foundAChild = childrenA[foundAChildIdx];
-                    childrenAIndicesToSkip[foundAChildIdx] = true;
-                    patchOps.moveChild(node, foundAChild, leftChildA, false);
-                    foundAChild.patch(leftChildB, node);
-                }
-                updateLeftIdxB = true;
-            }
-
-            if(updateLeftIdxA) {
-                updateLeftIdxA = false;
-                if(++leftIdxA <= rightIdxA) {
-                    leftChildA = childrenA[leftIdxA];
-                    leftChildAKey = leftChildA._key;
-                }
-            }
-
-            if(updateRightIdxA) {
-                updateRightIdxA = false;
-                if(--rightIdxA >= leftIdxA) {
-                    rightChildA = childrenA[rightIdxA];
-                    rightChildAKey = rightChildA._key;
-                }
-            }
-
-            if(updateLeftIdxB) {
-                updateLeftIdxB = false;
-                if(++leftIdxB <= rightIdxB) {
-                    leftChildB = childrenB[leftIdxB];
-                    leftChildBKey = leftChildB._key;
-                }
-            }
-
-            if(updateRightIdxB) {
-                updateRightIdxB = false;
-                if(--rightIdxB >= leftIdxB) {
-                    rightChildB = childrenB[rightIdxB];
-                    rightChildBKey = rightChildB._key;
-                }
-            }
-        }
-
-        while(leftIdxA <= rightIdxA) {
-            if(!childrenAIndicesToSkip[leftIdxA]) {
-                patchOps.removeChild(node, childrenA[leftIdxA]);
-            }
-            ++leftIdxA;
-        }
-
-        while(leftIdxB <= rightIdxB) {
-            rightIdxB < childrenBLen - 1?
-                patchOps.insertChild(node, childrenB[leftIdxB], childrenB[rightIdxB + 1]) :
-                patchOps.appendChild(node, childrenB[leftIdxB]);
-            ++leftIdxB;
-        }
+        patchChildren(this, node);
     },
 
     _patchAttrs(node) {
@@ -622,44 +498,6 @@ function processChildren(children) {
     return typeOfChildren === 'string'?
         children :
         children.toString();
-}
-
-function checkChildren(children) {
-    const keys = {},
-        len = children.length;
-
-    let i = 0,
-        child;
-
-    while(i < len) {
-        child = children[i++];
-
-        if(typeof child !== 'object') {
-            console.error('You mustn\'t use simple child in case of multiple children.');
-        }
-        else if(child._key != null) {
-            if(child._key in keys) {
-                console.error(
-                    `Childrens\' keys must be unique across the children. Found duplicate of "${child._key}" key.`);
-            }
-            else {
-                keys[child._key] = true;
-            }
-        }
-    }
-}
-
-function buildKeys(children, idxFrom, idxTo) {
-    let res = {},
-        child;
-
-    while(idxFrom < idxTo) {
-        child = children[idxFrom];
-        child._key != null && (res[child._key] = idxFrom);
-        ++idxFrom;
-    }
-
-    return res;
 }
 
 function checkAttrs(attrs) {

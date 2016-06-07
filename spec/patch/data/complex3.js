@@ -25,7 +25,7 @@ export default {
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [parentNode, nodeA, nodeD] },
-        { op : patchOps.moveChild, args : [parentNode, nodeB, nodeD, false] },
+        { op : patchOps.moveChild, args : [nodeB, nodeD, false] },
         { op : patchOps.insertChild, args : [parentNode, nodeC, nodeD] },
         { op : patchOps.appendChild, args : [parentNode, nodeE] }
     ]

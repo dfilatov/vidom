@@ -1,10 +1,9 @@
 import sinon from 'sinon';
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../../src/vidom';
 
 describe('shouldUpdate', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -18,27 +17,30 @@ describe('shouldUpdate', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onRender() {
-                    return createNode('div');
+                    return node('div');
                 },
 
-                shouldUpdate : spy
+                shouldUpdate() {
+                    spy.apply(this, arguments);
+                    return true;
+                }
             }),
             oldAttrs = { id : 1 },
             newAttrs = { id : 2 };
 
-        mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
-        mountToDomSync(domNode, createNode(C).attrs(newAttrs));
+        mountToDomSync(domNode, node(C).attrs(oldAttrs));
+        mountToDomSync(domNode, node(C).attrs(newAttrs));
 
         expect(spy.called).to.be.ok();
         expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
     });
 
-    it('shouldn prevent rendering if returns false', () => {
+    it('should prevent rendering if returns false', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onRender() {
-                    spy.apply(this, arguments);
-                    return createNode('div');
+                    spy();
+                    return node('div');
                 },
 
                 shouldUpdate() {
@@ -46,8 +48,8 @@ describe('shouldUpdate', () => {
                 }
             });
 
-        mountToDomSync(domNode, createNode(C));
-        mountToDomSync(domNode, createNode(C));
+        mountToDomSync(domNode, node(C));
+        mountToDomSync(domNode, node(C));
 
         expect(spy.calledOnce).to.be.ok();
     });

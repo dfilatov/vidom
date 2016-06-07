@@ -1,29 +1,35 @@
-import createNode from '../../src/createNode';
-import createComponent from '../../src/createComponent';
+import { node, createComponent } from '../../src/vidom';
+import TopNode from '../../src/nodes/TopNode';
 
 describe('renderToDom', () => {
+    let topNode;
+
+    beforeEach(() => {
+        topNode = new TopNode();
+    });
+
     describe('tag', () => {
         it('should be rendered properly', () => {
-            expect(createNode('span').renderToDom().tagName).to.equal('SPAN');
+            expect(node('span').renderToDom(topNode).tagName).to.equal('SPAN');
         });
     });
 
     describe('ns', () => {
         it('should be rendered with default namespace', () => {
-            expect(createNode('div').renderToDom().namespaceURI)
+            expect(node('div').renderToDom(topNode).namespaceURI)
                 .to.equal('http://www.w3.org/1999/xhtml');
         });
 
         it('should be rendered with given namespace', () => {
-            expect(createNode('svg').ns('http://www.w3.org/2000/svg').renderToDom().namespaceURI)
+            expect(node('svg').ns('http://www.w3.org/2000/svg').renderToDom(topNode).namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should be inherited from parent', () => {
-            var domNode = createNode('svg')
+            var domNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children(createNode('g').children(createNode('circle')))
-                    .renderToDom();
+                    .children(node('g').children(node('circle')))
+                    .renderToDom(topNode);
 
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
@@ -31,7 +37,7 @@ describe('renderToDom', () => {
 
     describe('children', () => {
         it('should be rendered as child nodes', () => {
-            const domNode = createNode('div').children([createNode('span'), createNode('img')]).renderToDom();
+            const domNode = node('div').children([node('span'), node('img')]).renderToDom(topNode);
 
             expect(domNode.children.length).to.equal(2);
             expect(domNode.children[0].tagName).to.equal('SPAN');
@@ -41,7 +47,7 @@ describe('renderToDom', () => {
 
     describe('attrs', () => {
         it('should be rendered as attributes', () => {
-            const domNode = createNode('textarea').attrs({ cols : 5, rows : 2, disabled : true }).renderToDom();
+            const domNode = node('textarea').attrs({ cols : 5, rows : 2, disabled : true }).renderToDom(topNode);
 
             expect(domNode.getAttribute('cols')).to.equal('5');
             expect(domNode.getAttribute('rows')).to.equal('2');
@@ -49,52 +55,52 @@ describe('renderToDom', () => {
         });
 
         it('shouldn\'t render falsy boolean attribute', () => {
-            const domNode = createNode('textarea').attrs({ disabled : false }).renderToDom();
+            const domNode = node('textarea').attrs({ disabled : false }).renderToDom(topNode);
 
             expect(domNode.hasAttribute('disabled')).to.equal(false);
         });
 
         it('should be rendered as properties', () => {
-            const domNode = createNode('input').attrs({ type : 'radio', checked : true }).renderToDom();
+            const domNode = node('input').attrs({ type : 'radio', checked : true }).renderToDom(topNode);
             expect(domNode.checked).to.equal(true);
         });
 
         it('should properly render style', () => {
-            const domNode = createNode('div').attrs({ style : { width : '100px', display : 'none' } }).renderToDom();
+            const domNode = node('div').attrs({ style : { width : '100px', display : 'none' } }).renderToDom(topNode);
 
             expect(domNode.style.width).to.equal('100px');
             expect(domNode.style.display).to.equal('none');
         });
 
         it('shouldn\'t render null value', () => {
-            const domNode = createNode('input').attrs({ value : null }).renderToDom();
+            const domNode = node('input').attrs({ value : null }).renderToDom(topNode);
 
             expect(domNode.className).to.equal('');
             expect(domNode.value).to.equal('');
         });
 
         it('shouldn\'t render undefined value', () => {
-            const domNode = createNode('input').attrs({ 'class' : undefined }).renderToDom();
+            const domNode = node('input').attrs({ 'class' : undefined }).renderToDom(topNode);
 
             expect(domNode.className).to.equal('');
             expect(domNode.value).to.equal('');
         });
 
         it('should be rendered as data-attribute', () => {
-            const domNode = createNode('div').attrs({ 'data-id' : '123' }).renderToDom();
+            const domNode = node('div').attrs({ 'data-id' : '123' }).renderToDom(topNode);
 
             expect(domNode.getAttribute('data-id')).to.equal('123');
         });
 
         it('should be rendered as custom attribute', () => {
-            const domNode = createNode('div').attrs({ 'custom-attr' : '123' }).renderToDom();
+            const domNode = node('div').attrs({ 'custom-attr' : '123' }).renderToDom(topNode);
 
             expect(domNode.getAttribute('custom-attr')).to.equal('123');
         });
 
         it('should support alternative names', () => {
-            const domNode1 = createNode('label').attrs({ 'for' : 'id1', 'class' : 'c1' }).renderToDom(),
-                domNode2 = createNode('label').attrs({ htmlFor : 'id1', className : 'c1' }).renderToDom();
+            const domNode1 = node('label').attrs({ 'for' : 'id1', 'class' : 'c1' }).renderToDom(topNode),
+                domNode2 = node('label').attrs({ htmlFor : 'id1', className : 'c1' }).renderToDom(topNode);
 
             expect(domNode1.className).to.equal('c1');
             expect(domNode1.getAttribute('for')).to.equal('id1');
@@ -105,7 +111,7 @@ describe('renderToDom', () => {
 
     describe('text', () => {
         it('should be rendered as wrapped text node', () => {
-            const domNode = createNode('span').children('some text').renderToDom();
+            const domNode = node('span').children('some text').renderToDom(topNode);
 
             expect(domNode.childNodes.length).to.equal(1);
             expect(domNode.textContent).to.equal('some text');
@@ -114,35 +120,53 @@ describe('renderToDom', () => {
 
     describe('html', () => {
         it('should be rendered as inner html', () => {
-            const domNode = createNode('span').html('<span></span><i></i>').renderToDom();
+            const domNode = node('span').html('<span></span><i></i>').renderToDom(topNode);
 
             expect(domNode.childNodes.length).to.equal(2);
         });
     });
 
+    describe('fragment', () => {
+        it('should be rendered without own node', () => {
+            const domNode = node('div').children([
+                node('a'),
+                node('fragment').children([
+                    node('i'),
+                    node('fragment').children([
+                        node('span'),
+                        node('dl')
+                    ]),
+                    node('img')]),
+                node('b')
+            ]).renderToDom(topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a><i></i><span></span><dl></dl><!----><img><!----><b></b>');
+        });
+    });
+
     describe('select', () => {
         it('should be properly rendered', () => {
-            const domNode = createNode('select')
+            const domNode = node('select')
                 .attrs({ value : 2 })
                 .children([
-                    createNode('option').attrs({ value : 1 }),
-                    createNode('option').attrs({ value : 2 })
+                    node('option').attrs({ value : 1 }),
+                    node('option').attrs({ value : 2 })
                 ])
-                .renderToDom();
+                .renderToDom(topNode);
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(true);
         });
 
         it('should be properly rendered with multiple values', () => {
-            const domNode = createNode('select')
+            const domNode = node('select')
                 .attrs({ multiple : true, value : [2, 3] })
                 .children([
-                    createNode('option').attrs({ value : 1 }),
-                    createNode('option').attrs({ value : 2 }),
-                    createNode('option').attrs({ value : 3 })
+                    node('option').attrs({ value : 1 }),
+                    node('option').attrs({ value : 2 }),
+                    node('option').attrs({ value : 3 })
                 ])
-                .renderToDom();
+                .renderToDom(topNode);
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(true);
@@ -153,14 +177,14 @@ describe('renderToDom', () => {
     describe('component', () => {
         it('should be rendered as component', () => {
             const Component = createComponent({
-                    onRender : function(attrs, content) {
-                        return createNode('div').attrs(attrs).children([
-                            createNode('a'),
-                            createNode('span')
+                    onRender(attrs, content) {
+                        return node('div').attrs(attrs).children([
+                            node('a'),
+                            node('span')
                         ].concat(content));
                     }
                 }),
-                domNode = createNode(Component).attrs({ id : 'id1' }).children(createNode('i')).renderToDom();
+                domNode = node(Component).attrs({ id : 'id1' }).children(node('i')).renderToDom(topNode);
 
             expect(domNode.tagName).to.equal('DIV');
             expect(domNode.getAttribute('id')).to.equal('id1');
@@ -172,23 +196,23 @@ describe('renderToDom', () => {
 
         it('should pass parent namespace', () => {
             const Component = createComponent({
-                    onRender : () => {
-                        return createNode('circle');
+                    onRender() {
+                        return node('circle');
                     }
                 }),
-                domNode = createNode('svg')
+                domNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children(createNode('g').children(createNode(Component)))
-                    .renderToDom();
+                    .children(node('g').children(node(Component)))
+                    .renderToDom(topNode);
 
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should render <noscript/> if onRender() returns nothing', () => {
             const Component = createComponent({
-                    onRender : () => {}
+                    onRender() {}
                 }),
-                domNode = createNode(Component).renderToDom();
+                domNode = node(Component).renderToDom(topNode);
 
             expect(domNode.tagName).to.equal('NOSCRIPT');
         });
@@ -197,12 +221,12 @@ describe('renderToDom', () => {
     describe('functional component', () => {
         it('should be rendered as component', () => {
             const Component = (attrs, content) => {
-                    return createNode('div').attrs(attrs).children([
-                        createNode('a'),
-                        createNode('span')
+                    return node('div').attrs(attrs).children([
+                        node('a'),
+                        node('span')
                     ].concat(content));
                 },
-                domNode = createNode(Component).attrs({ id : 'id1' }).children(createNode('i')).renderToDom();
+                domNode = node(Component).attrs({ id : 'id1' }).children(node('i')).renderToDom(topNode);
 
             expect(domNode.tagName).to.equal('DIV');
             expect(domNode.getAttribute('id')).to.equal('id1');
@@ -213,18 +237,18 @@ describe('renderToDom', () => {
         });
 
         it('should pass parent namespace', () => {
-            const Component = () => createNode('circle'),
-                domNode = createNode('svg')
+            const Component = () => node('circle'),
+                domNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children(createNode('g').children(createNode(Component)))
-                    .renderToDom();
+                    .children(node('g').children(node(Component)))
+                    .renderToDom(topNode);
 
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should render <noscript/> if onRender() returns nothing', () => {
             const Component = () => {},
-                domNode = createNode(Component).renderToDom();
+                domNode = node(Component).renderToDom(topNode);
 
             expect(domNode.tagName).to.equal('NOSCRIPT');
         });

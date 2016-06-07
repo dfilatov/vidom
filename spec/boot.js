@@ -1,4 +1,4 @@
-import expect from 'expect.js';
+import 'expect.js';
 import './renderToDom/renderToDom.spec.js';
 import './renderToString/renderToString.spec.js';
 import './normalizeChildren/normalizeChildren.spec.js';

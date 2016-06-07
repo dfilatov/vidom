@@ -31,7 +31,7 @@ describe('context', () => {
                 },
 
                 onRender(_, children) {
-                    return createNode('div').children(children);
+                    return createNode('div').children(createNode('fragment').children(children));
                 }
             }),
             C2 = createComponent({

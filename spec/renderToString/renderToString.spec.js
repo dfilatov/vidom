@@ -98,9 +98,33 @@ describe('renderToString', () => {
     });
 
     describe('html', () => {
-        it('shouldn\'t escape html', () => {
+        it('should be rendered without escaping', () => {
             expect(createNode('span').html('<span></span><i></i>').renderToString())
                 .to.equal('<span><span></span><i></i></span>');
+        });
+    });
+
+    describe('fragment', () => {
+        it('should be rendered as fragment', () => {
+            expect(createNode('div').children([
+                createNode('a'),
+                createNode('fragment').children([
+                    createNode('i'),
+                    createNode('fragment').children(createNode('u')),
+                    createNode('span')
+                ]),
+                createNode('b')
+            ]).renderToString())
+                .to.equal('<div><a></a><i></i><u></u><!----><span></span><!----><b></b></div>');
+        });
+
+        it('should be rendered as comment if no children', () => {
+            expect(createNode('div').children([
+                createNode('a'),
+                createNode('fragment'),
+                createNode('b')
+            ]).renderToString())
+                .to.equal('<div><a></a><!----><b></b></div>');
         });
     });
 

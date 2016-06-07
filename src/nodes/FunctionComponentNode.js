@@ -1,5 +1,6 @@
 import TagNode from './TagNode';
 import emptyObj from '../utils/emptyObj';
+import normalizeNs from './utils/normalizeNs';
 
 export default function FunctionComponentNode(component) {
     this.type = FunctionComponentNode;
@@ -37,10 +38,8 @@ FunctionComponentNode.prototype = {
         return this;
     },
 
-    renderToDom(parentNode) {
-        if(!this._ns && parentNode && parentNode._ns) {
-            this._ns = parentNode._ns;
-        }
+    renderToDom(parent) {
+        normalizeNs(this, parent);
 
         return this._getRootNode().renderToDom(this);
     },
@@ -49,8 +48,8 @@ FunctionComponentNode.prototype = {
         return this._getRootNode().renderToString();
     },
 
-    adoptDom(domNode, parentNode) {
-        this._getRootNode().adoptDom(domNode, parentNode);
+    adoptDom(domNode, domIdx, parentNode) {
+        return this._getRootNode().adoptDom(domNode, domIdx, parentNode);
     },
 
     mount() {
@@ -69,9 +68,7 @@ FunctionComponentNode.prototype = {
             return;
         }
 
-        if(!node._ns && parentNode && parentNode._ns) {
-            node._ns = parentNode._ns;
-        }
+        normalizeNs(this, parentNode);
 
         this._getRootNode().patch(this.type === node.type? node._getRootNode() : node, parentNode);
     },
