@@ -23,17 +23,16 @@
     "babelify": "7.2.0",
     "browserify": "12.0.1",
     "envify": "3.4.0",
-    "eslint": "2.8.0",
+    "eslint": "2.12.0",
     "expect.js": "0.3.1",
-    "mocha": "2.2.5",
-    "mocha-phantomjs": "3.5.3",
-    "phantomjs": "1.9.17",
+    "mocha": "2.5.3",
+    "mocha-phantomjs": "4.0.2",
     "simulate": "git://github.com/dfilatov/simulate.js",
-    "sinon": "1.15.4",
+    "sinon": "1.17.4",
     "uglify-js": "2.4.24",
     "vow": "0.4.10",
     "vow-node": "0.3.0",
-    "zuul": "3.8.0"
+    "zuul": "3.10.1"
   },
   "license": "MIT",
   "scripts": {
