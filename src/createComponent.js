@@ -70,6 +70,7 @@ function renderComponentToString() {
 }
 
 function adoptComponentDom(domNode, domIdx, parentNode) {
+    this._parentNode = parentNode;
     return this._rootNode.adoptDom(domNode, domIdx, parentNode);
 }
 
