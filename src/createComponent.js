@@ -32,6 +32,7 @@ function patchComponent(attrs, children, ctx, parentNode) {
         }
     }
 
+    this._parentNode = parentNode;
     this._children = children;
     this._ctx = ctx;
 
@@ -60,6 +61,7 @@ function shouldComponentUpdate() {
 }
 
 function renderComponentToDom(parentNode) {
+    this._parentNode = parentNode;
     return this._rootNode.renderToDom(parentNode);
 }
 
@@ -67,8 +69,8 @@ function renderComponentToString() {
     return this._rootNode.renderToString();
 }
 
-function adoptComponentDom(domNode, parentNode) {
-    this._rootNode.adoptDom(domNode, parentNode);
+function adoptComponentDom(domNode, domIdx, parentNode) {
+    return this._rootNode.adoptDom(domNode, domIdx, parentNode);
 }
 
 function getComponentDomNode() {
@@ -138,7 +140,7 @@ function updateComponent(cb, cbCtx) {
             if(this.isMounted()) {
                 this._isUpdating = false;
                 var prevRootNode = this._rootNode;
-                this.patch(this._attrs, this._children);
+                this.patch(this._attrs, this._children, this._ctx, this._parentNode);
                 cb && cb.call(cbCtx || this);
                 if(process.env.NODE_ENV !== 'production') {
                     globalHook.emit('replace', prevRootNode, this._rootNode);
@@ -208,6 +210,7 @@ function createComponent(props, staticProps) {
             this._attrs = this._buildAttrs(attrs);
             this._children = children;
             this._ctx = ctx;
+            this._parentNode = null;
             this._domRefs = null;
             this._isMounted = false;
             this._isUpdating = false;

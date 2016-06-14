@@ -1,22 +1,28 @@
-import createNode from '../../src/createNode';
-import { mountToDomSync } from '../../src/client/mounter';
+import { node, mountToDomSync } from '../../src/vidom';
+import TopNode from '../../src/nodes/TopNode';
 
 describe('patchDom', () => {
+    let topNode;
+
+    beforeEach(() => {
+        topNode = new TopNode();
+    });
+
     describe('updateText', () => {
         it('should update node text', () => {
-            const node = createNode('span').children('text'),
-                domNode = node.renderToDom();
+            const parentNode = node('span').children('text'),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('span').children('new text'));
+            parentNode.patch(node('span').children('new text'), topNode);
 
             expect(domNode.textContent).to.equal('new text');
         });
 
         it('should update node html', () => {
-            const node = createNode('span').html('<span></span>'),
-                domNode = node.renderToDom();
+            const parentNode = node('span').html('<span></span>'),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('span').html('<span></span><i></i>'));
+            parentNode.patch(node('span').html('<span></span><i></i>'), topNode);
 
             expect(domNode.childNodes.length).to.equal(2);
         });
@@ -24,49 +30,51 @@ describe('patchDom', () => {
 
     describe('updateAttr', () => {
         it('should update node attribute', () => {
-            const node = createNode('textarea').attrs({ cols : 5 }),
-                domNode = node.renderToDom();
+            const parentNode = node('textarea').attrs({ cols : 5 }),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('textarea').attrs({ cols : 3 }));
+            parentNode.patch(node('textarea').attrs({ cols : 3 }), topNode);
 
             expect(domNode.getAttribute('cols')).to.equal('3');
         });
 
         it('should update node property', () => {
-            const node = createNode('input').attrs({ value : 'val' }),
-                domNode = node.renderToDom();
+            const parentNode = node('input').attrs({ value : 'val' }),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('input').attrs({ value : 'new val' }));
+            parentNode.patch(node('input').attrs({ value : 'new val' }), topNode);
 
             expect(domNode.value).to.equal('new val');
         });
 
         it('should keep value of input if type is changed', () => {
-            const node = createNode('input').attrs({ type : 'text', value : 'val' }),
-                domNode = node.renderToDom();
+            const parentNode = node('input').attrs({ type : 'text', value : 'val' }),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('input').attrs({ type : 'checkbox', value : 'val' }));
+            parentNode.patch(node('input').attrs({ type : 'checkbox', value : 'val' }), topNode);
 
             expect(domNode.value).to.equal('val');
         });
 
         it('should update select children', () => {
-            const node = createNode('select')
+            const parentNode = node('select')
                     .attrs({ multiple : true, value : [1] })
                     .children([
-                        createNode('option').attrs({ value : 1 }),
-                        createNode('option').attrs({ value : 2 }),
-                        createNode('option').attrs({ value : 3 })
+                        node('option').attrs({ value : 1 }),
+                        node('option').attrs({ value : 2 }),
+                        node('option').attrs({ value : 3 })
                     ]),
-                domNode = node.renderToDom();
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('select')
-                .attrs({ multiple : true, value : [2, 3] })
-                .children([
-                    createNode('option').attrs({ value : 1 }),
-                    createNode('option').attrs({ value : 2 }),
-                    createNode('option').attrs({ value : 3 })
-                ]));
+            parentNode.patch(
+                node('select')
+                    .attrs({ multiple : true, value : [2, 3] })
+                    .children([
+                        node('option').attrs({ value : 1 }),
+                        node('option').attrs({ value : 2 }),
+                        node('option').attrs({ value : 3 })
+                    ]),
+                topNode);
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(true);
@@ -76,46 +84,48 @@ describe('patchDom', () => {
 
     describe('removeAttr', () => {
         it('should remove node attribute', () => {
-            const node = createNode('textarea').attrs({ disabled : true }),
-                domNode = node.renderToDom();
+            const parentNode = node('textarea').attrs({ disabled : true }),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('textarea'));
+            parentNode.patch(node('textarea'), topNode);
 
             expect(domNode.hasAttribute('disabled')).to.equal(false);
         });
 
         it('should remove node property', () => {
-            const node = createNode('input').attrs({ value : 'val' }),
-                domNode = node.renderToDom();
+            const parentNode = node('input').attrs({ value : 'val' }),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('input'));
+            parentNode.patch(node('input'), topNode);
 
             expect(domNode.value).to.equal('');
         });
 
         it('should remove style node property', () => {
-            const node = createNode('div').attrs({ style : { width : '20px' } }),
-                domNode = node.renderToDom();
+            const parentNode = node('div').attrs({ style : { width : '20px' } }),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('div'));
+            parentNode.patch(node('div'), topNode);
             expect(domNode.style).to.eql(document.createElement('div').style);
         });
 
         it('should update select children', () => {
-            const node = createNode('select')
+            const parentNode = node('select')
                     .attrs({ value : 1 })
                     .children([
-                        createNode('option').attrs({ value : 1 }),
-                        createNode('option').attrs({ value : 2 })
+                        node('option').attrs({ value : 1 }),
+                        node('option').attrs({ value : 2 })
                     ]),
-                domNode = node.renderToDom();
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('select')
-                .attrs({ multiple : true })
-                .children([
-                    createNode('option').attrs({ value : 1 }),
-                    createNode('option').attrs({ value : 2 })
-                ]));
+            parentNode.patch(
+                node('select')
+                    .attrs({ multiple : true })
+                    .children([
+                        node('option').attrs({ value : 1 }),
+                        node('option').attrs({ value : 2 })
+                    ]),
+                topNode);
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(false);
@@ -124,107 +134,187 @@ describe('patchDom', () => {
 
     describe('replace', () => {
         it('should replace node', () => {
-            const oldNode = createNode('span'),
-                parentNode = createNode('div').children([createNode('a'), oldNode]),
-                domNode = parentNode.renderToDom();
+            const oldNode = node('span'),
+                parentNode = node('div').children([node('a'), oldNode]),
+                domNode = parentNode.renderToDom(topNode);
 
-            parentNode.patch(createNode('div').children([createNode('a'), createNode('div')]));
+            parentNode.patch(node('div').children([node('a'), node('div')]), topNode);
 
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
 
         it('should keep parent namespace', () => {
-            const node = createNode('svg')
+            const parentNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children(createNode('g').children(createNode('circle'))),
-                domNode = node.renderToDom();
+                    .children(node('g').children(node('circle'))),
+                domNode = parentNode.renderToDom(topNode);
 
-            node.patch(createNode('svg')
-                .ns('http://www.w3.org/2000/svg')
-                .children(createNode('g').children(createNode('path'))));
+            parentNode.patch(
+                node('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children(node('g').children(node('path'))),
+                topNode);
 
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+        });
+
+        it('should replace fragment with single node', () => {
+            const parentNode = node('div').children([
+                    node('a'),
+                    node('fragment').children([node('b'), node('i')])
+                ]),
+                domNode = parentNode.renderToDom(topNode);
+
+            parentNode.patch(node('div').children([node('a'), node('span')]), topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a><span></span>');
+        });
+
+        it('should replace node with fragment', () => {
+            const parentNode = node('div').children([node('a'), node('span')]),
+                domNode = parentNode.renderToDom(topNode);
+
+            parentNode.patch(
+                node('div').children([
+                    node('a'),
+                    node('fragment').children([node('b'), node('i')])
+                ]),
+                topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!---->');
         });
     });
 
     describe('appendChild', () => {
         it('should append child node', () => {
-            const parentNode = createNode('div').children([createNode('a'), createNode('span')]),
-                domNode = parentNode.renderToDom();
+            const parentNode = node('div').children([node('a'), node('span')]),
+                domNode = parentNode.renderToDom(topNode);
 
-            parentNode.patch(createNode('div').children([createNode('a'), createNode('span'), createNode('div')]));
+            parentNode.patch(
+                node('div').children([node('a'), node('span'), node('div')]),
+                topNode);
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
         });
 
         it('should keep parent namespace', () => {
-            const parentNode = createNode('svg')
+            const parentNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children(createNode('circle')),
-                domNode = parentNode.renderToDom();
+                    .children(node('circle')),
+                domNode = parentNode.renderToDom(topNode);
 
-            parentNode.patch(createNode('svg')
-                .ns('http://www.w3.org/2000/svg')
-                .children([createNode('circle'), createNode('circle')]));
+            parentNode.patch(
+                node('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children([node('circle'), node('circle')]),
+                topNode);
 
             expect(domNode.childNodes[1].namespaceURI).to.equal('http://www.w3.org/2000/svg');
+        });
+
+        it('should append child fragment', () => {
+            const parentNode = node('div').children([node('a')]),
+                domNode = parentNode.renderToDom(topNode);
+
+            parentNode.patch(
+                node('div').children([
+                    node('a'),
+                    node('fragment').children([node('b'), node('i')])
+                ]),
+                topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!---->');
         });
     });
 
     describe('removeChild', () => {
         it('should remove child node', () => {
-            const oldNode = createNode('span'),
-                parentNode = createNode('div').children([createNode('a'), oldNode]),
-                domNode = parentNode.renderToDom(),
+            const oldNode = node('span'),
+                parentNode = node('div').children([node('a'), oldNode]),
+                domNode = parentNode.renderToDom(topNode),
                 aDomNode = domNode.children[0];
 
-            parentNode.patch(createNode('div').children(createNode('a')));
+            parentNode.patch(node('div').children(node('a')), topNode);
 
             expect(domNode.childNodes.length).to.equal(1);
             expect(domNode.childNodes[0]).to.equal(aDomNode);
+        });
+
+        it('should remove child fragment', () => {
+            const parentNode = node('div').children([
+                    node('a'),
+                    node('fragment').children([node('b'), node('i')])
+                ]),
+                domNode = parentNode.renderToDom(topNode);
+
+            parentNode.patch(node('div').children([node('a')]), topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a>');
         });
     });
 
     describe('insertChild', () => {
         it('should insert child node', () => {
-            const parentNode = createNode('div').children([createNode('a').key('a'), createNode('span').key('c')]),
-                domNode = parentNode.renderToDom();
+            const parentNode = node('div').children([node('a').key('a'), node('span').key('c')]),
+                domNode = parentNode.renderToDom(topNode);
 
-            parentNode.patch(createNode('div').children([
-                createNode('a').key('a'),
-                createNode('div').key('b'),
-                createNode('span').key('c')
-            ]));
+            parentNode.patch(
+                node('div').children([
+                    node('a').key('a'),
+                    node('div').key('b'),
+                    node('span').key('c')
+                ]),
+                topNode);
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
 
         it('should keep parent namespace', () => {
-            const parentNode = createNode('svg')
+            const parentNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children(createNode('circle').key('b')),
-                domNode = parentNode.renderToDom();
+                    .children(node('circle').key('b')),
+                domNode = parentNode.renderToDom(topNode);
 
-            parentNode.patch(createNode('svg')
-                .ns('http://www.w3.org/2000/svg')
-                .children([createNode('circle').key('a'), createNode('circle').key('b')]));
+            parentNode.patch(
+                node('svg')
+                    .ns('http://www.w3.org/2000/svg')
+                    .children([node('circle').key('a'), node('circle').key('b')]),
+                topNode);
 
             expect(domNode.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+        });
+
+        it('should insert child fragment', () => {
+            const parentNode = node('div').children([
+                    node('a').key('a'),
+                    node('span').key('c')
+                ]),
+                domNode = parentNode.renderToDom(topNode);
+
+            parentNode.patch(
+                node('div').children([
+                    node('a').key('a'),
+                    node('fragment').key('b').children([node('b'), node('i')]),
+                    node('span').key('c')
+                ]),
+                topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!----><span></span>');
         });
     });
 
     describe('moveChild', () => {
         it('should move child node', () => {
-            const aNode = createNode('a').key('a'),
-                bNode = createNode('a').key('b'),
-                parentNode = createNode('div').children([aNode, bNode]),
-                domNode = parentNode.renderToDom(),
+            const aNode = node('a').key('a'),
+                bNode = node('a').key('b'),
+                parentNode = node('div').children([aNode, bNode]),
+                domNode = parentNode.renderToDom(topNode),
                 aDomNode = domNode.children[0],
                 bDomNode = domNode.children[1];
 
-            parentNode.patch(createNode('div').children([bNode, aNode]));
+            parentNode.patch(node('div').children([bNode, aNode]), topNode);
 
             expect(domNode.childNodes.length).to.equal(2);
             expect(domNode.childNodes[0]).to.equal(bDomNode);
@@ -236,22 +326,22 @@ describe('patchDom', () => {
 
             document.body.appendChild(rootDomElement);
 
-            mountToDomSync(rootDomElement, createNode('div').children([
-                createNode('div').key(1).children([
-                    createNode('input').attrs({ id : 'id1' }).key(1),
-                    createNode('input').key(2)
+            mountToDomSync(rootDomElement, node('div').children([
+                node('div').key(1).children([
+                    node('input').attrs({ id : 'id1' }).key(1),
+                    node('input').key(2)
                 ]),
-                createNode('div').key(2)
+                node('div').key(2)
             ]));
 
             const activeElement = document.getElementById('id1');
             activeElement.focus();
 
-            mountToDomSync(rootDomElement, createNode('div').children([
-                createNode('div').key(2),
-                createNode('div').key(1).children([
-                    createNode('input').key(2),
-                    createNode('input').attrs({ id : 'id1' }).key(1)
+            mountToDomSync(rootDomElement, node('div').children([
+                node('div').key(2),
+                node('div').key(1).children([
+                    node('input').key(2),
+                    node('input').attrs({ id : 'id1' }).key(1)
                 ])
             ]));
 
@@ -259,16 +349,52 @@ describe('patchDom', () => {
 
             document.body.removeChild(rootDomElement);
         });
+
+        it('should move child fragment', () => {
+            const parentNode = node('div').children([
+                    node('fragment').key('b').children([node('b'), node('i')]),
+                    node('a').key('a'),
+                    node('span').key('c')
+                ]),
+                domNode = parentNode.renderToDom(topNode);
+
+            parentNode.patch(
+                node('div').children([
+                    node('a').key('a'),
+                    node('fragment').key('b').children([node('b'), node('i')]),
+                    node('span').key('c')
+                ]),
+                topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!----><span></span>');
+        });
     });
 
     describe('removeChildren', () => {
         it('should remove children nodes', () => {
-            const parentNode = createNode('div').children([createNode('a'), createNode('span')]),
-                domNode = parentNode.renderToDom();
+            const parentNode = node('div').children([node('a'), node('span')]),
+                domNode = parentNode.renderToDom(topNode);
 
-            parentNode.patch(createNode('div'));
+            parentNode.patch(node('div'), topNode);
 
             expect(domNode.childNodes.length).to.equal(0);
+        });
+
+        it('should remove children nodes of fragment', () => {
+            const parentNode = node('div').children([
+                    node('a'),
+                    node('fragment').children([node('a'), node('b')])
+                ]),
+                domNode = parentNode.renderToDom(topNode);
+
+            parentNode.patch(
+                node('div').children([
+                    node('a'),
+                    node('fragment')
+                ]),
+                topNode);
+
+            expect(domNode.innerHTML).to.equal('<a></a><!---->');
         });
     });
 });

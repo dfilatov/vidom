@@ -1,6 +1,7 @@
 import TagNode from './nodes/TagNode';
 import ComponentNode from './nodes/ComponentNode';
 import FunctionComponentNode from './nodes/FunctionComponentNode';
+import FragmentNode from './nodes/FragmentNode';
 import Input from './components/Input';
 import Textarea from './components/Textarea';
 import Select from './components/Select';
@@ -15,9 +16,11 @@ const WRAPPER_COMPONENTS = {
 export default function(type) {
     switch(typeof type) {
         case 'string':
-            return WRAPPER_COMPONENTS[type]?
-                new ComponentNode(WRAPPER_COMPONENTS[type]) :
-                new TagNode(type);
+            return type === 'fragment'?
+                new FragmentNode() :
+                WRAPPER_COMPONENTS[type]?
+                    new ComponentNode(WRAPPER_COMPONENTS[type]) :
+                    new TagNode(type);
 
         case 'function':
             return type.__vidom__component__?

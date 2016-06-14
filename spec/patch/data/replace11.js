@@ -2,14 +2,14 @@ import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
 const oldNode = createNode('div'),
-    newNode = createNode('span'),
+    newNode = createNode('fragment'),
     replaceOp = patchOps.replace;
 
 export default {
-    'name' : 'replace10',
+    'name' : 'replace11',
     'trees' : [
         oldNode,
-        createNode(() => newNode)
+        newNode
     ],
     'patch' : topNode => [
         { op : replaceOp, args : [topNode, oldNode, newNode] }

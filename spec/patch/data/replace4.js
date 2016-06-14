@@ -2,7 +2,8 @@ import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
 const oldNode = createNode('div').ns('ns1'),
-    newNode = createNode('div').ns('ns2');
+    newNode = createNode('div').ns('ns2'),
+    replaceOp = patchOps.replace;
 
 export default {
     'name' : 'replace4',
@@ -10,7 +11,7 @@ export default {
         oldNode,
         newNode
     ],
-    'patch' : [
-        { op : patchOps.replace, args : [null, oldNode, newNode] }
+    'patch' : topNode => [
+        { op : replaceOp, args : [topNode, oldNode, newNode] }
     ]
 }

@@ -4,6 +4,7 @@ import patchOps from '../../../src/client/patchOps';
 
 const oldNode = createNode('div'),
     newNode = createNode('span'),
+    replaceOp = patchOps.replace,
     C = createComponent({
         onRender() {
             return newNode;
@@ -16,7 +17,7 @@ export default {
         oldNode,
         createNode(C)
     ],
-    'patch' : [
-        { op : patchOps.replace, args : [null, oldNode, newNode] }
+    'patch' : topNode => [
+        { op : replaceOp, args : [topNode, oldNode, newNode] }
     ]
 }

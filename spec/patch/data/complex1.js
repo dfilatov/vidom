@@ -22,10 +22,10 @@ export default {
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [parentNode, nodeB, nodeC] },
-        { op : patchOps.moveChild, args : [parentNode, nodeA, nodeC, false] },
+        { op : patchOps.moveChild, args : [nodeA, nodeC, false] },
         { op : patchOps.removeChildren, args : [nodeA] },
         { op : patchOps.updateText, args : [nodeA, 'new text', true] },
-        { op : patchOps.removeChild, args : [parentNode, nodeC] },
-        { op : patchOps.removeChild, args : [parentNode, nodeD] }
+        { op : patchOps.removeChild, args : [nodeC] },
+        { op : patchOps.removeChild, args : [nodeD] }
     ]
 }

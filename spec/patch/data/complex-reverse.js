@@ -1,8 +1,7 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const parentNode = createNode('div'),
-    nodeA = createNode('a').key('a'),
+const nodeA = createNode('a').key('a'),
     nodeB = createNode('a').key('b'),
     nodeC = createNode('a').key('c'),
     nodeD = createNode('a').key('d');
@@ -16,7 +15,7 @@ export default {
             nodeC,
             nodeD
         ]),
-        parentNode.children([
+        createNode('div').children([
             createNode('a').key('d'),
             createNode('a').key('c'),
             createNode('a').key('b'),
@@ -24,8 +23,8 @@ export default {
         ])
     ],
     'patch' : [
-        { op : patchOps.moveChild, args : [parentNode, nodeA, nodeD, true] },
-        { op : patchOps.moveChild, args : [parentNode, nodeB, nodeD, true] },
-        { op : patchOps.moveChild, args : [parentNode, nodeC, nodeD, true] }
+        { op : patchOps.moveChild, args : [nodeA, nodeD, true] },
+        { op : patchOps.moveChild, args : [nodeB, nodeD, true] },
+        { op : patchOps.moveChild, args : [nodeC, nodeD, true] }
     ]
 }

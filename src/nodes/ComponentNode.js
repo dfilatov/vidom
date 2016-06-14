@@ -1,4 +1,5 @@
 import emptyObj from '../utils/emptyObj';
+import normalizeNs from './utils/normalizeNs';
 
 export default function ComponentNode(component) {
     this.type = ComponentNode;
@@ -36,10 +37,8 @@ ComponentNode.prototype = {
         return this;
     },
 
-    renderToDom(parentNode) {
-        if(!this._ns && parentNode && parentNode._ns) {
-            this._ns = parentNode._ns;
-        }
+    renderToDom(parent) {
+        normalizeNs(this, parent);
 
         return this._getInstance().renderToDom(this);
     },
@@ -48,8 +47,8 @@ ComponentNode.prototype = {
         return this._getInstance().renderToString();
     },
 
-    adoptDom(domNode, parentNode) {
-        this._getInstance().adoptDom(domNode, parentNode);
+    adoptDom(domNode, domIdx, parentNode) {
+        return this._getInstance().adoptDom(domNode, domIdx, parentNode);
     },
 
     mount() {
@@ -70,9 +69,7 @@ ComponentNode.prototype = {
             return;
         }
 
-        if(!node._ns && parentNode && parentNode._ns) {
-            node._ns = parentNode._ns;
-        }
+        normalizeNs(node, parentNode);
 
         const instance = this._getInstance();
 

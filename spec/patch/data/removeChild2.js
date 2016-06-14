@@ -4,14 +4,14 @@ import patchOps from '../../../src/client/patchOps';
 const oldNode = createNode('div');
 
 export default {
-    'name' : 'removeChild1',
+    'name' : 'removeChild2',
     'trees' : [
-        createNode('div').children([
+        createNode('fragment').children([
             createNode('div'),
             createNode('div'),
             oldNode
         ]),
-        createNode('div').children([
+        createNode('fragment').children([
             createNode('div'),
             createNode('div')
         ])

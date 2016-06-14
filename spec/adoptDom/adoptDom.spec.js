@@ -1,9 +1,8 @@
-import createNode from '../../src/createNode';
-import createComponent from '../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
+import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../src/vidom';
 
 describe('adoptDom', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -14,9 +13,9 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing dom nodes', () => {
-        const firstChildNode = createNode('span'),
-            secondChildNode = createNode('i'),
-            tree = createNode('div').children([firstChildNode, secondChildNode]),
+        const firstChildNode = node('span'),
+            secondChildNode = node('i'),
+            tree = node('div').children([firstChildNode, secondChildNode]),
             treeDomNode = document.createElement('div'),
             firstChildDomNode = document.createElement('span'),
             secondChildDomNode = document.createElement('i');
@@ -33,10 +32,10 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing dom nodes through components', () => {
-        const spanNode = createNode('span'),
+        const spanNode = node('span'),
             C1 = createComponent({
                 onRender() {
-                    return createNode(C2);
+                    return node(C2);
                 }
             }),
             C2 = createComponent({
@@ -44,7 +43,7 @@ describe('adoptDom', () => {
                     return spanNode;
                 }
             }),
-            tree = createNode('div').children(createNode(C1)),
+            tree = node('div').children(node(C1)),
             treeDomNode = document.createElement('div'),
             childDomNode = document.createElement('span');
 
@@ -57,10 +56,10 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing dom nodes through function components', () => {
-        const spanNode = createNode('span'),
-            C1 = () => createNode(C2),
+        const spanNode = node('span'),
+            C1 = () => node(C2),
             C2 = () => spanNode,
-            tree = createNode('div').children(createNode(C1)),
+            tree = node('div').children(node(C1)),
             treeDomNode = document.createElement('div'),
             childDomNode = document.createElement('span');
 

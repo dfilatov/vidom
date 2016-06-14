@@ -1,40 +1,31 @@
 import domAttrs from './domAttrs';
+import domOps from './domOps';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
 
 const doc = global.document;
 
 function appendChild(parentNode, childNode) {
-    parentNode.getDomNode().appendChild(childNode.renderToDom(parentNode));
+    domOps.append(parentNode.getDomNode(), childNode.renderToDom(parentNode));
     childNode.mount();
 }
 
 function insertChild(parentNode, childNode, beforeChildNode) {
-    parentNode.getDomNode().insertBefore(childNode.renderToDom(parentNode), beforeChildNode.getDomNode());
+    domOps.insertBefore(childNode.renderToDom(parentNode), beforeChildNode.getDomNode());
     childNode.mount();
 }
 
-function removeChild(parentNode, childNode) {
+function removeChild(childNode) {
     const childDomNode = childNode.getDomNode();
+
     childNode.unmount();
-    parentNode.getDomNode().removeChild(childDomNode);
+    domOps.remove(childDomNode);
 }
 
-function moveChild(parentNode, childNode, toChildNode, after) {
-    const parentDomNode = parentNode.getDomNode(),
-        childDomNode = childNode.getDomNode(),
-        toChildDomNode = toChildNode.getDomNode(),
-        activeDomNode = doc.activeElement;
+function moveChild(childNode, toChildNode, after) {
+    const activeDomNode = doc.activeElement;
 
-    if(after) {
-        const nextSiblingDomNode = toChildDomNode.nextSibling;
-        nextSiblingDomNode?
-            parentDomNode.insertBefore(childDomNode, nextSiblingDomNode) :
-            parentDomNode.appendChild(childDomNode);
-    }
-    else {
-        parentDomNode.insertBefore(childDomNode, toChildDomNode);
-    }
+    domOps.move(childNode.getDomNode(), toChildNode.getDomNode(), after);
 
     if(doc.activeElement !== activeDomNode) {
         activeDomNode.focus();
@@ -51,14 +42,14 @@ function removeChildren(parentNode) {
         childNodes[j++].unmount();
     }
 
-    parentNode.getDomNode().innerHTML = '';
+    domOps.removeChildren(parentNode.getDomNode());
 }
 
 function replace(parentNode, oldNode, newNode) {
     const oldDomNode = oldNode.getDomNode();
 
     oldNode.unmount();
-    oldDomNode.parentNode.replaceChild(newNode.renderToDom(parentNode), oldDomNode);
+    domOps.replace(oldDomNode, newNode.renderToDom(parentNode));
     newNode.mount();
 }
 

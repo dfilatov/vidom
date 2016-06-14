@@ -29,11 +29,11 @@ export default {
         ])
     ],
     'patch' : [
-        { op : patchOps.moveChild, args : [parentNode, nodeA, nodeD, true] },
+        { op : patchOps.moveChild, args : [nodeA, nodeD, true] },
         { op : patchOps.insertChild, args : [parentNode, nodeE, nodeB] },
-        { op : patchOps.moveChild, args : [parentNode, nodeC, nodeD, true] },
+        { op : patchOps.moveChild, args : [nodeC, nodeD, true] },
         { op : patchOps.insertChild, args : [parentNode, nodeF, nodeD] },
         { op : patchOps.insertChild, args : [parentNode, nodeG, nodeD] },
-        { op : patchOps.removeChild, args : [parentNode, nodeD] }
+        { op : patchOps.removeChild, args : [nodeD] }
     ]
 }

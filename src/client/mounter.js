@@ -1,11 +1,16 @@
 import getDomNodeId from './getDomNodeId';
 import rafBatch from './rafBatch';
 import globalHook from '../globalHook';
+import domOps from './domOps';
+import TopNode from '../nodes/TopNode';
 
-const mountedNodes = {};
+const DOM_NODE_TYPE_ELEMENT = 1,
+    DOM_NODE_TYPE_COMMENT = 8,
+    DEFAULT_NS_URI = 'http://www.w3.org/1999/xhtml',
+    mountedNodes = {};
 let counter = 0;
 
-function mount(domNode, tree, cb, cbCtx, syncMode) {
+function mount(domNode, node, cb, cbCtx, syncMode) {
     let domNodeId = getDomNodeId(domNode),
         mounted = mountedNodes[domNodeId],
         mountId;
@@ -14,20 +19,20 @@ function mount(domNode, tree, cb, cbCtx, syncMode) {
         mountId = ++mounted.id;
         const patchFn = () => {
             if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
-                mounted.tree.patch(tree);
-                mounted.tree = tree;
+                mounted.tree.patch(node);
                 callCb(cb, cbCtx);
             }
         };
+
         syncMode? patchFn() : rafBatch(patchFn);
     }
     else {
-        mountedNodes[domNodeId] = { tree : null, id : mountId = ++counter };
+        mounted = mountedNodes[domNodeId] = { tree : null, id : mountId = ++counter };
 
-        let existingDom = domNode.firstElementChild;
-        if(existingDom) {
-            mountedNodes[domNodeId].tree = tree;
-            tree.adoptDom(existingDom);
+        if(domNode.children.length) {
+            const tree = mounted.tree = new TopNode(node, getNs(domNode));
+
+            tree.adoptDom(collectTopDomChildren(domNode));
             tree.mount();
             callCb(cb, cbCtx);
             if(process.env.NODE_ENV !== 'production') {
@@ -36,9 +41,12 @@ function mount(domNode, tree, cb, cbCtx, syncMode) {
         }
         else {
             const renderFn = () => {
-                if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
-                    mountedNodes[domNodeId].tree = tree;
-                    domNode.appendChild(tree.renderToDom());
+                const mounted = mountedNodes[domNodeId];
+
+                if(mounted && mounted.id === mountId) {
+                    const tree = mounted.tree = new TopNode(node, getNs(domNode));
+
+                    domOps.append(domNode, tree.renderToDom());
                     tree.mount();
                     callCb(cb, cbCtx);
                     if(process.env.NODE_ENV !== 'production') {
@@ -63,11 +71,14 @@ function unmount(domNode, cb, cbCtx, syncMode) {
                 if(mounted && mounted.id === mountId) {
                     delete mountedNodes[domNodeId];
                     const tree = mounted.tree;
+
                     if(tree) {
                         const treeDomNode = tree.getDomNode();
+
                         tree.unmount();
-                        domNode.removeChild(treeDomNode);
+                        domOps.remove(treeDomNode);
                     }
+
                     callCb(cb, cbCtx);
                     if(process.env.NODE_ENV !== 'production') {
                         tree && globalHook.emit('unmount', tree);
@@ -86,6 +97,30 @@ function unmount(domNode, cb, cbCtx, syncMode) {
 
 function callCb(cb, cbCtx) {
     cb && cb.call(cbCtx || this);
+}
+
+function collectTopDomChildren(node) {
+    const children = node.childNodes,
+        len = children.length,
+        res = [];
+    let i = 0,
+        nodeType;
+
+    while(i < len) {
+        nodeType = children[i].nodeType;
+
+        if(nodeType === DOM_NODE_TYPE_ELEMENT || nodeType === DOM_NODE_TYPE_COMMENT) {
+            res.push(children[i]);
+        }
+
+        i++;
+    }
+
+    return res;
+}
+
+function getNs(domNode) {
+    return domNode.namespaceURI === DEFAULT_NS_URI? null : domNode.namespaceURI;
 }
 
 export function mountToDom(domNode, tree, cb, cbCtx) {

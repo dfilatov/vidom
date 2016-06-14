@@ -5,13 +5,13 @@ const nodeA = createNode('input').key('a'),
     nodeB = createNode('input').key('b');
 
 export default {
-    'name' : 'moveChild1',
+    'name' : 'moveChild2',
     'trees' : [
-        createNode('div').children([
+        createNode('fragment').children([
             nodeA,
             nodeB
         ]),
-        createNode('div').children([
+        createNode('fragment').children([
             createNode('input').key('b'),
             createNode('input').key('a')
         ])

@@ -1,7 +1,9 @@
 import patchOps from '../../src/client/patchOps';
+import TopNode from '../../src/nodes/TopNode';
 
 describe('patch', () => {
-    const origPatchOps = {};
+    const origPatchOps = {},
+        topNode = new TopNode();
     let opsLog;
 
     Object.keys(patchOps).forEach(op => {
@@ -35,16 +37,23 @@ describe('patch', () => {
         require('./data/replace8'),
         require('./data/replace9'),
         require('./data/replace10'),
+        require('./data/replace11'),
         require('./data/appendChild1'),
         require('./data/appendChild2'),
+        require('./data/appendChild3'),
         require('./data/removeChild1'),
+        require('./data/removeChild2'),
         require('./data/insertChild1'),
         require('./data/insertChild2'),
+        require('./data/insertChild3'),
         require('./data/moveChild1'),
+        require('./data/moveChild2'),
         require('./data/removeChildren1'),
+        require('./data/removeChildren2'),
         require('./data/complex1'),
         require('./data/complex2'),
         require('./data/complex3'),
+        require('./data/complex4'),
         require('./data/complex-insert-to-beginning-with-key'),
         require('./data/complex-insert-to-beginning-without-key'),
         require('./data/complex-insert-to-middle-with-key'),
@@ -76,8 +85,8 @@ describe('patch', () => {
         });
 
         it('for ' + specData.name + ' should be right', () => {
-            specData.trees[0].patch(specData.trees[1]);
-            expect(opsLog).to.eql(specData.patch);
+            specData.trees[0].patch(specData.trees[1], topNode);
+            expect(opsLog).to.eql(typeof specData.patch === 'function'? specData.patch(topNode) : specData.patch);
         });
     });
 });
