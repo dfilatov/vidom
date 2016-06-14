@@ -1,6 +1,6 @@
 {
   "name": "vidom",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Library to build UI",
   "keywords": [
     "virtual",
@@ -45,7 +45,7 @@
     "test-server": "zuul --local 3000 -- spec/boot.js",
     "build-lib": "rm -rf lib && mkdir -p lib && babel src --out-dir lib",
     "build-dist": "rm -rf dist && mkdir -p dist && NODE_ENV=production browserify src/vidom.js -t babelify -t envify -o dist/vidom.js --standalone vidom && uglifyjs dist/vidom.js -c -m -o dist/vidom.min.js",
-    "debug-server" : "webpack-dev-server --config debug/webpack.debug.config.js --progress --colors --port 3000",
+    "debug-server": "webpack-dev-server --config debug/webpack.debug.config.js --progress --colors --port 3000",
     "build-demo": "browserify demo/demo.js -t babelify -o demo/demo.build.js",
     "release": "node scripts/release"
   }
