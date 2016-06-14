@@ -1,9 +1,9 @@
 import patchOps from '../../src/client/patchOps';
+import domOps from '../../src/client/domOps';
 import TopNode from '../../src/nodes/TopNode';
 
 describe('patch', () => {
-    const origPatchOps = {},
-        topNode = new TopNode();
+    const origPatchOps = {};
     let opsLog;
 
     Object.keys(patchOps).forEach(op => {
@@ -73,6 +73,7 @@ describe('patch', () => {
             opsLog = [];
             Object.keys(patchOps).forEach(op => {
                 patchOps[op] = function() {
+                    origPatchOps[op].apply(null, arguments);
                     opsLog.push({ op : origPatchOps[op], args : Array.prototype.slice.call(arguments) });
                 };
             });
@@ -85,7 +86,10 @@ describe('patch', () => {
         });
 
         it('for ' + specData.name + ' should be right', () => {
-            specData.trees[0].patch(specData.trees[1], topNode);
+            const topNode = new TopNode(specData.trees[0]);
+
+            domOps.append(document.createElement('div'), topNode.renderToDom());
+            topNode.patch(specData.trees[1], topNode);
             expect(opsLog).to.eql(typeof specData.patch === 'function'? specData.patch(topNode) : specData.patch);
         });
     });

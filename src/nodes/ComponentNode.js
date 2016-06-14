@@ -1,8 +1,9 @@
 import emptyObj from '../utils/emptyObj';
 import normalizeNs from './utils/normalizeNs';
+import { NODE_TYPE_COMPONENT } from './utils/nodeTypes';
 
 export default function ComponentNode(component) {
-    this.type = ComponentNode;
+    this.type = NODE_TYPE_COMPONENT;
     this._component = component;
     this._key = null;
     this._attrs = null;

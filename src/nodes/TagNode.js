@@ -13,8 +13,11 @@ import emptyObj from '../utils/emptyObj';
 import { isTrident, isEdge } from '../client/browsers';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
-import ComponentNode from './ComponentNode';
-import FunctionComponentNode from './FunctionComponentNode';
+import {
+    NODE_TYPE_TAG,
+    NODE_TYPE_COMPONENT,
+    NODE_TYPE_FUNCTION_COMPONENT
+} from './utils/nodeTypes';
 
 const SHORT_TAGS = {
         area : true,
@@ -38,7 +41,7 @@ const SHORT_TAGS = {
     USE_DOM_STRINGS = isTrident || isEdge;
 
 export default function TagNode(tag) {
-    this.type = TagNode;
+    this.type = NODE_TYPE_TAG;
     this._tag = tag;
     this._domNode = null;
     this._key = null;
@@ -299,7 +302,7 @@ TagNode.prototype = {
         normalizeNs(node, parentNode);
 
         switch(node.type) {
-            case TagNode:
+            case NODE_TYPE_TAG:
                 if(this._tag !== node._tag || this._ns !== node._ns) {
                     patchOps.replace(parentNode, this, node);
                 }
@@ -310,13 +313,14 @@ TagNode.prototype = {
                 }
                 break;
 
-            case ComponentNode:
+            case NODE_TYPE_COMPONENT:
                 const instance = node._getInstance();
+
                 this.patch(instance.getRootNode(), parentNode);
                 instance.mount();
                 break;
 
-            case FunctionComponentNode:
+            case NODE_TYPE_FUNCTION_COMPONENT:
                 this.patch(node._getRootNode(), parentNode);
                 break;
 

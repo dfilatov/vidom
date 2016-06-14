@@ -1,9 +1,10 @@
 import TagNode from './TagNode';
 import emptyObj from '../utils/emptyObj';
 import normalizeNs from './utils/normalizeNs';
+import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
 
 export default function FunctionComponentNode(component) {
-    this.type = FunctionComponentNode;
+    this.type = NODE_TYPE_FUNCTION_COMPONENT;
     this._component = component;
     this._key = null;
     this._attrs = emptyObj;

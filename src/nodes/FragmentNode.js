@@ -4,14 +4,17 @@ import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
-import ComponentNode from './ComponentNode';
-import FunctionComponentNode from './FunctionComponentNode';
+import {
+    NODE_TYPE_FRAGMENT,
+    NODE_TYPE_COMPONENT,
+    NODE_TYPE_FUNCTION_COMPONENT
+} from './utils/nodeTypes';
 
 const doc = global.document;
 let boundaryDomNode;
 
 export default function FragmentNode() {
-    this.type = FragmentNode;
+    this.type = NODE_TYPE_FRAGMENT;
     this._domNode = null;
     this._boundaryDomNode = null;
     this._key = null;
@@ -21,23 +24,23 @@ export default function FragmentNode() {
 
 FragmentNode.prototype = {
     getDomNode() {
-        if(!this._domNode && this._boundaryDomNode) {
-            const domNode = this._domNode = [],
-                children = this._children;
-
-            if(children) {
-                const len = children.length;
-                let i = 0;
-
-                while(i < len) {
-                    domNode.push(children[i++].getDomNode());
-                }
-
-                domNode.push(this._boundaryDomNode);
-            }
-        }
-
         return this._domNode;
+    },
+
+    _hydrateDomNode() {
+        const domNode = this._domNode = [],
+            children = this._children;
+
+        if(children) {
+            const len = children.length;
+            let i = 0;
+
+            while(i < len) {
+                domNode.push(children[i++].getDomNode());
+            }
+
+            domNode.push(this._boundaryDomNode);
+        }
     },
 
     key(key) {
@@ -161,19 +164,20 @@ FragmentNode.prototype = {
         normalizeNs(node, parentNode);
 
         switch(node.type) {
-            case FragmentNode:
-                node._boundaryDomNode = this._boundaryDomNode;
+            case NODE_TYPE_FRAGMENT:
+                node._domNode = [node._boundaryDomNode = this._boundaryDomNode];
                 this._patchChildren(node);
+                node._hydrateDomNode();
                 break;
 
-            case ComponentNode:
+            case NODE_TYPE_COMPONENT:
                 const instance = node._getInstance();
 
                 this.patch(instance.getRootNode(), parentNode);
                 instance.mount();
                 break;
 
-            case FunctionComponentNode:
+            case NODE_TYPE_FUNCTION_COMPONENT:
                 this.patch(node._getRootNode(), parentNode);
                 break;
 

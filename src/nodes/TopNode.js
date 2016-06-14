@@ -1,4 +1,7 @@
+import { NODE_TYPE_TOP } from './utils/nodeTypes';
+
 export default function TopNode(childNode, ns) {
+    this.type = NODE_TYPE_TOP;
     this._childNode = childNode;
     this._ns = ns;
 }
