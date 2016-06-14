@@ -18,6 +18,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [Tutorial](../../wiki/Tutorial)
   * [Top-level API](../../wiki/Top-Level-API)
   * [TagNode API](../../wiki/TagNode-API)
+  * [FragmentNode API](../../wiki/FragmentNode-API)
   * [ComponentNode API](../../wiki/ComponentNode-API)
   * [FunctionComponentNode API](../../wiki/FunctionComponentNode-API)
   * [DOM Events API](../../wiki/DOM-Events-API)
