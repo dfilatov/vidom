@@ -15,7 +15,6 @@ let boundaryDomNode;
 
 export default function FragmentNode() {
     this.type = NODE_TYPE_FRAGMENT;
-    this._domNode = null;
     this._boundaryDomNode = null;
     this._key = null;
     this._children = null;
@@ -24,23 +23,21 @@ export default function FragmentNode() {
 
 FragmentNode.prototype = {
     getDomNode() {
-        return this._domNode;
-    },
-
-    _hydrateDomNode() {
-        const domNode = this._domNode = [],
+        const domNode = [this._boundaryDomNode],
             children = this._children;
 
         if(children) {
-            const len = children.length;
-            let i = 0;
+            let i = children.length - 1,
+                childDomNode;
 
-            while(i < len) {
-                domNode.push(children[i++].getDomNode());
+            while(i >= 0) {
+                if(childDomNode = children[i--].getDomNode()) {
+                    domNode.unshift(childDomNode);
+                }
             }
-
-            domNode.push(this._boundaryDomNode);
         }
+
+        return domNode;
     },
 
     key(key) {
@@ -92,7 +89,7 @@ FragmentNode.prototype = {
             }
         }
 
-        return this._domNode = domNode;
+        return domNode;
     },
 
     renderToString() {
@@ -113,19 +110,15 @@ FragmentNode.prototype = {
     adoptDom(domNodes, domIdx, parentNode) {
         normalizeNs(this, parentNode);
 
-        const domNode = [],
-            children = this._children,
+        const children = this._children,
             len = children.length;
         let i = 0;
 
         while(i < len) {
-            domIdx = children[i].adoptDom(domNodes, domIdx, parentNode);
-            domNode.push(children[i++].getDomNode());
+            domIdx = children[i++].adoptDom(domNodes, domIdx, parentNode);
         }
 
-        domNode.push(this._boundaryDomNode = domNodes[domIdx]);
-
-        this._domNode = domNode;
+        this._boundaryDomNode = domNodes[domIdx];
 
         return domIdx + 1;
     },
@@ -165,9 +158,8 @@ FragmentNode.prototype = {
 
         switch(node.type) {
             case NODE_TYPE_FRAGMENT:
-                node._domNode = [node._boundaryDomNode = this._boundaryDomNode];
+                node._boundaryDomNode = this._boundaryDomNode;
                 this._patchChildren(node);
-                node._hydrateDomNode();
                 break;
 
             case NODE_TYPE_COMPONENT:

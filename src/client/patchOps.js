@@ -33,7 +33,8 @@ function moveChild(childNode, toChildNode, after) {
 }
 
 function removeChildren(parentNode) {
-    const childNodes = parentNode._children,
+    const parentDomNode = parentNode.getDomNode(),
+        childNodes = parentNode._children,
         len = childNodes.length;
 
     let j = 0;
@@ -42,7 +43,7 @@ function removeChildren(parentNode) {
         childNodes[j++].unmount();
     }
 
-    domOps.removeChildren(parentNode.getDomNode());
+    domOps.removeChildren(parentDomNode);
 }
 
 function replace(parentNode, oldNode, newNode) {
