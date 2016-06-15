@@ -30,7 +30,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [FAQ](../../wiki/FAQ)
 
 ## Tools
-  * [Vidom inspector](https://github.com/dfilatov/vidom-inspector) developer tool which helps debug vidom-based applications
+  * [Vidom inspector](https://github.com/dfilatov/vidom-inspector) developer tool which helps debug vidom-based applications (NOTE: Currently it doesn't work with 0.3.x versions and will be fixed soon)
  
 ## Examples
   * [TodoMVC](http://dfilatov.github.io/vidom-todomvc/) ([source](https://github.com/dfilatov/vidom-todomvc))
