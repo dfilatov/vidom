@@ -21,6 +21,9 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
             if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
                 mounted.tree.patch(node);
                 callCb(cb, cbCtx);
+                if(process.env.NODE_ENV !== 'production') {
+                    globalHook.emit('mount', mounted.tree);
+                }
             }
         };
 
