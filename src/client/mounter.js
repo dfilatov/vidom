@@ -19,10 +19,15 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
         mountId = ++mounted.id;
         const patchFn = () => {
             if(mountedNodes[domNodeId] && mountedNodes[domNodeId].id === mountId) {
-                mounted.tree.patch(node);
+                const prevTree = mounted.tree,
+                    newTree = new TopNode(node, prevTree._ns);
+
+                prevTree.patch(newTree);
+                mounted.tree = newTree;
+
                 callCb(cb, cbCtx);
                 if(process.env.NODE_ENV !== 'production') {
-                    globalHook.emit('mount', mounted.tree);
+                    globalHook.emit('replace', prevTree, newTree);
                 }
             }
         };

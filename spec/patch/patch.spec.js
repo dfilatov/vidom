@@ -86,11 +86,13 @@ describe('patch', () => {
         });
 
         it('for ' + specData.name + ' should be right', () => {
-            const topNode = new TopNode(specData.trees[0]);
+            const topNode1 = new TopNode(specData.trees[0]),
+                topNode2 = new TopNode(specData.trees[1]);
 
-            domOps.append(document.createElement('div'), topNode.renderToDom());
-            topNode.patch(specData.trees[1], topNode);
-            expect(opsLog).to.eql(typeof specData.patch === 'function'? specData.patch(topNode) : specData.patch);
+            domOps.append(document.createElement('div'), topNode1.renderToDom());
+            topNode1.patch(topNode2);
+
+            expect(opsLog).to.eql(typeof specData.patch === 'function'? specData.patch(topNode2) : specData.patch);
         });
     });
 });

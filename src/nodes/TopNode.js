@@ -19,9 +19,8 @@ TopNode.prototype = {
         this._childNode.adoptDom(domNode, 0, this);
     },
 
-    patch(childNode) {
-        this._childNode.patch(childNode, this);
-        this._childNode = childNode;
+    patch(node) {
+        this._childNode.patch(node._childNode, node);
     },
 
     mount() {
