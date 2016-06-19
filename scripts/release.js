@@ -2,35 +2,37 @@ var vow = require('vow'),
     vowNode = require('vow-node'),
     childProcess = require('child_process'),
     fs = require('fs'),
+    exec = vowNode.promisify(childProcess.exec),
+    readFile = vowNode.promisify(fs.readFile),
+    writeFile = vowNode.promisify(fs.writeFile);
     version = process.argv.slice(2)[0] || 'patch';
 
-function execCommand(command) {
-    return vowNode.invoke(childProcess.exec, command);
-}
+exec('git pull')
+    .then(() => exec('npm i'))
+    .then(() => vow.all([
+        exec('npm run-script build-lib'),
+        exec('npm run-script build-dist')
+    ]))
+    .then(() => exec('npm version ' + version))
+    .then(() => vow.all([
+        readFile('package.json', 'utf8'),
+        readFile(__dirname + '/distHeaderTmpl.txt', 'utf8'),
+        readFile('dist/vidom.js'),
+        readFile('dist/vidom.min.js')
+    ]))
+    .spread((packageContent, distHeaderTmpl, distContent, distMinContent) => {
+        version = JSON.parse(packageContent).version;
 
-execCommand('git pull')
-    .then(function() {
-        return execCommand('npm i');
-    })
-    .then(function() {
+        var distHeader = distHeaderTmpl.replace('${VERSION}', version);
+
         return vow.all([
-            execCommand('npm run-script build-lib'),
-            execCommand('npm run-script build-dist')
+            writeFile('dist/vidom.js', distHeader + distContent),
+            writeFile('dist/vidom.min.js', distHeader + distMinContent)
         ]);
     })
-    .then(function() {
-        return execCommand('npm version ' + version);
-    })
-    .then(function() {
-        return execCommand('git push --follow-tags');
-    })
-    .then(function() {
-        return execCommand('npm publish');
-    })
-    .then(function() {
-        return vowNode.invoke(fs.readFile, 'package.json', 'utf8');
-    })
-    .then(function(content) {
-        console.log('version ' + JSON.parse(content).version + ' has just been released');
+    .then(() => exec('git push --follow-tags'))
+    .then(() => exec('npm publish'))
+    .then(() => {
+        console.log(`version ${version} has just been released`);
     })
     .done();

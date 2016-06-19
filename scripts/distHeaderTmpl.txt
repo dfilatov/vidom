@@ -1,0 +1,5 @@
+/**
+ * Vidom
+ * @author Filatov Dmitry <dfilatov@inbox.ru>
+ * @version ${VERSION}
+ */
