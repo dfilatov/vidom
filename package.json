@@ -9,7 +9,6 @@
     "ui"
   ],
   "main": "lib/vidom.js",
-  "filename": "dist/vidom.min.js",
   "author": "Dmitry Filatov <dfilatov@yandex-team.ru>",
   "repository": {
     "type": "git",
