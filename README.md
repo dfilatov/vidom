@@ -37,4 +37,4 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [TodoMVC](http://dfilatov.github.io/vidom-todomvc/) ([source](https://github.com/dfilatov/vidom-todomvc))
   
 ## Thanks
-  * [cdnjs](https://github.com/cdnjs/cdnjs) for Vidom is avalaible on CDN.
+  * [cdnjs](https://github.com/cdnjs/cdnjs) for library is avalaible on CDN.
