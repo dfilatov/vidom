@@ -20,7 +20,7 @@ Object.keys(suits).forEach(suitName => {
 
             onComplete() {
                 console.log('\n' + cliff.stringifyObjectRows(
-                    results,
+                    results.sort((resultA, resultB) => resultA.mean - resultB.mean),
                     ['', 'mean time', 'ops/sec'],
                     ['', 'green', 'yellow']) + '\n');
             }
@@ -46,6 +46,7 @@ Object.keys(suits).forEach(suitName => {
                 onComplete() {
                     results.push({
                         '' : name,
+                        mean : this.stats.mean,
                         'mean time' : (this.stats.mean * 1000).toFixed(3) + 'ms',
                         'ops/sec' : (1 / this.stats.mean).toFixed(0)
                     });
