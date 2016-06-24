@@ -45,8 +45,8 @@ class Content extends Component {
                 createElement('b', null, 'bold' + i),
                 createElement(
                     'span',
-                    { className : 'input' },
-                    createElement(ContentItem, { value : 'input-' + i })),
+                    { className : 'link' },
+                    createElement(Link, { href : '/', value : 'link-' + i })),
                 createElement('i', null, 'italic' + i++),
                 createElement(
                     'div',
@@ -67,9 +67,9 @@ class Content extends Component {
     }
 }
 
-class ContentItem extends Component {
+class Link extends Component {
     render() {
-        return createElement('input', { value : this.props.value });
+        return createElement('a', { href : this.props.href }, this.props.value);
     }
 }
 

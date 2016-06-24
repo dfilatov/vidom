@@ -39,8 +39,8 @@ class Content extends vidom.Component {
             children.push(
                 node('b').children('bold' + i),
                 node('span')
-                    .attrs({ className : 'input' })
-                    .children(node(ContentItem).attrs({ value : 'input-' + i })),
+                    .attrs({ className : 'link' })
+                    .children(node(Link).attrs({ href : '/', value : 'link-' + i })),
                 node('i').children('italic' + i++),
                 node('div').children(
                     node('div').children(
@@ -52,9 +52,9 @@ class Content extends vidom.Component {
     }
 }
 
-class ContentItem extends vidom.Component {
+class Link extends vidom.Component {
     onRender(attrs) {
-        return node('input').attrs({ value : attrs.value });
+        return node('a').attrs({ href : attrs.href }).children(attrs.value);
     }
 }
 

@@ -40,8 +40,8 @@ class Content extends React.Component {
                 React.createElement('b', null, 'bold' + i),
                 React.createElement(
                     'span',
-                    { className : 'input' },
-                    React.createElement(ContentItem, { value : 'input-' + i })),
+                    { className : 'link' },
+                    React.createElement(Link, { href : '/', value : 'link-' + i })),
                 React.createElement('i', null, 'italic' + i++),
                 React.createElement(
                     'div',
@@ -62,9 +62,9 @@ class Content extends React.Component {
     }
 }
 
-class ContentItem extends React.Component {
+class Link extends React.Component {
     render() {
-        return React.createElement('input', { value : this.props.value });
+        return React.createElement('a', { href : this.props.href }, this.props.value);
     }
 }
 
