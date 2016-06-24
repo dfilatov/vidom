@@ -12,7 +12,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * Ability to render multiple components without unwanted DOM wrappers
   * No extra markup in the result HTML
   * JSX support via babel plugin
-  * Small footprint, about 8KB after gzip
+  * Small footprint, about 10KB after gzip
 
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
