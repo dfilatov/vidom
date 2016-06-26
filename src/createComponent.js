@@ -20,7 +20,8 @@ function patchComponent(attrs, children, ctx, parentNode) {
     attrs = this._buildAttrs(attrs);
 
     let prevRootNode = this._rootNode,
-        prevAttrs = this._attrs;
+        prevAttrs = this._attrs,
+        prevChildren = this._children;
 
     if(prevAttrs !== attrs) {
         this._attrs = attrs;
@@ -40,7 +41,7 @@ function patchComponent(attrs, children, ctx, parentNode) {
         return;
     }
 
-    const shouldUpdate = this.shouldUpdate(attrs, prevAttrs);
+    const shouldUpdate = this.shouldUpdate(attrs, prevAttrs, children, prevChildren);
 
     if(process.env.NODE_ENV !== 'production') {
         const shouldUpdateResType = typeof shouldUpdate;
