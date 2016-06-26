@@ -1,7 +1,6 @@
 import sinon from 'sinon';
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import emptyObj from '../../../src/utils/emptyObj';
+import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../../src/vidom';
 
 describe('onAttrsReceive', () => {
     let domNode;
@@ -17,34 +16,41 @@ describe('onAttrsReceive', () => {
     it('should be called when new attrs is passed', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                onRender() {
-                    return createNode('div');
-                },
-
                 onAttrsReceive : spy
             }),
             oldAttrs = { id : 1 },
             newAttrs = { id : 2 };
 
-        mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
-        mountToDomSync(domNode, createNode(C).attrs(newAttrs));
+        mountToDomSync(domNode, node(C).attrs(oldAttrs));
+        mountToDomSync(domNode, node(C).attrs(newAttrs));
 
         expect(spy.called).to.be.ok();
         expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
     });
 
-    it('shouldn\'t be called when no new attrs is passed', () => {
+    it('should be called when new children are passed', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                onRender() {
-                    return createNode('div');
-                },
+                onAttrsReceive : spy
+            }),
+            oldChildren = [node('div')],
+            newChildren = [node('span')];
 
+        mountToDomSync(domNode, node(C).children(oldChildren));
+        mountToDomSync(domNode, node(C).children(newChildren));
+
+        expect(spy.called).to.be.ok();
+        expect(spy.calledWith(emptyObj, emptyObj, newChildren, oldChildren)).to.be.ok();
+    });
+
+    it('shouldn\'t be called when no new attrs or children are passed', () => {
+        const spy = sinon.spy(),
+            C = createComponent({
                 onAttrsReceive : spy
             });
 
-        mountToDomSync(domNode, createNode(C));
-        mountToDomSync(domNode, createNode(C));
+        mountToDomSync(domNode, node(C));
+        mountToDomSync(domNode, node(C));
 
         expect(spy.called).not.to.be.ok();
     });
@@ -54,7 +60,7 @@ describe('onAttrsReceive', () => {
             C = createComponent({
                 onRender() {
                     spy.apply(this, arguments);
-                    return createNode('div');
+                    return node('div');
                 },
 
                 onAttrsReceive : function() {
@@ -65,7 +71,7 @@ describe('onAttrsReceive', () => {
                 }
             });
 
-        mountToDomSync(domNode, createNode(C));
-        mountToDomSync(domNode, createNode(C).attrs({}));
+        mountToDomSync(domNode, node(C));
+        mountToDomSync(domNode, node(C).attrs({}));
     });
 });

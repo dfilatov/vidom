@@ -23,12 +23,12 @@ function patchComponent(attrs, children, ctx, parentNode) {
         prevAttrs = this._attrs,
         prevChildren = this._children;
 
-    if(prevAttrs !== attrs) {
+    if(prevAttrs !== attrs || prevChildren !== children) {
         this._attrs = attrs;
         if(this.isMounted()) {
             const isUpdating = this._isUpdating;
             this._isUpdating = true;
-            this.onAttrsReceive(attrs, prevAttrs);
+            this.onAttrsReceive(attrs, prevAttrs, children, prevChildren);
             this._isUpdating = isUpdating;
         }
     }
@@ -53,7 +53,7 @@ function patchComponent(attrs, children, ctx, parentNode) {
     if(shouldUpdate) {
         this._rootNode = this.render();
         prevRootNode.patch(this._rootNode, parentNode);
-        this.isMounted() && this.onUpdate(attrs, prevAttrs);
+        this.isMounted() && this.onUpdate(attrs, prevAttrs, children, prevChildren);
     }
 }
 
