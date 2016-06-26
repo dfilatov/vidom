@@ -13,26 +13,24 @@ describe('shouldUpdate', () => {
         document.body.removeChild(domNode);
     });
 
-    it('should be called when new attrs is passed', () => {
+    it('should be called when new attrs and children are received', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                onRender() {
-                    return node('div');
-                },
-
                 shouldUpdate() {
                     spy.apply(this, arguments);
                     return true;
                 }
             }),
             oldAttrs = { id : 1 },
-            newAttrs = { id : 2 };
+            newAttrs = { id : 2 },
+            oldChildren = [node('div')],
+            newChildren = [node('span')];
 
-        mountToDomSync(domNode, node(C).attrs(oldAttrs));
-        mountToDomSync(domNode, node(C).attrs(newAttrs));
+        mountToDomSync(domNode, node(C).attrs(oldAttrs).children(oldChildren));
+        mountToDomSync(domNode, node(C).attrs(newAttrs).children(newChildren));
 
         expect(spy.called).to.be.ok();
-        expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
+        expect(spy.calledWith(newAttrs, oldAttrs, newChildren, oldChildren)).to.be.ok();
     });
 
     it('should prevent rendering if returns false', () => {
