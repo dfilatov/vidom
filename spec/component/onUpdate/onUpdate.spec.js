@@ -1,7 +1,5 @@
 import sinon from 'sinon';
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../../src/vidom';
 
 describe('onUpdate', () => {
     var domNode;
@@ -14,39 +12,35 @@ describe('onUpdate', () => {
         document.body.removeChild(domNode);
     });
 
-    it('should be called after a component is updated with actual and previous attributes', () => {
+    it('should be called after a component has updated with actual and previous attributes and children', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                onRender(attrs) {
-                    return createNode('div').attrs(attrs);
-                },
-
                 onUpdate : spy
             }),
             oldAttrs = { id : 1 },
-            newAttrs = { id : 2 };
+            newAttrs = { id : 2 },
+            oldChildren = [node('div')],
+            newChildren = [node('span')];
 
-        mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
-        mountToDomSync(domNode, createNode(C).attrs(newAttrs));
+        mountToDomSync(domNode, node(C).attrs(oldAttrs).children(oldChildren));
+        mountToDomSync(domNode, node(C).attrs(newAttrs).children(newChildren));
 
         expect(spy.called).to.be.ok();
-        expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
+        expect(spy.calledWith(newAttrs, oldAttrs, newChildren, oldChildren)).to.be.ok();
     });
 
-    it.skip('should not be called if component isn\'t updated', () => {
+    it('should not be called if component hasn\'t updated', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                onRender(attrs) {
-                    return createNode('div').attrs(attrs);
+                shouldUpdate() {
+                    return false;
                 },
 
                 onUpdate : spy
-            }),
-            oldAttrs = { id : 1 },
-            newAttrs = { id : 1 };
+            });
 
-        mountToDomSync(domNode, createNode(C).attrs(oldAttrs));
-        mountToDomSync(domNode, createNode(C).attrs(newAttrs));
+        mountToDomSync(domNode, node(C).attrs({ id : 1 }));
+        mountToDomSync(domNode, node(C).attrs({ id : 2 }));
 
         expect(spy.called).not.to.be.ok();
     });
