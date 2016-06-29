@@ -7,7 +7,7 @@ export default function patchChildren(nodeA, nodeB) {
         childrenBLen = childrenB.length;
 
     if(childrenALen === 1 && childrenBLen === 1) {
-        childrenA[0].patch(childrenB[0], nodeB);
+        childrenA[0].patch(childrenB[0]);
         return;
     }
 
@@ -38,29 +38,29 @@ export default function patchChildren(nodeA, nodeB) {
             updateRightIdxA = true;
         }
         else if(leftChildAKey === leftChildBKey) {
-            leftChildA.patch(leftChildB, nodeB);
+            leftChildA.patch(leftChildB);
             updateLeftIdxA = true;
             updateLeftIdxB = true;
         }
         else if(rightChildAKey === rightChildBKey) {
-            rightChildA.patch(rightChildB, nodeB);
+            rightChildA.patch(rightChildB);
             updateRightIdxA = true;
             updateRightIdxB = true;
         }
         else if(leftChildAKey != null && leftChildAKey === rightChildBKey) {
             patchOps.moveChild(leftChildA, rightChildA, true);
-            leftChildA.patch(rightChildB, nodeB);
+            leftChildA.patch(rightChildB);
             updateLeftIdxA = true;
             updateRightIdxB = true;
         }
         else if(rightChildAKey != null && rightChildAKey === leftChildBKey) {
             patchOps.moveChild(rightChildA, leftChildA, false);
-            rightChildA.patch(leftChildB, nodeB);
+            rightChildA.patch(leftChildB);
             updateRightIdxA = true;
             updateLeftIdxB = true;
         }
         else if(leftChildAKey != null && leftChildBKey == null) {
-            patchOps.insertChild(nodeB, leftChildB, leftChildA);
+            patchOps.insertChild(leftChildB, leftChildA);
             updateLeftIdxB = true;
         }
         else if(leftChildAKey == null && leftChildBKey != null) {
@@ -70,13 +70,13 @@ export default function patchChildren(nodeA, nodeB) {
         else {
             childrenAKeys || (childrenAKeys = buildKeys(childrenA, leftIdxA, rightIdxA));
             if((foundAChildIdx = childrenAKeys[leftChildBKey]) == null) {
-                patchOps.insertChild(nodeB, leftChildB, leftChildA);
+                patchOps.insertChild(leftChildB, leftChildA);
             }
             else {
                 foundAChild = childrenA[foundAChildIdx];
                 childrenAIndicesToSkip[foundAChildIdx] = true;
                 patchOps.moveChild(foundAChild, leftChildA, false);
-                foundAChild.patch(leftChildB, nodeB);
+                foundAChild.patch(leftChildB);
             }
             updateLeftIdxB = true;
         }
@@ -123,7 +123,7 @@ export default function patchChildren(nodeA, nodeB) {
 
     while(leftIdxB <= rightIdxB) {
         rightIdxB < childrenBLen - 1?
-            patchOps.insertChild(nodeB, childrenB[leftIdxB], childrenB[rightIdxB + 1]) :
+            patchOps.insertChild(childrenB[leftIdxB], childrenB[rightIdxB + 1]) :
             patchOps.appendChild(nodeB, childrenB[leftIdxB]);
         ++leftIdxB;
     }

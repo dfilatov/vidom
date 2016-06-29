@@ -1,17 +1,24 @@
 import domAttrs from './domAttrs';
 import domOps from './domOps';
+import { getNs, getParentNs } from './ns';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
 
 const doc = global.document;
 
 function appendChild(parentNode, childNode) {
-    domOps.append(parentNode.getDomNode(), childNode.renderToDom(parentNode));
+    const parentDomNode = parentNode.getDomNode();
+
+    domOps.append(parentDomNode, childNode.renderToDom(getNs(parentDomNode)));
     childNode.mount();
 }
 
-function insertChild(parentNode, childNode, beforeChildNode) {
-    domOps.insertBefore(childNode.renderToDom(parentNode), beforeChildNode.getDomNode());
+function insertChild(childNode, beforeChildNode) {
+    const beforeChildDomNode = beforeChildNode.getDomNode();
+
+    domOps.insertBefore(
+        childNode.renderToDom(getParentNs(beforeChildDomNode)),
+        beforeChildDomNode);
     childNode.mount();
 }
 
@@ -46,11 +53,11 @@ function removeChildren(parentNode) {
     domOps.removeChildren(parentDomNode);
 }
 
-function replace(parentNode, oldNode, newNode) {
+function replace(oldNode, newNode) {
     const oldDomNode = oldNode.getDomNode();
 
     oldNode.unmount();
-    domOps.replace(oldDomNode, newNode.renderToDom(parentNode));
+    domOps.replace(oldDomNode, newNode.renderToDom(getParentNs(oldDomNode)));
     newNode.mount();
 }
 

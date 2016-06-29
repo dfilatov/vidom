@@ -3,8 +3,7 @@ import patchOps from '../../../src/client/patchOps';
 
 const nodeA = createNode('a'),
     nodeB = createNode('a'),
-    nodeC = createNode('a').key('c'),
-    parentNode = createNode('div');
+    nodeC = createNode('a').key('c');
 
 export default {
     'name' : 'complex-insert-to-beginning-without-key',
@@ -13,7 +12,7 @@ export default {
             createNode('a').key('c'),
             createNode('a').key('d')
         ]),
-        parentNode.children([
+        createNode('div').children([
             nodeA,
             nodeB,
             nodeC,
@@ -21,7 +20,7 @@ export default {
         ])
     ],
     'patch' : [
-        { op : patchOps.insertChild, args : [parentNode, nodeA, nodeC] },
-        { op : patchOps.insertChild, args : [parentNode, nodeB, nodeC] }
+        { op : patchOps.insertChild, args : [nodeA, nodeC] },
+        { op : patchOps.insertChild, args : [nodeB, nodeC] }
     ]
 }

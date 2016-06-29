@@ -1,28 +1,21 @@
 import { node, mountToDomSync } from '../../src/vidom';
-import TopNode from '../../src/nodes/TopNode';
 
 describe('patchDom', () => {
-    let topNode;
-
-    beforeEach(() => {
-        topNode = new TopNode();
-    });
-
     describe('updateText', () => {
         it('should update node text', () => {
             const parentNode = node('span').children('text'),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('span').children('new text'), topNode);
+            parentNode.patch(node('span').children('new text'));
 
             expect(domNode.textContent).to.equal('new text');
         });
 
         it('should update node html', () => {
             const parentNode = node('span').html('<span></span>'),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('span').html('<span></span><i></i>'), topNode);
+            parentNode.patch(node('span').html('<span></span><i></i>'));
 
             expect(domNode.childNodes.length).to.equal(2);
         });
@@ -31,27 +24,27 @@ describe('patchDom', () => {
     describe('updateAttr', () => {
         it('should update node attribute', () => {
             const parentNode = node('textarea').attrs({ cols : 5 }),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('textarea').attrs({ cols : 3 }), topNode);
+            parentNode.patch(node('textarea').attrs({ cols : 3 }));
 
             expect(domNode.getAttribute('cols')).to.equal('3');
         });
 
         it('should update node property', () => {
             const parentNode = node('input').attrs({ value : 'val' }),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('input').attrs({ value : 'new val' }), topNode);
+            parentNode.patch(node('input').attrs({ value : 'new val' }));
 
             expect(domNode.value).to.equal('new val');
         });
 
         it('should keep value of input if type is changed', () => {
             const parentNode = node('input').attrs({ type : 'text', value : 'val' }),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('input').attrs({ type : 'checkbox', value : 'val' }), topNode);
+            parentNode.patch(node('input').attrs({ type : 'checkbox', value : 'val' }));
 
             expect(domNode.value).to.equal('val');
         });
@@ -64,7 +57,7 @@ describe('patchDom', () => {
                         node('option').attrs({ value : 2 }),
                         node('option').attrs({ value : 3 })
                     ]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('select')
@@ -73,8 +66,7 @@ describe('patchDom', () => {
                         node('option').attrs({ value : 1 }),
                         node('option').attrs({ value : 2 }),
                         node('option').attrs({ value : 3 })
-                    ]),
-                topNode);
+                    ]));
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(true);
@@ -85,27 +77,27 @@ describe('patchDom', () => {
     describe('removeAttr', () => {
         it('should remove node attribute', () => {
             const parentNode = node('textarea').attrs({ disabled : true }),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('textarea'), topNode);
+            parentNode.patch(node('textarea'));
 
             expect(domNode.hasAttribute('disabled')).to.equal(false);
         });
 
         it('should remove node property', () => {
             const parentNode = node('input').attrs({ value : 'val' }),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('input'), topNode);
+            parentNode.patch(node('input'));
 
             expect(domNode.value).to.equal('');
         });
 
         it('should remove style node property', () => {
             const parentNode = node('div').attrs({ style : { width : '20px' } }),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div'), topNode);
+            parentNode.patch(node('div'));
             expect(domNode.style).to.eql(document.createElement('div').style);
         });
 
@@ -116,7 +108,7 @@ describe('patchDom', () => {
                         node('option').attrs({ value : 1 }),
                         node('option').attrs({ value : 2 })
                     ]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('select')
@@ -124,8 +116,7 @@ describe('patchDom', () => {
                     .children([
                         node('option').attrs({ value : 1 }),
                         node('option').attrs({ value : 2 })
-                    ]),
-                topNode);
+                    ]));
 
             expect(domNode.childNodes[0].selected).to.equal(false);
             expect(domNode.childNodes[1].selected).to.equal(false);
@@ -136,9 +127,9 @@ describe('patchDom', () => {
         it('should replace node', () => {
             const oldNode = node('span'),
                 parentNode = node('div').children([node('a'), oldNode]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div').children([node('a'), node('div')]), topNode);
+            parentNode.patch(node('div').children([node('a'), node('div')]));
 
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
         });
@@ -147,13 +138,12 @@ describe('patchDom', () => {
             const parentNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
                     .children(node('g').children(node('circle'))),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children(node('g').children(node('path'))),
-                topNode);
+                    .children(node('g').children(node('path'))));
 
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
@@ -163,23 +153,22 @@ describe('patchDom', () => {
                     node('a'),
                     node('fragment').children([node('b'), node('i')])
                 ]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div').children([node('a'), node('span')]), topNode);
+            parentNode.patch(node('div').children([node('a'), node('span')]));
 
             expect(domNode.innerHTML).to.equal('<a></a><span></span>');
         });
 
         it('should replace node with fragment', () => {
             const parentNode = node('div').children([node('a'), node('span')]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('div').children([
                     node('a'),
                     node('fragment').children([node('b'), node('i')])
-                ]),
-                topNode);
+                ]));
 
             expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!---->');
         });
@@ -188,11 +177,9 @@ describe('patchDom', () => {
     describe('appendChild', () => {
         it('should append child node', () => {
             const parentNode = node('div').children([node('a'), node('span')]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(
-                node('div').children([node('a'), node('span'), node('div')]),
-                topNode);
+            parentNode.patch(node('div').children([node('a'), node('span'), node('div')]));
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
@@ -202,27 +189,25 @@ describe('patchDom', () => {
             const parentNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
                     .children(node('circle')),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children([node('circle'), node('circle')]),
-                topNode);
+                    .children([node('circle'), node('circle')]));
 
             expect(domNode.childNodes[1].namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should append child fragment', () => {
             const parentNode = node('div').children([node('a')]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('div').children([
                     node('a'),
                     node('fragment').children([node('b'), node('i')])
-                ]),
-                topNode);
+                ]));
 
             expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!---->');
         });
@@ -232,10 +217,10 @@ describe('patchDom', () => {
         it('should remove child node', () => {
             const oldNode = node('span'),
                 parentNode = node('div').children([node('a'), oldNode]),
-                domNode = parentNode.renderToDom(topNode),
+                domNode = parentNode.renderToDom(),
                 aDomNode = domNode.children[0];
 
-            parentNode.patch(node('div').children(node('a')), topNode);
+            parentNode.patch(node('div').children(node('a')));
 
             expect(domNode.childNodes.length).to.equal(1);
             expect(domNode.childNodes[0]).to.equal(aDomNode);
@@ -246,9 +231,9 @@ describe('patchDom', () => {
                     node('a'),
                     node('fragment').children([node('b'), node('i')])
                 ]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div').children([node('a')]), topNode);
+            parentNode.patch(node('div').children([node('a')]));
 
             expect(domNode.innerHTML).to.equal('<a></a>');
         });
@@ -257,15 +242,14 @@ describe('patchDom', () => {
     describe('insertChild', () => {
         it('should insert child node', () => {
             const parentNode = node('div').children([node('a').key('a'), node('span').key('c')]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('div').children([
                     node('a').key('a'),
                     node('div').key('b'),
                     node('span').key('c')
-                ]),
-                topNode);
+                ]));
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[1].tagName).to.equal('DIV');
@@ -275,13 +259,12 @@ describe('patchDom', () => {
             const parentNode = node('svg')
                     .ns('http://www.w3.org/2000/svg')
                     .children(node('circle').key('b')),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('svg')
                     .ns('http://www.w3.org/2000/svg')
-                    .children([node('circle').key('a'), node('circle').key('b')]),
-                topNode);
+                    .children([node('circle').key('a'), node('circle').key('b')]));
 
             expect(domNode.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
@@ -291,15 +274,14 @@ describe('patchDom', () => {
                     node('a').key('a'),
                     node('span').key('c')
                 ]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('div').children([
                     node('a').key('a'),
                     node('fragment').key('b').children([node('b'), node('i')]),
                     node('span').key('c')
-                ]),
-                topNode);
+                ]));
 
             expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!----><span></span>');
         });
@@ -310,11 +292,11 @@ describe('patchDom', () => {
             const aNode = node('a').key('a'),
                 bNode = node('a').key('b'),
                 parentNode = node('div').children([aNode, bNode]),
-                domNode = parentNode.renderToDom(topNode),
+                domNode = parentNode.renderToDom(),
                 aDomNode = domNode.children[0],
                 bDomNode = domNode.children[1];
 
-            parentNode.patch(node('div').children([bNode, aNode]), topNode);
+            parentNode.patch(node('div').children([bNode, aNode]));
 
             expect(domNode.childNodes.length).to.equal(2);
             expect(domNode.childNodes[0]).to.equal(bDomNode);
@@ -356,15 +338,14 @@ describe('patchDom', () => {
                     node('a').key('a'),
                     node('span').key('c')
                 ]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('div').children([
                     node('a').key('a'),
                     node('fragment').key('b').children([node('b'), node('i')]),
                     node('span').key('c')
-                ]),
-                topNode);
+                ]));
 
             expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!----><span></span>');
         });
@@ -373,9 +354,9 @@ describe('patchDom', () => {
     describe('removeChildren', () => {
         it('should remove children nodes', () => {
             const parentNode = node('div').children([node('a'), node('span')]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div'), topNode);
+            parentNode.patch(node('div'));
 
             expect(domNode.childNodes.length).to.equal(0);
         });
@@ -385,14 +366,13 @@ describe('patchDom', () => {
                     node('a'),
                     node('fragment').children([node('a'), node('b')])
                 ]),
-                domNode = parentNode.renderToDom(topNode);
+                domNode = parentNode.renderToDom();
 
             parentNode.patch(
                 node('div').children([
                     node('a'),
                     node('fragment')
-                ]),
-                topNode);
+                ]));
 
             expect(domNode.innerHTML).to.equal('<a></a><!---->');
         });
