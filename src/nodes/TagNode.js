@@ -1,7 +1,6 @@
 import patchOps from '../client/patchOps';
 import domAttrs from '../client/domAttrs';
 import domOps from '../client/domOps';
-import normalizeNs from './utils/normalizeNs';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import { addListener, removeListeners } from '../client/events/domEventManager';
@@ -119,18 +118,17 @@ TagNode.prototype = {
         return this;
     },
 
-    renderToDom(parentNode) {
-        normalizeNs(this, parentNode);
-
-        const children = this._children;
+    renderToDom(parentNs) {
+        const ns = this._ns || parentNs,
+            children = this._children;
 
         if(USE_DOM_STRINGS && children && typeof children !== 'string') {
-            const domNode = createElementByHtml(this.renderToString(), this._tag, this._ns);
-            this.adoptDom([domNode], 0, parentNode);
+            const domNode = createElementByHtml(this.renderToString(), this._tag, ns);
+            this.adoptDom([domNode], 0);
             return domNode;
         }
 
-        const domNode = createElement(this._ns, this._tag),
+        const domNode = createElement(ns, this._tag),
             attrs = this._attrs;
 
         if(children) {
@@ -144,7 +142,7 @@ TagNode.prototype = {
                 const len = children.length;
 
                 while(i < len) {
-                    domOps.append(domNode, children[i++].renderToDom(this));
+                    domOps.append(domNode, children[i++].renderToDom(ns));
                 }
             }
         }
@@ -231,9 +229,7 @@ TagNode.prototype = {
         return res;
     },
 
-    adoptDom(domNodes, domIdx, parentNode) {
-        normalizeNs(this, parentNode);
-
+    adoptDom(domNodes, domIdx) {
         const domNode = this._domNode = domNodes[domIdx],
             attrs = this._attrs,
             children = this._children;
@@ -256,7 +252,7 @@ TagNode.prototype = {
                 let domChildIdx = 0;
 
                 while(i < len) {
-                    domChildIdx = children[i++].adoptDom(domChildren, domChildIdx, this);
+                    domChildIdx = children[i++].adoptDom(domChildren, domChildIdx);
                 }
             }
         }
@@ -294,17 +290,15 @@ TagNode.prototype = {
         this._domNode = null;
     },
 
-    patch(node, parentNode) {
+    patch(node) {
         if(this === node) {
             return;
         }
 
-        normalizeNs(node, parentNode);
-
         switch(node.type) {
             case NODE_TYPE_TAG:
                 if(this._tag !== node._tag || this._ns !== node._ns) {
-                    patchOps.replace(parentNode, this, node);
+                    patchOps.replace(this, node);
                 }
                 else {
                     node._domNode = this._domNode;
@@ -316,16 +310,16 @@ TagNode.prototype = {
             case NODE_TYPE_COMPONENT:
                 const instance = node._getInstance();
 
-                this.patch(instance.getRootNode(), parentNode);
+                this.patch(instance.getRootNode());
                 instance.mount();
                 break;
 
             case NODE_TYPE_FUNCTION_COMPONENT:
-                this.patch(node._getRootNode(), parentNode);
+                this.patch(node._getRootNode());
                 break;
 
             default:
-                patchOps.replace(parentNode, this, node);
+                patchOps.replace(this, node);
         }
     },
 

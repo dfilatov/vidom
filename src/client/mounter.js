@@ -2,11 +2,11 @@ import getDomNodeId from './getDomNodeId';
 import rafBatch from './rafBatch';
 import globalHook from '../globalHook';
 import domOps from './domOps';
+import { getNs } from './ns';
 import TopNode from '../nodes/TopNode';
 
 const DOM_NODE_TYPE_ELEMENT = 1,
     DOM_NODE_TYPE_COMMENT = 8,
-    DEFAULT_NS_URI = 'http://www.w3.org/1999/xhtml',
     mountedNodes = {};
 let counter = 0;
 
@@ -125,10 +125,6 @@ function collectTopDomChildren(node) {
     }
 
     return res;
-}
-
-function getNs(domNode) {
-    return domNode.namespaceURI === DEFAULT_NS_URI? null : domNode.namespaceURI;
 }
 
 export function mountToDom(domNode, tree, cb, cbCtx) {

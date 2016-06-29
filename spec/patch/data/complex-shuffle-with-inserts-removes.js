@@ -7,8 +7,7 @@ const nodeA = createNode('a').key('a'),
     nodeD = createNode('a').key('d'),
     nodeE = createNode('a').key('e'),
     nodeF = createNode('a').key('f'),
-    nodeG = createNode('a').key('g'),
-    parentNode = createNode('div');
+    nodeG = createNode('a').key('g');
 
 export default {
     'name' : 'complex-shuffle-with-inserts-removes',
@@ -19,7 +18,7 @@ export default {
             nodeC,
             nodeD
         ]),
-        parentNode.children([
+        createNode('div').children([
             nodeE,
             createNode('a').key('b'),
             nodeF,
@@ -30,10 +29,10 @@ export default {
     ],
     'patch' : [
         { op : patchOps.moveChild, args : [nodeA, nodeD, true] },
-        { op : patchOps.insertChild, args : [parentNode, nodeE, nodeB] },
+        { op : patchOps.insertChild, args : [nodeE, nodeB] },
         { op : patchOps.moveChild, args : [nodeC, nodeD, true] },
-        { op : patchOps.insertChild, args : [parentNode, nodeF, nodeD] },
-        { op : patchOps.insertChild, args : [parentNode, nodeG, nodeD] },
+        { op : patchOps.insertChild, args : [nodeF, nodeD] },
+        { op : patchOps.insertChild, args : [nodeG, nodeD] },
         { op : patchOps.removeChild, args : [nodeD] }
     ]
 }

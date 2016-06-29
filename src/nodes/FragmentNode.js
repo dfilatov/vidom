@@ -1,5 +1,4 @@
 import patchOps from '../client/patchOps';
-import normalizeNs from './utils/normalizeNs';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import console from '../utils/console';
@@ -75,9 +74,7 @@ FragmentNode.prototype = {
         return this;
     },
 
-    renderToDom(parent) {
-        normalizeNs(this, parent);
-
+    renderToDom(parentNs) {
         const children = this._children,
             domNode = [this._boundaryDomNode = createBoundaryDomNode()];
 
@@ -85,7 +82,7 @@ FragmentNode.prototype = {
             let i = children.length - 1;
 
             while(i >= 0) {
-                domNode.unshift(children[i--].renderToDom(this));
+                domNode.unshift(children[i--].renderToDom(parentNs));
             }
         }
 
@@ -107,15 +104,13 @@ FragmentNode.prototype = {
         return res;
     },
 
-    adoptDom(domNodes, domIdx, parentNode) {
-        normalizeNs(this, parentNode);
-
+    adoptDom(domNodes, domIdx) {
         const children = this._children,
             len = children.length;
         let i = 0;
 
         while(i < len) {
-            domIdx = children[i++].adoptDom(domNodes, domIdx, parentNode);
+            domIdx = children[i++].adoptDom(domNodes, domIdx);
         }
 
         this._boundaryDomNode = domNodes[domIdx];
@@ -149,12 +144,10 @@ FragmentNode.prototype = {
         }
     },
 
-    patch(node, parentNode) {
+    patch(node) {
         if(this === node) {
             return;
         }
-
-        normalizeNs(node, parentNode);
 
         switch(node.type) {
             case NODE_TYPE_FRAGMENT:
@@ -165,16 +158,16 @@ FragmentNode.prototype = {
             case NODE_TYPE_COMPONENT:
                 const instance = node._getInstance();
 
-                this.patch(instance.getRootNode(), parentNode);
+                this.patch(instance.getRootNode());
                 instance.mount();
                 break;
 
             case NODE_TYPE_FUNCTION_COMPONENT:
-                this.patch(node._getRootNode(), parentNode);
+                this.patch(node._getRootNode());
                 break;
 
             default:
-                patchOps.replace(parentNode, this, node);
+                patchOps.replace(this, node);
         }
     },
 

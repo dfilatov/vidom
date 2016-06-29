@@ -11,7 +11,7 @@ export default {
         oldNode,
         newNode
     ],
-    'patch' : topNode => [
-        { op : replaceOp, args : [topNode, oldNode, newNode] }
+    'patch' : [
+        { op : replaceOp, args : [oldNode, newNode] }
     ]
 }

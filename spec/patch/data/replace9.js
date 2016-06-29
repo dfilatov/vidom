@@ -17,7 +17,7 @@ export default {
         oldNode,
         createNode(C)
     ],
-    'patch' : topNode => [
-        { op : replaceOp, args : [topNode, oldNode, newNode] }
+    'patch' : [
+        { op : replaceOp, args : [oldNode, newNode] }
     ]
 }

@@ -92,7 +92,7 @@ describe('patch', () => {
             domOps.append(document.createElement('div'), topNode1.renderToDom());
             topNode1.patch(topNode2);
 
-            expect(opsLog).to.eql(typeof specData.patch === 'function'? specData.patch(topNode2) : specData.patch);
+            expect(opsLog).to.eql(specData.patch);
         });
     });
 });

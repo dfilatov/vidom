@@ -12,15 +12,15 @@ TopNode.prototype = {
     },
 
     renderToDom() {
-        return this._childNode.renderToDom(this);
+        return this._childNode.renderToDom(this._ns);
     },
 
     adoptDom(domNode) {
-        this._childNode.adoptDom(domNode, 0, this);
+        this._childNode.adoptDom(domNode, 0);
     },
 
     patch(node) {
-        this._childNode.patch(node._childNode, node);
+        this._childNode.patch(node._childNode);
     },
 
     mount() {

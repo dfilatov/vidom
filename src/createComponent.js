@@ -16,7 +16,7 @@ function unmountComponent() {
     this.onUnmount();
 }
 
-function patchComponent(attrs, children, ctx, parentNode) {
+function patchComponent(attrs, children, ctx) {
     attrs = this._buildAttrs(attrs);
 
     let prevRootNode = this._rootNode,
@@ -33,7 +33,6 @@ function patchComponent(attrs, children, ctx, parentNode) {
         }
     }
 
-    this._parentNode = parentNode;
     this._children = children;
     this._ctx = ctx;
 
@@ -52,7 +51,7 @@ function patchComponent(attrs, children, ctx, parentNode) {
 
     if(shouldUpdate) {
         this._rootNode = this.render();
-        prevRootNode.patch(this._rootNode, parentNode);
+        prevRootNode.patch(this._rootNode);
         this.isMounted() && this.onUpdate(attrs, prevAttrs, children, prevChildren);
     }
 }
@@ -61,18 +60,16 @@ function shouldComponentUpdate() {
     return true;
 }
 
-function renderComponentToDom(parentNode) {
-    this._parentNode = parentNode;
-    return this._rootNode.renderToDom(parentNode);
+function renderComponentToDom(parentNs) {
+    return this._rootNode.renderToDom(parentNs);
 }
 
 function renderComponentToString() {
     return this._rootNode.renderToString();
 }
 
-function adoptComponentDom(domNode, domIdx, parentNode) {
-    this._parentNode = parentNode;
-    return this._rootNode.adoptDom(domNode, domIdx, parentNode);
+function adoptComponentDom(domNode, domIdx) {
+    return this._rootNode.adoptDom(domNode, domIdx);
 }
 
 function getComponentDomNode() {
@@ -142,7 +139,7 @@ function updateComponent(cb, cbCtx) {
             if(this.isMounted()) {
                 this._isUpdating = false;
                 var prevRootNode = this._rootNode;
-                this.patch(this._attrs, this._children, this._ctx, this._parentNode);
+                this.patch(this._attrs, this._children, this._ctx);
                 cb && cb.call(cbCtx || this);
                 if(process.env.NODE_ENV !== 'production') {
                     globalHook.emit('replace', prevRootNode, this._rootNode);
@@ -212,7 +209,6 @@ function createComponent(props, staticProps) {
             this._attrs = this._buildAttrs(attrs);
             this._children = children;
             this._ctx = ctx;
-            this._parentNode = null;
             this._domRefs = null;
             this._isMounted = false;
             this._isUpdating = false;

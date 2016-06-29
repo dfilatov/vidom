@@ -1,5 +1,4 @@
 import emptyObj from '../utils/emptyObj';
-import normalizeNs from './utils/normalizeNs';
 import { NODE_TYPE_COMPONENT } from './utils/nodeTypes';
 
 export default function ComponentNode(component) {
@@ -38,18 +37,16 @@ ComponentNode.prototype = {
         return this;
     },
 
-    renderToDom(parent) {
-        normalizeNs(this, parent);
-
-        return this._getInstance().renderToDom(this);
+    renderToDom(parentNs) {
+        return this._getInstance().renderToDom(parentNs);
     },
 
     renderToString() {
         return this._getInstance().renderToString();
     },
 
-    adoptDom(domNode, domIdx, parentNode) {
-        return this._getInstance().adoptDom(domNode, domIdx, parentNode);
+    adoptDom(domNode, domIdx) {
+        return this._getInstance().adoptDom(domNode, domIdx);
     },
 
     mount() {
@@ -65,30 +62,28 @@ ComponentNode.prototype = {
         }
     },
 
-    patch(node, parentNode) {
+    patch(node) {
         if(this === node) {
             return;
         }
-
-        normalizeNs(node, parentNode);
 
         const instance = this._getInstance();
 
         if(this.type === node.type) {
             if(this._component === node._component) {
-                instance.patch(node._attrs, node._children, node._ctx, parentNode);
+                instance.patch(node._attrs, node._children, node._ctx);
                 node._instance = instance;
             }
             else {
                 instance.unmount();
                 const newInstance = node._getInstance();
-                instance.getRootNode().patch(newInstance.getRootNode(), parentNode);
+                instance.getRootNode().patch(newInstance.getRootNode());
                 newInstance.mount();
             }
         }
         else {
             instance.unmount();
-            instance.getRootNode().patch(node, parentNode);
+            instance.getRootNode().patch(node);
         }
     },
 
