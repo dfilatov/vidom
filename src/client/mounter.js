@@ -2,7 +2,7 @@ import getDomNodeId from './getDomNodeId';
 import rafBatch from './rafBatch';
 import globalHook from '../globalHook';
 import domOps from './domOps';
-import { getNs } from './ns';
+import { getNs } from './utils/ns';
 import TopNode from '../nodes/TopNode';
 
 const DOM_NODE_TYPE_ELEMENT = 1,

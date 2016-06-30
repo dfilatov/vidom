@@ -1,6 +1,6 @@
 import domAttrs from './domAttrs';
 import domOps from './domOps';
-import { getNs, getParentNs } from './ns';
+import { getNs, getParentNs } from './utils/ns';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
 
