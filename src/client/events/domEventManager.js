@@ -4,16 +4,17 @@ import getDomNodeId from '../getDomNodeId';
 
 const doc = global.document,
     BUBBLEABLE_NATIVE_EVENTS = [
-        'mouseover', 'mousemove', 'mouseout', 'mousedown', 'mouseup',
-        'click', 'dblclick', 'touchstart', 'touchmove', 'touchend', 'touchcancel',
-        'keydown', 'keypress', 'keyup',
-        'change', 'input', 'submit', 'focus', 'blur',
-        'dragstart', 'drag', 'dragenter', 'dragover', 'dragleave', 'dragend', 'drop',
-        'contextmenu', 'wheel', 'copy', 'cut', 'paste'
+        'blur', 'change', 'click', 'contextmenu', 'copy', 'cut',
+        'dblclick', 'drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop',
+        'focus', 'input', 'keydown', 'keypress', 'keyup',
+        'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
+        'paste', 'submit', 'touchcancel', 'touchend', 'touchmove', 'touchstart', 'wheel'
     ],
     NON_BUBBLEABLE_NATIVE_EVENTS = [
-        'mouseenter', 'mouseleave',
-        'scroll', 'load', 'error'
+        'canplay', 'canplaythrough', 'complete', 'durationchange', 'emptied', 'ended', 'error',
+        'load', 'loadeddata', 'loadedmetadata', 'loadstart', 'mouseenter', 'mouseleave',
+        'pause', 'play', 'playing', 'progress', 'ratechange',
+        'scroll', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting'
     ];
 
 const listenersStorage = {},
