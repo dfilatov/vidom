@@ -133,7 +133,8 @@ describe('renderToDom', () => {
                 node('b')
             ]).renderToDom();
 
-            expect(domNode.innerHTML).to.equal('<a></a><i></i><span></span><dl></dl><!----><img><!----><b></b>');
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!----><i></i><!----><span></span><dl></dl><!----><img><!----><b></b>');
         });
     });
 
