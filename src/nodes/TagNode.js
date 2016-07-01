@@ -1,6 +1,5 @@
 import patchOps from '../client/patchOps';
 import domAttrs from '../client/domAttrs';
-import domOps from '../client/domOps';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import { addListener, removeListeners } from '../client/events/domEventManager';
@@ -142,7 +141,7 @@ TagNode.prototype = {
                 const len = children.length;
 
                 while(i < len) {
-                    domOps.append(domNode, children[i++].renderToDom(ns));
+                    domNode.appendChild(children[i++].renderToDom(ns));
                 }
             }
         }
