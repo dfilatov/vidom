@@ -1,14 +1,19 @@
 function append(parent, child) {
     if(Array.isArray(parent)) {
-        insertBefore(child, parent[parent.length - 1]);
+        insertBefore(child, parent[1]);
     }
     else if(Array.isArray(child)) {
-        const len = child.length;
-        let i = 0;
+        let currentChild = child[0],
+            nextChild;
+        const lastChild = child[1];
 
-        while(i < len) {
-            append(parent, child[i++]);
+        while(currentChild !== lastChild) {
+            nextChild = currentChild.nextSibling;
+            append(parent, currentChild);
+            currentChild = nextChild;
         }
+
+        append(parent, lastChild);
     }
     else {
         parent.appendChild(child);
@@ -17,12 +22,17 @@ function append(parent, child) {
 
 function remove(child) {
     if(Array.isArray(child)) {
-        const len = child.length;
-        let i = 0;
+        let currentChild = child[0],
+            nextChild;
+        const lastChild = child[1];
 
-        while(i < len) {
-            remove(child[i++]);
+        while(currentChild !== lastChild) {
+            nextChild = currentChild.nextSibling;
+            remove(currentChild);
+            currentChild = nextChild;
         }
+
+        remove(lastChild);
     }
     else {
         child.parentNode.removeChild(child);
@@ -33,22 +43,28 @@ function insertBefore(child, beforeChild) {
     Array.isArray(beforeChild) && (beforeChild = beforeChild[0]);
 
     if(Array.isArray(child)) {
-        const len = child.length;
-        let i = 0;
+        let currentChild = child[0],
+            nextChild;
+        const lastChild = child[1];
 
-        while(i < len) {
-            insertBefore(child[i++], beforeChild);
+        while(currentChild !== lastChild) {
+            nextChild = currentChild.nextSibling;
+            insertBefore(currentChild, beforeChild);
+            currentChild = nextChild;
         }
+
+        insertBefore(lastChild, beforeChild);
     }
     else {
-        beforeChild.parentNode.insertBefore(child, beforeChild);
+        beforeChild.parentNode.insertBefore(
+            child,
+            beforeChild);
     }
 }
 
 function move(child, toChild, after) {
-    Array.isArray(toChild) && (toChild = toChild[toChild.length - 1]);
-
     if(after) {
+        Array.isArray(toChild) && (toChild = toChild[1]);
         const nextSibling = toChild.nextSibling;
 
         nextSibling?
@@ -61,7 +77,7 @@ function move(child, toChild, after) {
 }
 
 function replace(old, replacement) {
-    if(Array.isArray(old) || Array.isArray(replacement)) {
+    if(Array.isArray(old)) {
         insertBefore(replacement, old);
         remove(old);
     }
@@ -72,11 +88,14 @@ function replace(old, replacement) {
 
 function removeChildren(parent) {
     if(Array.isArray(parent)) {
-        const len = parent.length - 1;
-        let i = 0;
+        let currentChild = parent[0].nextSibling,
+            nextChild;
+        const lastChild = parent[1];
 
-        while(i < len) {
-            remove(parent[i++]);
+        while(currentChild !== lastChild) {
+            nextChild = currentChild.nextSibling;
+            remove(currentChild);
+            currentChild = nextChild;
         }
     }
     else {

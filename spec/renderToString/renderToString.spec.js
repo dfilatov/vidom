@@ -115,7 +115,7 @@ describe('renderToString', () => {
                 ]),
                 createNode('b')
             ]).renderToString())
-                .to.equal('<div><a></a><i></i><u></u><!----><span></span><!----><b></b></div>');
+                .to.equal('<div><a></a><!----><i></i><!----><u></u><!----><span></span><!----><b></b></div>');
         });
 
         it('should be rendered as comment if no children', () => {
@@ -124,7 +124,7 @@ describe('renderToString', () => {
                 createNode('fragment'),
                 createNode('b')
             ]).renderToString())
-                .to.equal('<div><a></a><!----><b></b></div>');
+                .to.equal('<div><a></a><!----><!----><b></b></div>');
         });
     });
 

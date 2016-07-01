@@ -14,7 +14,7 @@ let boundaryDomNode;
 
 export default function FragmentNode() {
     this.type = NODE_TYPE_FRAGMENT;
-    this._boundaryDomNode = null;
+    this._domNode = null;
     this._key = null;
     this._children = null;
     this._ctx = emptyObj;
@@ -22,21 +22,7 @@ export default function FragmentNode() {
 
 FragmentNode.prototype = {
     getDomNode() {
-        const domNode = [this._boundaryDomNode],
-            children = this._children;
-
-        if(children) {
-            let i = children.length - 1,
-                childDomNode;
-
-            while(i >= 0) {
-                if(childDomNode = children[i--].getDomNode()) {
-                    domNode.unshift(childDomNode);
-                }
-            }
-        }
-
-        return domNode;
+        return this._domNode;
     },
 
     key(key) {
@@ -76,17 +62,28 @@ FragmentNode.prototype = {
 
     renderToDom(parentNs) {
         const children = this._children,
-            domNode = [this._boundaryDomNode = createBoundaryDomNode()];
+            domNode = [
+                createBoundaryDomNode(),
+                createBoundaryDomNode()
+            ],
+            domFragment = doc.createDocumentFragment();
+
+        domFragment.appendChild(domNode[0]);
 
         if(children) {
-            let i = children.length - 1;
+            const len = children.length;
+            let i = 0;
 
-            while(i >= 0) {
-                domNode.unshift(children[i--].renderToDom(parentNs));
+            while(i < len) {
+                domFragment.appendChild(children[i++].renderToDom(parentNs));
             }
         }
 
-        return domNode;
+        domFragment.appendChild(domNode[1]);
+
+        this._domNode = domNode;
+
+        return domFragment;
     },
 
     renderToString() {
@@ -101,11 +98,12 @@ FragmentNode.prototype = {
             }
         }
 
-        return res;
+        return '<!---->' + res;
     },
 
     adoptDom(domNodes, domIdx) {
-        const children = this._children,
+        const domNode = [domNodes[domIdx++]],
+            children = this._children,
             len = children.length;
         let i = 0;
 
@@ -113,7 +111,9 @@ FragmentNode.prototype = {
             domIdx = children[i++].adoptDom(domNodes, domIdx);
         }
 
-        this._boundaryDomNode = domNodes[domIdx];
+        domNode.push(domNodes[domIdx]);
+
+        this._domNode = domNode;
 
         return domIdx + 1;
     },
@@ -151,7 +151,7 @@ FragmentNode.prototype = {
 
         switch(node.type) {
             case NODE_TYPE_FRAGMENT:
-                node._boundaryDomNode = this._boundaryDomNode;
+                node._domNode = this._domNode;
                 this._patchChildren(node);
                 break;
 

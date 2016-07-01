@@ -131,7 +131,8 @@ describe('patchDom', () => {
 
             parentNode.patch(node('div').children([node('a'), node('div')]));
 
-            expect(domNode.childNodes[1].tagName).to.equal('DIV');
+            expect(domNode.childNodes[1].tagName)
+                .to.equal('DIV');
         });
 
         it('should keep parent namespace', () => {
@@ -145,7 +146,8 @@ describe('patchDom', () => {
                     .ns('http://www.w3.org/2000/svg')
                     .children(node('g').children(node('path'))));
 
-            expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+            expect(domNode.firstChild.firstChild.namespaceURI)
+                .to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should replace fragment with single node', () => {
@@ -157,7 +159,8 @@ describe('patchDom', () => {
 
             parentNode.patch(node('div').children([node('a'), node('span')]));
 
-            expect(domNode.innerHTML).to.equal('<a></a><span></span>');
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><span></span>');
         });
 
         it('should replace node with fragment', () => {
@@ -170,7 +173,8 @@ describe('patchDom', () => {
                     node('fragment').children([node('b'), node('i')])
                 ]));
 
-            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!---->');
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!----><b></b><i></i><!---->');
         });
     });
 
@@ -196,7 +200,8 @@ describe('patchDom', () => {
                     .ns('http://www.w3.org/2000/svg')
                     .children([node('circle'), node('circle')]));
 
-            expect(domNode.childNodes[1].namespaceURI).to.equal('http://www.w3.org/2000/svg');
+            expect(domNode.childNodes[1].namespaceURI)
+                .to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should append child fragment', () => {
@@ -209,7 +214,37 @@ describe('patchDom', () => {
                     node('fragment').children([node('b'), node('i')])
                 ]));
 
-            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!---->');
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!----><b></b><i></i><!---->');
+        });
+
+        it('should append child fragment to another one', () => {
+            const parentNode = node('div').children([
+                    node('a').key('a'),
+                    node('fragment').key('b').children([
+                        node('b'),
+                        node('i')
+                    ]),
+                    node('u').key('c')
+                ]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('a').key('a'),
+                    node('fragment').key('b').children([
+                        node('b').key('a'),
+                        node('i').key('b'),
+                        node('fragment').key('c').children([
+                            node('h1'),
+                            node('h2')
+                        ])
+                    ]),
+                    node('u').key('c')
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!----><b></b><i></i><!----><h1></h1><h2></h2><!----><!----><u></u>');
         });
     });
 
@@ -283,7 +318,22 @@ describe('patchDom', () => {
                     node('span').key('c')
                 ]));
 
-            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!----><span></span>');
+            expect(domNode.innerHTML).to.equal('<a></a><!----><b></b><i></i><!----><span></span>');
+        });
+
+        it('should insert child fragment before another one', () => {
+            const parentNode = node('div').children([
+                    node('fragment').key('b').children([node('i'), node('u')])
+                ]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('fragment').key('a').children([node('a'), node('b')]),
+                    node('fragment').key('b').children([node('i'), node('u')])
+                ]));
+
+            expect(domNode.innerHTML).to.equal('<!----><a></a><b></b><!----><!----><i></i><u></u><!---->');
         });
     });
 
@@ -334,7 +384,10 @@ describe('patchDom', () => {
 
         it('should move child fragment', () => {
             const parentNode = node('div').children([
-                    node('fragment').key('b').children([node('b'), node('i')]),
+                    node('fragment').key('b').children([
+                        node('b'),
+                        node('i')
+                    ]),
                     node('a').key('a'),
                     node('span').key('c')
                 ]),
@@ -347,7 +400,51 @@ describe('patchDom', () => {
                     node('span').key('c')
                 ]));
 
-            expect(domNode.innerHTML).to.equal('<a></a><b></b><i></i><!----><span></span>');
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!----><b></b><i></i><!----><span></span>');
+        });
+
+        it('should move child fragment before another one', () => {
+            const parentNode = node('div').children([
+                    node('fragment').key('c').children([node('h1'), node('h2')]),
+                    node('fragment').key('a').children([node('a'), node('b')]),
+                    node('fragment').key('b').children([node('i'), node('u')]),
+                    node('fragment').key('d').children([node('h3'), node('h4')])
+                ]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('fragment').key('a').children([node('a'), node('b')]),
+                    node('fragment').key('b').children([node('i'), node('u')]),
+                    node('fragment').key('c').children([node('h1'), node('h2')]),
+                    node('fragment').key('e').children([node('h3'), node('h4')])
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal(
+                    '<!----><a></a><b></b><!----><!----><i></i><u></u><!---->' +
+                    '<!----><h1></h1><h2></h2><!----><!----><h3></h3><h4></h4><!---->');
+        });
+
+        it('should move child fragment after another one', () => {
+            const parentNode = node('div').children([
+                    node('fragment').key('a').children([node('a'), node('b')]),
+                    node('fragment').key('b').children([node('i'), node('u')]),
+                    node('fragment').key('c').children([node('h1'), node('h2')])
+                ]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('fragment').key('a').children([node('a'), node('b')]),
+                    node('fragment').key('c').children([node('h1'), node('h2')]),
+                    node('fragment').key('b').children([node('i'), node('u')])
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal(
+                    '<!----><a></a><b></b><!----><!----><h1></h1><h2></h2><!----><!----><i></i><u></u><!---->');
         });
     });
 
@@ -374,7 +471,8 @@ describe('patchDom', () => {
                     node('fragment')
                 ]));
 
-            expect(domNode.innerHTML).to.equal('<a></a><!---->');
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!----><!---->');
         });
     });
 });
