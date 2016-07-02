@@ -100,6 +100,7 @@ class B extends Component {
 const root = document.getElementById('root'),
     tree = node(A).attrs({ a : 1 });
 
+console.log(renderToString(tree));
 root.innerHTML = renderToString(tree);
 
 mountToDom(root, tree);
@@ -109,12 +110,12 @@ setTimeout(function() {
     setTimeout(function() {
         console.log('before 3');
         mountToDom(root, node(A).attrs({ a : 3 }));
-// //     //     setTimeout(function() {
-// //     //         mountToDom(document.getElementById('root'), node('div').children([
-// //     //             node('div').children('-1'),
-// //     //             node(A).attrs({ a : false }),
-// //     //             node('div').children('+1')
-// //     //         ]));
-// //     //     }, 100);
+// // //     //     setTimeout(function() {
+// // //     //         mountToDom(document.getElementById('root'), node('div').children([
+// // //     //             node('div').children('-1'),
+// // //     //             node(A).attrs({ a : false }),
+// // //     //             node('div').children('+1')
+// // //     //         ]));
+// // //     //     }, 100);
     }, 70);
 }, 100);

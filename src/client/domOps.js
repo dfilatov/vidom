@@ -9,11 +9,11 @@ function append(parent, child) {
 
         while(currentChild !== lastChild) {
             nextChild = currentChild.nextSibling;
-            append(parent, currentChild);
+            parent.appendChild(currentChild);
             currentChild = nextChild;
         }
 
-        append(parent, lastChild);
+        parent.appendChild(lastChild);
     }
     else {
         parent.appendChild(child);
@@ -24,15 +24,16 @@ function remove(child) {
     if(Array.isArray(child)) {
         let currentChild = child[0],
             nextChild;
-        const lastChild = child[1];
+        const lastChild = child[1],
+            parent = lastChild.parentNode;
 
         while(currentChild !== lastChild) {
             nextChild = currentChild.nextSibling;
-            remove(currentChild);
+            parent.removeChild(currentChild);
             currentChild = nextChild;
         }
 
-        remove(lastChild);
+        parent.removeChild(lastChild);
     }
     else {
         child.parentNode.removeChild(child);
@@ -45,20 +46,19 @@ function insertBefore(child, beforeChild) {
     if(Array.isArray(child)) {
         let currentChild = child[0],
             nextChild;
-        const lastChild = child[1];
+        const lastChild = child[1],
+            parent = lastChild.parentNode;
 
         while(currentChild !== lastChild) {
             nextChild = currentChild.nextSibling;
-            insertBefore(currentChild, beforeChild);
+            parent.insertBefore(currentChild, beforeChild);
             currentChild = nextChild;
         }
 
-        insertBefore(lastChild, beforeChild);
+        parent.insertBefore(lastChild, beforeChild);
     }
     else {
-        beforeChild.parentNode.insertBefore(
-            child,
-            beforeChild);
+        beforeChild.parentNode.insertBefore(child, beforeChild);
     }
 }
 
@@ -86,20 +86,21 @@ function replace(old, replacement) {
     }
 }
 
-function removeChildren(parent) {
-    if(Array.isArray(parent)) {
-        let currentChild = parent[0].nextSibling,
+function removeChildren(from) {
+    if(Array.isArray(from)) {
+        let currentChild = from[0].nextSibling,
             nextChild;
-        const lastChild = parent[1];
+        const lastChild = from[1],
+            parent = lastChild.parentNode;
 
         while(currentChild !== lastChild) {
             nextChild = currentChild.nextSibling;
-            remove(currentChild);
+            parent.removeChild(currentChild);
             currentChild = nextChild;
         }
     }
     else {
-        parent.innerHTML = '';
+        from.innerHTML = '';
     }
 }
 
