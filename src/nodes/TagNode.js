@@ -127,7 +127,7 @@ TagNode.prototype = {
             return domNode;
         }
 
-        const domNode = createElement(ns, this._tag),
+        const domNode = createElement(this._tag, ns),
             attrs = this._attrs;
 
         if(children) {
@@ -160,8 +160,13 @@ TagNode.prototype = {
     },
 
     renderToString() {
-        const tag = this._tag,
-            ns = this._ns,
+        const tag = this._tag;
+
+        if(tag === '!') {
+            return '<!---->';
+        }
+
+        const ns = this._ns,
             attrs = this._attrs;
         let children = this._children,
             res = '<' + tag;

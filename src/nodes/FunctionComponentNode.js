@@ -1,4 +1,4 @@
-import TagNode from './TagNode';
+import createNode from '../createNode';
 import emptyObj from '../utils/emptyObj';
 import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
 
@@ -74,7 +74,7 @@ FunctionComponentNode.prototype = {
             return this._rootNode;
         }
 
-        const rootNode = this._component(this._attrs, this._children, this._ctx) || new TagNode('noscript');
+        const rootNode = this._component(this._attrs, this._children, this._ctx) || createNode('!');
 
         if(process.env.NODE_ENV !== 'production') {
             if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {

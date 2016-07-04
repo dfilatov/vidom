@@ -5,9 +5,7 @@ import domOps from './domOps';
 import { getNs } from './utils/ns';
 import TopNode from '../nodes/TopNode';
 
-const DOM_NODE_TYPE_ELEMENT = 1,
-    DOM_NODE_TYPE_COMMENT = 8,
-    mountedNodes = {};
+const mountedNodes = {};
 let counter = 0;
 
 function mount(domNode, node, cb, cbCtx, syncMode) {
@@ -117,7 +115,7 @@ function collectTopDomChildren(node) {
     while(i < len) {
         nodeType = children[i].nodeType;
 
-        if(nodeType === DOM_NODE_TYPE_ELEMENT || nodeType === DOM_NODE_TYPE_COMMENT) {
+        if(nodeType === Node.ELEMENT_NODE || nodeType === Node.COMMENT_NODE) {
             res.push(children[i]);
         }
 

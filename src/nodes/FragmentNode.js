@@ -1,4 +1,5 @@
 import patchOps from '../client/patchOps';
+import createElement from '../client/utils/createElement';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import console from '../utils/console';
@@ -10,7 +11,6 @@ import {
 } from './utils/nodeTypes';
 
 const doc = global.document;
-let boundaryDomNode;
 
 export default function FragmentNode() {
     this.type = NODE_TYPE_FRAGMENT;
@@ -63,8 +63,8 @@ FragmentNode.prototype = {
     renderToDom(parentNs) {
         const children = this._children,
             domNode = [
-                createBoundaryDomNode(),
-                createBoundaryDomNode()
+                createElement('!'),
+                createElement('!')
             ],
             domFragment = doc.createDocumentFragment();
 
@@ -214,10 +214,4 @@ function processChildren(children) {
     }
 
     return res;
-}
-
-function createBoundaryDomNode() {
-    return boundaryDomNode?
-        boundaryDomNode.cloneNode() :
-        boundaryDomNode = doc.createComment('');
 }

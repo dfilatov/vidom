@@ -6,7 +6,7 @@ const doc = global.document,
 
 let helperDomNode;
 
-function createElementByHtml(html, tag, ns) {
+export default function createElementByHtml(html, tag, ns) {
     helperDomNode || (helperDomNode = doc.createElement('div'));
 
     if(!ns || !TOP_LEVEL_NS_TAGS[ns] || TOP_LEVEL_NS_TAGS[ns] === tag) {
@@ -18,5 +18,3 @@ function createElementByHtml(html, tag, ns) {
     helperDomNode.innerHTML = '<' + topLevelTag + ' xmlns="' + ns + '">' + html + '</' + topLevelTag + '>';
     return helperDomNode.removeChild(helperDomNode.firstChild).firstChild;
 }
-
-export default createElementByHtml;
