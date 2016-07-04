@@ -112,12 +112,15 @@ FragmentNode.prototype = {
         }
 
         const domNode = [domNodes[domIdx++]],
-            children = this._children,
-            len = children.length;
-        let i = 0;
+            children = this._children;
 
-        while(i < len) {
-            domIdx = children[i++].adoptDom(domNodes, domIdx);
+        if(children) {
+            const len = children.length;
+            let i = 0;
+
+            while(i < len) {
+                domIdx = children[i++].adoptDom(domNodes, domIdx);
+            }
         }
 
         domNode.push(domNodes[domIdx]);
