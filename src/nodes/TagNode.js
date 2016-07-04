@@ -1,5 +1,6 @@
 import patchOps from '../client/patchOps';
 import domAttrs from '../client/domAttrs';
+import checkReuse from './utils/checkReuse';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import { addListener, removeListeners } from '../client/events/domEventManager';
@@ -118,6 +119,10 @@ TagNode.prototype = {
     },
 
     renderToDom(parentNs) {
+        if(process.env.NODE_ENV !== 'production') {
+            checkReuse(this, this._tag);
+        }
+
         const ns = this._ns || parentNs,
             children = this._children;
 
@@ -127,7 +132,7 @@ TagNode.prototype = {
             return domNode;
         }
 
-        const domNode = createElement(this._tag, ns),
+        const domNode = this._domNode = createElement(this._tag, ns),
             attrs = this._attrs;
 
         if(children) {
@@ -156,7 +161,7 @@ TagNode.prototype = {
             }
         }
 
-        return this._domNode = domNode;
+        return domNode;
     },
 
     renderToString() {
@@ -234,6 +239,10 @@ TagNode.prototype = {
     },
 
     adoptDom(domNodes, domIdx) {
+        if(process.env.NODE_ENV !== 'production') {
+            checkReuse(this, this._tag);
+        }
+
         const domNode = this._domNode = domNodes[domIdx],
             attrs = this._attrs,
             children = this._children;
