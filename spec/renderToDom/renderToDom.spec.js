@@ -202,13 +202,13 @@ describe('renderToDom', () => {
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
 
-        it('should render <noscript/> if onRender() returns nothing', () => {
+        it('should render comment if onRender() returns nothing', () => {
             const Component = createComponent({
                     onRender() {}
                 }),
                 domNode = node(Component).renderToDom();
 
-            expect(domNode.tagName).to.equal('NOSCRIPT');
+            expect(domNode.nodeType).to.equal(Node.COMMENT_NODE);
         });
     });
 
@@ -240,11 +240,11 @@ describe('renderToDom', () => {
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
 
-        it('should render <noscript/> if onRender() returns nothing', () => {
+        it('should render comment if onRender() returns nothing', () => {
             const Component = () => {},
                 domNode = node(Component).renderToDom();
 
-            expect(domNode.tagName).to.equal('NOSCRIPT');
+            expect(domNode.nodeType).to.equal(Node.COMMENT_NODE);
         });
     });
 });

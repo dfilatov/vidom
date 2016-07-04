@@ -179,13 +179,13 @@ describe('renderToString', () => {
                 .to.equal('<div id="id1"><a></a><span></span><i></i></div>')
         });
 
-        it('should render <noscript/> if onRender() returns nothing', () => {
+        it('should render comment if onRender() returns nothing', () => {
             const Component = createComponent({
                 onRender : () => {}
             });
 
             expect(createNode(Component).renderToString())
-                .to.equal('<noscript></noscript>');
+                .to.equal('<!---->');
         });
     });
 
@@ -202,11 +202,11 @@ describe('renderToString', () => {
                 .to.equal('<div id="id1"><a></a><span></span><i></i></div>')
         });
 
-        it('should render <noscript/> if returns nothing', () => {
+        it('should render comment if returns nothing', () => {
             const Component = () => {};
 
             expect(createNode(Component).renderToString())
-                .to.equal('<noscript></noscript>');
+                .to.equal('<!---->');
         });
     });
 });

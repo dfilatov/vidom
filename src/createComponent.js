@@ -110,7 +110,7 @@ function getComponentPrevState() {
 function renderComponent() {
     this._domRefs = {};
 
-    const rootNode = this.onRender(this._attrs, this._children) || createNode('noscript');
+    const rootNode = this.onRender(this._attrs, this._children) || createNode('!');
 
     if(process.env.NODE_ENV !== 'production') {
         if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
