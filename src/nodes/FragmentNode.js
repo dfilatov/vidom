@@ -1,5 +1,6 @@
 import patchOps from '../client/patchOps';
 import createElement from '../client/utils/createElement';
+import checkReuse from './utils/checkReuse';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import console from '../utils/console';
@@ -61,6 +62,10 @@ FragmentNode.prototype = {
     },
 
     renderToDom(parentNs) {
+        if(process.env.NODE_ENV !== 'production') {
+            checkReuse(this, 'fragment');
+        }
+
         const children = this._children,
             domNode = [
                 createElement('!'),
@@ -102,6 +107,10 @@ FragmentNode.prototype = {
     },
 
     adoptDom(domNodes, domIdx) {
+        if(process.env.NODE_ENV !== 'production') {
+            checkReuse(this, 'fragment');
+        }
+
         const domNode = [domNodes[domIdx++]],
             children = this._children,
             len = children.length;

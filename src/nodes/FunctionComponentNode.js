@@ -1,4 +1,5 @@
 import createNode from '../createNode';
+import checkReuse from './utils/checkReuse';
 import emptyObj from '../utils/emptyObj';
 import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
 
@@ -15,7 +16,7 @@ export default function FunctionComponentNode(component) {
 
 FunctionComponentNode.prototype = {
     getDomNode() {
-        return this._rootNode.getDomNode();
+        return this._rootNode && this._rootNode.getDomNode();
     },
 
     key(key) {
@@ -39,6 +40,10 @@ FunctionComponentNode.prototype = {
     },
 
     renderToDom(parentNs) {
+        if(process.env.NODE_ENV !== 'production') {
+            checkReuse(this, this._component.name || 'Anonymous');
+        }
+
         return this._getRootNode().renderToDom(parentNs);
     },
 
@@ -47,6 +52,10 @@ FunctionComponentNode.prototype = {
     },
 
     adoptDom(domNode, domIdx) {
+        if(process.env.NODE_ENV !== 'production') {
+            checkReuse(this, this._component.name || 'Anonymous');
+        }
+
         return this._getRootNode().adoptDom(domNode, domIdx);
     },
 
