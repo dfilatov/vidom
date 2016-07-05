@@ -10,7 +10,6 @@ export default function FunctionComponentNode(component) {
     this._attrs = emptyObj;
     this._rootNode = null;
     this._children = null;
-    this._ns = null;
     this._ctx = emptyObj;
 }
 

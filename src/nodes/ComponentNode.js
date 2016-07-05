@@ -9,7 +9,6 @@ export default function ComponentNode(component) {
     this._attrs = null;
     this._instance = null;
     this._children = null;
-    this._ns = null;
     this._ctx = emptyObj;
 }
 
