@@ -20,7 +20,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [uibench](https://localvoid.github.io/uibench/)
   * server-side rendering
     
-    <img src="https://img-fotki.yandex.ru/get/28072/58414218.1/0_f5cb4_e0e29b44_orig" width="252" height="77">
+    <img src="https://img-fotki.yandex.ru/get/45443/58414218.1/0_f66e9_e14a108f_orig" width="254" height="76">
 
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
@@ -37,6 +37,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [JSX](../../wiki/JSX)
   * [Isomorphism](../../wiki/Isomorphism)
   * [FAQ](../../wiki/FAQ)
+  * [Changelog](../../releases)
 
 ## Tools
   * [Vidom inspector](https://github.com/dfilatov/vidom-inspector) developer tool which helps debug vidom-based applications
