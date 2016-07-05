@@ -8,7 +8,7 @@
     "inferno-server": "0.7.13",
     "react": "15.2.0",
     "react-dom": "15.2.0",
-    "vidom": "0.3.5"
+    "vidom": "0.3.8"
   },
   "scripts": {
     "start": "NODE_ENV=production node index.js"
