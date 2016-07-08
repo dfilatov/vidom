@@ -1,7 +1,7 @@
 # vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom) [![npm version](https://badge.fury.io/js/vidom.svg)](http://badge.fury.io/js/vidom)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)
 
-Vidom is just a library to build UI. It's highly inspired and based on ideas from [React](https://facebook.github.io/react/). Its main goal is to provide as fast as possible lightweight implementation with API similar to React. According to the corresponding benchmarks Vidom is 6x faster in Chrome, 5x faster in Firefox, 2x faster in IE and 6x faster in server-side rendering than React.
+Vidom is just a library to build UI. It's highly inspired and based on ideas from [React](https://facebook.github.io/react/). Its main goal is to provide as fast as possible lightweight implementation with API similar to React. According to the corresponding benchmarks Vidom is 6x faster in Chrome, 5x faster in Firefox, 2x faster in IE and 10x faster in server-side rendering than React.
 
 ## Main features
   * Fast virtual DOM builder and patcher under the hood
@@ -12,7 +12,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * Ability to render multiple components without unwanted DOM wrappers
   * No extra markup in the result HTML
   * JSX support via babel plugin
-  * Small footprint, about 10KB after gzip
+  * Small footprint, about 8KB after gzip
   
 ## Benchmarks
   * [repaint rate challenge](http://mathieuancelin.github.io/js-repaint-perfs/)
@@ -20,7 +20,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [uibench](https://localvoid.github.io/uibench/)
   * server-side rendering
     
-    <img src="https://img-fotki.yandex.ru/get/45443/58414218.1/0_f66e9_e14a108f_orig" width="254" height="71">
+    <img src="https://img-fotki.yandex.ru/get/98050/58414218.1/0_f6976_8ec5c31f_orig" width="256" height="71">
 
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
