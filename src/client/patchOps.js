@@ -4,8 +4,6 @@ import { getNs, getParentNs } from './utils/ns';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
 
-const doc = global.document;
-
 function appendChild(parentNode, childNode) {
     const parentDomNode = parentNode.getDomNode();
 
@@ -30,11 +28,11 @@ function removeChild(childNode) {
 }
 
 function moveChild(childNode, toChildNode, after) {
-    const activeDomNode = doc.activeElement;
+    const activeDomNode = document.activeElement;
 
     domOps.move(childNode.getDomNode(), toChildNode.getDomNode(), after);
 
-    if(doc.activeElement !== activeDomNode) {
+    if(document.activeElement !== activeDomNode) {
         activeDomNode.focus();
     }
 }

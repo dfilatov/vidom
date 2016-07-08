@@ -2,8 +2,7 @@ import escapeAttr from '../utils/escapeAttr';
 import isInArray from '../utils/isInArray';
 import dasherize from '../utils/dasherize';
 import console from '../utils/console';
-
-const doc = global.document;
+import { IS_DEBUG } from '../utils/debug';
 
 function setAttr(node, name, val) {
     if(name === 'type' && node.tagName === 'INPUT') {
@@ -30,7 +29,7 @@ function setProp(node, name, val) {
 }
 
 function setObjProp(node, name, val) {
-    if(process.env.NODE_ENV !== 'production') {
+    if(IS_DEBUG) {
         const typeOfVal = typeof val;
         if(typeOfVal !== 'object') {
             console.error(`"${name}" attribute expects an object as a value, not a ${typeOfVal}`);
@@ -118,7 +117,7 @@ function getDefaultPropVal(tag, attrName) {
     let tagAttrs = defaultPropVals[tag] || (defaultPropVals[tag] = {});
     return attrName in tagAttrs?
         tagAttrs[attrName] :
-        tagAttrs[attrName] = doc.createElement(tag)[attrName];
+        tagAttrs[attrName] = document.createElement(tag)[attrName];
 }
 
 const ATTR_NAMES = {

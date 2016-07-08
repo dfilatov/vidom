@@ -12,6 +12,7 @@ import emptyObj from '../utils/emptyObj';
 import { isTrident, isEdge } from '../client/browsers';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
+import { IS_DEBUG } from '../utils/debug';
 import {
     NODE_TYPE_TAG,
     NODE_TYPE_COMPONENT,
@@ -69,7 +70,7 @@ TagNode.prototype = {
     attrs(attrs) {
         this._attrs = attrs;
 
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkAttrs(attrs);
         }
 
@@ -77,7 +78,7 @@ TagNode.prototype = {
     },
 
     children(children) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             if(this._children !== null) {
                 console.warn('You\'re trying to set children or html more than once or pass both children and html.');
             }
@@ -107,7 +108,7 @@ TagNode.prototype = {
     },
 
     html(html) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             if(this._children !== null) {
                 console.warn('You\'re trying to set children or html more than once or pass both children and html.');
             }
@@ -119,7 +120,7 @@ TagNode.prototype = {
     },
 
     renderToDom(parentNs) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, this._tag);
         }
 
@@ -239,7 +240,7 @@ TagNode.prototype = {
     },
 
     adoptDom(domNodes, domIdx) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, this._tag);
         }
 
@@ -499,7 +500,7 @@ function processChildren(children) {
     if(typeOfChildren === 'object') {
         const res = Array.isArray(children)? children : [children];
 
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkChildren(res);
         }
 

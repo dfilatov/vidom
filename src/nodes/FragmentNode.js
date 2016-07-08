@@ -5,13 +5,12 @@ import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
+import { IS_DEBUG } from '../utils/debug';
 import {
     NODE_TYPE_FRAGMENT,
     NODE_TYPE_COMPONENT,
     NODE_TYPE_FUNCTION_COMPONENT
 } from './utils/nodeTypes';
-
-const doc = global.document;
 
 export default function FragmentNode() {
     this.type = NODE_TYPE_FRAGMENT;
@@ -32,7 +31,7 @@ FragmentNode.prototype = {
     },
 
     children(children) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             if(this._children !== null) {
                 console.warn('You\'re trying to set children to fragment more than once.');
             }
@@ -62,7 +61,7 @@ FragmentNode.prototype = {
     },
 
     renderToDom(parentNs) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, 'fragment');
         }
 
@@ -71,7 +70,7 @@ FragmentNode.prototype = {
                 createElement('!'),
                 createElement('!')
             ],
-            domFragment = doc.createDocumentFragment();
+            domFragment = document.createDocumentFragment();
 
         domFragment.appendChild(domNode[0]);
 
@@ -107,7 +106,7 @@ FragmentNode.prototype = {
     },
 
     adoptDom(domNodes, domIdx) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, 'fragment');
         }
 
@@ -221,7 +220,7 @@ function processChildren(children) {
 
     const res = Array.isArray(children)? children : [children];
 
-    if(process.env.NODE_ENV !== 'production') {
+    if(IS_DEBUG) {
         checkChildren(res);
     }
 

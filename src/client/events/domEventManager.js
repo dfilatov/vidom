@@ -2,8 +2,7 @@ import isEventSupported from './isEventSupported';
 import createSyntheticEvent from './createSyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
 
-const doc = global.document,
-    BUBBLEABLE_NATIVE_EVENTS = [
+const BUBBLEABLE_NATIVE_EVENTS = [
         'blur', 'change', 'click', 'contextmenu', 'copy', 'cut',
         'dblclick', 'drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop',
         'focus', 'input', 'keydown', 'keypress', 'keyup',
@@ -32,7 +31,7 @@ function globalEventListener(e, type) {
         listenersToInvoke,
         domNodeId;
 
-    while(listenersCount > 0 && target && target !== doc) {
+    while(listenersCount > 0 && target && target !== document) {
         if(domNodeId = getDomNodeId(target, true)) {
             listeners = listenersStorage[domNodeId];
             if(listeners && (listener = listeners[type])) {
@@ -68,7 +67,7 @@ function eventListener(e) {
     listenersStorage[getDomNodeId(e.target)][e.type](createSyntheticEvent(e.type, e));
 }
 
-if(doc) {
+if(typeof document !== 'undefined') {
     const focusEvents = {
         focus : 'focusin',
         blur : 'focusout'
@@ -88,12 +87,12 @@ if(doc) {
                 isEventSupported(focusEvents[type])?
                     function() {
                         const type = this.type;
-                        doc.addEventListener(
+                        document.addEventListener(
                             focusEvents[type],
                             e => { globalEventListener(e, type); });
                     } :
                     function() {
-                        doc.addEventListener(
+                        document.addEventListener(
                             this.type,
                             globalEventListener,
                             true);
@@ -118,7 +117,7 @@ function addListener(domNode, type, listener) {
         if(!cfg.set) {
             cfg.setup?
                 cfg.setup() :
-                cfg.bubbles && doc.addEventListener(type, globalEventListener, false);
+                cfg.bubbles && document.addEventListener(type, globalEventListener, false);
             cfg.set = true;
         }
 

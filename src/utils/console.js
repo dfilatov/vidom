@@ -1,7 +1,7 @@
 import noOp from './noOp';
 
-const globalConsole = global.console,
-    console = {},
+const globalConsole = typeof console == 'undefined'? null : console,
+    consoleWrapper = {},
     PREFIXES = {
         log : '',
         info : '',
@@ -10,7 +10,7 @@ const globalConsole = global.console,
     };
 
 ['log', 'info', 'warn', 'error'].forEach(function(name) {
-    console[name] = globalConsole?
+    consoleWrapper[name] = globalConsole?
         globalConsole[name]?
             function(arg1, arg2, arg3, arg4, arg5) { // IE9: console methods aren't functions
                 const arg0 = PREFIXES[name];
@@ -42,4 +42,4 @@ const globalConsole = global.console,
         noOp;
 });
 
-export default console;
+export default consoleWrapper;
