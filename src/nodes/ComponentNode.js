@@ -1,6 +1,7 @@
 import emptyObj from '../utils/emptyObj';
 import checkReuse from './utils/checkReuse';
 import { NODE_TYPE_COMPONENT } from './utils/nodeTypes';
+import { IS_DEBUG } from '../utils/debug';
 
 export default function ComponentNode(component) {
     this.type = NODE_TYPE_COMPONENT;
@@ -38,7 +39,7 @@ ComponentNode.prototype = {
     },
 
     renderToDom(parentNs) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, this._component.name || 'Anonymous');
         }
 
@@ -50,7 +51,7 @@ ComponentNode.prototype = {
     },
 
     adoptDom(domNode, domIdx) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, this._component.name || 'Anonymous');
         }
 

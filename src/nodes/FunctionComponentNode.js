@@ -1,6 +1,7 @@
 import createNode from '../createNode';
 import checkReuse from './utils/checkReuse';
 import emptyObj from '../utils/emptyObj';
+import { IS_DEBUG } from '../utils/debug';
 import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
 
 export default function FunctionComponentNode(component) {
@@ -39,7 +40,7 @@ FunctionComponentNode.prototype = {
     },
 
     renderToDom(parentNs) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, this._component.name || 'Anonymous');
         }
 
@@ -51,7 +52,7 @@ FunctionComponentNode.prototype = {
     },
 
     adoptDom(domNode, domIdx) {
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             checkReuse(this, this._component.name || 'Anonymous');
         }
 
@@ -84,7 +85,7 @@ FunctionComponentNode.prototype = {
 
         const rootNode = this._component(this._attrs, this._children, this._ctx) || createNode('!');
 
-        if(process.env.NODE_ENV !== 'production') {
+        if(IS_DEBUG) {
             if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
                 console.error('Function component must return a single node object on the top level');
             }

@@ -4,6 +4,7 @@ import globalHook from '../globalHook';
 import domOps from './domOps';
 import { getNs } from './utils/ns';
 import TopNode from '../nodes/TopNode';
+import { IS_DEBUG } from '../utils/debug';
 
 const mountedNodes = {};
 let counter = 0;
@@ -24,7 +25,7 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
                 mounted.tree = newTree;
 
                 callCb(cb, cbCtx);
-                if(process.env.NODE_ENV !== 'production') {
+                if(IS_DEBUG) {
                     globalHook.emit('replace', prevTree, newTree);
                 }
             }
@@ -41,7 +42,7 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
             tree.adoptDom(collectTopDomChildren(domNode));
             tree.mount();
             callCb(cb, cbCtx);
-            if(process.env.NODE_ENV !== 'production') {
+            if(IS_DEBUG) {
                 globalHook.emit('mount', tree);
             }
         }
@@ -55,7 +56,7 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
                     domOps.append(domNode, tree.renderToDom());
                     tree.mount();
                     callCb(cb, cbCtx);
-                    if(process.env.NODE_ENV !== 'production') {
+                    if(IS_DEBUG) {
                         globalHook.emit('mount', tree);
                     }
                 }
@@ -86,7 +87,7 @@ function unmount(domNode, cb, cbCtx, syncMode) {
                     }
 
                     callCb(cb, cbCtx);
-                    if(process.env.NODE_ENV !== 'production') {
+                    if(IS_DEBUG) {
                         tree && globalHook.emit('unmount', tree);
                     }
                 }

@@ -3,6 +3,7 @@ import rafBatch from './client/rafBatch';
 import createNode from './createNode';
 import console from './utils/console';
 import emptyObj from './utils/emptyObj';
+import { IS_DEBUG } from './utils/debug';
 import globalHook from './globalHook';
 
 function mountComponent() {
@@ -42,7 +43,7 @@ function patchComponent(attrs, children, ctx) {
 
     const shouldUpdate = this.shouldUpdate(attrs, prevAttrs, children, prevChildren);
 
-    if(process.env.NODE_ENV !== 'production') {
+    if(IS_DEBUG) {
         const shouldUpdateResType = typeof shouldUpdate;
         if(shouldUpdateResType !== 'boolean') {
             console.warn(`Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
@@ -112,7 +113,7 @@ function renderComponent() {
 
     const rootNode = this.onRender(this._attrs, this._children) || createNode('!');
 
-    if(process.env.NODE_ENV !== 'production') {
+    if(IS_DEBUG) {
         if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
             console.error('Component#onRender must return a single node object on the top level');
         }
@@ -141,7 +142,7 @@ function updateComponent(cb, cbCtx) {
                 var prevRootNode = this._rootNode;
                 this.patch(this._attrs, this._children, this._ctx);
                 cb && cb.call(cbCtx || this);
-                if(process.env.NODE_ENV !== 'production') {
+                if(IS_DEBUG) {
                     globalHook.emit('replace', prevRootNode, this._rootNode);
                 }
             }

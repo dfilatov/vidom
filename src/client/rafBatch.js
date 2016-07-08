@@ -1,6 +1,7 @@
-const raf = global.requestAnimationFrame ||
-    global.webkitRequestAnimationFrame ||
-    global.mozRequestAnimationFrame ||
+const raf = typeof window !== 'undefined' &&
+    (window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame) ||
     (callback => {
         setTimeout(callback, 1000 / 60);
     });

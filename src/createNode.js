@@ -6,6 +6,7 @@ import Input from './components/Input';
 import Textarea from './components/Textarea';
 import Select from './components/Select';
 import console from './utils/console';
+import { IS_DEBUG } from './utils/debug';
 
 const WRAPPER_COMPONENTS = {
     input : Input,
@@ -28,7 +29,7 @@ export default function(type) {
                 new FunctionComponentNode(type);
 
         default:
-            if(process.env.NODE_ENV !== 'production') {
+            if(IS_DEBUG) {
                 console.error('Unsupported type of node');
             }
     }
