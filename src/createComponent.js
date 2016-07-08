@@ -213,9 +213,9 @@ function createComponent(props, staticProps) {
             this._domRefs = null;
             this._isMounted = false;
             this._isUpdating = false;
-            this._state = this.onInitialStateRequest(this._attrs);
+            this._state = this.onInitialStateRequest(this._attrs, children);
             this._prevState = this._state;
-            this.onInit(this._attrs);
+            this.onInit(this._attrs, children);
             this._rootNode = this.render();
         },
         ptp = {
