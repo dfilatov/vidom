@@ -18,5 +18,7 @@ export {
     createComponent,
     renderToString,
     normalizeChildren,
+    IS_DEBUG,
+    console,
     Component
 }
