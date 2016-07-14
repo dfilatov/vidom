@@ -91,7 +91,7 @@ function updateText(node, text, escape) {
 }
 
 function removeText(parentNode) {
-    parentNode.getDomNode().innerHTML = '';
+    parentNode.getDomNode().textContent = '';
 }
 
 export default {

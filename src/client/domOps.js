@@ -100,7 +100,7 @@ function removeChildren(from) {
         }
     }
     else {
-        from.innerHTML = '';
+        from.textContent = '';
     }
 }
 
