@@ -50,7 +50,6 @@ export default function TagNode(tag) {
     this._children = null;
     this._escapeChildren = true;
     this._ctx = emptyObj;
-    this._hasListeners = false;
 }
 
 TagNode.prototype = {
@@ -159,7 +158,6 @@ TagNode.prototype = {
                 if((value = attrs[name]) != null) {
                     if(ATTRS_TO_EVENTS[name]) {
                         addListener(domNode, ATTRS_TO_EVENTS[name], value);
-                        this._hasListeners = true;
                     }
                     else {
                         domAttrs(name).set(domNode, name, value);
@@ -259,7 +257,6 @@ TagNode.prototype = {
             for(name in attrs) {
                 if((value = attrs[name]) != null && ATTRS_TO_EVENTS[name]) {
                     addListener(domNode, ATTRS_TO_EVENTS[name], value);
-                    this._hasListeners = true;
                 }
             }
         }
@@ -306,10 +303,7 @@ TagNode.prototype = {
             }
         }
 
-        if(this._hasListeners) {
-            removeListeners(this._domNode);
-            this._hasListeners = false;
-        }
+        removeListeners(this._domNode);
 
         this._domNode = null;
     },
