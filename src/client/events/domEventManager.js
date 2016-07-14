@@ -1,6 +1,7 @@
 import isEventSupported from './isEventSupported';
 import createSyntheticEvent from './createSyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
+import SimpleMap from '../../utils/SimpleMap';
 
 const BUBBLEABLE_NATIVE_EVENTS = [
         'blur', 'change', 'click', 'contextmenu', 'copy', 'cut',
@@ -16,7 +17,7 @@ const BUBBLEABLE_NATIVE_EVENTS = [
         'scroll', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting'
     ];
 
-const listenersStorage = {},
+const listenersStorage = new SimpleMap(),
     eventsCfg = {};
 
 function globalEventListener(e, type) {
@@ -33,7 +34,7 @@ function globalEventListener(e, type) {
 
     while(listenersCount > 0 && target && target !== document) {
         if(domNodeId = getDomNodeId(target, true)) {
-            listeners = listenersStorage[domNodeId];
+            listeners = listenersStorage.get(domNodeId);
             if(listeners && (listener = listeners[type])) {
                 if(listenersToInvoke) {
                     listenersToInvoke.push(listener);
@@ -64,7 +65,7 @@ function globalEventListener(e, type) {
 }
 
 function eventListener(e) {
-    listenersStorage[getDomNodeId(e.target)][e.type](createSyntheticEvent(e.type, e));
+    listenersStorage.get(getDomNodeId(e.target))[e.type](createSyntheticEvent(e.type, e));
 }
 
 if(typeof document !== 'undefined') {
@@ -121,8 +122,12 @@ function addListener(domNode, type, listener) {
             cfg.set = true;
         }
 
-        const domNodeId = getDomNodeId(domNode),
-            listeners = listenersStorage[domNodeId] || (listenersStorage[domNodeId] = {});
+        const domNodeId = getDomNodeId(domNode);
+        let listeners = listenersStorage.get(domNodeId);
+
+        if(!listeners) {
+            listenersStorage.set(domNodeId, listeners = {});
+        }
 
         if(!listeners[type]) {
             cfg.bubbles?
@@ -138,7 +143,7 @@ function removeListener(domNode, type) {
     const domNodeId = getDomNodeId(domNode, true);
 
     if(domNodeId) {
-        const listeners = listenersStorage[domNodeId];
+        const listeners = listenersStorage.get(domNodeId);
 
         if(listeners && listeners[type]) {
             listeners[type] = null;
@@ -158,10 +163,10 @@ function removeListeners(domNode) {
     const domNodeId = getDomNodeId(domNode, true);
 
     if(domNodeId) {
-        const listeners = listenersStorage[domNodeId];
+        const listeners = listenersStorage.get(domNodeId);
 
         if(listeners) {
-            delete listenersStorage[domNodeId];
+            listenersStorage.delete(domNodeId);
             for(let type in listeners) {
                 removeListener(domNode, type);
             }
