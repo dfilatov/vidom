@@ -10,8 +10,8 @@ var vow = require('vow'),
 exec('git pull')
     .then(() => exec('npm i'))
     .then(() => vow.all([
-        exec('npm run-script build-lib'),
-        exec('npm run-script build-dist')
+        exec('npm run build-lib'),
+        exec('npm run build-dist')
     ]))
     .then(() => exec('npm version ' + version))
     .then(() => vow.all([
