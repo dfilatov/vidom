@@ -2,12 +2,13 @@ import isEventSupported from './isEventSupported';
 import createSyntheticEvent from './createSyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
 import SimpleMap from '../../utils/SimpleMap';
+import { isIos } from '../utils/ua';
 
-const BUBBLEABLE_NATIVE_EVENTS = [
+const MOUSE_NATIVE_EVENTS = ['click', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup'];
+let BUBBLEABLE_NATIVE_EVENTS = [
         'blur', 'change', 'click', 'contextmenu', 'copy', 'cut',
         'dblclick', 'drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop',
         'focus', 'input', 'keydown', 'keypress', 'keyup',
-        'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup',
         'paste', 'submit', 'touchcancel', 'touchend', 'touchmove', 'touchstart', 'wheel'
     ],
     NON_BUBBLEABLE_NATIVE_EVENTS = [
@@ -16,6 +17,13 @@ const BUBBLEABLE_NATIVE_EVENTS = [
         'pause', 'play', 'playing', 'progress', 'ratechange',
         'scroll', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting'
     ];
+
+if(isIos) {
+    NON_BUBBLEABLE_NATIVE_EVENTS = [...NON_BUBBLEABLE_NATIVE_EVENTS, ...MOUSE_NATIVE_EVENTS];
+}
+else {
+    BUBBLEABLE_NATIVE_EVENTS = [...BUBBLEABLE_NATIVE_EVENTS, ...MOUSE_NATIVE_EVENTS];
+}
 
 const listenersStorage = new SimpleMap(),
     eventsCfg = {};
