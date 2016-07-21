@@ -9,7 +9,7 @@ import escapeHtml from '../utils/escapeHtml';
 import isInArray from '../utils/isInArray';
 import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
-import { isTrident, isEdge } from '../client/browsers';
+import { isTrident, isEdge } from '../client/utils/ua';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
 import { IS_DEBUG } from '../utils/debug';
