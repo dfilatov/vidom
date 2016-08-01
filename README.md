@@ -20,7 +20,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [uibench](https://localvoid.github.io/uibench/)
   * server-side rendering
     
-    <img src="https://img-fotki.yandex.ru/get/135076/58414218.1/0_f697b_9ef2325e_orig" width="254" height="76">
+    <img src="https://img-fotki.yandex.ru/get/42925/58414218.1/0_f708d_450eebd1_orig" width="256" height="76">
 
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
