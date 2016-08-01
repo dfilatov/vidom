@@ -1,6 +1,7 @@
 import createComponent from '../createComponent';
 import TagNode from '../nodes/TagNode';
 import { applyBatch } from '../client/rafBatch';
+import merge from '../utils/merge';
 
 export default createComponent({
     onInit() {
@@ -24,14 +25,9 @@ export default createComponent({
     },
 
     onRender(attrs) {
-        const controlAttrs = {
-            ...attrs,
-            onInput : this.onInput,
-            onChange : null
-        };
-
         return this.setDomRef(
             'control',
-            new TagNode('textarea').attrs(controlAttrs));
+            new TagNode('textarea')
+                .attrs(merge(attrs, { onInput : this.onInput, onChange : null })));
     }
 });

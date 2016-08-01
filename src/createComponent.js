@@ -1,6 +1,7 @@
 import noOp from './utils/noOp';
 import rafBatch from './client/rafBatch';
 import createNode from './createNode';
+import merge from './utils/merge';
 import console from './utils/console';
 import emptyObj from './utils/emptyObj';
 import { IS_DEBUG } from './utils/debug';
@@ -91,7 +92,7 @@ function requestInitialComponentState() {
 
 function setComponentState(state) {
     this._prevState = this._state;
-    this._state = { ...this._state, ...state };
+    this._state = merge(this._state, state);
 
     this.update(updateComponentPrevState);
 }
@@ -125,23 +126,24 @@ function renderComponent() {
         this._ctx :
         this._ctx === emptyObj?
             childCtx :
-            { ...this._ctx, ...childCtx });
+            merge(this._ctx, childCtx));
 
     return rootNode;
 }
 
-function updateComponent(cb, cbCtx) {
+function updateComponent(cb) {
     if(this._isUpdating) {
-        cb && rafBatch(() => cb.call(cbCtx || this));
+        cb && rafBatch(() => cb.call(this));
     }
     else {
         this._isUpdating = true;
         rafBatch(() => {
             if(this.isMounted()) {
                 this._isUpdating = false;
-                var prevRootNode = this._rootNode;
+                const prevRootNode = this._rootNode;
+
                 this.patch(this._attrs, this._children, this._ctx);
-                cb && cb.call(cbCtx || this);
+                cb && cb.call(this);
                 if(IS_DEBUG) {
                     globalHook.emit('replace', prevRootNode, this._rootNode);
                 }

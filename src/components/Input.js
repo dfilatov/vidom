@@ -1,6 +1,7 @@
 import createComponent from '../createComponent';
 import TagNode from '../nodes/TagNode';
 import { applyBatch } from '../client/rafBatch';
+import merge from '../utils/merge';
 
 export default createComponent({
     onInit() {
@@ -48,7 +49,7 @@ export default createComponent({
             controlAttrs = attrs;
         }
         else {
-            controlAttrs = { ...attrs, onChange : null };
+            controlAttrs = merge(attrs, { onChange : null });
 
             if(attrs.type === 'checkbox' || attrs.type === 'radio') {
                 controlAttrs.onClick = this.onClick;

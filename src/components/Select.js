@@ -1,6 +1,7 @@
 import createComponent from '../createComponent';
 import TagNode from '../nodes/TagNode';
 import { applyBatch } from '../client/rafBatch';
+import merge from '../utils/merge';
 
 export default createComponent({
     onInit() {
@@ -23,13 +24,10 @@ export default createComponent({
     },
 
     onRender(attrs, children) {
-        const controlAttrs = {
-            ...attrs,
-            onChange : this.onChange
-        };
-
         return this.setDomRef(
             'control',
-            new TagNode('select').attrs(controlAttrs).children(children));
+            new TagNode('select')
+                .attrs(merge(attrs, { onChange : this.onChange }))
+                .children(children));
     }
 });

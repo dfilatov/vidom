@@ -1,4 +1,5 @@
-export default str =>
-    (str + '')
+export default function escapeAttr(str) {
+    return (str + '')
         .replace(/&/g, '&amp;')
         .replace(/"/g, '&quot;');
+}

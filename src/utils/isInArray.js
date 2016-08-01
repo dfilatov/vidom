@@ -1,4 +1,4 @@
-export default (arr, item) => {
+export default function isInArray(arr, item) {
     const len = arr.length;
     let i = 0;
 
