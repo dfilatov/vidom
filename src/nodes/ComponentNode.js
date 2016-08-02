@@ -72,27 +72,32 @@ ComponentNode.prototype = {
     },
 
     patch(node) {
-        if(this === node) {
-            return;
-        }
-
         const instance = this._getInstance();
 
-        if(this.type === node.type) {
-            if(this._component === node._component) {
-                instance.patch(node._attrs, node._children, node._ctx);
-                node._instance = instance;
+        if(this === node) {
+            instance.patch(node._attrs, node._children, node._ctx);
+        }
+        else {
+            if(this.type === node.type) {
+                if(this._component === node._component) {
+                    instance.patch(node._attrs, node._children, node._ctx);
+                    node._instance = instance;
+                }
+                else {
+                    instance.unmount();
+
+                    const newInstance = node._getInstance();
+
+                    instance.getRootNode().patch(newInstance.getRootNode());
+                    newInstance.mount();
+                }
             }
             else {
                 instance.unmount();
-                const newInstance = node._getInstance();
-                instance.getRootNode().patch(newInstance.getRootNode());
-                newInstance.mount();
+                instance.getRootNode().patch(node);
             }
-        }
-        else {
-            instance.unmount();
-            instance.getRootNode().patch(node);
+
+            this._instance = null;
         }
     },
 

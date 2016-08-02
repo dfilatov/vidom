@@ -72,10 +72,15 @@ FunctionComponentNode.prototype = {
 
     patch(node) {
         if(this === node) {
-            return;
-        }
+            const prevRootNode = this._getRootNode();
 
-        this._getRootNode().patch(this.type === node.type? node._getRootNode() : node);
+            this._rootNode = null;
+            prevRootNode.patch(this._getRootNode());
+        }
+        else {
+            this._getRootNode().patch(this.type === node.type? node._getRootNode() : node);
+            this._rootNode = null;
+        }
     },
 
     _getRootNode() {
