@@ -157,6 +157,7 @@ FragmentNode.prototype = {
 
     patch(node) {
         if(this === node) {
+            this._patchChildren(node);
             return;
         }
 
@@ -186,7 +187,7 @@ FragmentNode.prototype = {
         const childrenA = this._children,
             childrenB = node._children;
 
-        if(childrenA === childrenB) {
+        if(!childrenA && !childrenB) {
             return;
         }
 

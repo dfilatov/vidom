@@ -310,6 +310,7 @@ TagNode.prototype = {
 
     patch(node) {
         if(this === node) {
+            this._patchChildren(node);
             return;
         }
 
@@ -345,7 +346,7 @@ TagNode.prototype = {
         const childrenA = this._children,
             childrenB = node._children;
 
-        if(childrenA === childrenB) {
+        if(!childrenA && !childrenB) {
             return;
         }
 
@@ -354,7 +355,9 @@ TagNode.prototype = {
 
         if(isChildrenBText) {
             if(isChildrenAText) {
-                patchOps.updateText(this, childrenB, node._escapeChildren);
+                if(childrenA !== childrenB) {
+                    patchOps.updateText(this, childrenB, node._escapeChildren);
+                }
                 return;
             }
 
