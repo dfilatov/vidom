@@ -186,25 +186,11 @@ function buildComponentAttrs(attrs) {
     const cons = this.constructor,
         defaultAttrs = cons._defaultAttrs || (cons._defaultAttrs = cons.getDefaultAttrs());
 
-    if(!attrs) {
-        return defaultAttrs;
-    }
-
-    if(defaultAttrs === emptyObj) {
-        return attrs;
-    }
-
-    const res = {};
-
-    for(let i in defaultAttrs) {
-        res[i] = defaultAttrs[i];
-    }
-
-    for(let i in attrs) {
-        res[i] = attrs[i];
-    }
-
-    return res;
+    return attrs?
+        defaultAttrs === emptyObj?
+            attrs :
+            merge(defaultAttrs, attrs) :
+        defaultAttrs;
 }
 
 function createComponent(props, staticProps) {
