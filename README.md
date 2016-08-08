@@ -44,6 +44,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
    
 ## Addons
   * [vidom-css-animation-group](https://github.com/dfilatov/vidom-css-animation-group) API for "appearance", "entering" and "leaving" animation via CSS transitions and animation
+  * [vidom-redux](https://github.com/dfilatov/vidom-redux) Redux bindings 
  
 ## Examples
   * [TodoMVC](http://dfilatov.github.io/vidom-todomvc/) ([source](https://github.com/dfilatov/vidom-todomvc))
