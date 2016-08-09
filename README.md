@@ -13,6 +13,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * No extra markup in the result HTML
   * JSX support via babel plugin
   * Small footprint, about 8KB after gzip
+  * Zero dependencies
   
 ## Benchmarks
   * [repaint rate challenge](http://mathieuancelin.github.io/js-repaint-perfs/)
