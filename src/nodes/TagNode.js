@@ -403,10 +403,11 @@ TagNode.prototype = {
             return;
         }
 
-        let attrName, attrAVal, attrBVal,
-            isAttrAValArray, isAttrBValArray;
+        let attrName;
 
         if(attrsB) {
+            let attrAVal, attrBVal, isAttrAValArray, isAttrBValArray;
+
             for(attrName in attrsB) {
                 attrBVal = attrsB[attrName];
                 if(!attrsA || (attrAVal = attrsA[attrName]) == null) {
@@ -440,7 +441,7 @@ TagNode.prototype = {
 
         if(attrsA) {
             for(attrName in attrsA) {
-                if((!attrsB || !(attrName in attrsB)) && (attrAVal = attrsA[attrName]) != null) {
+                if((!attrsB || !(attrName in attrsB)) && attrsA[attrName] != null) {
                     patchOps.removeAttr(this, attrName);
                 }
             }
