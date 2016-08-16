@@ -225,7 +225,7 @@ describe('domEvents', () => {
             expect(spy.called).not.to.be.ok();
         });
 
-        it('should properly replace handler for bubbleable events', () => {
+        it('should properly replace handler for non-bubbleable events', () => {
             const spy1 = sinon.spy(),
                 spy2 = sinon.spy();
 
