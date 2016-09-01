@@ -1,4 +1,8 @@
-# vidom [![Build Status](https://secure.travis-ci.org/dfilatov/vidom.png)](http://travis-ci.org/dfilatov/vidom) [![npm version](https://badge.fury.io/js/vidom.svg)](http://badge.fury.io/js/vidom)
+# vidom
+[![Build Status](https://img.shields.io/travis/dfilatov/vidom/master.svg?style=flat-square)](https://travis-ci.org/dfilatov/vidom/branches)
+[![NPM Version](https://img.shields.io/npm/v/vidom.svg?style=flat-square)](https://www.npmjs.com/package/vidom)
+[![Dependencies](https://img.shields.io/david/dfilatov/vidom.svg?style=flat-square)](https://david-dm.org/dfilatov/vidom)
+[![NPM Downloads](https://img.shields.io/npm/dm/vidom.svg?style=flat-square)](https://www.npmjs.org/package/vidom)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)
 
 Vidom is just a library to build UI. It's highly inspired and based on ideas from [React](https://facebook.github.io/react/). Its main goal is to provide as fast as possible lightweight implementation with API similar to React. According to the corresponding benchmarks Vidom is 6x faster in Chrome, 5x faster in Firefox, 2x faster in IE and 10x faster in server-side rendering than React.
