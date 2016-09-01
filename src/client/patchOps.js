@@ -1,5 +1,6 @@
 import domAttrs from './domAttrs';
 import domOps from './domOps';
+import { disableListeners, enableListeners } from './events/domEventManager';
 import { getNs, getParentNs } from './utils/ns';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
@@ -30,11 +31,15 @@ function removeChild(childNode) {
 function moveChild(childNode, toChildNode, after) {
     const activeDomNode = document.activeElement;
 
+    disableListeners();
+
     domOps.move(childNode.getDomNode(), toChildNode.getDomNode(), after);
 
     if(document.activeElement !== activeDomNode) {
         activeDomNode.focus();
     }
+
+    enableListeners();
 }
 
 function removeChildren(parentNode) {

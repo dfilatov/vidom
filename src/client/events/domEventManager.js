@@ -27,8 +27,13 @@ else {
 
 const listenersStorage = new SimpleMap(),
     eventsCfg = {};
+let areListenersEnabled = true;
 
 function globalEventListener(e, type) {
+    if(!areListenersEnabled) {
+        return;
+    }
+
     type || (type = e.type);
 
     const cfg = eventsCfg[type];
@@ -73,7 +78,9 @@ function globalEventListener(e, type) {
 }
 
 function eventListener(e) {
-    listenersStorage.get(getDomNodeId(e.target))[e.type](createSyntheticEvent(e.type, e));
+    if(areListenersEnabled) {
+        listenersStorage.get(getDomNodeId(e.target))[e.type](createSyntheticEvent(e.type, e));
+    }
 }
 
 if(typeof document !== 'undefined') {
@@ -182,8 +189,18 @@ function removeListeners(domNode) {
     }
 }
 
+function disableListeners() {
+    areListenersEnabled = false;
+}
+
+function enableListeners() {
+    areListenersEnabled = true;
+}
+
 export {
     addListener,
     removeListener,
-    removeListeners
+    removeListeners,
+    disableListeners,
+    enableListeners
 }

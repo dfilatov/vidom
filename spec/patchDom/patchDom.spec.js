@@ -1,4 +1,5 @@
-import { node, mountToDomSync } from '../../src/vidom';
+import { node, mountToDomSync, unmountFromDomSync } from '../../src/vidom';
+import sinon from 'sinon';
 
 describe('patchDom', () => {
     describe('updateText', () => {
@@ -353,14 +354,16 @@ describe('patchDom', () => {
             expect(domNode.childNodes[1]).to.equal(aDomNode);
         });
 
-        it('should keep focus', () => {
-            const rootDomElement = document.createElement('div');
+        it('should keep focus and don\'t emit redundant onFocus/onBlur', () => {
+            const rootDomElement = document.createElement('div'),
+                onFocus = sinon.spy(),
+                onBlur = sinon.spy();
 
             document.body.appendChild(rootDomElement);
 
             mountToDomSync(rootDomElement, node('div').children([
                 node('div').key(1).children([
-                    node('input').attrs({ id : 'id1' }).key(1),
+                    node('input').attrs({ id : 'id1', onFocus, onBlur }).key(1),
                     node('input').key(2)
                 ]),
                 node('div').key(2)
@@ -373,12 +376,15 @@ describe('patchDom', () => {
                 node('div').key(2),
                 node('div').key(1).children([
                     node('input').key(2),
-                    node('input').attrs({ id : 'id1' }).key(1)
+                    node('input').attrs({ id : 'id1', onFocus, onBlur }).key(1)
                 ])
             ]));
 
             expect(document.activeElement).to.equal(activeElement);
+            expect(onFocus.calledOnce).to.be.ok();
+            expect(onBlur.called).not.to.be.ok();
 
+            unmountFromDomSync(rootDomElement);
             document.body.removeChild(rootDomElement);
         });
 
