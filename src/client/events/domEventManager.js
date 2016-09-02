@@ -15,7 +15,8 @@ let BUBBLEABLE_NATIVE_EVENTS = [
         'canplay', 'canplaythrough', 'complete', 'durationchange', 'emptied', 'ended', 'error',
         'load', 'loadeddata', 'loadedmetadata', 'loadstart', 'mouseenter', 'mouseleave',
         'pause', 'play', 'playing', 'progress', 'ratechange',
-        'scroll', 'seeked', 'seeking', 'stalled', 'suspend', 'timeupdate', 'volumechange', 'waiting'
+        'scroll', 'seeked', 'seeking', 'select', 'stalled', 'suspend',
+        'timeupdate', 'volumechange', 'waiting'
     ];
 
 if(isIos) {

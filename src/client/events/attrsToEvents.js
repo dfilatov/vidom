@@ -45,6 +45,7 @@ export default {
     onScroll : 'scroll',
     onSeeked : 'seeked',
     onSeeking : 'seeking',
+    onSelect : 'select',
     onStalled : 'stalled',
     onSubmit : 'submit',
     onSuspend : 'suspend',
