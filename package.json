@@ -30,8 +30,8 @@
     "browserify": "13.0.1",
     "eslint": "2.12.0",
     "expect.js": "0.3.1",
-    "mocha": "2.5.3",
-    "mocha-phantomjs": "4.0.2",
+    "mocha": "3.0.2",
+    "mocha-phantomjs": "4.1.0",
     "rollup": "0.33.1",
     "rollup-plugin-babel": "2.6.1",
     "rollup-plugin-replace": "1.1.1",
@@ -42,7 +42,7 @@
     "vow-node": "0.3.0",
     "webpack": "1.13.1",
     "webpack-dev-server": "1.14.1",
-    "zuul": "3.10.1"
+    "zuul": "3.11.0"
   },
   "license": "MIT",
   "scripts": {
