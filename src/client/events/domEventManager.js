@@ -6,7 +6,7 @@ import { isIos } from '../utils/ua';
 
 const MOUSE_NATIVE_EVENTS = ['click', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup'];
 let BUBBLEABLE_NATIVE_EVENTS = [
-        'blur', 'change', 'click', 'contextmenu', 'copy', 'cut',
+        'blur', 'change', 'contextmenu', 'copy', 'cut',
         'dblclick', 'drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop',
         'focus', 'input', 'keydown', 'keypress', 'keyup',
         'paste', 'submit', 'touchcancel', 'touchend', 'touchmove', 'touchstart', 'wheel'
@@ -79,7 +79,7 @@ function globalEventListener(e, type) {
 
 function eventListener(e) {
     if(areListenersEnabled) {
-        listenersStorage.get(getDomNodeId(e.target))[e.type](createSyntheticEvent(e.type, e));
+        listenersStorage.get(getDomNodeId(e.currentTarget))[e.type](createSyntheticEvent(e.type, e));
     }
 }
 
