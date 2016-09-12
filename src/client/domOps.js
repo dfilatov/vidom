@@ -104,11 +104,48 @@ function removeChildren(from) {
     }
 }
 
+function updateText(node, text, escape) {
+    if(Array.isArray(node)) {
+        const beforeChild = node[1],
+            previousChild = beforeChild.previousSibling;
+
+        if(previousChild === node[0]) {
+            beforeChild.parentNode.insertBefore(document.createTextNode(text), beforeChild);
+        }
+        else {
+            previousChild.nodeValue = text;
+        }
+    }
+    else if(escape) {
+        const firstChild = node.firstChild;
+
+        firstChild?
+            firstChild.nodeValue = text :
+            node.textContent = text;
+    }
+    else {
+        node.innerHTML = text;
+    }
+}
+
+function removeText(from) {
+    if(Array.isArray(from)) {
+        const child = from[0].nextSibling;
+
+        child.parentNode.removeChild(child);
+    }
+    else {
+        from.textContent = '';
+    }
+}
+
 export default {
     append,
     remove,
     insertBefore,
     move,
     replace,
-    removeChildren
+    removeChildren,
+    updateText,
+    removeText
 }

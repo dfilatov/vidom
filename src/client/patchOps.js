@@ -81,22 +81,11 @@ function removeAttr(node, attrName) {
 }
 
 function updateText(node, text, escape) {
-    const domNode = node.getDomNode();
-
-    if(escape) {
-        const firstChild = domNode.firstChild;
-
-        firstChild?
-            firstChild.nodeValue = text :
-            domNode.textContent = text;
-    }
-    else {
-        domNode.innerHTML = text;
-    }
+    domOps.updateText(node.getDomNode(), text, escape);
 }
 
-function removeText(parentNode) {
-    parentNode.getDomNode().textContent = '';
+function removeText(node) {
+    domOps.removeText(node.getDomNode());
 }
 
 export default {

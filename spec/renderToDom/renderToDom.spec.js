@@ -109,6 +109,17 @@ describe('renderToDom', () => {
             expect(domNode.childNodes.length).to.equal(1);
             expect(domNode.textContent).to.equal('some text');
         });
+
+        it('should be rendered as a text node', () => {
+            const domNode = node('div').children([
+                node('text').children('text1'),
+                node('text').children(''),
+                node('text').children('text2')
+            ]).renderToDom();
+
+            expect(domNode.innerHTML)
+                .to.equal('<!---->text1<!----><!----><!----><!---->text2<!---->');
+        });
     });
 
     describe('html', () => {

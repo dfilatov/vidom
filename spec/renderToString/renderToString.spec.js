@@ -95,6 +95,11 @@ describe('renderToString', () => {
             expect(createNode('span').children('<&/>').renderToString())
                 .to.equal('<span>&lt;&amp;/&gt;</span>');
         });
+
+        it('should be rendered as a text node', () => {
+            expect(createNode('text').children('text').renderToString())
+                .to.equal('<!---->text<!---->');
+        });
     });
 
     describe('html', () => {

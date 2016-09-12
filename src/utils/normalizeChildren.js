@@ -81,7 +81,7 @@ function normalizeChildren(children) {
 }
 
 function toNode(obj) {
-    return typeof obj === 'object'? obj : createNode('span').children(obj);
+    return typeof obj === 'object'? obj : createNode('text').children(obj);
 }
 
 function join(objA, objB) {
