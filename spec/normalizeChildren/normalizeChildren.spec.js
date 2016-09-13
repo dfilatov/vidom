@@ -42,15 +42,15 @@ describe('normalizeChildren', () => {
             .to.be.eql([node1, node2]);
     });
 
-    it('should create <span/> nodes for strings, numbers and booleans', () => {
+    it('should create text nodes for strings, numbers and booleans', () => {
         const node = createNode('a');
 
         expect(normalizeChildren(['str', node, 0, true]))
             .to.be.eql([
-                createNode('span').children('str'),
+                createNode('text').children('str'),
                 node,
-                createNode('span').children(0),
-                createNode('span').children('true')
+                createNode('text').children(0),
+                createNode('text').children('true')
             ]);
     });
 
@@ -61,7 +61,7 @@ describe('normalizeChildren', () => {
 
     it('should properly skip null after strings', () => {
         expect(normalizeChildren(['test', null]))
-            .to.be.eql([createNode('span').children('test')]);
+            .to.be.eql([createNode('text').children('test')]);
     });
 
     it('should make array for only node child', () => {

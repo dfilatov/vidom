@@ -18,7 +18,49 @@ describe('patchDom', () => {
 
             parentNode.patch(node('span').html('<span></span><i></i>'));
 
-            expect(domNode.childNodes.length).to.equal(2);
+            expect(domNode.innerHTML)
+                .to.equal('<span></span><i></i>');
+        });
+
+        it('should update empty text node', () => {
+            const parentNode = node('span').children(node('text')),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(node('span').children(node('text').children('text')));
+
+            expect(domNode.innerHTML)
+                .to.equal('<!---->text<!---->');
+        });
+
+        it('should update not empty text node', () => {
+            const parentNode = node('span').children(node('text').children('text')),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(node('span').children(node('text').children('new text')));
+
+            expect(domNode.innerHTML)
+                .to.equal('<!---->new text<!---->');
+        });
+    });
+
+    describe('removeText', () => {
+        it('should remove node text', () => {
+            const parentNode = node('span').children('text'),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(node('span'));
+
+            expect(domNode.textContent).to.equal('');
+        });
+
+        it('should remove text node text', () => {
+            const parentNode = node('span').children(node('text').children('text')),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(node('span').children(node('text')));
+
+            expect(domNode.innerHTML)
+                .to.equal('<!----><!---->');
         });
     });
 
@@ -176,6 +218,34 @@ describe('patchDom', () => {
 
             expect(domNode.innerHTML)
                 .to.equal('<a></a><!----><b></b><i></i><!---->');
+        });
+
+        it('should replace node with text node', () => {
+            const parentNode = node('div').children([node('a'), node('span')]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('a'),
+                    node('text')
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!----><!---->');
+        });
+
+        it('should replace text node with node', () => {
+            const parentNode = node('div').children([node('a'), node('text')]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('a'),
+                    node('span')
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><span></span>');
         });
     });
 
@@ -451,6 +521,65 @@ describe('patchDom', () => {
             expect(domNode.innerHTML)
                 .to.equal(
                     '<!----><a></a><b></b><!----><!----><h1></h1><h2></h2><!----><!----><i></i><u></u><!---->');
+        });
+
+        it('should move text node', () => {
+            const parentNode = node('div').children([
+                    node('text').key('b').children('text'),
+                    node('a').key('a'),
+                    node('span').key('c')
+                ]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('a').key('a'),
+                    node('text').key('b').children('text'),
+                    node('span').key('c')
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal('<a></a><!---->text<!----><span></span>');
+        });
+
+        it('should move text node before another one', () => {
+            const parentNode = node('div').children([
+                    node('text').key('c').children('c'),
+                    node('text').key('a').children('a'),
+                    node('text').key('b').children('b'),
+                    node('text').key('d').children('d')
+                ]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('text').key('a').children('a'),
+                    node('text').key('b').children('b'),
+                    node('text').key('c').children('c'),
+                    node('text').key('e').children('e')
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal('<!---->a<!----><!---->b<!----><!---->c<!----><!---->e<!---->');
+        });
+
+        it('should move text node before another one', () => {
+            const parentNode = node('div').children([
+                    node('text').key('a').children('a'),
+                    node('text').key('b').children('b'),
+                    node('text').key('c').children('c')
+                ]),
+                domNode = parentNode.renderToDom();
+
+            parentNode.patch(
+                node('div').children([
+                    node('text').key('a').children('a'),
+                    node('text').key('c').children('c'),
+                    node('text').key('b').children('b')
+                ]));
+
+            expect(domNode.innerHTML)
+                .to.equal('<!---->a<!----><!---->c<!----><!---->b<!---->');
         });
     });
 

@@ -31,6 +31,28 @@ describe('adoptDom', () => {
         expect(secondChildNode.getDomNode()).to.equal(secondChildDomNode);
     });
 
+    it('should properly adopt existing text dom nodes', () => {
+        const firstChildNode = node('text').children('text1'),
+            secondChildNode = node('text').children('text2'),
+            tree = node('div').children([firstChildNode, secondChildNode]),
+            treeDomNode = document.createElement('div'),
+            firstChildDomNode = [document.createComment(''), document.createComment('')],
+            secondChildDomNode = [document.createComment(''), document.createComment('')];
+
+        treeDomNode.appendChild(firstChildDomNode[0]);
+        treeDomNode.appendChild(document.createTextNode('text1'));
+        treeDomNode.appendChild(firstChildDomNode[1]);
+        treeDomNode.appendChild(secondChildDomNode[0]);
+        treeDomNode.appendChild(document.createTextNode('text2'));
+        treeDomNode.appendChild(secondChildDomNode[1]);
+        domNode.appendChild(treeDomNode);
+
+        mountToDomSync(domNode, tree);
+
+        expect(firstChildNode.getDomNode()).to.eql(firstChildDomNode);
+        expect(secondChildNode.getDomNode()).to.eql(secondChildDomNode);
+    });
+
     it('should properly adopt existing dom nodes through components', () => {
         const spanNode = node('span'),
             C1 = createComponent({
