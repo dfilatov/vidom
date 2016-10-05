@@ -38,34 +38,43 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
     else {
         mountedNodes.set(domNodeId, mounted = { tree : null, id : mountId = ++counter });
 
-        if(domNode.children.length) {
-            const tree = mounted.tree = new TopNode(node, getNs(domNode));
+        if(domNode.childNodes.length) {
+            const topDomChildNodes = collectTopDomChildNodes(domNode);
 
-            tree.adoptDom(collectTopDomChildren(domNode));
-            tree.mount();
-            callCb(cb, cbCtx);
-            if(IS_DEBUG) {
-                globalHook.emit('mount', tree);
+            if(topDomChildNodes) {
+                const tree = mounted.tree = new TopNode(node, getNs(domNode));
+
+                tree.adoptDom(topDomChildNodes);
+                tree.mount();
+                callCb(cb, cbCtx);
+
+                if(IS_DEBUG) {
+                    globalHook.emit('mount', tree);
+                }
+
+                return;
+            }
+            else {
+                domNode.textContent = '';
             }
         }
-        else {
-            const renderFn = () => {
-                const mounted = mountedNodes.get(domNodeId);
 
-                if(mounted && mounted.id === mountId) {
-                    const tree = mounted.tree = new TopNode(node, getNs(domNode));
+        const renderFn = () => {
+            const mounted = mountedNodes.get(domNodeId);
 
-                    domOps.append(domNode, tree.renderToDom());
-                    tree.mount();
-                    callCb(cb, cbCtx);
-                    if(IS_DEBUG) {
-                        globalHook.emit('mount', tree);
-                    }
+            if(mounted && mounted.id === mountId) {
+                const tree = mounted.tree = new TopNode(node, getNs(domNode));
+
+                domOps.append(domNode, tree.renderToDom());
+                tree.mount();
+                callCb(cb, cbCtx);
+                if(IS_DEBUG) {
+                    globalHook.emit('mount', tree);
                 }
-            };
+            }
+        };
 
-            syncMode? renderFn() : rafBatch(renderFn);
-        }
+        syncMode? renderFn() : rafBatch(renderFn);
     }
 }
 
@@ -108,21 +117,22 @@ function callCb(cb, cbCtx) {
     cb && cb.call(cbCtx || this);
 }
 
-function collectTopDomChildren(node) {
-    const children = node.childNodes,
-        len = children.length,
-        res = [];
+function collectTopDomChildNodes(node) {
+    const childNodes = node.childNodes,
+        len = childNodes.length;
     let i = 0,
-        nodeType;
+        res,
+        childNode;
 
     while(i < len) {
-        nodeType = children[i].nodeType;
+        childNode = childNodes[i++];
 
-        if(nodeType === Node.ELEMENT_NODE || nodeType === Node.COMMENT_NODE) {
-            res.push(children[i]);
+        if(res) {
+            res.push(childNode);
         }
-
-        i++;
+        else if(childNode.nodeType === Node.COMMENT_NODE && childNode.textContent === 'vidom') {
+            res = [];
+        }
     }
 
     return res;

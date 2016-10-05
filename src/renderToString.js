@@ -1,1 +1,1 @@
-export default tree => tree.renderToString();
+export default tree => '<!--vidom-->' + tree.renderToString();
