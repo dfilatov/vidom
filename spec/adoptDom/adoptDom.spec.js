@@ -4,7 +4,9 @@ describe('adoptDom', () => {
     let domNode;
 
     beforeEach(() => {
-        document.body.appendChild(domNode = document.createElement('div'));
+        domNode = document.createElement('div');
+        domNode.appendChild(document.createComment('vidom'));
+        document.body.appendChild(domNode);
     });
 
     afterEach(() => {
@@ -51,6 +53,33 @@ describe('adoptDom', () => {
 
         expect(firstChildNode.getDomNode()).to.eql(firstChildDomNode);
         expect(secondChildNode.getDomNode()).to.eql(secondChildDomNode);
+    });
+
+    it('should properly adopt existing top level text dom node', () => {
+        const tree = node('text').children('text1'),
+            textDomNode = [document.createComment(''), document.createComment('')];
+
+        domNode.appendChild(textDomNode[0]);
+        domNode.appendChild(document.createTextNode('text1'));
+        domNode.appendChild(textDomNode[1]);
+
+        mountToDomSync(domNode, tree);
+
+        expect(tree.getDomNode()).to.eql(textDomNode);
+    });
+
+    it('should properly adopt existing top level fragment dom node', () => {
+        const tree = node('fragment').children([node('div'), node('div')]),
+            fragmentDomNode = [document.createComment(''), document.createComment('')];
+
+        domNode.appendChild(fragmentDomNode[0]);
+        domNode.appendChild(document.createElement('div'));
+        domNode.appendChild(document.createElement('div'));
+        domNode.appendChild(fragmentDomNode[1]);
+
+        mountToDomSync(domNode, tree);
+
+        expect(tree.getDomNode()).to.eql(fragmentDomNode);
     });
 
     it('should properly adopt existing dom nodes through components', () => {
