@@ -43,14 +43,27 @@ describe('normalizeChildren', () => {
     });
 
     it('should create text nodes for strings, numbers and booleans', () => {
-        const node = createNode('a');
+        const node1 = createNode('a'),
+            node2 = createNode('b');
 
-        expect(normalizeChildren(['str', node, 0, true]))
+        expect(normalizeChildren(['str', node1, 0, node2, true]))
             .to.be.eql([
                 createNode('text').children('str'),
-                node,
+                node1,
                 createNode('text').children(0),
+                node2,
                 createNode('text').children('true')
+            ]);
+    });
+
+    it('should concat sibling text nodes', () => {
+        const node = createNode('a');
+
+        expect(normalizeChildren(['t1', 't2', node, 't3', 't4', ['t5', ['t6']]]))
+            .to.be.eql([
+                createNode('text').children('t1t2'),
+                node,
+                createNode('text').children('t3t4t5t6')
             ]);
     });
 
@@ -59,9 +72,26 @@ describe('normalizeChildren', () => {
             .to.be.eql('test');
     });
 
+    it('should normalize children with last simple child', () => {
+        const node = createNode('a');
+
+        expect(normalizeChildren([node, 'test']))
+            .to.be.eql([node, createNode('text').children('test')]);
+    });
+
+    it('should concat simple children to only child', () => {
+        expect(normalizeChildren(['t1', null, 't2', 't3']))
+            .to.be.eql('t1t2t3');
+    });
+
+    it('should properly skip null before strings', () => {
+        expect(normalizeChildren([null, 'test']))
+            .to.be.eql('test');
+    });
+
     it('should properly skip null after strings', () => {
         expect(normalizeChildren(['test', null]))
-            .to.be.eql([createNode('text').children('test')]);
+            .to.be.eql('test');
     });
 
     it('should make array for only node child', () => {
