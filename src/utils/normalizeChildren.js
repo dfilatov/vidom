@@ -21,57 +21,90 @@ function normalizeChildren(children) {
     let res = children,
         i = 0,
         len = children.length,
-        allSkipped = true,
-        child,
-        isChildObject;
+        hasContentBefore = false,
+        alreadyNormalizeChildren = {},
+        child;
 
     while(i < len) {
-        child = normalizeChildren(children[i]);
+        child = i in alreadyNormalizeChildren?
+            alreadyNormalizeChildren[i] :
+            normalizeChildren(children[i]);
+
         if(child === null) {
             if(res !== null) {
-                if(allSkipped) {
+                if(!hasContentBefore) {
                     res = null;
                 }
                 else if(res === children) {
                     res = children.slice(0, i);
                 }
             }
-        } else {
-            if(res === null) {
-                res = child;
-            }
-            else if(Array.isArray(child)) {
-                res = allSkipped?
-                    child :
+        }
+        else if(typeof child === 'object') {
+            if(Array.isArray(child)) {
+                res = hasContentBefore?
                     (res === children?
                         res.slice(0, i) :
-                        Array.isArray(res)? res : [res]).concat(child);
+                        Array.isArray(res)? res : [toNode(res)]).concat(child) :
+                    child;
             }
-            else {
-                isChildObject = typeof child === 'object';
-
-                if(isChildObject && children[i] === child) {
-                    if(res !== children) {
-                        res = join(res, child);
-                    }
+            else if(res !== children) {
+                if(!hasContentBefore) {
+                    res = child;
+                }
+                else if(Array.isArray(res)) {
+                    res.push(child);
                 }
                 else {
-                    if(res === children) {
-                        if(allSkipped && isChildObject) {
-                            res = child;
-                            allSkipped = false;
-                            ++i;
-                            continue;
-                        }
+                    res = [toNode(res), child];
+                }
+            }
+            else if(child !== children[i]) {
+                if(hasContentBefore) {
+                    res = res.slice(0, i);
+                    res.push(child);
+                }
+                else {
+                    res = child;
+                }
+            }
 
+            hasContentBefore = true;
+        }
+        else {
+            let nextChild;
+
+            // join all next text nodes
+            while(++i < len) {
+                nextChild = alreadyNormalizeChildren[i] = normalizeChildren(children[i]);
+
+                if(typeof nextChild === 'string') {
+                    child += nextChild;
+                }
+                else if(nextChild !== null) {
+                    break;
+                }
+            }
+
+            --i;
+
+            if(hasContentBefore) {
+                if(Array.isArray(res)) {
+                    if(res === children) {
                         res = res.slice(0, i);
                     }
 
-                    res = join(res, child);
+                    res.push(toNode(child));
+                }
+                else {
+                    res = [res, toNode(child)];
                 }
             }
+            else {
+                res = '' + child;
+            }
 
-            allSkipped = false;
+            hasContentBefore = true;
         }
 
         ++i;
@@ -82,18 +115,6 @@ function normalizeChildren(children) {
 
 function toNode(obj) {
     return typeof obj === 'object'? obj : createNode('text').children(obj);
-}
-
-function join(objA, objB) {
-    if(Array.isArray(objA)) {
-        objA.push(toNode(objB));
-        return objA;
-    }
-
-    return [
-        toNode(objA),
-        toNode(objB)
-    ];
 }
 
 export default function(children) {
