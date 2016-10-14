@@ -72,11 +72,12 @@ function normalizeChildren(children) {
             hasContentBefore = true;
         }
         else {
-            let nextChild;
+            let nextChild,
+                j = i;
 
             // join all next text nodes
-            while(++i < len) {
-                nextChild = alreadyNormalizeChildren[i] = normalizeChildren(children[i]);
+            while(++j < len) {
+                nextChild = alreadyNormalizeChildren[j] = normalizeChildren(children[j]);
 
                 if(typeof nextChild === 'string') {
                     child += nextChild;
@@ -85,8 +86,6 @@ function normalizeChildren(children) {
                     break;
                 }
             }
-
-            --i;
 
             if(hasContentBefore) {
                 if(Array.isArray(res)) {
@@ -103,6 +102,8 @@ function normalizeChildren(children) {
             else {
                 res = '' + child;
             }
+
+            i = j - 1;
 
             hasContentBefore = true;
         }

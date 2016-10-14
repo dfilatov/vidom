@@ -67,6 +67,18 @@ describe('normalizeChildren', () => {
             ]);
     });
 
+    it('should concat sibling text nodes in the middle of children', () => {
+        const node1 = createNode('a'),
+            node2 = createNode('b');
+
+        expect(normalizeChildren([node1, 't1', 't2', node2]))
+            .to.be.eql([
+                node1,
+                createNode('text').children('t1t2'),
+                node2
+            ]);
+    });
+
     it('should do nothing for only simple child', () => {
         expect(normalizeChildren('test'))
             .to.be.eql('test');
