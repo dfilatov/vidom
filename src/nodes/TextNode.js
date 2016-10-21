@@ -47,7 +47,7 @@ TextNode.prototype = {
         }
 
         const domFragment = document.createDocumentFragment(),
-            domNode = [createElement('!')],
+            domNode = [createElement('!'), createElement('!')],
             children = this._children;
 
         domFragment.appendChild(domNode[0]);
@@ -56,7 +56,6 @@ TextNode.prototype = {
             domFragment.appendChild(document.createTextNode(children));
         }
 
-        domNode.push(createElement('!'));
         domFragment.appendChild(domNode[1]);
 
         this._domNode = domNode;
