@@ -9,7 +9,7 @@ import globalHook from './globalHook';
 
 function mountComponent() {
     this._isMounted = true;
-    this.onMount(this._attrs);
+    this.onMount(this._attrs, this._children);
 }
 
 function unmountComponent() {
