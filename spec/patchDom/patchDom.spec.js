@@ -1,4 +1,4 @@
-import { node, mountToDomSync, unmountFromDomSync } from '../../src/vidom';
+import { node, mountSync, unmountSync } from '../../src/vidom';
 import sinon from 'sinon';
 
 describe('patchDom', () => {
@@ -431,7 +431,7 @@ describe('patchDom', () => {
 
             document.body.appendChild(rootDomElement);
 
-            mountToDomSync(rootDomElement, node('div').children([
+            mountSync(rootDomElement, node('div').children([
                 node('div').key(1).children([
                     node('input').attrs({ id : 'id1', onFocus, onBlur }).key(1),
                     node('input').key(2)
@@ -442,7 +442,7 @@ describe('patchDom', () => {
             const activeElement = document.getElementById('id1');
             activeElement.focus();
 
-            mountToDomSync(rootDomElement, node('div').children([
+            mountSync(rootDomElement, node('div').children([
                 node('div').key(2),
                 node('div').key(1).children([
                     node('input').key(2),
@@ -454,7 +454,7 @@ describe('patchDom', () => {
             expect(onFocus.calledOnce).to.be.ok();
             expect(onBlur.called).not.to.be.ok();
 
-            unmountFromDomSync(rootDomElement);
+            unmountSync(rootDomElement);
             document.body.removeChild(rootDomElement);
         });
 

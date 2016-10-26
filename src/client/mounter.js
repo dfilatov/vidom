@@ -10,7 +10,7 @@ import SimpleMap from '../utils/SimpleMap';
 const mountedNodes = new SimpleMap();
 let counter = 0;
 
-function mount(domNode, node, ctx, cb, syncMode) {
+function mountToDomNode(domNode, node, ctx, cb, syncMode) {
     let domNodeId = getDomNodeId(domNode),
         mounted = mountedNodes.get(domNodeId),
         mountId;
@@ -90,7 +90,7 @@ function mount(domNode, node, ctx, cb, syncMode) {
     }
 }
 
-function unmount(domNode, cb, syncMode) {
+function unmountFromDomNode(domNode, cb, syncMode) {
     const domNodeId = getDomNodeId(domNode);
     let mounted = mountedNodes.get(domNodeId);
 
@@ -150,25 +150,41 @@ function collectTopDomChildNodes(node) {
     return res;
 }
 
-export function mountToDom(domNode, tree, ctx, cb) {
+export function mount(domNode, tree, ctx, cb) {
     if(typeof ctx === 'function') {
         cb = ctx;
         ctx = this;
     }
 
-    mount(domNode, tree, ctx, cb, false);
+    mountToDomNode(domNode, tree, ctx, cb, false);
 }
 
-export function mountToDomSync(domNode, tree, ctx) {
-    mount(domNode, tree, ctx, null, true);
+export function mountToDom(domNode, tree, ctx, cb) {
+    if(IS_DEBUG) {
+        console.warn('mountToDom() is deprecated, use mount() instead.');
+    }
+
+    mount(domNode, tree, ctx, cb);
+}
+
+export function mountSync(domNode, tree, ctx) {
+    mountToDomNode(domNode, tree, ctx, null, true);
+}
+
+export function unmount(domNode, cb) {
+    unmountFromDomNode(domNode, cb, false);
 }
 
 export function unmountFromDom(domNode, cb) {
-    unmount(domNode, cb, false);
+    if(IS_DEBUG) {
+        console.warn('unmountFromDom() is deprecated, use unmount() instead.');
+    }
+
+    unmount(domNode, cb);
 }
 
-export function unmountFromDomSync(domNode) {
-    unmount(domNode, null, true);
+export function unmountSync(domNode) {
+    unmountFromDomNode(domNode, null, true);
 }
 
 export function getMountedRootNodes() {

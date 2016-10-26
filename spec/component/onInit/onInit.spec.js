@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import { mountSync, unmountSync } from '../../../src/client/mounter';
 
 describe('onInit', () => {
     let domNode;
@@ -10,7 +10,7 @@ describe('onInit', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -20,7 +20,7 @@ describe('onInit', () => {
                 onInit : spy
             });
 
-        mountToDomSync(domNode, createNode(C1));
+        mountSync(domNode, createNode(C1));
 
         expect(spy.called).to.be.ok();
     });

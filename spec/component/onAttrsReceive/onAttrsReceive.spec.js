@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import emptyObj from '../../../src/utils/emptyObj';
-import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../../src/vidom';
+import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onAttrsReceive', () => {
     let domNode;
@@ -9,7 +9,7 @@ describe('onAttrsReceive', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -21,8 +21,8 @@ describe('onAttrsReceive', () => {
             oldAttrs = { id : 1 },
             newAttrs = { id : 2 };
 
-        mountToDomSync(domNode, node(C).attrs(oldAttrs));
-        mountToDomSync(domNode, node(C).attrs(newAttrs));
+        mountSync(domNode, node(C).attrs(oldAttrs));
+        mountSync(domNode, node(C).attrs(newAttrs));
 
         expect(spy.called).to.be.ok();
         expect(spy.calledWith(newAttrs, oldAttrs)).to.be.ok();
@@ -36,8 +36,8 @@ describe('onAttrsReceive', () => {
             oldChildren = [node('div')],
             newChildren = [node('span')];
 
-        mountToDomSync(domNode, node(C).children(oldChildren));
-        mountToDomSync(domNode, node(C).children(newChildren));
+        mountSync(domNode, node(C).children(oldChildren));
+        mountSync(domNode, node(C).children(newChildren));
 
         expect(spy.called).to.be.ok();
         expect(spy.calledWith(emptyObj, emptyObj, newChildren, oldChildren)).to.be.ok();
@@ -49,8 +49,8 @@ describe('onAttrsReceive', () => {
                 onAttrsReceive : spy
             });
 
-        mountToDomSync(domNode, node(C));
-        mountToDomSync(domNode, node(C));
+        mountSync(domNode, node(C));
+        mountSync(domNode, node(C));
 
         expect(spy.called).not.to.be.ok();
     });
@@ -71,7 +71,7 @@ describe('onAttrsReceive', () => {
                 }
             });
 
-        mountToDomSync(domNode, node(C));
-        mountToDomSync(domNode, node(C).attrs({}));
+        mountSync(domNode, node(C));
+        mountSync(domNode, node(C).attrs({}));
     });
 });

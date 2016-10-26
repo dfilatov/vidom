@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../../src/vidom';
+import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onMount', () => {
     let domNode;
@@ -8,7 +8,7 @@ describe('onMount', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -37,7 +37,7 @@ describe('onMount', () => {
                 }
             });
 
-        mountToDomSync(domNode, node(C1));
+        mountSync(domNode, node(C1));
 
         expect(spy1.called).to.be.ok();
         expect(spy2.called).to.be.ok();
@@ -54,7 +54,7 @@ describe('onMount', () => {
             }),
             attrs = { name : 'value' };
 
-        mountToDomSync(domNode, node(C1).attrs(attrs));
+        mountSync(domNode, node(C1).attrs(attrs));
 
         expect(spy.calledWith(attrs)).to.be.ok();
     });
@@ -76,7 +76,7 @@ describe('onMount', () => {
             });
 
         domNode.innerHTML = '<div><div></div></div>'
-        mountToDomSync(domNode, node(C1));
+        mountSync(domNode, node(C1));
 
         expect(spy1.called).to.be.ok();
         expect(spy2.called).to.be.ok();
@@ -89,8 +89,8 @@ describe('onMount', () => {
                 onMount : spy
             });
 
-        mountToDomSync(domNode, node(C1));
-        mountToDomSync(domNode, node(C2));
+        mountSync(domNode, node(C1));
+        mountSync(domNode, node(C2));
 
         expect(spy.called).to.be.ok();
     });
@@ -105,8 +105,8 @@ describe('onMount', () => {
                 onMount : spy
             });
 
-        mountToDomSync(domNode, node('div'));
-        mountToDomSync(domNode, node(C));
+        mountSync(domNode, node('div'));
+        mountSync(domNode, node(C));
 
         expect(spy.called).to.be.ok();
     });
@@ -121,8 +121,8 @@ describe('onMount', () => {
                 onMount : spy
             });
 
-        mountToDomSync(domNode, node(() => node('div')));
-        mountToDomSync(domNode, node(C));
+        mountSync(domNode, node(() => node('div')));
+        mountSync(domNode, node(C));
 
         expect(spy.called).to.be.ok();
     });

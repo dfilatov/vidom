@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../../src/vidom';
+import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('shouldUpdate', () => {
     let domNode;
@@ -9,7 +9,7 @@ describe('shouldUpdate', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -26,8 +26,8 @@ describe('shouldUpdate', () => {
             oldChildren = [node('div')],
             newChildren = [node('span')];
 
-        mountToDomSync(domNode, node(C).attrs(oldAttrs).children(oldChildren));
-        mountToDomSync(domNode, node(C).attrs(newAttrs).children(newChildren));
+        mountSync(domNode, node(C).attrs(oldAttrs).children(oldChildren));
+        mountSync(domNode, node(C).attrs(newAttrs).children(newChildren));
 
         expect(spy.called).to.be.ok();
         expect(spy.calledWith(newAttrs, oldAttrs, newChildren, oldChildren)).to.be.ok();
@@ -46,8 +46,8 @@ describe('shouldUpdate', () => {
                 }
             });
 
-        mountToDomSync(domNode, node(C));
-        mountToDomSync(domNode, node(C));
+        mountSync(domNode, node(C));
+        mountSync(domNode, node(C));
 
         expect(spy.calledOnce).to.be.ok();
     });
