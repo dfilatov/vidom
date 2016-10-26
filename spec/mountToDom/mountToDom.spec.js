@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, mountToDom, unmountFromDom } from '../../src/vidom';
+import { node, createComponent, mountToDom, unmountFromDom } from '../../src/vidom';
 
 describe('mountToDom', () => {
     let domNode;
@@ -59,7 +59,9 @@ describe('mountToDom', () => {
                 done();
             });
         });
+    });
 
+    describe('replacing', () => {
         it('should replace extraneous dom', done => {
             domNode.appendChild(document.createElement('span'));
             mountToDom(domNode, node('div'), () => {
@@ -67,6 +69,20 @@ describe('mountToDom', () => {
                 expect(domNode.childNodes[0].tagName.toLowerCase()).to.equal('div');
                 done();
             });
+        });
+    });
+
+    describe('context', () => {
+        it('should pass context to inner components', done => {
+            const ctx = { prop : 'val' },
+                C = createComponent({
+                    onMount() {
+                        expect(this.getContext()).to.equal(ctx);
+                        done();
+                    }
+                });
+
+            mountToDom(domNode, node('div').children(node(C)), ctx);
         });
     });
 });

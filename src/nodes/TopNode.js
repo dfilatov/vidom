@@ -1,14 +1,30 @@
 import { NODE_TYPE_TOP } from './utils/nodeTypes';
 
-export default function TopNode(childNode, ns) {
+export default function TopNode(childNode) {
     this.type = NODE_TYPE_TOP;
     this._childNode = childNode;
-    this._ns = ns;
+    this._ns = null;
 }
 
 TopNode.prototype = {
     getDomNode() {
         return this._childNode.getDomNode();
+    },
+
+    ns(ns) {
+        if(ns) {
+            this._ns = ns;
+        }
+
+        return this;
+    },
+
+    ctx(ctx) {
+        if(ctx) {
+            this._childNode.ctx(ctx);
+        }
+
+        return this;
     },
 
     renderToDom() {
