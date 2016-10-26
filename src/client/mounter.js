@@ -10,7 +10,7 @@ import SimpleMap from '../utils/SimpleMap';
 const mountedNodes = new SimpleMap();
 let counter = 0;
 
-function mount(domNode, node, cb, cbCtx, syncMode) {
+function mount(domNode, node, ctx, cb, syncMode) {
     let domNodeId = getDomNodeId(domNode),
         mounted = mountedNodes.get(domNodeId),
         mountId;
@@ -21,12 +21,16 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
             mounted = mountedNodes.get(domNodeId);
             if(mounted && mounted.id === mountId) {
                 const prevTree = mounted.tree,
-                    newTree = new TopNode(node, prevTree._ns);
+                    newTree = new TopNode(node);
+
+                newTree
+                    .ns(prevTree._ns)
+                    .ctx(ctx);
 
                 prevTree.patch(newTree);
                 mounted.tree = newTree;
 
-                callCb(cb, cbCtx);
+                callCb(cb);
                 if(IS_DEBUG) {
                     globalHook.emit('replace', prevTree, newTree);
                 }
@@ -42,11 +46,15 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
             const topDomChildNodes = collectTopDomChildNodes(domNode);
 
             if(topDomChildNodes) {
-                const tree = mounted.tree = new TopNode(node, getNs(domNode));
+                const tree = mounted.tree = new TopNode(node);
+
+                tree
+                    .ns(getNs(domNode))
+                    .ctx(ctx);
 
                 tree.adoptDom(topDomChildNodes);
                 tree.mount();
-                callCb(cb, cbCtx);
+                callCb(cb);
 
                 if(IS_DEBUG) {
                     globalHook.emit('mount', tree);
@@ -63,11 +71,15 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
             const mounted = mountedNodes.get(domNodeId);
 
             if(mounted && mounted.id === mountId) {
-                const tree = mounted.tree = new TopNode(node, getNs(domNode));
+                const tree = mounted.tree = new TopNode(node);
+
+                tree
+                    .ns(getNs(domNode))
+                    .ctx(ctx);
 
                 domOps.append(domNode, tree.renderToDom());
                 tree.mount();
-                callCb(cb, cbCtx);
+                callCb(cb);
                 if(IS_DEBUG) {
                     globalHook.emit('mount', tree);
                 }
@@ -78,7 +90,7 @@ function mount(domNode, node, cb, cbCtx, syncMode) {
     }
 }
 
-function unmount(domNode, cb, cbCtx, syncMode) {
+function unmount(domNode, cb, syncMode) {
     const domNodeId = getDomNodeId(domNode);
     let mounted = mountedNodes.get(domNodeId);
 
@@ -97,7 +109,7 @@ function unmount(domNode, cb, cbCtx, syncMode) {
                         domOps.remove(treeDomNode);
                     }
 
-                    callCb(cb, cbCtx);
+                    callCb(cb);
                     if(IS_DEBUG) {
                         tree && globalHook.emit('unmount', tree);
                     }
@@ -106,15 +118,15 @@ function unmount(domNode, cb, cbCtx, syncMode) {
 
         mounted.tree?
             syncMode? unmountFn() : rafBatch(unmountFn) :
-            syncMode || callCb(cb, cbCtx);
+            syncMode || callCb(cb);
     }
     else if(!syncMode) {
-        callCb(cb, cbCtx);
+        callCb(cb);
     }
 }
 
-function callCb(cb, cbCtx) {
-    cb && cb.call(cbCtx || this);
+function callCb(cb) {
+    cb && cb();
 }
 
 function collectTopDomChildNodes(node) {
@@ -138,20 +150,25 @@ function collectTopDomChildNodes(node) {
     return res;
 }
 
-export function mountToDom(domNode, tree, cb, cbCtx) {
-    mount(domNode, tree, cb, cbCtx, false);
+export function mountToDom(domNode, tree, ctx, cb) {
+    if(typeof ctx === 'function') {
+        cb = ctx;
+        ctx = this;
+    }
+
+    mount(domNode, tree, ctx, cb, false);
 }
 
-export function mountToDomSync(domNode, tree) {
-    mount(domNode, tree, null, null, true);
+export function mountToDomSync(domNode, tree, ctx) {
+    mount(domNode, tree, ctx, null, true);
 }
 
-export function unmountFromDom(domNode, cb, cbCtx) {
-    unmount(domNode, cb, cbCtx, false);
+export function unmountFromDom(domNode, cb) {
+    unmount(domNode, cb, false);
 }
 
 export function unmountFromDomSync(domNode) {
-    unmount(domNode, null, null, true);
+    unmount(domNode, null, true);
 }
 
 export function getMountedRootNodes() {
