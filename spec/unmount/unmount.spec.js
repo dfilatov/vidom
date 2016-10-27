@@ -1,7 +1,7 @@
 import createNode from '../../src/createNode';
-import { mountToDom, unmountFromDom } from '../../src/client/mounter';
+import { mount, unmount } from '../../src/client/mounter';
 
-describe('unmountFromDom', () => {
+describe('unmount', () => {
     var domNode;
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
@@ -13,8 +13,8 @@ describe('unmountFromDom', () => {
 
     describe('callbacks', () => {
         it('should properly call callback on unmount', function(done) {
-            mountToDom(domNode, createNode('div'), () => {
-                unmountFromDom(domNode, () => {
+            mount(domNode, createNode('div'), () => {
+                unmount(domNode, () => {
                     expect(domNode.childNodes.length).to.equal(0);
                     done();
                 });
@@ -22,7 +22,7 @@ describe('unmountFromDom', () => {
         });
 
         it('should properly call callback if there\'s no mounted tree', function(done) {
-            unmountFromDom(domNode, () => {
+            unmount(domNode, () => {
                 done();
             });
         });

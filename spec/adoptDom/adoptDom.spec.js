@@ -1,4 +1,4 @@
-import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../src/vidom';
+import { node, createComponent, mountSync, unmountSync } from '../../src/vidom';
 
 describe('adoptDom', () => {
     let domNode;
@@ -10,7 +10,7 @@ describe('adoptDom', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -26,7 +26,7 @@ describe('adoptDom', () => {
         treeDomNode.appendChild(secondChildDomNode);
         domNode.appendChild(treeDomNode);
 
-        mountToDomSync(domNode, tree);
+        mountSync(domNode, tree);
 
         expect(tree.getDomNode()).to.equal(treeDomNode);
         expect(firstChildNode.getDomNode()).to.equal(firstChildDomNode);
@@ -49,7 +49,7 @@ describe('adoptDom', () => {
         treeDomNode.appendChild(secondChildDomNode[1]);
         domNode.appendChild(treeDomNode);
 
-        mountToDomSync(domNode, tree);
+        mountSync(domNode, tree);
 
         expect(firstChildNode.getDomNode()).to.eql(firstChildDomNode);
         expect(secondChildNode.getDomNode()).to.eql(secondChildDomNode);
@@ -63,7 +63,7 @@ describe('adoptDom', () => {
         domNode.appendChild(document.createTextNode('text1'));
         domNode.appendChild(textDomNode[1]);
 
-        mountToDomSync(domNode, tree);
+        mountSync(domNode, tree);
 
         expect(tree.getDomNode()).to.eql(textDomNode);
     });
@@ -77,7 +77,7 @@ describe('adoptDom', () => {
         domNode.appendChild(document.createElement('div'));
         domNode.appendChild(fragmentDomNode[1]);
 
-        mountToDomSync(domNode, tree);
+        mountSync(domNode, tree);
 
         expect(tree.getDomNode()).to.eql(fragmentDomNode);
     });
@@ -101,7 +101,7 @@ describe('adoptDom', () => {
         treeDomNode.appendChild(childDomNode);
         domNode.appendChild(treeDomNode);
 
-        mountToDomSync(domNode, tree);
+        mountSync(domNode, tree);
 
         expect(spanNode.getDomNode()).to.equal(childDomNode);
     });
@@ -117,7 +117,7 @@ describe('adoptDom', () => {
         treeDomNode.appendChild(childDomNode);
         domNode.appendChild(treeDomNode);
 
-        mountToDomSync(domNode, tree);
+        mountSync(domNode, tree);
 
         expect(spanNode.getDomNode()).to.equal(childDomNode);
     });

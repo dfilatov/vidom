@@ -1,6 +1,6 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import { mountSync, unmountSync } from '../../../src/client/mounter';
 
 describe('getDefaultAttrs', () => {
     let domNode;
@@ -9,7 +9,7 @@ describe('getDefaultAttrs', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -21,7 +21,7 @@ describe('getDefaultAttrs', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C1));
+        mountSync(domNode, createNode(C1));
     });
 
     it('should provide passed attributes if not defined', done => {
@@ -33,7 +33,7 @@ describe('getDefaultAttrs', () => {
                 }
             });
 
-        mountToDomSync(domNode, createNode(C1).attrs(attrs));
+        mountSync(domNode, createNode(C1).attrs(attrs));
     });
 
     it('should merge passed with default attributes', done => {
@@ -48,6 +48,6 @@ describe('getDefaultAttrs', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C1).attrs({ a : 3 }));
+        mountSync(domNode, createNode(C1).attrs({ a : 3 }));
     });
 });

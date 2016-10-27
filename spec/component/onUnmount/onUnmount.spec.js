@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountToDomSync, unmountFromDomSync } from '../../../src/vidom';
+import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onUnmount', () => {
     let domNode;
@@ -8,7 +8,7 @@ describe('onUnmount', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -37,8 +37,8 @@ describe('onUnmount', () => {
                 }
             });
 
-        mountToDomSync(domNode, node(C1));
-        unmountFromDomSync(domNode);
+        mountSync(domNode, node(C1));
+        unmountSync(domNode);
 
         expect(spy1.called).to.be.ok();
         expect(spy2.called).to.be.ok();
@@ -52,8 +52,8 @@ describe('onUnmount', () => {
             }),
             C2 = createComponent();
 
-        mountToDomSync(domNode, node(C1));
-        mountToDomSync(domNode, node(C2));
+        mountSync(domNode, node(C1));
+        mountSync(domNode, node(C2));
 
         expect(spy.called).to.be.ok();
     });
@@ -68,8 +68,8 @@ describe('onUnmount', () => {
                 onUnmount : spy
             });
 
-        mountToDomSync(domNode, node(C));
-        mountToDomSync(domNode, node('div'));
+        mountSync(domNode, node(C));
+        mountSync(domNode, node('div'));
 
         expect(spy.called).to.be.ok();
     });
@@ -84,8 +84,8 @@ describe('onUnmount', () => {
                 onUnmount : spy
             });
 
-        mountToDomSync(domNode, node(C));
-        mountToDomSync(domNode, node(() => node('div')));
+        mountSync(domNode, node(C));
+        mountSync(domNode, node(() => node('div')));
 
         expect(spy.called).to.be.ok();
     });

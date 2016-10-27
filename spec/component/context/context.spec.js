@@ -1,6 +1,6 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
-import { mountToDom, mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import { mount, mountSync, unmountSync } from '../../../src/client/mounter';
 
 describe('context', () => {
     let domNode;
@@ -9,7 +9,7 @@ describe('context', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -21,7 +21,7 @@ describe('context', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
     });
 
     it('should be passed through tree', done => {
@@ -41,7 +41,7 @@ describe('context', () => {
                 }
             });
 
-        mountToDomSync(domNode, createNode(C1).children([
+        mountSync(domNode, createNode(C1).children([
             createNode('div').children([
                 createNode('div').children([
                     createNode(() => createNode('div').children([
@@ -81,7 +81,7 @@ describe('context', () => {
                 }
             });
 
-        mountToDomSync(domNode, createNode(C1).children([
+        mountSync(domNode, createNode(C1).children([
             createNode('div').children([
                 createNode('div').children([
                     createNode(() => createNode('div').children([
@@ -118,7 +118,7 @@ describe('context', () => {
                 }
             });
 
-        mountToDomSync(domNode, createNode(C1).children([
+        mountSync(domNode, createNode(C1).children([
             createNode(C2),
             createNode(C3)
         ]));
@@ -153,7 +153,7 @@ describe('context', () => {
                 }
             });
 
-        mountToDom(domNode, createNode(C1).attrs({ prop : 'val1' }).children([
+        mount(domNode, createNode(C1).attrs({ prop : 'val1' }).children([
             createNode('div').children([
                 createNode('div').children([
                     createNode(() => createNode('div').children([
@@ -166,7 +166,7 @@ describe('context', () => {
                 ])
             ])
         ]), () => {
-            mountToDom(domNode, createNode(C1).attrs({ prop : 'val3' }).children([
+            mount(domNode, createNode(C1).attrs({ prop : 'val3' }).children([
                 createNode('div').children([
                     createNode('div').children([
                         createNode(() => createNode('div').children([

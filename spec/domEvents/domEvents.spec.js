@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import createNode from '../../src/createNode';
-import { mountToDomSync, unmountFromDomSync } from '../../src/client/mounter';
+import { mountSync, unmountSync } from '../../src/client/mounter';
 import isEventSupported from '../../src/client/events/isEventSupported';
 import simulate from 'simulate';
 
@@ -11,7 +11,7 @@ describe('domEvents', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -21,7 +21,7 @@ describe('domEvents', () => {
                 spy2 = sinon.spy(),
                 spy3 = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ onClick : spy1 }).children([
                     createNode('div').attrs({ onClick : spy2 }).children(
@@ -46,7 +46,7 @@ describe('domEvents', () => {
         it('should properly call handler with SyntheticEvent object', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onClick : spy }));
 
@@ -61,7 +61,7 @@ describe('domEvents', () => {
         it('should properly stop propagation', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ onClick : spy }).children(
                     createNode('div').attrs({
@@ -77,7 +77,7 @@ describe('domEvents', () => {
         });
 
         it('should properly prevent default', () => {
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('input').attrs({
                     type : 'checkbox',
@@ -96,11 +96,11 @@ describe('domEvents', () => {
             const spy1 = sinon.spy(),
                 spy2 = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onClick : spy1 }));
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onDblClick : spy2 }));
 
@@ -115,11 +115,11 @@ describe('domEvents', () => {
             var spy1 = sinon.spy(),
                 spy2 = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onClick : spy1 }));
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onClick : spy2 }));
 
@@ -132,7 +132,7 @@ describe('domEvents', () => {
         it('should properly simulate bubbling of focus event', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onFocus : spy })
                     .children(createNode('input')));
@@ -145,7 +145,7 @@ describe('domEvents', () => {
         it('should properly simulate bubbling of blur event', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ onBlur : spy }).children(
                     createNode('input').attrs({ id : 'id1' })));
@@ -162,7 +162,7 @@ describe('domEvents', () => {
 
             domNode.innerHTML= '<div><div><div id="id1"></div></div></div>';
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ onClick : spy1 }).children(
                     createNode('div').attrs({ onClick : spy2 }).children(
@@ -181,7 +181,7 @@ describe('domEvents', () => {
                 spy2 = sinon.spy(),
                 spy3 = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ onScroll : spy1 }).children([
                     createNode('div').attrs({ id : 'id1', onScroll : spy2 }),
@@ -198,7 +198,7 @@ describe('domEvents', () => {
         it('should properly call handler with SyntheticEvent object', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onScroll : spy }));
 
@@ -212,11 +212,11 @@ describe('domEvents', () => {
         it('should properly remove handler', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onScroll : spy }));
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1' }));
 
@@ -229,11 +229,11 @@ describe('domEvents', () => {
             const spy1 = sinon.spy(),
                 spy2 = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onScroll : spy1 }));
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div').attrs({ id : 'id1', onScroll : spy2 }));
 
@@ -246,7 +246,7 @@ describe('domEvents', () => {
         it('should properly reuse SyntheticEvent object', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div')
                     .attrs({ id : 'id1', onClick : spy })
@@ -262,7 +262,7 @@ describe('domEvents', () => {
         it('shouldn\'t reuse persisted SyntheticEvent object', () => {
             const spy = sinon.spy();
 
-            mountToDomSync(
+            mountSync(
                 domNode,
                 createNode('div')
                     .attrs({

@@ -1,6 +1,6 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import { mountSync, unmountSync } from '../../../src/client/mounter';
 
 describe('state', () => {
     let domNode;
@@ -9,7 +9,7 @@ describe('state', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -21,7 +21,7 @@ describe('state', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
     });
 
     it('should be filled from onInitialStateRequest', done => {
@@ -36,7 +36,7 @@ describe('state', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
     });
 
     it('should be properly updated with setState', done => {
@@ -55,7 +55,7 @@ describe('state', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
     });
 
     it('should be possible to get both state and previous state inside shouldUpdate', done => {
@@ -75,6 +75,6 @@ describe('state', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
     });
 });

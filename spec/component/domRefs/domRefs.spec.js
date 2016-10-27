@@ -1,6 +1,6 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
-import { mountToDomSync, unmountFromDomSync } from '../../../src/client/mounter';
+import { mountSync, unmountSync } from '../../../src/client/mounter';
 
 describe('dom refs', () => {
     let domNode;
@@ -9,7 +9,7 @@ describe('dom refs', () => {
     });
 
     afterEach(() => {
-        unmountFromDomSync(domNode);
+        unmountSync(domNode);
         document.body.removeChild(domNode);
     });
 
@@ -28,7 +28,7 @@ describe('dom refs', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
     });
 
     it('should be reset on each render', function(done) {
@@ -55,7 +55,7 @@ describe('dom refs', () => {
             }
         });
 
-        mountToDomSync(domNode, createNode(C));
-        mountToDomSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
+        mountSync(domNode, createNode(C));
     });
 });
