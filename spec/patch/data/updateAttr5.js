@@ -5,7 +5,7 @@ const node = createNode('select').attrs({
         multiple : true,
         value : [1, 2, 3]
     }),
-    rootNode = node._getInstance()._rootNode;
+    rootNode = node._getInstance().getRootNode();
 
 export default {
     'name' : 'updateAttr5',
