@@ -8,37 +8,37 @@ import { IS_DEBUG } from './utils/debug';
 import globalHook from './globalHook';
 
 function mountComponent() {
-    this._isMounted = true;
-    this.onMount(this._attrs, this._children);
+    this.__isMounted = true;
+    this.onMount(this.__attrs, this.__children);
 }
 
 function unmountComponent() {
-    this._isMounted = false;
-    this._domRefs = null;
+    this.__isMounted = false;
+    this.__domRefs = null;
     this.onUnmount();
 }
 
 function patchComponent(attrs, children, ctx) {
-    attrs = this._buildAttrs(attrs);
+    attrs = this.__buildAttrs(attrs);
 
-    let prevRootNode = this._rootNode,
-        prevAttrs = this._attrs,
-        prevChildren = this._children;
+    let prevRootNode = this.__rootNode,
+        prevAttrs = this.__attrs,
+        prevChildren = this.__children;
 
     if(prevAttrs !== attrs || prevChildren !== children) {
-        this._attrs = attrs;
+        this.__attrs = attrs;
         if(this.isMounted()) {
-            const isUpdating = this._isUpdating;
-            this._isUpdating = true;
+            const isUpdating = this.__isUpdating;
+            this.__isUpdating = true;
             this.onAttrsReceive(attrs, prevAttrs, children, prevChildren);
-            this._isUpdating = isUpdating;
+            this.__isUpdating = isUpdating;
         }
     }
 
-    this._children = children;
-    this._ctx = ctx;
+    this.__children = children;
+    this.__ctx = ctx;
 
-    if(this._isUpdating) {
+    if(this.__isUpdating) {
         return;
     }
 
@@ -52,8 +52,8 @@ function patchComponent(attrs, children, ctx) {
     }
 
     if(shouldUpdate) {
-        this._rootNode = this.render();
-        prevRootNode.patch(this._rootNode);
+        this.__rootNode = this.render();
+        prevRootNode.patch(this.__rootNode);
         this.isMounted() && this.onUpdate(attrs, prevAttrs, children, prevChildren);
     }
 }
@@ -63,23 +63,23 @@ function shouldComponentUpdate() {
 }
 
 function renderComponentToDom(parentNs) {
-    return this._rootNode.renderToDom(parentNs);
+    return this.__rootNode.renderToDom(parentNs);
 }
 
 function renderComponentToString() {
-    return this._rootNode.renderToString();
+    return this.__rootNode.renderToString();
 }
 
 function adoptComponentDom(domNode, domIdx) {
-    return this._rootNode.adoptDom(domNode, domIdx);
+    return this.__rootNode.adoptDom(domNode, domIdx);
 }
 
 function getComponentDomNode() {
-    return this._rootNode.getDomNode();
+    return this.__rootNode.getDomNode();
 }
 
 function getComponentAttrs() {
-    return this._attrs;
+    return this.__attrs;
 }
 
 function requestChildContext() {
@@ -91,28 +91,28 @@ function requestInitialComponentState() {
 }
 
 function setComponentState(state) {
-    this._prevState = this._state;
-    this._state = merge(this._state, state);
+    this.__prevState = this.__state;
+    this.__state = merge(this.__state, state);
 
     this.update(updateComponentPrevState);
 }
 
 function updateComponentPrevState() {
-    this._prevState = this._state;
+    this.__prevState = this.__state;
 }
 
 function getComponentState() {
-    return this._state;
+    return this.__state;
 }
 
 function getComponentPrevState() {
-    return this._prevState;
+    return this.__prevState;
 }
 
 function renderComponent() {
-    this._domRefs = {};
+    this.__domRefs = {};
 
-    const rootNode = this.onRender(this._attrs, this._children) || createNode('!');
+    const rootNode = this.onRender(this.__attrs, this.__children) || createNode('!');
 
     if(IS_DEBUG) {
         if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
@@ -120,32 +120,32 @@ function renderComponent() {
         }
     }
 
-    const childCtx = this.onChildContextRequest(this._attrs);
+    const childCtx = this.onChildContextRequest(this.__attrs);
 
     rootNode.ctx(childCtx === emptyObj?
-        this._ctx :
-        this._ctx === emptyObj?
+        this.__ctx :
+        this.__ctx === emptyObj?
             childCtx :
-            merge(this._ctx, childCtx));
+            merge(this.__ctx, childCtx));
 
     return rootNode;
 }
 
 function updateComponent(cb) {
-    if(this._isUpdating) {
+    if(this.__isUpdating) {
         cb && rafBatch(() => cb.call(this));
     }
     else {
-        this._isUpdating = true;
+        this.__isUpdating = true;
         rafBatch(() => {
             if(this.isMounted()) {
-                this._isUpdating = false;
-                const prevRootNode = this._rootNode;
+                this.__isUpdating = false;
+                const prevRootNode = this.__rootNode;
 
-                this.patch(this._attrs, this._children, this._ctx);
+                this.patch(this.__attrs, this.__children, this.__ctx);
                 cb && cb.call(this);
                 if(IS_DEBUG) {
-                    globalHook.emit('replace', prevRootNode, this._rootNode);
+                    globalHook.emit('replace', prevRootNode, this.__rootNode);
                 }
             }
         });
@@ -153,25 +153,25 @@ function updateComponent(cb) {
 }
 
 function getComponentRootNode() {
-    return this._rootNode;
+    return this.__rootNode;
 }
 
 function isComponentMounted() {
-    return this._isMounted;
+    return this.__isMounted;
 }
 
 function setComponentDomRef(ref, node) {
-    return this._domRefs[ref] = node;
+    return this.__domRefs[ref] = node;
 }
 
 function getComponentDomRef(ref) {
-    return this._domRefs[ref]?
-        this._domRefs[ref].getDomNode() :
+    return this.__domRefs[ref]?
+        this.__domRefs[ref].getDomNode() :
         null;
 }
 
 function getComponentContext() {
-    return this._ctx;
+    return this.__ctx;
 }
 
 function getComponentDefaultAttrs() {
@@ -179,12 +179,12 @@ function getComponentDefaultAttrs() {
 }
 
 function buildComponentAttrs(attrs) {
-    if(this._attrs && attrs === this._attrs) {
+    if(this.__attrs && attrs === this.__attrs) {
         return attrs;
     }
 
     const cons = this.constructor,
-        defaultAttrs = cons._defaultAttrs || (cons._defaultAttrs = cons.getDefaultAttrs());
+        defaultAttrs = cons.__defaultAttrs || (cons.__defaultAttrs = cons.getDefaultAttrs());
 
     return attrs?
         defaultAttrs === emptyObj?
@@ -195,16 +195,16 @@ function buildComponentAttrs(attrs) {
 
 function createComponent(props, staticProps) {
     const res = function(attrs, children, ctx) {
-            this._attrs = this._buildAttrs(attrs);
-            this._children = children;
-            this._ctx = ctx;
-            this._domRefs = null;
-            this._isMounted = false;
-            this._isUpdating = false;
-            this._state = this.onInitialStateRequest(this._attrs, children);
-            this._prevState = this._state;
-            this.onInit(this._attrs, children);
-            this._rootNode = this.render();
+            this.__attrs = this.__buildAttrs(attrs);
+            this.__children = children;
+            this.__ctx = ctx;
+            this.__domRefs = null;
+            this.__isMounted = false;
+            this.__isUpdating = false;
+            this.__state = this.onInitialStateRequest(this.__attrs, children);
+            this.__prevState = this.__state;
+            this.onInit(this.__attrs, children);
+            this.__rootNode = this.render();
         },
         ptp = {
             constructor : res,
@@ -235,7 +235,7 @@ function createComponent(props, staticProps) {
             getAttrs : getComponentAttrs,
             onChildContextRequest : requestChildContext,
             getContext : getComponentContext,
-            _buildAttrs : buildComponentAttrs
+            __buildAttrs : buildComponentAttrs
         };
 
     for(let i in props) {
