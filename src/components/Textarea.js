@@ -14,11 +14,11 @@ export default createComponent({
             applyBatch();
 
             if(this.isMounted()) {
-                // attrs could be changed during applyBatch()
-                attrs = this.getAttrs();
-                const control = this.getDomRef('control');
-                if(typeof attrs.value !== 'undefined' && control.value !== attrs.value) {
-                    control.value = attrs.value;
+                const control = this.getDomRef('control'),
+                    { value } = this.getAttrs(); // attrs could be changed during applyBatch()
+
+                if(typeof value !== 'undefined' && control.value !== value) {
+                    control.value = value;
                 }
             }
         };
