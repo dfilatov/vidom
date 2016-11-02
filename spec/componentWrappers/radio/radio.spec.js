@@ -3,6 +3,7 @@ import { node, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('radio', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -50,5 +51,15 @@ describe('radio', () => {
 
         expect(document.getElementById('id1').checked).not.to.be.ok();
         expect(secondRadio.checked).to.be.ok();
+    });
+
+    it('should return dom node as ref', () => {
+        let ref;
+
+        mountSync(
+            domNode,
+            node('input').attrs({ type : 'radio', id : 'id1', ref(_ref) { ref = _ref; } }));
+
+        expect(ref === document.getElementById('id1'));
     });
 });

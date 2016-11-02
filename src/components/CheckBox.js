@@ -12,10 +12,8 @@ export default createComponent({
         };
     },
 
-    onRender(attrs, children) {
-        return new TagNode('select')
-            .attrs(merge(attrs, this._addAttrs))
-            .children(children);
+    onRender(attrs) {
+        return new TagNode('input').attrs(merge(attrs, this._addAttrs));
     },
 
     onChange(e) {
@@ -27,10 +25,10 @@ export default createComponent({
 
         if(this.isMounted()) {
             const control = this.getDomNode(),
-                { value } = this.getAttrs(); // attrs could be changed during applyBatch()
+                { checked } = this.getAttrs(); // attrs could be changed during applyBatch()
 
-            if(typeof value !== 'undefined' && control.value !== value) {
-                control.value = value;
+            if(typeof checked !== 'undefined' && control.checked !== checked) {
+                control.checked = checked;
             }
         }
     },

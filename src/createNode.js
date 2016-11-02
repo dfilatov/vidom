@@ -4,16 +4,10 @@ import FunctionComponentNode from './nodes/FunctionComponentNode';
 import FragmentNode from './nodes/FragmentNode';
 import TextNode from './nodes/TextNode';
 import Input from './components/Input';
-import Textarea from './components/Textarea';
+import TextArea from './components/TextArea';
 import Select from './components/Select';
 import console from './utils/console';
 import { IS_DEBUG } from './utils/debug';
-
-const WRAPPER_COMPONENTS = {
-    input : Input,
-    textarea : Textarea,
-    select : Select
-};
 
 export default function(type) {
     switch(typeof type) {
@@ -25,10 +19,17 @@ export default function(type) {
                 case 'text':
                     return new TextNode();
 
+                case 'input':
+                    return new ComponentNode(Input);
+
+                case 'textarea':
+                    return new ComponentNode(TextArea);
+
+                case 'select':
+                    return new ComponentNode(Select);
+
                 default:
-                    return WRAPPER_COMPONENTS[type]?
-                        new ComponentNode(WRAPPER_COMPONENTS[type]) :
-                        new TagNode(type);
+                    return new TagNode(type);
             }
 
         case 'function':

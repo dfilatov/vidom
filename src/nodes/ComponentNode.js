@@ -3,6 +3,10 @@ import checkReuse from './utils/checkReuse';
 import merge from '../utils/merge';
 import { NODE_TYPE_COMPONENT } from './utils/nodeTypes';
 import { IS_DEBUG } from '../utils/debug';
+import Input from '../components/Input';
+import Radio from '../components/Radio';
+import CheckBox from '../components/CheckBox';
+import File from '../components/File';
 
 export default function ComponentNode(component) {
     this.type = NODE_TYPE_COMPONENT;
@@ -27,6 +31,23 @@ ComponentNode.prototype = {
 
     attrs(attrs) {
         this._attrs = this._attrs? merge(this._attrs, attrs) : attrs;
+
+        if(this._component === Input) {
+            switch(this._attrs.type) {
+                case 'radio':
+                    this._component = Radio;
+                    break;
+
+                case 'checkbox':
+                    this._component = CheckBox;
+                    break;
+
+                case 'file':
+                    this._component = File;
+                    break;
+            }
+        }
+
         return this;
     },
 
@@ -68,7 +89,7 @@ ComponentNode.prototype = {
     mount() {
         this._instance.getRootNode().mount();
         this._instance.mount();
-        this._ref && this._ref(this._instance);
+        this._ref && this._ref(this._instance.getRef());
     },
 
     unmount() {
