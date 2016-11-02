@@ -1,20 +1,18 @@
-import { node, mountToDom } from '../src/vidom';
+import { mount } from 'vidom';
 
 const users = [
-        { login : 'dmitry', online : false },
-        { login : 'vitaly', online : false },
-        { login : 'alexey', online : false },
-        { login : 'vadim', online : false },
-        { login : 'olga', online : false },
-        { login : 'petr', online : false },
-        { login : 'marta', online : false },
-        { login : 'olesya', online : false },
-        { login : 'yuri', online : false },
-        { login : 'sergey', online : false },
-        { login : 'inna', online : false }
-    ],
-    tree = buildTree(sortUsers()),
-    rootDomNode = document.body.appendChild(document.createElement('div'));
+    { login : 'dmitry', online : false },
+    { login : 'vitaly', online : false },
+    { login : 'alexey', online : false },
+    { login : 'vadim', online : false },
+    { login : 'olga', online : false },
+    { login : 'petr', online : false },
+    { login : 'marta', online : false },
+    { login : 'olesya', online : false },
+    { login : 'yuri', online : false },
+    { login : 'sergey', online : false },
+    { login : 'inna', online : false }
+];
 
 function updateUsersStates() {
     users.forEach(user => {
@@ -37,33 +35,29 @@ function buildTree(sortOrder) {
     const onlineUsers = users.filter(user => user.online),
         offlineUsers = users.filter(user => !user.online);
 
-    return node('div')
-        .attrs({ className : 'users' })
-        .children(users.map(user => {
-            return node('div')
-                .key(user.login)
-                .attrs({
-                    className : 'user' + (user.online? ' user_online' : ''),
-                    style : {
-                        transform : 'translateY(' + (sortOrder.indexOf(user.login) * 30) + 'px)'
-                    }
-                })
-                .children(user.login);
-        }).concat(
-            node('div')
-                .key('__delimiter__')
-                .attrs({
-                    className : 'delimiter' + (onlineUsers.length && offlineUsers.length?
-                        ' delimiter_visible' :
-                        ''),
-                    style : {
-                        transform : 'translateY(' + (onlineUsers.length * 30) + 'px)'
-                    }
-                })));
+    return (
+        <div class="users">
+            {
+                users.map(user =>
+                    <div
+                        key={ user.login }
+                        class={ 'user' + (user.online? ' user_online' : '') }
+                        style={{ transform : 'translateY(' + (sortOrder.indexOf(user.login) * 30) + 'px)' }}
+                    >
+                        { user.login }
+                    </div>)
+            }
+            <div
+                key="__delimiter__"
+                class={ 'delimiter' + (onlineUsers.length && offlineUsers.length? ' delimiter_visible' : '') }
+                style={{ transform : 'translateY(' + (onlineUsers.length * 30) + 'px)' }}
+            />
+        </div>
+    );
 }
 
 function update() {
-    mountToDom(rootDomNode, buildTree(sortUsers()), function() {
+    mount(document.body, buildTree(sortUsers()), function() {
         updateUsersStates();
         setTimeout(update, 3000);
     });
