@@ -29,7 +29,6 @@ export default createComponent({
             const attrs = this.getAttrs(),
                 control = this.getDomRef('control');
 
-            attrs.onClick && attrs.onClick(e);
             attrs.onChange && attrs.onChange(e);
 
             applyBatch();
