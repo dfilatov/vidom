@@ -147,4 +147,8 @@ function removeFromNamedRadioInputs(name, input) {
 
         i++;
     }
+
+    if(!radioInputs.length) {
+        delete namedRadioInputs[name];
+    }
 }
