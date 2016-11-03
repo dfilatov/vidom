@@ -9,9 +9,9 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
 
 ## Main features
   * Fast virtual DOM builder and patcher under the hood
+  * Fast server-side rendering with ability to reuse existing DOM in the browsers also known as isomorphism.
   * Easy and clear way to subscribe to DOM Events
   * API to build your own high-level components
-  * Server-side rendering with ability to reuse existing DOM in the browsers also known as isomorphism.
   * Namespaces support (e.g., SVG, MathML)
   * Ability to render multiple components without unwanted DOM wrappers
   * No extra markup in the result HTML
@@ -25,7 +25,7 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [uibench](https://localvoid.github.io/uibench/)
   * server-side rendering
     
-    <img src="https://img-fotki.yandex.ru/get/42925/58414218.1/0_f708d_450eebd1_orig" width="256" height="76">
+    <img src="https://img-fotki.yandex.ru/get/169995/58414218.1/0_f9ded_4fd2985a_orig" width="246" height="75">
 
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
