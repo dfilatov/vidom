@@ -2,16 +2,17 @@ import createComponent from '../createComponent';
 import TagNode from '../nodes/TagNode';
 import { applyBatch } from '../client/rafBatch';
 import merge from '../utils/merge';
+import SimpleMap from '../utils/SimpleMap';
 
-const namedRadioInputs = {};
+const namedRadioInputs = new SimpleMap();
 
 export default createComponent({
     onInit() {
         this.onInput = e => {
-            let attrs = this.getAttrs();
+            const { onInput, onChange } = this.getAttrs();
 
-            attrs.onInput && attrs.onInput(e);
-            attrs.onChange && attrs.onChange(e);
+            onInput && onInput(e);
+            onChange && onChange(e);
 
             applyBatch();
 
@@ -26,10 +27,10 @@ export default createComponent({
         };
 
         this.onChange = e => {
-            const attrs = this.getAttrs(),
+            const { onChange } = this.getAttrs(),
                 control = this.getDomRef('control');
 
-            attrs.onChange && attrs.onChange(e);
+            onChange && onChange(e);
 
             applyBatch();
 
@@ -38,7 +39,7 @@ export default createComponent({
 
                 if(typeof checked !== 'undefined' && control.checked !== checked) {
                     if(type === 'radio' && name) {
-                        const radioInputs = namedRadioInputs[name],
+                        const radioInputs = namedRadioInputs.get(name),
                             len = radioInputs.length;
                         let i = 0,
                             radioInput,
@@ -125,30 +126,33 @@ export default createComponent({
 });
 
 function addToNamedRadioInputs(name, input) {
-    (namedRadioInputs[name] || (namedRadioInputs[name] = [])).push(input);
+    const radioInputs = namedRadioInputs.get(name);
+
+    if(radioInputs) {
+        radioInputs.push(input);
+    }
+    else {
+        namedRadioInputs.set(name, [input]);
+    }
 }
 
 function removeFromNamedRadioInputs(name, input) {
-    const radioInputs = namedRadioInputs[name],
+    const radioInputs = namedRadioInputs.get(name),
         len = radioInputs.length;
     let i = 0;
 
     while(i < len) {
         if(radioInputs[i] === input) {
             if(len === 1) {
-                delete namedRadioInputs[name];
-                return;
+                namedRadioInputs.delete(name);
             }
             else {
                 radioInputs.splice(i, 1);
-                break;
             }
+
+            return;
         }
 
         i++;
-    }
-
-    if(!radioInputs.length) {
-        delete namedRadioInputs[name];
     }
 }
