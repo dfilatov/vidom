@@ -2,13 +2,13 @@
   "dependencies": {
     "benchmark": "2.1.0",
     "cliff": "0.1.10",
-    "inferno": "0.7.25",
-    "inferno-component": "0.7.25",
-    "inferno-create-element": "0.7.25",
-    "inferno-server": "0.7.25",
-    "react": "15.3.0",
-    "react-dom": "15.3.0",
-    "vidom": "0.3.18"
+    "inferno": "0.7.27",
+    "inferno-component": "0.7.27",
+    "inferno-create-element": "0.7.27",
+    "inferno-server": "0.7.27",
+    "react": "15.3.2",
+    "react-dom": "15.3.2",
+    "vidom": "0.5.2"
   },
   "scripts": {
     "start": "NODE_ENV=production node index.js"
