@@ -43,38 +43,23 @@ function globalEventListener(e, type) {
         listenersCount = cfg.listenersCounter,
         listeners,
         listener,
-        listenersToInvoke,
-        domNodeId;
+        domNodeId,
+        syntheticEvent;
 
     while(listenersCount > 0 && target && target !== document) {
         if(domNodeId = getDomNodeId(target, true)) {
             listeners = listenersStorage.get(domNodeId);
             if(listeners && (listener = listeners[type])) {
-                if(listenersToInvoke) {
-                    listenersToInvoke.push(listener);
+                listener(syntheticEvent || (syntheticEvent = createSyntheticEvent(type, e)));
+                if(syntheticEvent.isPropagationStopped()) {
+                    break;
                 }
-                else {
-                    listenersToInvoke = [listener];
-                }
+
                 --listenersCount;
             }
         }
 
         target = target.parentNode;
-    }
-
-    if(listenersToInvoke) {
-        const event = createSyntheticEvent(type, e),
-            len = listenersToInvoke.length;
-
-        let i = 0;
-
-        while(i < len) {
-            listenersToInvoke[i++](event);
-            if(event.isPropagationStopped()) {
-                break;
-            }
-        }
     }
 }
 
@@ -130,6 +115,7 @@ if(typeof document !== 'undefined') {
 
 function addListener(domNode, type, listener) {
     const cfg = eventsCfg[type];
+
     if(cfg) {
         if(!cfg.set) {
             cfg.setup?
