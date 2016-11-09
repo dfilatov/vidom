@@ -141,6 +141,19 @@ function addListener(domNode, type, listener) {
     }
 }
 
+function removeSingleListener(domNode, type) {
+    const cfg = eventsCfg[type];
+
+    if(cfg) {
+        if(cfg.bubbles) {
+            --cfg.listenersCounter;
+        }
+        else {
+            domNode.removeEventListener(type, eventListener);
+        }
+    }
+}
+
 function removeListener(domNode, type) {
     const domNodeId = getDomNodeId(domNode, true);
 
@@ -149,14 +162,7 @@ function removeListener(domNode, type) {
 
         if(listeners && listeners[type]) {
             listeners[type] = null;
-
-            const cfg = eventsCfg[type];
-
-            if(cfg) {
-                cfg.bubbles?
-                    --cfg.listenersCounter :
-                    domNode.removeEventListener(type, eventListener);
-            }
+            removeSingleListener(domNode, type);
         }
     }
 }
@@ -168,10 +174,13 @@ function removeListeners(domNode) {
         const listeners = listenersStorage.get(domNodeId);
 
         if(listeners) {
-            listenersStorage.delete(domNodeId);
             for(let type in listeners) {
-                removeListener(domNode, type);
+                if(listeners[type]) {
+                    removeSingleListener(domNode, type);
+                }
             }
+
+            listenersStorage.delete(domNodeId);
         }
     }
 }

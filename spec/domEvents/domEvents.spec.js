@@ -112,7 +112,7 @@ describe('domEvents', () => {
         });
 
         it('should properly replace handler for bubbleable events', () => {
-            var spy1 = sinon.spy(),
+            const spy1 = sinon.spy(),
                 spy2 = sinon.spy();
 
             mountSync(

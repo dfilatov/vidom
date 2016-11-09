@@ -95,6 +95,7 @@ describe('patch', () => {
 
             domOps.append(document.createElement('div'), topNode1.renderToDom());
             topNode1.patch(topNode2);
+            topNode2.unmount();
 
             expect(opsLog).to.eql(specData.patch);
         });

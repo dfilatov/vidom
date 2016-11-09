@@ -2,12 +2,22 @@ import { node, mountSync, unmountSync } from '../../src/vidom';
 import sinon from 'sinon';
 
 describe('patchDom', () => {
+    let topNode;
+
+    beforeEach(() => {
+        topNode = null;
+    });
+
+    afterEach(() => {
+        topNode && topNode.unmount();
+    });
+
     describe('updateText', () => {
         it('should update node text', () => {
             const parentNode = node('span').children('text'),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('span').children('new text'));
+            parentNode.patch((topNode = node('span')).children('new text'));
 
             expect(domNode.textContent).to.equal('new text');
         });
@@ -16,7 +26,7 @@ describe('patchDom', () => {
             const parentNode = node('span').html('<span></span>'),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('span').html('<span></span><i></i>'));
+            parentNode.patch((topNode = node('span')).html('<span></span><i></i>'));
 
             expect(domNode.innerHTML)
                 .to.equal('<span></span><i></i>');
@@ -26,7 +36,7 @@ describe('patchDom', () => {
             const parentNode = node('span').children(node('text')),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('span').children(node('text').children('text')));
+            parentNode.patch((topNode = node('span')).children(node('text').children('text')));
 
             expect(domNode.innerHTML)
                 .to.equal('<!---->text<!---->');
@@ -36,7 +46,7 @@ describe('patchDom', () => {
             const parentNode = node('span').children(node('text').children('text')),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('span').children(node('text').children('new text')));
+            parentNode.patch((topNode = node('span')).children(node('text').children('new text')));
 
             expect(domNode.innerHTML)
                 .to.equal('<!---->new text<!---->');
@@ -48,7 +58,7 @@ describe('patchDom', () => {
             const parentNode = node('span').children('text'),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('span'));
+            parentNode.patch(topNode = node('span'));
 
             expect(domNode.textContent).to.equal('');
         });
@@ -69,7 +79,7 @@ describe('patchDom', () => {
             const parentNode = node('textarea').attrs({ cols : 5 }),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('textarea').attrs({ cols : 3 }));
+            parentNode.patch((topNode = node('textarea')).attrs({ cols : 3 }));
 
             expect(domNode.getAttribute('cols')).to.equal('3');
         });
@@ -87,7 +97,7 @@ describe('patchDom', () => {
             const parentNode = node('input').attrs({ type : 'text', value : 'val' }),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('input').attrs({ type : 'checkbox', value : 'val' }));
+            parentNode.patch((topNode = node('input')).attrs({ type : 'checkbox', value : 'val' }));
 
             expect(domNode.value).to.equal('val');
         });
@@ -103,7 +113,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('select')
+                (topNode = node('select'))
                     .attrs({ multiple : true, value : [2, 3] })
                     .children([
                         node('option').attrs({ value : 1 }),
@@ -122,7 +132,7 @@ describe('patchDom', () => {
             const parentNode = node('textarea').attrs({ disabled : true }),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('textarea'));
+            parentNode.patch(topNode = node('textarea'));
 
             expect(domNode.hasAttribute('disabled')).to.equal(false);
         });
@@ -140,7 +150,7 @@ describe('patchDom', () => {
             const parentNode = node('div').attrs({ style : { width : '20px' } }),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div'));
+            parentNode.patch(topNode = node('div'));
             expect(domNode.style).to.eql(document.createElement('div').style);
         });
 
@@ -154,7 +164,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('select')
+                (topNode = node('select'))
                     .attrs({ multiple : true })
                     .children([
                         node('option').attrs({ value : 1 }),
@@ -172,7 +182,7 @@ describe('patchDom', () => {
                 parentNode = node('div').children([node('a'), oldNode]),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div').children([node('a'), node('div')]));
+            parentNode.patch((topNode = node('div')).children([node('a'), node('div')]));
 
             expect(domNode.childNodes[1].tagName)
                 .to.equal('DIV');
@@ -185,7 +195,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('svg')
+                (topNode = node('svg'))
                     .ns('http://www.w3.org/2000/svg')
                     .children(node('g').children(node('path'))));
 
@@ -200,7 +210,7 @@ describe('patchDom', () => {
                 ]),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div').children([node('a'), node('span')]));
+            parentNode.patch((topNode = node('div')).children([node('a'), node('span')]));
 
             expect(domNode.innerHTML)
                 .to.equal('<a></a><span></span>');
@@ -211,7 +221,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a'),
                     node('fragment').children([node('b'), node('i')])
                 ]));
@@ -225,7 +235,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a'),
                     node('text')
                 ]));
@@ -239,7 +249,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a'),
                     node('span')
                 ]));
@@ -254,7 +264,7 @@ describe('patchDom', () => {
             const parentNode = node('div').children([node('a'), node('span')]),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div').children([node('a'), node('span'), node('div')]));
+            parentNode.patch((topNode = node('div')).children([node('a'), node('span'), node('div')]));
 
             expect(domNode.childNodes.length).to.equal(3);
             expect(domNode.childNodes[2].tagName).to.equal('DIV');
@@ -267,7 +277,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('svg')
+                (topNode = node('svg'))
                     .ns('http://www.w3.org/2000/svg')
                     .children([node('circle'), node('circle')]));
 
@@ -280,7 +290,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a'),
                     node('fragment').children([node('b'), node('i')])
                 ]));
@@ -301,7 +311,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a').key('a'),
                     node('fragment').key('b').children([
                         node('b').key('a'),
@@ -326,7 +336,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom(),
                 aDomNode = domNode.children[0];
 
-            parentNode.patch(node('div').children(node('a')));
+            parentNode.patch((topNode = node('div')).children(node('a')));
 
             expect(domNode.childNodes.length).to.equal(1);
             expect(domNode.childNodes[0]).to.equal(aDomNode);
@@ -339,7 +349,7 @@ describe('patchDom', () => {
                 ]),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div').children([node('a')]));
+            parentNode.patch((topNode = node('div')).children([node('a')]));
 
             expect(domNode.innerHTML).to.equal('<a></a>');
         });
@@ -351,7 +361,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a').key('a'),
                     node('div').key('b'),
                     node('span').key('c')
@@ -368,7 +378,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('svg')
+                (topNode = node('svg'))
                     .ns('http://www.w3.org/2000/svg')
                     .children([node('circle').key('a'), node('circle').key('b')]));
 
@@ -383,7 +393,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a').key('a'),
                     node('fragment').key('b').children([node('b'), node('i')]),
                     node('span').key('c')
@@ -399,7 +409,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('fragment').key('a').children([node('a'), node('b')]),
                     node('fragment').key('b').children([node('i'), node('u')])
                 ]));
@@ -417,7 +427,7 @@ describe('patchDom', () => {
                 aDomNode = domNode.children[0],
                 bDomNode = domNode.children[1];
 
-            parentNode.patch(node('div').children([bNode, aNode]));
+            parentNode.patch((topNode = node('div')).children([bNode, aNode]));
 
             expect(domNode.childNodes.length).to.equal(2);
             expect(domNode.childNodes[0]).to.equal(bDomNode);
@@ -470,7 +480,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a').key('a'),
                     node('fragment').key('b').children([node('b'), node('i')]),
                     node('span').key('c')
@@ -490,7 +500,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('fragment').key('a').children([node('a'), node('b')]),
                     node('fragment').key('b').children([node('i'), node('u')]),
                     node('fragment').key('c').children([node('h1'), node('h2')]),
@@ -512,7 +522,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('fragment').key('a').children([node('a'), node('b')]),
                     node('fragment').key('c').children([node('h1'), node('h2')]),
                     node('fragment').key('b').children([node('i'), node('u')])
@@ -532,7 +542,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a').key('a'),
                     node('text').key('b').children('text'),
                     node('span').key('c')
@@ -552,7 +562,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('text').key('a').children('a'),
                     node('text').key('b').children('b'),
                     node('text').key('c').children('c'),
@@ -572,7 +582,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('text').key('a').children('a'),
                     node('text').key('c').children('c'),
                     node('text').key('b').children('b')
@@ -588,7 +598,7 @@ describe('patchDom', () => {
             const parentNode = node('div').children([node('a'), node('span')]),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch(node('div'));
+            parentNode.patch(topNode = node('div'));
 
             expect(domNode.childNodes.length).to.equal(0);
         });
@@ -601,7 +611,7 @@ describe('patchDom', () => {
                 domNode = parentNode.renderToDom();
 
             parentNode.patch(
-                node('div').children([
+                (topNode = node('div')).children([
                     node('a'),
                     node('fragment')
                 ]));
