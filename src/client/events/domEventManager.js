@@ -141,7 +141,7 @@ function addListener(domNode, type, listener) {
     }
 }
 
-function removeSingleListener(domNode, type) {
+function doRemoveListener(domNode, type) {
     const cfg = eventsCfg[type];
 
     if(cfg) {
@@ -162,7 +162,7 @@ function removeListener(domNode, type) {
 
         if(listeners && listeners[type]) {
             listeners[type] = null;
-            removeSingleListener(domNode, type);
+            doRemoveListener(domNode, type);
         }
     }
 }
@@ -176,7 +176,7 @@ function removeListeners(domNode) {
         if(listeners) {
             for(let type in listeners) {
                 if(listeners[type]) {
-                    removeSingleListener(domNode, type);
+                    doRemoveListener(domNode, type);
                 }
             }
 
