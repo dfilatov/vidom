@@ -13,7 +13,7 @@ SyntheticEvent.prototype = {
         this._isPropagationStopped = true;
 
         const nativeEvent = this.nativeEvent;
-        
+
         nativeEvent.stopPropagation?
             nativeEvent.stopPropagation() :
             nativeEvent.cancelBubble = true;
@@ -27,7 +27,7 @@ SyntheticEvent.prototype = {
         this._isDefaultPrevented = true;
 
         const nativeEvent = this.nativeEvent;
-        
+
         nativeEvent.preventDefault?
             nativeEvent.preventDefault() :
             nativeEvent.returnValue = false;
