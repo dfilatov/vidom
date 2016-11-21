@@ -1,5 +1,13 @@
 export default function escapeAttr(str) {
-    return (str + '')
-        .replace(/&/g, '&amp;')
-        .replace(/"/g, '&quot;');
+    str = str + '';
+
+    if(~str.indexOf('&')) {
+        str = str.replace(/&/g, '&amp;');
+    }
+
+    if(~str.indexOf('"')) {
+        str = str.replace(/"/g, '&quot;');
+    }
+
+    return str;
 }

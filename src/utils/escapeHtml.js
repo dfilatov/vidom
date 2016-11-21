@@ -1,6 +1,17 @@
 export default function escapeHtml(str) {
-    return (str + '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+    str = str + '';
+
+    if(~str.indexOf('&')) {
+        str = str.replace(/&/g, '&amp;');
+    }
+
+    if(~str.indexOf('<')) {
+        str = str.replace(/</g, '&lt;');
+    }
+
+    if(~str.indexOf('>')) {
+        str = str.replace(/>/g, '&gt;');
+    }
+
+    return str;
 }

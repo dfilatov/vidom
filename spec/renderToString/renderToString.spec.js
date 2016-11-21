@@ -83,6 +83,11 @@ describe('renderToString', () => {
             expect(createNode('textarea').attrs({ value : 'val' }).renderToString())
                 .to.equal('<textarea>val</textarea>');
         });
+
+        it('should escape values', () => {
+            expect(createNode('textarea').attrs({ className : '"&' }).renderToString())
+                .to.equal('<textarea class="&quot;&amp;"></textarea>');
+        });
     });
 
     describe('text', () => {
