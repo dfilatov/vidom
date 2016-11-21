@@ -2,11 +2,11 @@
   "dependencies": {
     "benchmark": "2.1.0",
     "cliff": "0.1.10",
-    "inferno": "^1.0.0-beta13",
-    "inferno-server": "^1.0.0-beta13",
-    "react": "15.3.2",
-    "react-dom": "15.3.2",
-    "vidom": "0.5.2"
+    "inferno": "1.0.0-beta13",
+    "inferno-server": "1.0.0-beta13",
+    "react": "15.4.0",
+    "react-dom": "15.4.0",
+    "vidom": "0.5.4"
   },
   "scripts": {
     "start": "NODE_ENV=production node index.js"
