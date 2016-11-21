@@ -2,10 +2,8 @@
   "dependencies": {
     "benchmark": "2.1.0",
     "cliff": "0.1.10",
-    "inferno": "0.7.27",
-    "inferno-component": "0.7.27",
-    "inferno-create-element": "0.7.27",
-    "inferno-server": "0.7.27",
+    "inferno": "^1.0.0-beta13",
+    "inferno-server": "^1.0.0-beta13",
     "react": "15.3.2",
     "react-dom": "15.3.2",
     "vidom": "0.5.2"

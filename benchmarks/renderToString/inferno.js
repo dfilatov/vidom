@@ -3,88 +3,78 @@
 // inferno-component doesn't work on server because uses window
 global.window = { screen : {} };
 
-const Inferno = require('inferno'),
-    Component = require('inferno-component'),
-    InfernoServer = require('inferno-server'),
-    createElement = require('inferno-create-element');
+const Inferno = require('inferno');
+const InfernoServer = require('inferno-server');
 
-class App extends Component {
-    render() {
-        const childrenNum = this.props.childrenNum;
+const createVNode = Inferno.createVNode;
 
-        return createElement('div', { className : 'app' }, [
-            createElement(Header, { childrenNum }),
-            createElement(Content, { childrenNum }),
-            createElement(Footer, { childrenNum })
-        ]);
-    }
+function App(props) {
+    const childrenNum = props.childrenNum;
+
+    return createVNode(66, 'div', { className : 'app' }, [
+        createVNode(8, Header, { childrenNum }, null, null, null, true),
+        createVNode(8, Content, { childrenNum }, null, null, null, true),
+        createVNode(8, Footer, { childrenNum }, null, null, null, true)
+    ], null, null, false);
 }
 
-class Header extends Component {
-    render() {
-        const childrenNum = this.props.childrenNum,
-            children = [];
-        let i = 0;
+function Header(props) {
+    const childrenNum = props.childrenNum,
+        children = [];
+    let i = 0;
 
-        while(i < childrenNum) {
-            children.push(createElement('div', { id : 'header-' + i++ }));
-        }
-
-        return createElement('div', { className : 'header' }, children);
+    while(i < childrenNum) {
+        children.push(createVNode(2, 'div', { id : 'header-' + i++ }, null, null, null, true));
     }
+
+    return createVNode(2, 'div', { className : 'header' }, children, null, null, true);
 }
 
-class Content extends Component {
-    render() {
-        const childrenNum = this.props.childrenNum,
-            children = [];
-        let i = 0;
+function Content(props) {
+    const childrenNum = props.childrenNum,
+        children = [];
+    let i = 0;
 
-        while(i < childrenNum) {
-            children.push(
-                createElement('b', null, 'bold' + i),
-                createElement(
-                    'span',
-                    { className : 'link' },
-                    createElement(Link, { href : '/', value : 'link-' + i })),
-                createElement('i', null, 'italic' + i++),
-                createElement(
+    while(i < childrenNum) {
+        children.push(
+            createVNode(2, 'b', null, 'bold' + i, null, null, null, true),
+            createVNode(2, 
+                'span',
+                { className : 'link' },
+                createVNode(8, Link, { href : '/', value : 'link-' + i }, null, null, null, true), null, null, true),
+            createVNode(2, 'i', null, 'italic' + i++, null, null, true),
+            createVNode(2, 
+                'div',
+                null,
+                createVNode(2,
                     'div',
                     null,
-                    createElement(
+                    createVNode(2,
                         'div',
                         null,
-                        createElement(
+                        createVNode(2,
                             'div',
                             null,
-                            createElement(
-                                'div',
-                                null,
-                                'div')))));
-        }
-
-        return createElement('div', { className : 'header' }, children);
+                            'div', null, null, true), null, null, true), null, null, true), null, null, true));
     }
+
+    return createVNode(66, 'div', { className : 'header' }, children, null, null, true);
 }
 
-class Link extends Component {
-    render() {
-        return createElement('a', { href : this.props.href }, this.props.value);
-    }
+function Link(props) {
+    return createVNode(2, 'a', { href : props.href }, props.value, null, null, true);
 }
 
-class Footer extends Component {
-    render() {
-        const childrenNum = this.props.childrenNum,
-            children = [];
-        let i = 0;
+function Footer(props) {
+    const childrenNum = props.childrenNum,
+        children = [];
+    let i = 0;
 
-        while(i < childrenNum) {
-            children.push(createElement('div', { id : 'footer-' + i++ }));
-        }
-
-        return createElement('div', { className : 'footer' }, children);
+    while(i < childrenNum) {
+        children.push(createVNode(2, 'div', { id : 'footer-' + i++ }, null, null, true));
     }
+
+    return createVNode(2, 'div', { className : 'footer' }, children, null, null, true);
 }
 
-module.exports = childrenNum => () => InfernoServer.renderToString(createElement(App, { childrenNum }));
+module.exports = childrenNum => () => InfernoServer.renderToString(createVNode(8, App, { childrenNum }, null, null, null, true));
