@@ -77,6 +77,4 @@ class Footer extends Component {
     }
 }
 
-module.exports = childrenNum => () => {
-    return renderToString(VComponent(App, {childrenNum}));
-}
+module.exports = childrenNum => () => renderToString(VComponent(App, {childrenNum}));
