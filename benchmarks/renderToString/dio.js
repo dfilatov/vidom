@@ -2,7 +2,11 @@
 
 const dio = require('dio.js');
 
-const {Component, VComponent, VElement, VText, renderToString} = dio;
+const Component = dio.Component,
+    VComponent = dio.VComponent,
+    VElement = dio.VElement,
+    VText = dio.VText,
+    renderToString = dio.renderToString;
 
 class App extends Component {
     render() {
