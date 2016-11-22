@@ -7,7 +7,8 @@
     "inferno-component": "1.0.0-beta13",
     "react": "15.4.0",
     "react-dom": "15.4.0",
-    "vidom": "0.5.4"
+    "vidom": "0.5.4",
+    "dio.js": "3.1.0"
   },
   "scripts": {
     "start": "NODE_ENV=production node index.js"
