@@ -95,7 +95,9 @@ function removeSelectValue(node) {
 }
 
 function attrToString(name, value) {
-    return (ATTR_NAMES[name] || name) + '="' + escapeAttr(value) + '"';
+    return value === false?
+        '' :
+        (ATTR_NAMES[name] || name) + (value === true? '' : '="' + escapeAttr(value) + '"');
 }
 
 function booleanAttrToString(name, value) {

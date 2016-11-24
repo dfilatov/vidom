@@ -34,24 +34,34 @@ describe('renderToString', () => {
                 .to.equal('<input type="text" id="id1" value="v1"/>');
         });
 
-        it('should be rendered properly for boolean attribues', () => {
+        it('should be rendered properly for boolean attributes', () => {
             expect(createNode('input').attrs({ checked : true, disabled : true }).renderToString())
-                .to.equal('<input checked disabled/>')
+                .to.equal('<input checked disabled/>');
+        });
+
+        it('should be rendered properly for overloaded with "true" attribute', () => {
+            expect(createNode('a').attrs({ download : true }).renderToString())
+                .to.equal('<a download></a>');
+        });
+
+        it('should be rendered properly for overloaded with "false" attribute', () => {
+            expect(createNode('a').attrs({ download : false }).renderToString())
+                .to.equal('<a></a>');
         });
 
         it('shouldn\'t render null value', () => {
             expect(createNode('input').attrs({ value : null }).renderToString())
-                .to.equal('<input/>')
+                .to.equal('<input/>');
         });
 
         it('shouldn\'t render undefined value', () => {
             expect(createNode('input').attrs({ className : undefined }).renderToString())
-                .to.equal('<input/>')
+                .to.equal('<input/>');
         });
 
         it('should not be rendered if boolean attribute is false', () => {
             expect(createNode('input').attrs({ checked : false }).renderToString())
-                .to.equal('<input/>')
+                .to.equal('<input/>');
         });
 
         it('should properly render style', () => {
