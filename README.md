@@ -26,9 +26,9 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * server-side rendering (nodejs 4.6.2)
 ```    
                          mean time ops/sec
-  vidom v0.5.4           1.610ms   621
-  inferno v1.0.0-beta13  1.805ms   554
-  react v15.4.0          18.482ms  54
+  vidom v0.5.5           1.544ms   648
+  inferno v1.0.0-beta14  1.653ms   605
+  react v15.4.1          21.194ms  47
 ```
 
 ## Documentation
