@@ -5,37 +5,34 @@ const AMP_RE = /&/g,
 export default function escapeHtml(str) {
     str = str + '';
 
-    const len = str.length;
-    let i = 0,
-        escapeAmp = false,
-        escapeLt = false,
-        escapeGt = false;
+    let i = str.length,
+        escapes = 0; // 1 — escape '&', 2 — escape '<', 4 — escape '>'
 
-    while(i < len) {
-        switch(str[i++]) {
+    while(i--) {
+        switch(str[i]) {
             case '&':
-                escapeAmp = true;
+                escapes = escapes | 1;
                 break;
 
             case '<':
-                escapeLt = true;
+                escapes = escapes | 2;
                 break;
 
             case '>':
-                escapeGt = true;
+                escapes = escapes | 4;
                 break;
         }
     }
 
-    if(escapeAmp) {
+    if(escapes & 1) {
         str = str.replace(AMP_RE, '&amp;');
     }
 
-    if(escapeLt) {
+    if(escapes & 2) {
         str = str.replace(LT_RE, '&lt;');
     }
 
-    if(escapeGt) {
+    if(escapes & 4) {
         str = str.replace(GT_RE, '&gt;');
     }
 

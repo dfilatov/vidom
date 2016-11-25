@@ -4,28 +4,26 @@ const AMP_RE = /&/g,
 export default function escapeAttr(str) {
     str = str + '';
 
-    const len = str.length;
-    let i = 0,
-        escapeAmp = false,
-        escapeQuot = false;
+    let i = str.length,
+        escapes = 0; // 1 — escape '&', 2 — escape '"'
 
-    while(i < len) {
-        switch(str[i++]) {
+    while(i--) {
+        switch(str[i]) {
             case '&':
-                escapeAmp = true;
+                escapes = escapes | 1;
                 break;
 
             case '"':
-                escapeQuot = true;
+                escapes = escapes | 2;
                 break;
         }
     }
 
-    if(escapeAmp) {
+    if(escapes & 1) {
         str = str.replace(AMP_RE, '&amp;');
     }
 
-    if(escapeQuot) {
+    if(escapes & 2) {
         str = str.replace(QUOT_RE, '&quot;');
     }
 
