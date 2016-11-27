@@ -10,11 +10,11 @@ export default function escapeAttr(str) {
     while(i--) {
         switch(str[i]) {
             case '&':
-                escapes = escapes | 1;
+                escapes |= 1;
                 break;
 
             case '"':
-                escapes = escapes | 2;
+                escapes |= 2;
                 break;
         }
     }

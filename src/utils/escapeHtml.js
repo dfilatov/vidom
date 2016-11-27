@@ -11,15 +11,15 @@ export default function escapeHtml(str) {
     while(i--) {
         switch(str[i]) {
             case '&':
-                escapes = escapes | 1;
+                escapes |= 1;
                 break;
 
             case '<':
-                escapes = escapes | 2;
+                escapes |= 2;
                 break;
 
             case '>':
-                escapes = escapes | 4;
+                escapes |= 4;
                 break;
         }
     }
