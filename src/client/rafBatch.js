@@ -18,7 +18,7 @@ function applyBatch() {
     batch = [];
 }
 
-export default (fn) => {
+export default function rafBatch(fn) {
     batch.push(fn) === 1 && raf(applyBatch);
 }
 

@@ -10,4 +10,4 @@ export default function merge(source1, source2) {
     }
 
     return res;
-};
+}

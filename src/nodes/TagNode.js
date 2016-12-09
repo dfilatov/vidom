@@ -124,16 +124,17 @@ TagNode.prototype = {
             checkReuse(this, this._tag);
         }
 
-        const ns = this._ns || parentNs,
+        const tag = this._tag,
+            ns = this._ns || parentNs,
             children = this._children;
 
         if(USE_DOM_STRINGS && children && typeof children !== 'string') {
-            const domNode = createElementByHtml(this.renderToString(), this._tag, ns);
+            const domNode = createElementByHtml(this.renderToString(), tag, ns);
             this.adoptDom([domNode], 0);
             return domNode;
         }
 
-        const domNode = this._domNode = createElement(this._tag, ns),
+        const domNode = this._domNode = createElement(tag, ns),
             attrs = this._attrs;
 
         if(children) {
@@ -202,7 +203,9 @@ TagNode.prototype = {
                                 continue;
 
                             case 'option':
-                                if(this._ctx.multiple? isInArray(this._ctx.value, value) : this._ctx.value === value) {
+                                const ctx = this._ctx;
+
+                                if(ctx.multiple? isInArray(ctx.value, value) : ctx.value === value) {
                                     res += ' ' + domAttrs('selected').toString('selected', true);
                                 }
                         }

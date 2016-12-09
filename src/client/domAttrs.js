@@ -7,6 +7,7 @@ import { IS_DEBUG } from '../utils/debug';
 function setAttr(node, name, val) {
     if(name === 'type' && node.tagName === 'INPUT') {
         const value = node.value; // value will be lost in IE if type is changed
+
         node.setAttribute(name, '' + val);
         node.value = value;
     }
@@ -31,6 +32,7 @@ function setProp(node, name, val) {
 function setObjProp(node, name, val) {
     if(IS_DEBUG) {
         const typeOfVal = typeof val;
+
         if(typeOfVal !== 'object') {
             console.error(`"${name}" attribute expects an object as a value, not a ${typeOfVal}`);
             return;
@@ -38,6 +40,7 @@ function setObjProp(node, name, val) {
     }
 
     const prop = node[name];
+
     for(let i in val) {
         prop[i] = val[i] == null? '' : val[i];
     }
@@ -72,7 +75,6 @@ function setSelectValue(node, value) {
     const isMultiple = Array.isArray(value),
         options = node.options,
         len = options.length;
-
     let i = 0,
         optionNode;
 
@@ -86,7 +88,6 @@ function setSelectValue(node, value) {
 function removeSelectValue(node) {
     const options = node.options,
         len = options.length;
-
     let i = 0;
 
     while(i < len) {
@@ -105,18 +106,23 @@ function booleanAttrToString(name, value) {
 }
 
 function stylePropToString(name, value) {
-    let styles = '';
+    let styles = '',
+        i;
 
-    for(let i in value) {
-        value[i] != null && (styles += dasherize(i) + ':' + value[i] + ';');
+    for(i in value) {
+        if(value[i] != null) {
+            styles += dasherize(i) + ':' + value[i] + ';';
+        }
     }
 
     return styles? name + '="' + styles + '"' : styles;
 }
 
 let defaultPropVals = {};
+
 function getDefaultPropVal(tag, attrName) {
     let tagAttrs = defaultPropVals[tag] || (defaultPropVals[tag] = {});
+
     return attrName in tagAttrs?
         tagAttrs[attrName] :
         tagAttrs[attrName] = document.createElement(tag)[attrName];
