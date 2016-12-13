@@ -1,5 +1,6 @@
 import emptyObj from '../utils/emptyObj';
 import checkReuse from './utils/checkReuse';
+import merge from '../utils/merge';
 import { NODE_TYPE_COMPONENT } from './utils/nodeTypes';
 import { IS_DEBUG } from '../utils/debug';
 
@@ -8,8 +9,8 @@ export default function ComponentNode(component) {
     this._component = component;
     this._key = null;
     this._attrs = null;
-    this._instance = null;
     this._children = null;
+    this._instance = null;
     this._ctx = emptyObj;
 }
 
@@ -24,7 +25,7 @@ ComponentNode.prototype = {
     },
 
     attrs(attrs) {
-        this._attrs = attrs;
+        this._attrs = this._attrs? merge(this._attrs, attrs) : attrs;
         return this;
     },
 
@@ -69,6 +70,17 @@ ComponentNode.prototype = {
             this._instance.unmount();
             this._instance = null;
         }
+    },
+
+    clone() {
+        const res = new ComponentNode(this._component);
+
+        res._key = this._key;
+        res._attrs = this._attrs;
+        res._children = this._children;
+        res._ctx = this._ctx;
+
+        return res;
     },
 
     patch(node) {

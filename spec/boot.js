@@ -7,6 +7,7 @@ import './patchDom/patchDom.spec.js';
 import './adoptDom/adoptDom.spec.js';
 import './mount/mount.spec.js';
 import './unmount/unmount.spec.js';
+import './cloneNode/cloneNode.spec.js';
 import './domEvents/domEvents.spec.js';
 import './component/component.spec.js';
 import './componentWrappers/componentWrappers.spec.js';

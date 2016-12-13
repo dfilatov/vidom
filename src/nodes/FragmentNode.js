@@ -3,7 +3,6 @@ import createElement from '../client/utils/createElement';
 import checkReuse from './utils/checkReuse';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
-import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
 import { IS_DEBUG } from '../utils/debug';
 import {
@@ -31,12 +30,6 @@ FragmentNode.prototype = {
     },
 
     children(children) {
-        if(IS_DEBUG) {
-            if(this._children !== null) {
-                console.warn('You\'re trying to set children to fragment more than once.');
-            }
-        }
-
         this._children = processChildren(children);
         return this;
     },
@@ -153,6 +146,16 @@ FragmentNode.prototype = {
                 children[i++].unmount();
             }
         }
+    },
+
+    clone() {
+        const res = new FragmentNode();
+
+        res._key = this._key;
+        res._children = this._children;
+        res._ctx = this._ctx;
+
+        return res;
     },
 
     patch(node) {
