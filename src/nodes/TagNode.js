@@ -9,6 +9,7 @@ import escapeHtml from '../utils/escapeHtml';
 import isInArray from '../utils/isInArray';
 import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
+import merge from '../utils/merge';
 import { isTrident, isEdge } from '../client/utils/ua';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
@@ -45,9 +46,9 @@ export default function TagNode(tag) {
     this._tag = tag;
     this._domNode = null;
     this._key = null;
-    this._ns = null;
     this._attrs = null;
     this._children = null;
+    this._ns = null;
     this._escapeChildren = true;
     this._ctx = emptyObj;
 }
@@ -68,22 +69,16 @@ TagNode.prototype = {
     },
 
     attrs(attrs) {
-        this._attrs = attrs;
-
         if(IS_DEBUG) {
             checkAttrs(attrs);
         }
+
+        this._attrs = this._attrs? merge(this._attrs, attrs) : attrs;
 
         return this;
     },
 
     children(children) {
-        if(IS_DEBUG) {
-            if(this._children !== null) {
-                console.warn('You\'re trying to set children or html more than once or pass both children and html.');
-            }
-        }
-
         this._children = processChildren(children);
         return this;
     },
@@ -309,6 +304,19 @@ TagNode.prototype = {
         removeListeners(this._domNode);
 
         this._domNode = null;
+    },
+
+    clone() {
+        const res = new TagNode(this._tag);
+
+        res._key = this._key;
+        res._attrs = this._attrs;
+        res._children = this._children;
+        res._ns = this._ns;
+        res._escapeChildren = this._escapeChildren;
+        res._ctx = this._ctx;
+
+        return res;
     },
 
     patch(node) {

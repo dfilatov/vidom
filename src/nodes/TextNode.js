@@ -1,7 +1,6 @@
 import patchOps from '../client/patchOps';
 import createElement from '../client/utils/createElement';
 import checkReuse from './utils/checkReuse';
-import console from '../utils/console';
 import { IS_DEBUG } from '../utils/debug';
 import {
     NODE_TYPE_TEXT,
@@ -27,12 +26,6 @@ TextNode.prototype = {
     },
 
     children(children) {
-        if(IS_DEBUG) {
-            if(this._children !== null) {
-                console.warn('You\'re trying to set children to fragment more than once.');
-            }
-        }
-
         this._children = processChildren(children);
         return this;
     },
@@ -88,6 +81,15 @@ TextNode.prototype = {
     mount() {},
 
     unmount() {},
+
+    clone() {
+        const res = new TextNode();
+
+        res._key = this._key;
+        res._children = this._children;
+
+        return res;
+    },
 
     patch(node) {
         if(this === node) {

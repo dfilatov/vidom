@@ -1,6 +1,7 @@
 import createNode from '../createNode';
 import checkReuse from './utils/checkReuse';
 import emptyObj from '../utils/emptyObj';
+import merge from '../utils/merge';
 import { IS_DEBUG } from '../utils/debug';
 import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
 
@@ -8,9 +9,9 @@ export default function FunctionComponentNode(component) {
     this.type = NODE_TYPE_FUNCTION_COMPONENT;
     this._component = component;
     this._key = null;
-    this._attrs = emptyObj;
-    this._rootNode = null;
+    this._attrs = null;
     this._children = null;
+    this._rootNode = null;
     this._ctx = emptyObj;
 }
 
@@ -25,7 +26,7 @@ FunctionComponentNode.prototype = {
     },
 
     attrs(attrs) {
-        this._attrs = attrs;
+        this._attrs = this._attrs? merge(this._attrs, attrs) : attrs;
         return this;
     },
 
@@ -68,6 +69,17 @@ FunctionComponentNode.prototype = {
             this._rootNode.unmount();
             this._rootNode = null;
         }
+    },
+
+    clone() {
+        const res = new FunctionComponentNode(this._component);
+
+        res._key = this._key;
+        res._attrs = this._attrs;
+        res._children = this._children;
+        res._ctx = this._ctx;
+
+        return res;
     },
 
     patch(node) {
