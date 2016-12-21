@@ -82,6 +82,10 @@ function getComponentAttrs() {
     return this.__attrs;
 }
 
+function getComponentChildren() {
+    return this.__children;
+}
+
 function requestChildContext() {
     return emptyObj;
 }
@@ -233,6 +237,7 @@ function createComponent(props, staticProps) {
             getDomRef : getComponentDomRef,
             setDomRef : setComponentDomRef,
             getAttrs : getComponentAttrs,
+            getChildren : getComponentChildren,
             onChildContextRequest : requestChildContext,
             getContext : getComponentContext,
             __buildAttrs : buildComponentAttrs
