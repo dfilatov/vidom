@@ -51,6 +51,7 @@ export default function TagNode(tag) {
     this._ns = null;
     this._escapeChildren = true;
     this._ctx = emptyObj;
+    this._ref = null;
 }
 
 TagNode.prototype = {
@@ -111,6 +112,11 @@ TagNode.prototype = {
 
         this._children = html;
         this._escapeChildren = false;
+        return this;
+    },
+
+    ref(ref) {
+        this._ref = ref;
         return this;
     },
 
@@ -287,6 +293,8 @@ TagNode.prototype = {
                 children[i++].mount();
             }
         }
+
+        this._ref && this._ref(this._domNode);
     },
 
     unmount() {
@@ -304,6 +312,8 @@ TagNode.prototype = {
         removeListeners(this._domNode);
 
         this._domNode = null;
+
+        this._ref && this._ref(null);
     },
 
     clone() {
@@ -315,6 +325,7 @@ TagNode.prototype = {
         res._ns = this._ns;
         res._escapeChildren = this._escapeChildren;
         res._ctx = this._ctx;
+        res._ref = this._ref;
 
         return res;
     },

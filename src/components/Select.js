@@ -13,7 +13,7 @@ export default createComponent({
             applyBatch();
 
             if(this.isMounted()) {
-                const control = this.getDomRef('control'),
+                const control = this.getDomNode(),
                     { value } = this.getAttrs(); // attrs could be changed during applyBatch()
 
                 if(typeof value !== 'undefined' && control.value !== value) {
@@ -24,10 +24,8 @@ export default createComponent({
     },
 
     onRender(attrs, children) {
-        return this.setDomRef(
-            'control',
-            new TagNode('select')
-                .attrs(merge(attrs, { onChange : this.onChange }))
-                .children(children));
+        return new TagNode('select')
+            .attrs(merge(attrs, { onChange : this.onChange }))
+            .children(children);
     }
 });

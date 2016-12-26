@@ -4,6 +4,7 @@ import checkReuse from './utils/checkReuse';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import emptyObj from '../utils/emptyObj';
+import console from '../utils/console';
 import { IS_DEBUG } from '../utils/debug';
 import {
     NODE_TYPE_FRAGMENT,
@@ -216,6 +217,13 @@ FragmentNode.prototype = {
         patchChildren(this, node);
     }
 };
+
+if(IS_DEBUG) {
+    FragmentNode.prototype.ref = function() {
+        console.error('Fragment nodes don\'t support refs.');
+        return this;
+    };
+}
 
 function processChildren(children) {
     if(children == null) {

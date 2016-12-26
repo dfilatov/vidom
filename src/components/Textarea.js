@@ -14,7 +14,7 @@ export default createComponent({
             applyBatch();
 
             if(this.isMounted()) {
-                const control = this.getDomRef('control'),
+                const control = this.getDomNode(),
                     { value } = this.getAttrs(); // attrs could be changed during applyBatch()
 
                 if(typeof value !== 'undefined' && control.value !== value) {
@@ -25,9 +25,6 @@ export default createComponent({
     },
 
     onRender(attrs) {
-        return this.setDomRef(
-            'control',
-            new TagNode('textarea')
-                .attrs(merge(attrs, { onInput : this.onInput, onChange : null })));
+        return new TagNode('textarea').attrs(merge(attrs, { onInput : this.onInput, onChange : null }));
     }
 });

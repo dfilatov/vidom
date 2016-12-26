@@ -133,6 +133,13 @@ TextNode.prototype = {
     }
 };
 
+if(IS_DEBUG) {
+    TextNode.prototype.ref = function() {
+        console.error('Text nodes don\'t support refs.');
+        return this;
+    };
+}
+
 function processChildren(children) {
     return children == null || typeof children === 'string'?
         children :
