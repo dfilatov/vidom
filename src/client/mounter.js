@@ -159,28 +159,12 @@ export function mount(domNode, tree, ctx, cb) {
     mountToDomNode(domNode, tree, ctx, cb, false);
 }
 
-export function mountToDom(domNode, tree, ctx, cb) {
-    if(IS_DEBUG) {
-        console.warn('mountToDom() is deprecated, use mount() instead.');
-    }
-
-    mount(domNode, tree, ctx, cb);
-}
-
 export function mountSync(domNode, tree, ctx) {
     mountToDomNode(domNode, tree, ctx, null, true);
 }
 
 export function unmount(domNode, cb) {
     unmountFromDomNode(domNode, cb, false);
-}
-
-export function unmountFromDom(domNode, cb) {
-    if(IS_DEBUG) {
-        console.warn('unmountFromDom() is deprecated, use unmount() instead.');
-    }
-
-    unmount(domNode, cb);
 }
 
 export function unmountSync(domNode) {
