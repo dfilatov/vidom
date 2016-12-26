@@ -12,6 +12,7 @@ export default function ComponentNode(component) {
     this._children = null;
     this._instance = null;
     this._ctx = emptyObj;
+    this._ref = null;
 }
 
 ComponentNode.prototype = {
@@ -39,6 +40,11 @@ ComponentNode.prototype = {
         return this;
     },
 
+    ref(ref) {
+        this._ref = ref;
+        return this;
+    },
+
     renderToDom(parentNs) {
         if(IS_DEBUG) {
             checkReuse(this, this._component.name || 'Anonymous');
@@ -62,6 +68,7 @@ ComponentNode.prototype = {
     mount() {
         this._instance.getRootNode().mount();
         this._instance.mount();
+        this._ref && this._ref(this._instance);
     },
 
     unmount() {
@@ -69,6 +76,7 @@ ComponentNode.prototype = {
             this._instance.getRootNode().unmount();
             this._instance.unmount();
             this._instance = null;
+            this._ref && this._ref(null);
         }
     },
 
@@ -79,6 +87,7 @@ ComponentNode.prototype = {
         res._attrs = this._attrs;
         res._children = this._children;
         res._ctx = this._ctx;
+        res._ref = this._ref;
 
         return res;
     },

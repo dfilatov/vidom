@@ -1,5 +1,6 @@
 import createNode from '../createNode';
 import checkReuse from './utils/checkReuse';
+import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
 import merge from '../utils/merge';
 import { IS_DEBUG } from '../utils/debug';
@@ -113,3 +114,10 @@ FunctionComponentNode.prototype = {
         return this._rootNode = rootNode;
     }
 };
+
+if(IS_DEBUG) {
+    FunctionComponentNode.prototype.ref = function() {
+        console.error('Function component nodes don\'t support refs.');
+        return this;
+    };
+}

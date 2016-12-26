@@ -17,7 +17,7 @@ export default createComponent({
             applyBatch();
 
             if(this.isMounted()) {
-                const control = this.getDomRef('control'),
+                const control = this.getDomNode(),
                     { value } = this.getAttrs(); // attrs could be changed during applyBatch()
 
                 if(typeof value !== 'undefined' && control.value !== value) {
@@ -27,15 +27,15 @@ export default createComponent({
         };
 
         this.onChange = e => {
-            const { onChange } = this.getAttrs(),
-                control = this.getDomRef('control');
+            const { onChange } = this.getAttrs();
 
             onChange && onChange(e);
 
             applyBatch();
 
             if(this.isMounted()) {
-                const { name, type, checked } = this.getAttrs(); // attrs could be changed during applyBatch()
+                const control = this.getDomNode(),
+                    { name, type, checked } = this.getAttrs(); // attrs could be changed during applyBatch()
 
                 if(typeof checked !== 'undefined' && control.checked !== checked) {
                     if(type === 'radio' && name) {
@@ -50,7 +50,7 @@ export default createComponent({
                             checked = radioInput.getAttrs().checked;
 
                             if(typeof checked !== 'undefined') {
-                                const radioControl = radioInput.getDomRef('control');
+                                const radioControl = radioInput.getDomNode();
 
                                 if(checked !== radioControl.checked) {
                                     radioControl.checked = checked;
@@ -83,9 +83,7 @@ export default createComponent({
             }
         }
 
-        return this.setDomRef(
-            'control',
-            new TagNode('input').attrs(controlAttrs));
+        return new TagNode('input').attrs(controlAttrs);
     },
 
     onMount({ type, name }) {

@@ -14,7 +14,6 @@ function mountComponent() {
 
 function unmountComponent() {
     this.__isMounted = false;
-    this.__domRefs = null;
     this.onUnmount();
 }
 
@@ -114,8 +113,6 @@ function getComponentPrevState() {
 }
 
 function renderComponent() {
-    this.__domRefs = {};
-
     const rootNode = this.onRender(this.__attrs, this.__children) || createNode('!');
 
     if(IS_DEBUG) {
@@ -164,16 +161,6 @@ function isComponentMounted() {
     return this.__isMounted;
 }
 
-function setComponentDomRef(ref, node) {
-    return this.__domRefs[ref] = node;
-}
-
-function getComponentDomRef(ref) {
-    return this.__domRefs[ref]?
-        this.__domRefs[ref].getDomNode() :
-        null;
-}
-
 function getComponentContext() {
     return this.__ctx;
 }
@@ -202,7 +189,6 @@ function createComponent(props, staticProps) {
             this.__attrs = this.__buildAttrs(attrs);
             this.__children = children;
             this.__ctx = ctx;
-            this.__domRefs = null;
             this.__isMounted = false;
             this.__isUpdating = false;
             this.__state = this.onInitialStateRequest(this.__attrs, children);
@@ -234,8 +220,6 @@ function createComponent(props, staticProps) {
             onRender : noOp,
             update : updateComponent,
             patch : patchComponent,
-            getDomRef : getComponentDomRef,
-            setDomRef : setComponentDomRef,
             getAttrs : getComponentAttrs,
             getChildren : getComponentChildren,
             onChildContextRequest : requestChildContext,
