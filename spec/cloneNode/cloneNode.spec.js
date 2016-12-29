@@ -3,15 +3,21 @@ import { node, createComponent } from '../../src/vidom';
 describe('cloneNode', () => {
     describe('tag node', () => {
         it('should copy original fields', () => {
-            const origNode = node('a').key('1').attrs({ href : '/' }).children('link').ctx({}),
+            const origNode = node('a')
+                    .key('1')
+                    .attrs({ href : '/' })
+                    .ctx({})
+                    .ref(() => {})
+                    .children('link'),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
             expect(clonedNode._tag).to.equal(origNode._tag);
             expect(clonedNode._key).to.equal(origNode._key);
             expect(clonedNode._attrs).to.equal(origNode._attrs);
-            expect(clonedNode._children).to.equal(origNode._children);
             expect(clonedNode._ctx).to.equal(origNode._ctx);
+            expect(clonedNode._ref).to.equal(origNode._ref);
+            expect(clonedNode._children).to.equal(origNode._children);
         });
 
         it('should merge attrs', () => {
@@ -33,15 +39,21 @@ describe('cloneNode', () => {
         const C = createComponent({});
 
         it('should copy original fields', () => {
-            const origNode = node(C).key('1').attrs({ href : '/' }).children('link').ctx({}),
+            const origNode = node(C)
+                    .key('1')
+                    .attrs({ href : '/' })
+                    .ctx({})
+                    .ref(() => {})
+                    .children('link'),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
             expect(clonedNode._component).to.equal(origNode._component);
             expect(clonedNode._key).to.equal(origNode._key);
             expect(clonedNode._attrs).to.equal(origNode._attrs);
-            expect(clonedNode._children).to.equal(origNode._children);
             expect(clonedNode._ctx).to.equal(origNode._ctx);
+            expect(clonedNode._ref).to.equal(origNode._ref);
+            expect(clonedNode._children).to.equal(origNode._children);
         });
 
         it('should merge attrs', () => {
