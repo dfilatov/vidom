@@ -166,6 +166,10 @@ function getComponentContext() {
 }
 
 function getComponentRef() {
+    return this.onRefRequest();
+}
+
+function onComponentRefRequest() {
     return this;
 }
 
@@ -229,6 +233,7 @@ function createComponent(props, staticProps) {
             onChildContextRequest : requestChildContext,
             getContext : getComponentContext,
             getRef : getComponentRef,
+            onRefRequest : onComponentRefRequest,
             __buildAttrs : buildComponentAttrs
         };
 

@@ -35,7 +35,7 @@ export default createComponent({
         }
     },
 
-    getRef() {
+    onRefRequest() {
         return this.getDomNode();
     }
 });

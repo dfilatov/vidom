@@ -6,7 +6,7 @@ export default createComponent({
         return new TagNode('input').attrs(attrs);
     },
 
-    getRef() {
+    onRefRequest() {
         return this.getDomNode();
     }
 });
