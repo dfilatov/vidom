@@ -6,19 +6,18 @@ import merge from '../utils/merge';
 export default createComponent({
     onInit() {
         this._addAttrs = {
-            onChange : e => {
-                this.onChange(e);
+            onChange : null,
+            onInput : e => {
+                this.onInput(e);
             }
         };
     },
 
-    onRender(attrs, children) {
-        return new TagNode('select')
-            .attrs(merge(attrs, this._addAttrs))
-            .children(children);
+    onRender(attrs) {
+        return new TagNode('textarea').attrs(merge(attrs, this._addAttrs));
     },
 
-    onChange(e) {
+    onInput(e) {
         const { onChange } = this.getAttrs();
 
         onChange && onChange(e);

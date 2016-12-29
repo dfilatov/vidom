@@ -165,6 +165,10 @@ function getComponentContext() {
     return this.__ctx;
 }
 
+function getComponentRef() {
+    return this;
+}
+
 function getComponentDefaultAttrs() {
     return emptyObj;
 }
@@ -224,6 +228,7 @@ function createComponent(props, staticProps) {
             getChildren : getComponentChildren,
             onChildContextRequest : requestChildContext,
             getContext : getComponentContext,
+            getRef : getComponentRef,
             __buildAttrs : buildComponentAttrs
         };
 
