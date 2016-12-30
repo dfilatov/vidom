@@ -20,10 +20,10 @@ function normalizeChildren(children) {
 
     let res = children,
         i = 0,
-        len = children.length,
         hasContentBefore = false,
-        alreadyNormalizeChildren = {},
         child;
+    const len = children.length,
+        alreadyNormalizeChildren = {};
 
     while(i < len) {
         child = i in alreadyNormalizeChildren?

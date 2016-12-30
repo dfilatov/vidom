@@ -11,8 +11,8 @@ const mountedNodes = new SimpleMap();
 let counter = 0;
 
 function mountToDomNode(domNode, node, ctx, cb, syncMode) {
-    let domNodeId = getDomNodeId(domNode),
-        mounted = mountedNodes.get(domNodeId),
+    const domNodeId = getDomNodeId(domNode);
+    let mounted = mountedNodes.get(domNodeId),
         mountId;
 
     if(mounted && mounted.tree) {

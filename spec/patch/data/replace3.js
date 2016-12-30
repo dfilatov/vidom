@@ -19,4 +19,4 @@ export default {
     'patch' : [
         { op : patchOps.replace, args : [oldNode, newNode] }
     ]
-}
+};

@@ -20,4 +20,4 @@ export default {
     'patch' : [
         { op : patchOps.insertChild, args : [newNode, beforeNode] }
     ]
-}
+};

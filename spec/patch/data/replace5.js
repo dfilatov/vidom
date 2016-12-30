@@ -21,4 +21,4 @@ export default {
         newNode
     ],
     'patch' : []
-}
+};

@@ -18,4 +18,4 @@ export default {
     'patch' : [
         { op : patchOps.updateAttr, args : [node, 'value', 'new text'] }
     ]
-}
+};

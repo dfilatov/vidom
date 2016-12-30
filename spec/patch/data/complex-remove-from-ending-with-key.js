@@ -22,4 +22,4 @@ export default {
         { op : patchOps.removeChild, args : [nodeC] },
         { op : patchOps.removeChild, args : [nodeD] }
     ]
-}
+};

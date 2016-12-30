@@ -12,4 +12,4 @@ export default {
     'patch' : [
         { op : patchOps.updateText, args : [node, '<span></span>', false] }
     ]
-}
+};

@@ -9,7 +9,7 @@ import Select from './components/Select';
 import console from './utils/console';
 import { IS_DEBUG } from './utils/debug';
 
-export default function(type) {
+export default function createNode(type) {
     switch(typeof type) {
         case 'string':
             switch(type) {

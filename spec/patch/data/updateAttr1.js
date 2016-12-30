@@ -12,4 +12,4 @@ export default {
     'patch' : [
         { op : patchOps.updateAttr, args : [node, 'id', 'id2'] }
     ]
-}
+};

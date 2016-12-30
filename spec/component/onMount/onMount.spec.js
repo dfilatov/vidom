@@ -75,7 +75,7 @@ describe('onMount', () => {
                 }
             });
 
-        domNode.innerHTML = '<div><div></div></div>'
+        domNode.innerHTML = '<div><div></div></div>';
         mountSync(domNode, node(C1));
 
         expect(spy1.called).to.be.ok();

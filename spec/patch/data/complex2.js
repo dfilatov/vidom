@@ -30,4 +30,4 @@ export default {
         { op : patchOps.insertChild, args : [nodeD, nodeE] },
         { op : patchOps.appendChild, args : [parentNode, nodeF] }
     ]
-}
+};

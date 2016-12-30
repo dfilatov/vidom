@@ -148,4 +148,4 @@ export default {
     removeChildren,
     updateText,
     removeText
-}
+};

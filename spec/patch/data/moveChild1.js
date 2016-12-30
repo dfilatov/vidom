@@ -19,4 +19,4 @@ export default {
     'patch' : [
         { op : patchOps.moveChild, args : [nodeA, nodeB, true] }
     ]
-}
+};

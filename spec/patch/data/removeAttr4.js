@@ -7,4 +7,4 @@ export default {
         createNode('input')
     ],
     'patch' : []
-}
+};

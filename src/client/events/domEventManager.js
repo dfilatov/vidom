@@ -174,7 +174,7 @@ function removeListeners(domNode) {
         const listeners = listenersStorage.get(domNodeId);
 
         if(listeners) {
-            for(let type in listeners) {
+            for(const type in listeners) {
                 if(listeners[type]) {
                     doRemoveListener(domNode, type);
                 }
@@ -199,4 +199,4 @@ export {
     removeListeners,
     disableListeners,
     enableListeners
-}
+};

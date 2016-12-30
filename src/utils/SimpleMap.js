@@ -26,7 +26,7 @@ if(typeof Map === 'undefined') {
         forEach(callback, thisArg) {
             const storage = this._storage;
 
-            for(let key in storage) {
+            for(const key in storage) {
                 callback.call(thisArg, storage[key], key, this);
             }
         }

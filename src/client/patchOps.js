@@ -99,4 +99,4 @@ export default {
     removeAttr,
     updateText,
     removeText
-}
+};

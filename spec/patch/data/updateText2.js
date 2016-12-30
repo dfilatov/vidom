@@ -7,4 +7,4 @@ export default {
         createNode('span').children('text')
     ],
     'patch' : []
-}
+};

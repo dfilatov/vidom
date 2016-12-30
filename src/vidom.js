@@ -21,4 +21,4 @@ export {
     IS_DEBUG,
     console,
     Component
-}
+};

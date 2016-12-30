@@ -12,4 +12,4 @@ export default {
     'patch' : [
         { op : patchOps.removeAttr, args : [node, 'className'] }
     ]
-}
+};

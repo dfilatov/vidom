@@ -13,4 +13,4 @@ export default {
         { op : patchOps.removeAttr, args : [node, 'value'] },
         { op : patchOps.removeAttr, args : [node, 'className'] }
     ]
-}
+};

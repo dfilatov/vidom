@@ -20,7 +20,7 @@ function unmountComponent() {
 function patchComponent(attrs, children, ctx) {
     attrs = this.__buildAttrs(attrs);
 
-    let prevRootNode = this.__rootNode,
+    const prevRootNode = this.__rootNode,
         prevAttrs = this.__attrs,
         prevChildren = this.__children;
 
@@ -232,7 +232,7 @@ function createComponent(props, staticProps) {
             __buildAttrs : buildComponentAttrs
         };
 
-    for(let i in props) {
+    for(const i in props) {
         ptp[i] = props[i];
     }
 
@@ -240,7 +240,7 @@ function createComponent(props, staticProps) {
 
     res.getDefaultAttrs = getComponentDefaultAttrs;
 
-    for(let i in staticProps) {
+    for(const i in staticProps) {
         res[i] = staticProps[i];
     }
 

@@ -7,4 +7,4 @@ export default {
         createNode('input').attrs({ className : null })
     ],
     'patch' : []
-}
+};

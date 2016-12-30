@@ -196,7 +196,7 @@ describe('renderToString', () => {
             });
 
             expect(createNode(Component).attrs({ id : 'id1' }).children(createNode('i')).renderToString())
-                .to.equal('<div id="id1"><a></a><span></span><i></i></div>')
+                .to.equal('<div id="id1"><a></a><span></span><i></i></div>');
         });
 
         it('should render comment if onRender() returns nothing', () => {
@@ -219,7 +219,7 @@ describe('renderToString', () => {
             };
 
             expect(createNode(Component).attrs({ id : 'id1' }).children(createNode('i')).renderToString())
-                .to.equal('<div id="id1"><a></a><span></span><i></i></div>')
+                .to.equal('<div id="id1"><a></a><span></span><i></i></div>');
         });
 
         it('should render comment if returns nothing', () => {

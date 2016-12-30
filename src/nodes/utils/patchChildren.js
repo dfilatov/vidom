@@ -27,8 +27,8 @@ export default function patchChildren(nodeA, nodeB) {
         updateRightIdxA = false,
         updateLeftIdxB = false,
         updateRightIdxB = false,
-        childrenAIndicesToSkip = {},
         childrenAKeys, foundAChildIdx, foundAChild;
+    const childrenAIndicesToSkip = {};
 
     while(leftIdxA <= rightIdxA && leftIdxB <= rightIdxB) {
         if(childrenAIndicesToSkip[leftIdxA]) {
@@ -130,8 +130,8 @@ export default function patchChildren(nodeA, nodeB) {
 };
 
 function buildKeys(children, idxFrom, idxTo) {
-    let res = {},
-        child;
+    const res = {};
+    let child;
 
     while(idxFrom < idxTo) {
         child = children[idxFrom];

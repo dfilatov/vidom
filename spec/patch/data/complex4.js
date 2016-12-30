@@ -43,4 +43,4 @@ export default {
         { op : patchOps.moveChild, args : [nodeBAA, nodeBAB, true] },
         { op : patchOps.removeChild, args : [nodeD] }
     ]
-}
+};

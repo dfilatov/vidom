@@ -57,4 +57,4 @@ export default {
     onVolumeChange : 'volumechange',
     onWaiting : 'waiting',
     onWheel : 'wheel'
-}
+};

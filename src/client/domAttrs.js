@@ -41,7 +41,7 @@ function setObjProp(node, name, val) {
 
     const prop = node[name];
 
-    for(let i in val) {
+    for(const i in val) {
         prop[i] = val[i] == null? '' : val[i];
     }
 }
@@ -118,10 +118,10 @@ function stylePropToString(name, value) {
     return styles? name + '="' + styles + '"' : styles;
 }
 
-let defaultPropVals = {};
+const defaultPropVals = {};
 
 function getDefaultPropVal(tag, attrName) {
-    let tagAttrs = defaultPropVals[tag] || (defaultPropVals[tag] = {});
+    const tagAttrs = defaultPropVals[tag] || (defaultPropVals[tag] = {});
 
     return attrName in tagAttrs?
         tagAttrs[attrName] :

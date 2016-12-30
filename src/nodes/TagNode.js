@@ -499,17 +499,17 @@ TagNode.prototype = {
             return;
         }
 
-        let hasDiff = false,
-            diffObj = {};
+        const diffObj = {};
+        let hasDiff = false;
 
-        for(let i in objB) {
+        for(const i in objB) {
             if(objA[i] != objB[i]) {
                 hasDiff = true;
                 diffObj[i] = objB[i];
             }
         }
 
-        for(let i in objA) {
+        for(const i in objA) {
             if(objA[i] != null && !(i in objB)) {
                 hasDiff = true;
                 diffObj[i] = null;
@@ -543,7 +543,7 @@ function processChildren(children) {
 }
 
 function checkAttrs(attrs) {
-    for(let name in attrs) {
+    for(const name in attrs) {
         if(name.substr(0, 2) === 'on' && !ATTRS_TO_EVENTS[name]) {
             console.error(`You\'re trying to add unsupported event listener "${name}".`);
         }

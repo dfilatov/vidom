@@ -20,4 +20,4 @@ export default {
     'patch' : [
         { op : patchOps.updateAttr, args : [rootNode, 'value', [1, 2, 4]] }
     ]
-}
+};
