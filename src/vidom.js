@@ -7,10 +7,6 @@ import console from './utils/console';
 import { IS_DEBUG } from './utils/debug';
 import './globalHook';
 
-if(IS_DEBUG) {
-    console.info('You\'re using dev version of Vidom');
-}
-
 export * from './client/mounter';
 
 export {
