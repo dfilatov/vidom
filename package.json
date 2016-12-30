@@ -6,7 +6,8 @@
     "virtual",
     "dom",
     "component",
-    "ui"
+    "ui",
+    "react"
   ],
   "main": "lib/vidom.js",
   "author": "Dmitry Filatov <dfilatov@yandex-team.ru>",
@@ -20,7 +21,7 @@
   ],
   "devDependencies": {
     "babel-cli": "6.18.0",
-    "babel-core": "6.20.0",
+    "babel-core": "6.21.0",
     "babel-loader": "6.2.9",
     "babel-plugin-transform-object-rest-spread": "6.20.1",
     "babel-plugin-vidom-jsx": "0.3.1",
@@ -33,7 +34,7 @@
     "expect.js": "0.3.1",
     "mocha": "3.0.2",
     "mocha-phantomjs": "4.1.0",
-    "rollup": "0.37.0",
+    "rollup": "0.39.0",
     "rollup-plugin-babel": "2.7.1",
     "rollup-plugin-replace": "1.1.1",
     "rollup-plugin-uglify": "1.0.1",
