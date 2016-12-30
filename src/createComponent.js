@@ -165,10 +165,6 @@ function getComponentContext() {
     return this.__ctx;
 }
 
-function getComponentRef() {
-    return this.onRefRequest();
-}
-
 function onComponentRefRequest() {
     return this;
 }
@@ -232,7 +228,6 @@ function createComponent(props, staticProps) {
             getChildren : getComponentChildren,
             onChildContextRequest : requestChildContext,
             getContext : getComponentContext,
-            getRef : getComponentRef,
             onRefRequest : onComponentRefRequest,
             __buildAttrs : buildComponentAttrs
         };

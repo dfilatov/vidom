@@ -89,7 +89,7 @@ ComponentNode.prototype = {
     mount() {
         this._instance.getRootNode().mount();
         this._instance.mount();
-        this._ref && this._ref(this._instance.getRef());
+        this._ref && this._ref(this._instance.onRefRequest());
     },
 
     unmount() {
