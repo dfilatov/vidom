@@ -2,7 +2,7 @@ import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
 import { mountSync, unmountSync } from '../../../src/client/mounter';
 
-describe('getDefaultAttrs', () => {
+describe('onDefaultAttrsRequest', () => {
     let domNode;
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
@@ -43,7 +43,7 @@ describe('getDefaultAttrs', () => {
                 done();
             }
         }, {
-            getDefaultAttrs() {
+            onDefaultAttrsRequest() {
                 return { a : 1, b : 2 };
             }
         });

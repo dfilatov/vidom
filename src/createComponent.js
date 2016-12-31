@@ -169,7 +169,7 @@ function onComponentRefRequest() {
     return this;
 }
 
-function getComponentDefaultAttrs() {
+function onComponentDefaultAttrsRequest() {
     return emptyObj;
 }
 
@@ -179,7 +179,7 @@ function buildComponentAttrs(attrs) {
     }
 
     const cons = this.constructor,
-        defaultAttrs = cons.__defaultAttrs || (cons.__defaultAttrs = cons.getDefaultAttrs());
+        defaultAttrs = cons.__defaultAttrs || (cons.__defaultAttrs = cons.onDefaultAttrsRequest());
 
     return attrs?
         defaultAttrs === emptyObj?
@@ -238,7 +238,7 @@ function createComponent(props, staticProps) {
 
     res.prototype = ptp;
 
-    res.getDefaultAttrs = getComponentDefaultAttrs;
+    res.onDefaultAttrsRequest = onComponentDefaultAttrsRequest;
 
     for(const i in staticProps) {
         res[i] = staticProps[i];
