@@ -1,4 +1,4 @@
-import { node, createComponent } from '../../src/vidom';
+import { node, createComponent, createRef } from '../../src/vidom';
 
 describe('cloneNode', () => {
     describe('tag node', () => {
@@ -7,7 +7,7 @@ describe('cloneNode', () => {
                     .key('1')
                     .attrs({ href : '/' })
                     .ctx({})
-                    .ref(() => {})
+                    .ref(createRef())
                     .children('link'),
                 clonedNode = origNode.clone();
 
@@ -43,7 +43,7 @@ describe('cloneNode', () => {
                     .key('1')
                     .attrs({ href : '/' })
                     .ctx({})
-                    .ref(() => {})
+                    .ref(createRef())
                     .children('link'),
                 clonedNode = origNode.clone();
 

@@ -63,6 +63,11 @@ ComponentNode.prototype = {
 
     ref(ref) {
         this._ref = ref;
+
+        ref.setResolver(() => {
+            return this._instance.onRefRequest();
+        });
+
         return this;
     },
 
@@ -89,7 +94,6 @@ ComponentNode.prototype = {
     mount() {
         this._instance.getRootNode().mount();
         this._instance.mount();
-        this._ref && this._ref(this._instance.onRefRequest());
     },
 
     unmount() {
@@ -97,7 +101,6 @@ ComponentNode.prototype = {
             this._instance.getRootNode().unmount();
             this._instance.unmount();
             this._instance = null;
-            this._ref && this._ref(null);
         }
     },
 
@@ -108,7 +111,10 @@ ComponentNode.prototype = {
         res._attrs = this._attrs;
         res._children = this._children;
         res._ctx = this._ctx;
-        res._ref = this._ref;
+
+        if(this._ref) {
+            res.ref(this._ref);
+        }
 
         return res;
     },

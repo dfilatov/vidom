@@ -1,6 +1,7 @@
 import patchOps from '../client/patchOps';
 import createElement from '../client/utils/createElement';
 import checkReuse from './utils/checkReuse';
+import console from '../utils/console';
 import { IS_DEBUG } from '../utils/debug';
 import {
     NODE_TYPE_TEXT,

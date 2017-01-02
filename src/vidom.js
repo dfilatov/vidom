@@ -1,5 +1,6 @@
 import createNode from './createNode';
 import createComponent from './createComponent';
+import createRef from './createRef';
 import renderToString from './renderToString';
 import normalizeChildren from './utils/normalizeChildren';
 import Component from './Component';
@@ -12,6 +13,7 @@ export * from './client/mounter';
 export {
     createNode as node,
     createComponent,
+    createRef,
     renderToString,
     normalizeChildren,
     IS_DEBUG,
