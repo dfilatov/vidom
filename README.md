@@ -25,11 +25,11 @@ Vidom is just a library to build UI. It's highly inspired and based on ideas fro
   * [uibench](https://localvoid.github.io/uibench/)
   * server-side rendering (nodejs 6.9.2)
 ```    
-                         mean time ops/sec
-  vidom v0.5.7           1.383ms   723
-  inferno v1.0.0-beta33  2.959ms   338  
-  preact v7.1.0          3.204ms   312
-  react v15.4.1          15.628ms  64
+                  mean time ops/sec
+  vidom v0.6.2    1.075ms   930
+  preact v7.1.0   2.254ms   444
+  inferno v1.0.4  2.389ms   419  
+  react v15.4.1   14.781ms  68
 ```
 
 ## Documentation
