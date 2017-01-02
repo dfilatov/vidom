@@ -1,5 +1,5 @@
 import simulate from 'simulate';
-import { node, mountSync, unmountSync } from '../../../src/vidom';
+import { node, createRef, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('select', () => {
     let domNode;
@@ -59,12 +59,14 @@ describe('select', () => {
     });
 
     it('should return dom node as ref', () => {
-        let ref;
+        const ref = createRef();
 
         mountSync(
             domNode,
-            node('select').attrs({ id : 'select', ref(_ref) { ref = _ref; } }));
+            node('select')
+                .attrs({ id : 'select' })
+                .ref(ref));
 
-        expect(ref === document.getElementById('select'));
+        expect(ref.resolve()).to.be.equal(document.getElementById('select'));
     });
 });

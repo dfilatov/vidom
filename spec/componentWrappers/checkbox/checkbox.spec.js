@@ -1,5 +1,5 @@
 import simulate from 'simulate';
-import { node, mountSync, unmountSync } from '../../../src/vidom';
+import { node, createRef, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('checkbox', () => {
     let domNode;
@@ -57,12 +57,14 @@ describe('checkbox', () => {
     });
 
     it('should return dom node as ref', () => {
-        let ref;
+        const ref = createRef();
 
         mountSync(
             domNode,
-            node('input').attrs({ type : 'checkbox', id : 'id1', ref(_ref) { ref = _ref; } }));
+            node('input')
+                .attrs({ type : 'checkbox', id : 'id1' })
+                .ref(ref));
 
-        expect(ref === document.getElementById('id1'));
+        expect(ref.resolve()).to.be.equal(document.getElementById('id1'));
     });
 });
