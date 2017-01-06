@@ -33,6 +33,44 @@ describe('ref', () => {
             expect(spy.calledTwice).to.be.ok();
             expect(spy.args[1][0]).to.be.equal(null);
         });
+
+        it('should call callback with null during patching without reference', () => {
+            const spy = sinon.spy();
+
+            mountSync(domNode, node('div').ref(spy));
+            mountSync(domNode, node('div'));
+
+            expect(spy.calledTwice).to.be.ok();
+            expect(spy.args[1][0]).to.be.equal(null);
+
+            unmountSync(domNode);
+        });
+
+        it('should call callbacks during patching with a new reference', () => {
+            const spy1 = sinon.spy(),
+                spy2 = sinon.spy();
+
+            mountSync(domNode, node('div').attrs({ id : 'id1' }).ref(spy1));
+            mountSync(domNode, node('div').attrs({ id : 'id1' }).ref(spy2));
+
+            expect(spy1.calledTwice).to.be.ok();
+            expect(spy1.args[1][0]).to.be.equal(null);
+            expect(spy2.calledOnce).to.be.ok();
+            expect(spy2.args[0][0]).to.be.equal(document.getElementById('id1'));
+
+            unmountSync(domNode);
+        });
+
+        it('shouldn\'t call callback during patching with the same reference', () => {
+            const spy = sinon.spy();
+
+            mountSync(domNode, node('div').ref(spy));
+            mountSync(domNode, node('div').ref(spy));
+
+            expect(spy.calledOnce).to.be.ok();
+
+            unmountSync(domNode);
+        });
     });
 
     describe('for component nodes', () => {
@@ -57,6 +95,44 @@ describe('ref', () => {
 
             expect(spy.calledTwice).to.be.ok();
             expect(spy.args[1][0]).to.be.equal(null);
+        });
+
+        it('should call callback with null during patching without reference', () => {
+            const spy = sinon.spy();
+
+            mountSync(domNode, node(C).ref(spy));
+            mountSync(domNode, node(C));
+
+            expect(spy.calledTwice).to.be.ok();
+            expect(spy.args[1][0]).to.be.equal(null);
+
+            unmountSync(domNode);
+        });
+
+        it('should call callbacks during patching with a new reference', () => {
+            const spy1 = sinon.spy(),
+                spy2 = sinon.spy();
+
+            mountSync(domNode, node(C).ref(spy1));
+            mountSync(domNode, node(C).ref(spy2));
+
+            expect(spy1.calledTwice).to.be.ok();
+            expect(spy1.args[1][0]).to.be.equal(null);
+            expect(spy2.calledOnce).to.be.ok();
+            expect(spy2.args[0][0]).to.be.a(C);
+
+            unmountSync(domNode);
+        });
+
+        it('shouldn\'t call callback during patching with the same reference', () => {
+            const spy = sinon.spy();
+
+            mountSync(domNode, node(C).ref(spy));
+            mountSync(domNode, node(C).ref(spy));
+
+            expect(spy.calledOnce).to.be.ok();
+
+            unmountSync(domNode);
         });
     });
 });
