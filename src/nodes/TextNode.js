@@ -2,11 +2,7 @@ import patchOps from '../client/patchOps';
 import createElement from '../client/utils/createElement';
 import checkReuse from './utils/checkReuse';
 import { IS_DEBUG } from '../utils/debug';
-import {
-    NODE_TYPE_TEXT,
-    NODE_TYPE_COMPONENT,
-    NODE_TYPE_FUNCTION_COMPONENT
-} from './utils/nodeTypes';
+import { NODE_TYPE_TEXT } from './utils/nodeTypes';
 
 export default function TextNode() {
     this.type = NODE_TYPE_TEXT;
@@ -92,29 +88,14 @@ TextNode.prototype = {
     },
 
     patch(node) {
-        if(this === node) {
-            return;
-        }
-
-        switch(node.type) {
-            case NODE_TYPE_TEXT:
+        if(this !== node) {
+            if(this.type === node.type) {
                 node._domNode = this._domNode;
                 this._patchChildren(node);
-                break;
-
-            case NODE_TYPE_COMPONENT:
-                const instance = node._getInstance();
-
-                this.patch(instance.getRootNode());
-                instance.mount();
-                break;
-
-            case NODE_TYPE_FUNCTION_COMPONENT:
-                this.patch(node._getRootNode());
-                break;
-
-            default:
+            }
+            else {
                 patchOps.replace(this, node);
+            }
         }
     },
 

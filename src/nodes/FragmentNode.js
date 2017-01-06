@@ -6,11 +6,7 @@ import patchChildren from './utils/patchChildren';
 import emptyObj from '../utils/emptyObj';
 import console from '../utils/console';
 import { IS_DEBUG } from '../utils/debug';
-import {
-    NODE_TYPE_FRAGMENT,
-    NODE_TYPE_COMPONENT,
-    NODE_TYPE_FUNCTION_COMPONENT
-} from './utils/nodeTypes';
+import { NODE_TYPE_FRAGMENT } from './utils/nodeTypes';
 
 export default function FragmentNode() {
     this.type = NODE_TYPE_FRAGMENT;
@@ -162,28 +158,13 @@ FragmentNode.prototype = {
     patch(node) {
         if(this === node) {
             this._patchChildren(node);
-            return;
         }
-
-        switch(node.type) {
-            case NODE_TYPE_FRAGMENT:
-                node._domNode = this._domNode;
-                this._patchChildren(node);
-                break;
-
-            case NODE_TYPE_COMPONENT:
-                const instance = node._getInstance();
-
-                this.patch(instance.getRootNode());
-                instance.mount();
-                break;
-
-            case NODE_TYPE_FUNCTION_COMPONENT:
-                this.patch(node._getRootNode());
-                break;
-
-            default:
-                patchOps.replace(this, node);
+        else if(this.type === node.type) {
+            node._domNode = this._domNode;
+            this._patchChildren(node);
+        }
+        else {
+            patchOps.replace(this, node);
         }
     },
 

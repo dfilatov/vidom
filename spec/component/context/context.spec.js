@@ -151,34 +151,25 @@ describe('context', () => {
                     });
                     done();
                 }
-            });
+            }),
+            FC = ({ prop }) =>
+                createNode('div').children(
+                    createNode(C2).attrs({ prop }).children(
+                        createNode('div').children(createNode(C3))));
 
-        mount(domNode, createNode(C1).attrs({ prop : 'val1' }).children([
-            createNode('div').children([
-                createNode('div').children([
-                    createNode(() => createNode('div').children([
-                        createNode(C2).attrs({ prop : 'val2' }).children([
-                            createNode('div').children([
-                                createNode(C3)
-                            ])
-                        ])
-                    ]))
-                ])
-            ])
-        ]), () => {
-            mount(domNode, createNode(C1).attrs({ prop : 'val3' }).children([
-                createNode('div').children([
-                    createNode('div').children([
-                        createNode(() => createNode('div').children([
-                            createNode(C2).attrs({ prop : 'val4' }).children([
-                                createNode('div').children([
-                                    createNode(C3)
-                                ])
-                            ])
-                        ]))
-                    ])
-                ])
-            ]));
-        });
+        mount(
+            domNode,
+            createNode(C1).attrs({ prop : 'val1' }).children(
+                createNode('div').children(
+                    createNode('div').children(
+                        createNode(FC).attrs({ prop : 'val2' })))),
+            () => {
+                mount(
+                    domNode,
+                    createNode(C1).attrs({ prop : 'val3' }).children(
+                        createNode('div').children(
+                            createNode('div').children(
+                                createNode(FC).attrs({ prop : 'val4' })))));
+            });
     });
 });

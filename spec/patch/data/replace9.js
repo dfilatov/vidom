@@ -3,19 +3,18 @@ import createComponent from '../../../src/createComponent';
 import patchOps from '../../../src/client/patchOps';
 
 const oldNode = createNode('div'),
-    newNode = createNode('span'),
-    replaceOp = patchOps.replace,
-    C = createComponent({
+    newNode = createNode(createComponent({
         onRender() {
-            return newNode;
+            return createNode('div');
         }
-    });
+    })),
+    replaceOp = patchOps.replace;
 
 export default {
     'name' : 'replace9',
     'trees' : [
         oldNode,
-        createNode(C)
+        newNode
     ],
     'patch' : [
         { op : replaceOp, args : [oldNode, newNode] }

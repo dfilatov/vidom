@@ -1,3 +1,4 @@
+import patchOps from '../client/patchOps';
 import emptyObj from '../utils/emptyObj';
 import checkReuse from './utils/checkReuse';
 import merge from '../utils/merge';
@@ -119,26 +120,12 @@ ComponentNode.prototype = {
         if(this === node) {
             instance.patch(node._attrs, node._children, node._ctx);
         }
+        else if(this.type === node.type && this._component === node._component) {
+            instance.patch(node._attrs, node._children, node._ctx);
+            node._instance = instance;
+        }
         else {
-            if(this.type === node.type) {
-                if(this._component === node._component) {
-                    instance.patch(node._attrs, node._children, node._ctx);
-                    node._instance = instance;
-                }
-                else {
-                    instance.unmount();
-
-                    const newInstance = node._getInstance();
-
-                    instance.getRootNode().patch(newInstance.getRootNode());
-                    newInstance.mount();
-                }
-            }
-            else {
-                instance.unmount();
-                instance.getRootNode().patch(node);
-            }
-
+            patchOps.replace(this, node);
             this._instance = null;
         }
     },

@@ -1,3 +1,4 @@
+import patchOps from '../client/patchOps';
 import createNode from '../createNode';
 import checkReuse from './utils/checkReuse';
 import console from '../utils/console';
@@ -90,8 +91,12 @@ FunctionComponentNode.prototype = {
             this._rootNode = null;
             prevRootNode.patch(this._getRootNode());
         }
+        else if(this.type === node.type && this._component === node._component) {
+            this._getRootNode().patch(node._getRootNode());
+            this._rootNode = null;
+        }
         else {
-            this._getRootNode().patch(this.type === node.type? node._getRootNode() : node);
+            patchOps.replace(this, node);
             this._rootNode = null;
         }
     },

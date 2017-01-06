@@ -94,12 +94,13 @@ describe('patchDom', () => {
         });
 
         it('should keep value of input if type is changed', () => {
-            const parentNode = node('input').attrs({ type : 'text', value : 'val' }),
+            const parentNode = node('div').children(node('input').attrs({ type : 'text', value : 'val' })),
                 domNode = parentNode.renderToDom();
 
-            parentNode.patch((topNode = node('input')).attrs({ type : 'checkbox', value : 'val' }));
+            parentNode.patch(
+                (topNode = node('div')).children(node('input').attrs({ type : 'checkbox', value : 'val' })));
 
-            expect(domNode.value).to.equal('val');
+            expect(domNode.children[0].value).to.equal('val');
         });
 
         it('should update select children', () => {

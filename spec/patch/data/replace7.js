@@ -1,5 +1,6 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
+import patchOps from '../../../src/client/patchOps';
 
 const C1 = () => createNode('div'),
     C2 = createComponent({
@@ -8,7 +9,8 @@ const C1 = () => createNode('div'),
         }
     }),
     oldNode = createNode(C1),
-    newNode = createNode(C2);
+    newNode = createNode(C2),
+    replaceOp = patchOps.replace;
 
 export default {
     'name' : 'replace7',
@@ -16,5 +18,7 @@ export default {
         oldNode,
         newNode
     ],
-    'patch' : []
+    'patch' : [
+        { op : replaceOp, args : [oldNode, newNode] }
+    ]
 };

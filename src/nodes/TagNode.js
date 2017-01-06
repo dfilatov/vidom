@@ -14,11 +14,7 @@ import { isTrident, isEdge } from '../client/utils/ua';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
 import { IS_DEBUG } from '../utils/debug';
-import {
-    NODE_TYPE_TAG,
-    NODE_TYPE_COMPONENT,
-    NODE_TYPE_FUNCTION_COMPONENT
-} from './utils/nodeTypes';
+import { NODE_TYPE_TAG } from './utils/nodeTypes';
 
 const SHORT_TAGS = {
         area : true,
@@ -333,34 +329,14 @@ TagNode.prototype = {
     patch(node) {
         if(this === node) {
             this._patchChildren(node);
-            return;
         }
-
-        switch(node.type) {
-            case NODE_TYPE_TAG:
-                if(this._tag !== node._tag || this._ns !== node._ns) {
-                    patchOps.replace(this, node);
-                }
-                else {
-                    node._domNode = this._domNode;
-                    this._patchChildren(node);
-                    this._patchAttrs(node);
-                }
-                break;
-
-            case NODE_TYPE_COMPONENT:
-                const instance = node._getInstance();
-
-                this.patch(instance.getRootNode());
-                instance.mount();
-                break;
-
-            case NODE_TYPE_FUNCTION_COMPONENT:
-                this.patch(node._getRootNode());
-                break;
-
-            default:
-                patchOps.replace(this, node);
+        else if(this.type === node.type && this._tag === node._tag && this._ns === node._ns) {
+            node._domNode = this._domNode;
+            this._patchChildren(node);
+            this._patchAttrs(node);
+        }
+        else {
+            patchOps.replace(this, node);
         }
     },
 

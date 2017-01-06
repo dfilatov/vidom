@@ -6,13 +6,8 @@ const C1 = createComponent({
             return createNode('div');
         }
     }),
-    C2 = createComponent({
-        onRender() {
-            return createNode('div');
-        }
-    }),
     oldNode = createNode(C1),
-    newNode = createNode(C2);
+    newNode = createNode(C1);
 
 export default {
     'name' : 'replace5',
