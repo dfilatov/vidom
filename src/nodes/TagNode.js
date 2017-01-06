@@ -117,11 +117,6 @@ TagNode.prototype = {
 
     ref(ref) {
         this._ref = ref;
-
-        ref.setResolver(() => {
-            return this._domNode;
-        });
-
         return this;
     },
 
@@ -298,6 +293,8 @@ TagNode.prototype = {
                 children[i++].mount();
             }
         }
+
+        this._ref && this._ref(this._domNode);
     },
 
     unmount() {
@@ -315,6 +312,8 @@ TagNode.prototype = {
         removeListeners(this._domNode);
 
         this._domNode = null;
+
+        this._ref && this._ref(null);
     },
 
     clone() {
@@ -326,10 +325,7 @@ TagNode.prototype = {
         res._ns = this._ns;
         res._escapeChildren = this._escapeChildren;
         res._ctx = this._ctx;
-
-        if(this._ref) {
-            res.ref(this._ref);
-        }
+        res._ref = this._ref;
 
         return res;
     },
