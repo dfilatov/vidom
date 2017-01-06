@@ -1,5 +1,5 @@
 import simulate from 'simulate';
-import { node, createRef, mountSync, unmountSync } from '../../../src/vidom';
+import { node, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('textarea', () => {
     let domNode;
@@ -47,14 +47,12 @@ describe('textarea', () => {
     });
 
     it('should return dom node as ref', () => {
-        const ref = createRef();
+        let ref;
 
         mountSync(
             domNode,
-            node('textarea')
-                .attrs({ id : 'textarea' })
-                .ref(ref));
+            node('textarea').attrs({ id : 'textarea', ref(_ref) { ref = _ref; } }));
 
-        expect(ref.resolve()).to.be.equal(document.getElementById('textarea'));
+        expect(ref === document.getElementById('textarea'));
     });
 });

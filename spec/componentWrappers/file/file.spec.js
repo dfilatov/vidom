@@ -1,4 +1,4 @@
-import { node, createRef, mountSync, unmountSync } from '../../../src/vidom';
+import { node, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('file', () => {
     let domNode;
@@ -13,14 +13,12 @@ describe('file', () => {
     });
 
     it('should return dom node as ref', () => {
-        const ref = createRef();
+        let ref;
 
         mountSync(
             domNode,
-            node('input')
-                .attrs({ type : 'file', id : 'id1' })
-                .ref(ref));
+            node('input').attrs({ type : 'file', id : 'id1', ref(_ref) { ref = _ref; } }));
 
-        expect(ref.resolve()).to.be.equal(document.getElementById('id1'));
+        expect(ref === document.getElementById('id1'));
     });
 });
