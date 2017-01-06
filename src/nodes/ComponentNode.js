@@ -123,10 +123,26 @@ ComponentNode.prototype = {
         else if(this.type === node.type && this._component === node._component) {
             instance.patch(node._attrs, node._children, node._ctx);
             node._instance = instance;
+            this._patchRef(node);
         }
         else {
             patchOps.replace(this, node);
             this._instance = null;
+        }
+    },
+
+    _patchRef(node) {
+        if(this._ref) {
+            if(this._ref !== node._ref) {
+                this._ref(null);
+
+                if(node._ref) {
+                    node._ref(node._instance);
+                }
+            }
+        }
+        else if(node._ref) {
+            node._ref(node._instance);
         }
     },
 

@@ -334,6 +334,7 @@ TagNode.prototype = {
             node._domNode = this._domNode;
             this._patchChildren(node);
             this._patchAttrs(node);
+            this._patchRef(node);
         }
         else {
             patchOps.replace(this, node);
@@ -493,6 +494,21 @@ TagNode.prototype = {
         }
 
         hasDiff && patchOps.updateAttr(this, attrName, diffObj);
+    },
+
+    _patchRef(node) {
+        if(this._ref) {
+            if(this._ref !== node._ref) {
+                this._ref(null);
+
+                if(node._ref) {
+                    node._ref(node._domNode);
+                }
+            }
+        }
+        else if(node._ref) {
+            node._ref(node._domNode);
+        }
     }
 };
 
