@@ -94,10 +94,7 @@ function requestInitialComponentState() {
 }
 
 function setComponentState(state) {
-    if(this.__state === this.__prevState) {
-        this.update(updateComponentPrevState);
-    }
-
+    this.update(this.__state === this.__prevState? updateComponentPrevState : null);
     this.__state = merge(this.__state, state);
 }
 
