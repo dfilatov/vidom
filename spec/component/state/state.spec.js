@@ -47,10 +47,31 @@ describe('state', () => {
 
             onMount() {
                 this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
+                this.setState({ prop4 : 'val4' });
             },
 
             onUpdate() {
-                expect(this.getState()).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
+                expect(this.getState()).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4' });
+                done();
+            }
+        });
+
+        mountSync(domNode, createNode(C));
+    });
+
+    it('shouldn\'t affect prev state till updating', done => {
+        const C = createComponent({
+            onInitialStateRequest() {
+                return { prop1 : 'val1', prop2 : 'val2' };
+            },
+
+            onMount() {
+                this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
+                this.setState({ prop4 : 'val4' });
+            },
+
+            onUpdate() {
+                expect(this.getPrevState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
             }
         });
@@ -69,6 +90,26 @@ describe('state', () => {
             },
 
             shouldUpdate() {
+                expect(this.getState()).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
+                expect(this.getPrevState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+                done();
+            }
+        });
+
+        mountSync(domNode, createNode(C));
+    });
+
+    it('should be possible to get both state and previous state inside onUpdate', done => {
+        const C = createComponent({
+            onInitialStateRequest() {
+                return { prop1 : 'val1', prop2 : 'val2' };
+            },
+
+            onMount() {
+                this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
+            },
+
+            onUpdate() {
                 expect(this.getState()).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
                 expect(this.getPrevState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
