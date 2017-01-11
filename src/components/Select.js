@@ -2,6 +2,7 @@ import createComponent from '../createComponent';
 import TagNode from '../nodes/TagNode';
 import { applyBatch } from '../client/rafBatch';
 import merge from '../utils/merge';
+import isInArray from '../utils/isInArray';
 
 export default createComponent({
     onInit() {
@@ -19,18 +20,51 @@ export default createComponent({
     },
 
     onChange(e) {
-        const { onChange } = this.getAttrs();
+        const { target } = e,
+            { onChange, multiple } = this.getAttrs();
 
-        onChange && onChange(e);
+        if(onChange) {
+            if(multiple) {
+                const newValue = [],
+                    { options } = target,
+                    len = options.length;
+                let i = 0,
+                    option;
+
+                while(i < len) {
+                    option = options[i++];
+                    if(option.selected) {
+                        newValue.push(option.value);
+                    }
+                }
+
+                onChange(e, newValue);
+            }
+            else {
+                onChange(e);
+            }
+        }
 
         applyBatch();
 
         if(this.isMounted()) {
-            const control = this.getDomNode(),
-                { value } = this.getAttrs(); // attrs could be changed during applyBatch()
+            const { value, multiple } = this.getAttrs(); // attrs could be changed during applyBatch()
 
-            if(typeof value !== 'undefined' && control.value !== value) {
-                control.value = value;
+            if(typeof value !== 'undefined') {
+                if(multiple) {
+                    const { options } = target,
+                        len = options.length;
+                    let i = 0,
+                        option;
+
+                    while(i < len) {
+                        option = options[i++];
+                        option.selected = isInArray(value, option.value);
+                    }
+                }
+                else if(target.value != value) {
+                    target.value = value;
+                }
             }
         }
     },

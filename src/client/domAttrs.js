@@ -72,16 +72,21 @@ function removeProp(node, name) {
 }
 
 function setSelectValue(node, value) {
-    const isMultiple = Array.isArray(value),
-        options = node.options,
-        len = options.length;
-    let i = 0,
-        optionNode;
+    const isMultiple = Array.isArray(value);
 
-    while(i < len) {
-        optionNode = options[i++];
-        optionNode.selected = value != null &&
-            (isMultiple? isInArray(value, optionNode.value) : optionNode.value == value);
+    if(isMultiple) {
+        const { options } = node,
+            len = options.length;
+        let i = 0,
+            optionNode;
+
+        while(i < len) {
+            optionNode = options[i++];
+            optionNode.selected = value != null && isInArray(value, optionNode.value);
+        }
+    }
+    else {
+        node.value = value;
     }
 }
 
