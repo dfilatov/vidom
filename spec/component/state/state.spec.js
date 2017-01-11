@@ -24,15 +24,16 @@ describe('state', () => {
         mountSync(domNode, createNode(C));
     });
 
-    it('should be filled from onInitialStateRequest', done => {
+    it('should be possible to fill it from init', done => {
         const C = createComponent({
-            onInitialStateRequest() {
-                return { prop : 'val' };
+            onInit() {
+                this.setState({ prop1 : 'val1' });
+                this.setState({ prop2 : 'val2' });
+                done();
             },
 
-            onInit() {
-                expect(this.getState()).to.be.eql({ prop : 'val' });
-                done();
+            onMount() {
+                expect(this.getState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
             }
         });
 
@@ -41,8 +42,8 @@ describe('state', () => {
 
     it('should be properly updated with setState', done => {
         const C = createComponent({
-            onInitialStateRequest() {
-                return { prop1 : 'val1', prop2 : 'val2' };
+            onInit() {
+                this.setState({ prop1 : 'val1', prop2 : 'val2' });
             },
 
             onMount() {
@@ -61,8 +62,9 @@ describe('state', () => {
 
     it('shouldn\'t affect prev state till updating', done => {
         const C = createComponent({
-            onInitialStateRequest() {
-                return { prop1 : 'val1', prop2 : 'val2' };
+            onInit() {
+                this.setState({ prop1 : 'val1' });
+                this.setState({ prop2 : 'val2' });
             },
 
             onMount() {
@@ -81,8 +83,8 @@ describe('state', () => {
 
     it('should be possible to get both state and previous state inside shouldUpdate', done => {
         const C = createComponent({
-            onInitialStateRequest() {
-                return { prop1 : 'val1', prop2 : 'val2' };
+            onInit() {
+                this.setState({ prop1 : 'val1', prop2 : 'val2' });
             },
 
             onMount() {
@@ -101,8 +103,8 @@ describe('state', () => {
 
     it('should be possible to get both state and previous state inside onUpdate', done => {
         const C = createComponent({
-            onInitialStateRequest() {
-                return { prop1 : 'val1', prop2 : 'val2' };
+            onInit() {
+                this.setState({ prop1 : 'val1', prop2 : 'val2' });
             },
 
             onMount() {
