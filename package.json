@@ -1,6 +1,6 @@
 {
   "name": "vidom",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "description": "Library to build UI",
   "keywords": [
     "virtual",
