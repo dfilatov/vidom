@@ -89,13 +89,14 @@ function requestChildContext() {
     return emptyObj;
 }
 
-function requestInitialComponentState() {
-    return emptyObj;
-}
-
 function setComponentState(state) {
-    this.update(this.__state === this.__prevState? updateComponentPrevState : null);
-    this.__state = merge(this.__state, state);
+    if(this.__rootNode) { // was inited
+        this.update(this.__state === this.__prevState? updateComponentPrevState : null);
+        this.__state = merge(this.__state, state);
+    }
+    else {
+        this.__state = state === emptyObj? state : merge(this.__state, state);
+    }
 }
 
 function updateComponentPrevState() {
@@ -193,14 +194,15 @@ function createComponent(props, staticProps) {
             this.__ctx = ctx;
             this.__isMounted = false;
             this.__isUpdating = false;
-            this.__state = this.onInitialStateRequest(this.__attrs, children);
-            this.__prevState = this.__state;
+            this.__state = emptyObj;
+
             this.onInit(this.__attrs, children);
+
+            this.__prevState = this.__state;
             this.__rootNode = this.render();
         },
         ptp = {
             constructor : res,
-            onInitialStateRequest : requestInitialComponentState,
             onInit : noOp,
             mount : mountComponent,
             unmount : unmountComponent,
