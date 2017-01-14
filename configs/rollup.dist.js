@@ -14,8 +14,7 @@ export default Object.assign(
         plugins : baseConfig.plugins.concat(isProduction?
             [
                 replace({
-                    delimiters : ['(', ')'],
-                    'IS_DEBUG' : '(false)'
+                    'process.env.NODE_ENV': '\'production\''
                 }),
                 uglify()
             ] :
