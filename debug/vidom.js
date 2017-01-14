@@ -1,4 +1,4 @@
-import { Component, mountToDom, unmountFromDom, node, renderToString } from '../src/vidom';
+import { Component, mount, unmount, node, renderToString } from '../src/vidom';
 import patchOps from '../src/client/patchOps';
 
 const origPatchOps = {};
@@ -103,15 +103,15 @@ const root = document.getElementById('root'),
 console.log(renderToString(tree));
 root.innerHTML = renderToString(tree);
 
-mountToDom(root, tree);
+mount(root, tree);
 
 setTimeout(function() {
-    mountToDom(root, node(A).attrs({ a : 2 }));
+    mount(root, node(A).attrs({ a : 2 }));
     setTimeout(function() {
         console.log('before 3');
-        mountToDom(root, node(A).attrs({ a : 3 }));
+        mount(root, node(A).attrs({ a : 3 }));
 // // //     //     setTimeout(function() {
-// // //     //         mountToDom(document.getElementById('root'), node('div').children([
+// // //     //         mount(document.getElementById('root'), node('div').children([
 // // //     //             node('div').children('-1'),
 // // //     //             node(A).attrs({ a : false }),
 // // //     //             node('div').children('+1')
