@@ -106,11 +106,11 @@ describe('normalizeChildren', () => {
             .to.be.eql('test');
     });
 
-    it('should make array for only node child', () => {
+    it('should do nothing for only node child', () => {
         const node = createNode('a');
 
         expect(normalizeChildren(node))
-            .to.be.eql([node]);
+            .to.be.eql(node);
     });
 
     it('should reuse existing array if possible', () => {

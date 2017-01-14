@@ -1,11 +1,12 @@
 import createNode from '../createNode';
 
-function normalizeChildren(children) {
+export default function normalizeChildren(children) {
     if(children == null) {
         return null;
     }
 
     const typeOfChildren = typeof children;
+
     if(typeOfChildren !== 'object') {
         return typeOfChildren === 'string'? children || null : '' + children;
     }
@@ -116,14 +117,4 @@ function normalizeChildren(children) {
 
 function toNode(obj) {
     return typeof obj === 'object'? obj : createNode('text').children(obj);
-}
-
-export default function(children) {
-    let res = normalizeChildren(children);
-
-    if(res !== null && typeof res === 'object' && !Array.isArray(res)) {
-        res = [res];
-    }
-
-    return res;
 }
