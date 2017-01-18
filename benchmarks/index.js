@@ -29,7 +29,7 @@ Object.keys(suits).forEach(suitName => {
 
     Object.keys(test).forEach(testName => {
         let i = 0,
-            name = `  ${testName} v${versions[testName]} `;
+            name = `  ${testName} v${versions[testName.indexOf('.') > -1? testName.split('.')[0] : testName]} `;
 
         suite.add(
             testName,
