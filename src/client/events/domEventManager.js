@@ -30,32 +30,26 @@ const listenersStorage = new SimpleMap(),
     eventsCfg = {};
 let areListenersEnabled = true;
 
-function globalEventListener(e, type) {
+function globalEventListener(e, type = e.type) {
     if(!areListenersEnabled) {
         return;
     }
 
-    type || (type = e.type);
-
-    const cfg = eventsCfg[type];
-
-    let target = e.target,
-        listenersCount = cfg.listenersCounter,
+    let { target } = e,
+        { listenersCount } = eventsCfg[type],
         listeners,
         listener,
         domNodeId,
         syntheticEvent;
 
-    while(listenersCount > 0 && target && target !== document) {
+    while(listenersCount && target && target !== document) { // need to check target for detached dom
         if(domNodeId = getDomNodeId(target, true)) {
             listeners = listenersStorage.get(domNodeId);
             if(listeners && (listener = listeners[type])) {
                 listener(syntheticEvent || (syntheticEvent = createSyntheticEvent(type, e)));
-                if(syntheticEvent.isPropagationStopped()) {
-                    break;
+                if(!--listenersCount || syntheticEvent.isPropagationStopped()) {
+                    return;
                 }
-
-                --listenersCount;
             }
         }
 
@@ -83,7 +77,7 @@ if(typeof document !== 'undefined') {
         eventsCfg[type] = {
             type : type,
             bubbles : true,
-            listenersCounter : 0,
+            listenersCount : 0,
             set : false,
             setup : focusEvents[type]?
                 isEventSupported(focusEvents[type])?
@@ -133,7 +127,7 @@ function addListener(domNode, type, listener) {
 
         if(!listeners[type]) {
             cfg.bubbles?
-                ++cfg.listenersCounter :
+                ++cfg.listenersCount :
                 domNode.addEventListener(type, eventListener, false);
         }
 
@@ -146,7 +140,7 @@ function doRemoveListener(domNode, type) {
 
     if(cfg) {
         if(cfg.bubbles) {
-            --cfg.listenersCounter;
+            --cfg.listenersCount;
         }
         else {
             domNode.removeEventListener(type, eventListener);
