@@ -58,7 +58,7 @@ class Content extends Preact.Component {
                                 'div')))));
         }
 
-        return Preact.h('div', { className : 'header' }, children);
+        return Preact.h('div', { className : 'content' }, children);
     }
 }
 

@@ -1,8 +1,5 @@
 "use strict";
 
-// inferno-component doesn't work on server because uses window
-global.window = { screen : {} };
-
 const Inferno = require('inferno');
 const InfernoServer = require('inferno-server');
 const InfernoComponent = require('inferno-component');
@@ -67,7 +64,7 @@ class Content extends InfernoComponent {
                                 'div', null, null, true), null, null, true), null, null, true), null, null, true));
         }
 
-        return createVNode(66, 'div', { className : 'header' }, children, null, null, true);
+        return createVNode(66, 'div', { className : 'content' }, children, null, null, true);
     }
 }
 

@@ -58,7 +58,7 @@ class Content extends React.Component {
                                 'div')))));
         }
 
-        return React.createElement('div', { className : 'header' }, children);
+        return React.createElement('div', { className : 'content' }, children);
     }
 }
 

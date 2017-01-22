@@ -29,12 +29,20 @@ Object.keys(suits).forEach(suitName => {
 
     Object.keys(test).forEach(testName => {
         let i = 0,
-            name = `  ${testName} v${versions[testName.indexOf('.') > -1? testName.split('.')[0] : testName]} `;
+            name = `  ${testName} v${versions[testName.indexOf('.') > -1? testName.split('.')[0] : testName]} `,
+            testFn = test[testName],
+            defer = !!testFn.length;
 
         suite.add(
             testName,
-            test[testName],
+            defer?
+                deferred => {
+                    testFn(deferred);
+                } :
+                testFn,
             {
+                defer,
+
                 onStart() {
                     console.log(`${name}`);
                 },

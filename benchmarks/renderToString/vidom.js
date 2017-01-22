@@ -48,7 +48,7 @@ class Content extends vidom.Component {
                             node('div').children('div')))));
         }
 
-        return node('div').attrs({ className : 'header' }).children(children);
+        return node('div').attrs({ className : 'content' }).children(children);
     }
 }
 

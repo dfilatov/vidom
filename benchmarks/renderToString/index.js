@@ -7,5 +7,6 @@ module.exports = {
     'react.with-hack' : require('./react.with-hack')(CHILDREN_NUM),
     'preact' : require('./preact')(CHILDREN_NUM),
     'inferno' : require('./inferno')(CHILDREN_NUM),
-    'vidom' : require('./vidom')(CHILDREN_NUM)
+    'vidom' : require('./vidom')(CHILDREN_NUM),
+    'vue' : require('./vue')(CHILDREN_NUM)
 };
