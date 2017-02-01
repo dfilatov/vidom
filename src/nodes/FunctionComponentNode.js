@@ -106,7 +106,7 @@ FunctionComponentNode.prototype = {
             return this._rootNode;
         }
 
-        const rootNode = this._component(this._attrs, this._children, this._ctx) || createNode('!');
+        const rootNode = this._component(this._attrs || emptyObj, this._children, this._ctx) || createNode('!');
 
         if(IS_DEBUG) {
             if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
