@@ -12,3 +12,4 @@ import './cloneNode/cloneNode.spec.js';
 import './domEvents/domEvents.spec.js';
 import './component/component.spec.js';
 import './componentWrappers/componentWrappers.spec.js';
+import './functionComponent/functionComponent.spec.js';
