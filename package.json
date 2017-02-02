@@ -52,8 +52,11 @@
     "test": "browserify spec/boot.js -t babelify -o spec/boot.build.js && mocha-phantomjs spec/runner.html",
     "test-browsers": "NODE_ENV=production zuul -- spec/boot.js",
     "test-server": "zuul --local 3000 -- spec/boot.js",
-    "build-lib": "rm -rf lib && mkdir -p lib && rollup -c configs/rollup.lib.js",
-    "build-dist": "rm -rf dist && mkdir -p dist && rollup -c configs/rollup.dist.js && NODE_ENV=production rollup -c configs/rollup.dist.js",
+    "build": "npm run build:lib & npm run build:dist",
+    "prebuild:lib": "rm -rf lib && mkdir -p lib",
+    "build:lib": "rollup -c configs/rollup.lib.js",
+    "prebuild:dist": "rm -rf dist && mkdir -p dist",
+    "build:dist": "rollup -c configs/rollup.dist.js & NODE_ENV=production rollup -c configs/rollup.dist.js",
     "debug-server": "webpack-dev-server --config debug/webpack.debug.config.js --progress --colors --port 3000",
     "demo-server": "webpack-dev-server --config demo/webpack.demo.config.js --progress --colors --port 3000",
     "release": "node scripts/release"

@@ -9,10 +9,7 @@ var vow = require('vow'),
 
 exec('git pull')
     .then(() => exec('npm i'))
-    .then(() => vow.all([
-        exec('npm run build-lib'),
-        exec('npm run build-dist')
-    ]))
+    .then(() => exec('npm run build'))
     .then(() => exec('npm version ' + version))
     .then(() => vow.all([
         readFile('package.json', 'utf8'),
