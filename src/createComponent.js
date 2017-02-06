@@ -9,7 +9,7 @@ import globalHook from './globalHook';
 
 function mountComponent() {
     this.__isMounted = true;
-    this.onMount(this.__attrs, this.__children);
+    this.onMount();
 }
 
 function unmountComponent() {
@@ -17,43 +17,58 @@ function unmountComponent() {
     this.onUnmount();
 }
 
-function patchComponent(attrs, children, ctx) {
-    attrs = this.__buildAttrs(attrs);
-
-    const prevRootNode = this.__rootNode,
-        prevAttrs = this.__attrs,
-        prevChildren = this.__children;
-
-    if(prevAttrs !== attrs || prevChildren !== children) {
-        this.__attrs = attrs;
-        if(this.isMounted()) {
-            const isUpdating = this.__isUpdating;
-            this.__isUpdating = true;
-            this.onAttrsReceive(attrs, prevAttrs, children, prevChildren);
-            this.__isUpdating = isUpdating;
-        }
+function patchComponent(nextAttrs, nextChildren, nextContext) {
+    if(!this.isMounted()) {
+        return;
     }
 
-    this.__children = children;
-    this.__ctx = ctx;
+    nextAttrs = this.__buildAttrs(nextAttrs);
+
+    const prevAttrs = this.attrs,
+        prevChildren = this.children;
+
+    if(prevAttrs !== nextAttrs || prevChildren !== nextChildren) {
+        const isUpdating = this.__isUpdating;
+
+        this.__isUpdating = true;
+
+        if(prevAttrs !== nextAttrs) {
+            this.attrs = nextAttrs;
+            this.onAttrsChange(prevAttrs);
+        }
+
+        if(prevChildren !== nextChildren) {
+            this.children = nextChildren;
+            this.onChildrenChange(prevChildren);
+        }
+
+        this.__isUpdating = isUpdating;
+    }
+
+    if(this.context !== nextContext) {
+        this.context = nextContext;
+    }
 
     if(this.__isUpdating) {
         return;
     }
 
-    const shouldUpdate = this.shouldUpdate(attrs, prevAttrs, children, prevChildren);
+    const shouldUpdate = this.shouldUpdate(prevAttrs, prevChildren, this.__prevState);
 
     if(IS_DEBUG) {
         const shouldUpdateResType = typeof shouldUpdate;
+
         if(shouldUpdateResType !== 'boolean') {
             console.warn(`Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
         }
     }
 
     if(shouldUpdate) {
+        const prevRootNode = this.__rootNode;
+
         this.__rootNode = this.render();
         prevRootNode.patch(this.__rootNode);
-        this.isMounted() && this.onUpdate(attrs, prevAttrs, children, prevChildren);
+        this.onUpdate(prevAttrs, prevChildren, this.__prevState);
     }
 }
 
@@ -77,42 +92,26 @@ function getComponentDomNode() {
     return this.__rootNode.getDomNode();
 }
 
-function getComponentAttrs() {
-    return this.__attrs;
-}
-
-function getComponentChildren() {
-    return this.__children;
-}
-
 function requestChildContext() {
     return emptyObj;
 }
 
 function setComponentState(state) {
     if(this.__rootNode) { // was inited
-        this.update(this.__state === this.__prevState? updateComponentPrevState : null);
-        this.__state = merge(this.__state, state);
+        this.update(this.state === this.__prevState? updateComponentPrevState : null);
+        this.state = merge(this.state, state);
     }
     else {
-        this.__state = state === emptyObj? state : merge(this.__state, state);
+        this.state = state === emptyObj? state : merge(this.state, state);
     }
 }
 
 function updateComponentPrevState() {
-    this.__prevState = this.__state;
-}
-
-function getComponentState() {
-    return this.__state;
-}
-
-function getComponentPrevState() {
-    return this.__prevState;
+    this.__prevState = this.state;
 }
 
 function renderComponent() {
-    const rootNode = this.onRender(this.__attrs, this.__children) || createNode('!');
+    const rootNode = this.onRender() || createNode('!');
 
     if(IS_DEBUG) {
         if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
@@ -120,13 +119,13 @@ function renderComponent() {
         }
     }
 
-    const childCtx = this.onChildContextRequest(this.__attrs);
+    const childCtx = this.onChildContextRequest();
 
     rootNode.ctx(childCtx === emptyObj?
-        this.__ctx :
-        this.__ctx === emptyObj?
+        this.context :
+        this.context === emptyObj?
             childCtx :
-            merge(this.__ctx, childCtx));
+            merge(this.context, childCtx));
 
     return rootNode;
 }
@@ -142,7 +141,7 @@ function updateComponent(cb) {
                 this.__isUpdating = false;
                 const prevRootNode = this.__rootNode;
 
-                this.patch(this.__attrs, this.__children, this.__ctx);
+                this.patch(this.attrs, this.children, this.context);
                 cb && cb.call(this);
                 if(IS_DEBUG) {
                     globalHook.emit('replace', prevRootNode, this.__rootNode);
@@ -160,10 +159,6 @@ function isComponentMounted() {
     return this.__isMounted;
 }
 
-function getComponentContext() {
-    return this.__ctx;
-}
-
 function onComponentRefRequest() {
     return this;
 }
@@ -173,7 +168,7 @@ function onComponentDefaultAttrsRequest() {
 }
 
 function buildComponentAttrs(attrs) {
-    if(this.__attrs && attrs === this.__attrs) {
+    if(this.attrs && attrs === this.attrs) {
         return attrs;
     }
 
@@ -189,16 +184,17 @@ function buildComponentAttrs(attrs) {
 
 function createComponent(props, staticProps) {
     const res = function(attrs, children, ctx) {
-            this.__attrs = this.__buildAttrs(attrs);
-            this.__children = children;
-            this.__ctx = ctx;
+            this.attrs = this.__buildAttrs(attrs);
+            this.children = children;
+            this.state = emptyObj;
+            this.context = ctx;
+
             this.__isMounted = false;
             this.__isUpdating = false;
-            this.__state = emptyObj;
 
-            this.onInit(this.__attrs, children);
+            this.onInit();
 
-            this.__prevState = this.__state;
+            this.__prevState = this.state;
             this.__rootNode = this.render();
         },
         ptp = {
@@ -208,12 +204,11 @@ function createComponent(props, staticProps) {
             unmount : unmountComponent,
             onMount : noOp,
             onUnmount : noOp,
-            onAttrsReceive : noOp,
+            onAttrsChange : noOp,
+            onChildrenChange : noOp,
             shouldUpdate : shouldComponentUpdate,
             onUpdate : noOp,
             isMounted : isComponentMounted,
-            getState : getComponentState,
-            getPrevState : getComponentPrevState,
             setState : setComponentState,
             renderToDom : renderComponentToDom,
             renderToString : renderComponentToString,
@@ -224,10 +219,7 @@ function createComponent(props, staticProps) {
             onRender : noOp,
             update : updateComponent,
             patch : patchComponent,
-            getAttrs : getComponentAttrs,
-            getChildren : getComponentChildren,
             onChildContextRequest : requestChildContext,
-            getContext : getComponentContext,
             onRefRequest : onComponentRefRequest,
             __buildAttrs : buildComponentAttrs
         };

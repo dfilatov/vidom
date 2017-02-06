@@ -77,7 +77,7 @@ describe('mount', () => {
             const ctx = { prop : 'val' },
                 C = createComponent({
                     onMount() {
-                        expect(this.getContext()).to.equal(ctx);
+                        expect(this.context).to.equal(ctx);
                         done();
                     }
                 });

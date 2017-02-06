@@ -1,9 +1,11 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
 import { mount, mountSync, unmountSync } from '../../../src/client/mounter';
+import emptyObj from '../../../src/utils/emptyObj';
 
 describe('context', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -16,7 +18,7 @@ describe('context', () => {
     it('should be empty by default', done => {
         const C = createComponent({
             onInit() {
-                expect(this.getContext()).to.be.eql({});
+                expect(this.context).to.be.equal(emptyObj);
                 done();
             }
         });
@@ -25,18 +27,19 @@ describe('context', () => {
     });
 
     it('should be passed through tree', done => {
-        const C1 = createComponent({
+        const context = { prop : 'val' },
+            C1 = createComponent({
                 onChildContextRequest() {
-                    return { prop : 'val' };
+                    return context;
                 },
 
-                onRender(_, children) {
-                    return createNode('div').children(createNode('fragment').children(children));
+                onRender() {
+                    return createNode('div').children(createNode('fragment').children(this.children));
                 }
             }),
             C2 = createComponent({
                 onInit() {
-                    expect(this.getContext()).to.be.eql({ prop : 'val' });
+                    expect(this.context).to.be.equal(context);
                     done();
                 }
             });
@@ -58,8 +61,8 @@ describe('context', () => {
                     return { prop1 : 'val1' };
                 },
 
-                onRender(_, children) {
-                    return createNode('div').children(children);
+                onRender() {
+                    return createNode('div').children(this.children);
                 }
             }),
             C2 = createComponent({
@@ -67,13 +70,13 @@ describe('context', () => {
                     return { prop2 : 'val2' };
                 },
 
-                onRender(_, children) {
-                    return createNode('div').children(children);
+                onRender() {
+                    return createNode('div').children(this.children);
                 }
             }),
             C3 = createComponent({
                 onInit() {
-                    expect(this.getContext()).to.be.eql({
+                    expect(this.context).to.be.eql({
                         prop1 : 'val1',
                         prop2 : 'val2'
                     });
@@ -102,8 +105,8 @@ describe('context', () => {
                     return { prop1 : 'val1' };
                 },
 
-                onRender(_, children) {
-                    return createNode('div').children(children);
+                onRender() {
+                    return createNode('div').children(this.children);
                 }
             }),
             C2 = createComponent({
@@ -113,7 +116,7 @@ describe('context', () => {
             }),
             C3 = createComponent({
                 onInit() {
-                    expect(this.getContext()).to.be.eql({ prop1 : 'val1' });
+                    expect(this.context).to.be.eql({ prop1 : 'val1' });
                     done();
                 }
             });
@@ -126,26 +129,26 @@ describe('context', () => {
 
     it('shouldn\'t be updated after patching', done => {
         const C1 = createComponent({
-                onChildContextRequest(attrs) {
-                    return { prop1 : attrs.prop };
+                onChildContextRequest() {
+                    return { prop1 : this.attrs.prop };
                 },
 
-                onRender(_, children) {
-                    return createNode('div').children(children);
+                onRender() {
+                    return createNode('div').children(this.children);
                 }
             }),
             C2 = createComponent({
-                onChildContextRequest(attrs) {
-                    return { prop2 : attrs.prop };
+                onChildContextRequest() {
+                    return { prop2 : this.attrs.prop };
                 },
 
-                onRender(_, children) {
-                    return createNode('div').children(children);
+                onRender() {
+                    return createNode('div').children(this.children);
                 }
             }),
             C3 = createComponent({
                 onUpdate() {
-                    expect(this.getContext()).to.be.eql({
+                    expect(this.context).to.be.eql({
                         prop1 : 'val3',
                         prop2 : 'val4'
                     });

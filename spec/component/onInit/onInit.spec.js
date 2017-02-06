@@ -5,6 +5,7 @@ import { mountSync, unmountSync } from '../../../src/client/mounter';
 
 describe('onInit', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });

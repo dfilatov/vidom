@@ -187,11 +187,11 @@ describe('renderToString', () => {
     describe('component', () => {
         it('should be rendered as component', () => {
             const Component = createComponent({
-                onRender : function(attrs, content) {
-                    return createNode('div').attrs(attrs).children([
+                onRender : function() {
+                    return createNode('div').attrs(this.attrs).children([
                         createNode('a'),
                         createNode('span')
-                    ].concat(content));
+                    ].concat(this.children));
                 }
             });
 

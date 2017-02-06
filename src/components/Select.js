@@ -13,15 +13,15 @@ export default createComponent({
         };
     },
 
-    onRender(attrs, children) {
+    onRender() {
         return new TagNode('select')
-            .attrs(merge(attrs, this._addAttrs))
-            .children(children);
+            .attrs(merge(this.attrs, this._addAttrs))
+            .children(this.children);
     },
 
     onChange(e) {
         const { target } = e,
-            { onChange, multiple } = this.getAttrs();
+            { onChange, multiple } = this.attrs;
 
         if(onChange) {
             if(multiple) {
@@ -48,7 +48,7 @@ export default createComponent({
         applyBatch();
 
         if(this.isMounted()) {
-            const { value, multiple } = this.getAttrs(); // attrs could be changed during applyBatch()
+            const { value, multiple } = this.attrs; // attrs could be changed during applyBatch()
 
             if(typeof value !== 'undefined') {
                 if(multiple) {

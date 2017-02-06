@@ -1,6 +1,5 @@
+import { mountSync, unmountSync } from '../../src/vidom';
 import patchOps from '../../src/client/patchOps';
-import domOps from '../../src/client/domOps';
-import TopNode from '../../src/nodes/TopNode';
 
 describe('patch', () => {
     const origPatchOps = {};
@@ -73,6 +72,8 @@ describe('patch', () => {
     ];
 
     data.forEach(({ default : specData }) => {
+        let domNode;
+
         beforeEach(() => {
             opsLog = [];
             Object.keys(patchOps).forEach(op => {
@@ -81,21 +82,22 @@ describe('patch', () => {
                     opsLog.push({ op : origPatchOps[op], args : Array.prototype.slice.call(arguments) });
                 };
             });
+
+            document.body.appendChild(domNode = document.createElement('div'));
         });
 
         afterEach(() => {
             Object.keys(patchOps).forEach(op => {
                 patchOps[op] = origPatchOps[op];
             });
+
+            unmountSync(domNode);
+            document.body.removeChild(domNode);
         });
 
         it('for ' + specData.name + ' should be right', () => {
-            const topNode1 = new TopNode(specData.trees[0]),
-                topNode2 = new TopNode(specData.trees[1]);
-
-            domOps.append(document.createElement('div'), topNode1.renderToDom());
-            topNode1.patch(topNode2);
-            topNode2.unmount();
+            mountSync(domNode, specData.trees[0]);
+            mountSync(domNode, specData.trees[1]);
 
             expect(opsLog).to.eql(specData.patch);
         });
