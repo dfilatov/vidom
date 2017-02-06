@@ -15,17 +15,21 @@ export default createComponent({
         };
     },
 
-    onRender(attrs) {
-        return new TagNode('input').attrs(merge(attrs, this._addAttrs));
+    onRender() {
+        return new TagNode('input').attrs(merge(this.attrs, this._addAttrs));
     },
 
-    onMount({ name }) {
+    onMount() {
+        const { name } = this.attrs;
+
         if(name) {
             addToNamedRadioInputs(name, this);
         }
     },
 
-    onUpdate({ name }, { name : prevName }) {
+    onUpdate({ name : prevName }) {
+        const { name } = this.attrs;
+
         if(name !== prevName) {
             if(prevName) {
                 removeFromNamedRadioInputs(prevName, this);
@@ -38,7 +42,7 @@ export default createComponent({
     },
 
     onUnmount() {
-        const { name } = this.getAttrs();
+        const { name } = this.attrs;
 
         if(name) {
             removeFromNamedRadioInputs(name, this);
@@ -46,7 +50,7 @@ export default createComponent({
     },
 
     onChange(e) {
-        const { onChange } = this.getAttrs();
+        const { onChange } = this.attrs;
 
         onChange && onChange(e);
 
@@ -54,7 +58,7 @@ export default createComponent({
 
         if(this.isMounted()) {
             const control = this.getDomNode(),
-                { name, checked } = this.getAttrs(); // attrs could be changed during applyBatch()
+                { name, checked } = this.attrs; // attrs could be changed during applyBatch()
 
             if(typeof checked !== 'undefined' && control.checked !== checked) {
                 if(name) {
@@ -66,7 +70,7 @@ export default createComponent({
 
                     while(i < len) {
                         radioInput = radioInputs[i++];
-                        checked = radioInput.getAttrs().checked;
+                        checked = radioInput.attrs.checked;
 
                         if(typeof checked !== 'undefined') {
                             const radioControl = radioInput.getDomNode();

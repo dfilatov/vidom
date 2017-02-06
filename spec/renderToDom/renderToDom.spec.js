@@ -25,10 +25,10 @@ describe('renderToDom', () => {
         });
 
         it('should be inherited from parent', () => {
-            var domNode = (topNode = node('svg'))
-                    .ns('http://www.w3.org/2000/svg')
-                    .children(node('g').children(node('circle')))
-                    .renderToDom();
+            const domNode = (topNode = node('svg'))
+                .ns('http://www.w3.org/2000/svg')
+                .children(node('g').children(node('circle')))
+                .renderToDom();
 
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
@@ -190,11 +190,11 @@ describe('renderToDom', () => {
     describe('component', () => {
         it('should be rendered as component', () => {
             const Component = createComponent({
-                    onRender(attrs, content) {
-                        return node('div').attrs(attrs).children([
+                    onRender() {
+                        return node('div').attrs(this.attrs).children([
                             node('a'),
                             node('span')
-                        ].concat(content));
+                        ].concat(this.children));
                     }
                 }),
                 domNode = (topNode = node(Component)).attrs({ id : 'id1' }).children(node('i')).renderToDom();

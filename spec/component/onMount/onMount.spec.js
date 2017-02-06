@@ -3,6 +3,7 @@ import { node, createComponent, mountSync, unmountSync } from '../../../src/vido
 
 describe('onMount', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -26,8 +27,8 @@ describe('onMount', () => {
             }),
             C2 = createComponent({
                 onMount : spy2,
-                onRender(_, content) {
-                    return node('div').children(content);
+                onRender() {
+                    return node('div').children(this.children);
                 }
             }),
             C3 = createComponent({
@@ -44,19 +45,16 @@ describe('onMount', () => {
         expect(spy3.called).to.be.ok();
     });
 
-    it('should be called with actual attributes', () => {
-        var spy = sinon.spy(),
-            C1 = createComponent({
-                onMount : spy,
-                onRender() {
-                    return null;
+    it('should be called with actual attributes', done => {
+        const C1 = createComponent({
+                onMount() {
+                    expect(this.attrs).to.be.equal(attrs);
+                    done();
                 }
             }),
             attrs = { name : 'value' };
 
         mountSync(domNode, node(C1).attrs(attrs));
-
-        expect(spy.calledWith(attrs)).to.be.ok();
     });
 
     it('should be recursively called when existing dom is adopted', () => {

@@ -3,6 +3,7 @@ import { node, createComponent, mountSync, unmountSync } from '../../../src/vido
 
 describe('onUnmount', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -26,8 +27,8 @@ describe('onUnmount', () => {
             }),
             C2 = createComponent({
                 onUnmount : spy2,
-                onRender(_, content) {
-                    return node('div').children(content);
+                onRender() {
+                    return node('div').children(this.children);
                 }
             }),
             C3 = createComponent({

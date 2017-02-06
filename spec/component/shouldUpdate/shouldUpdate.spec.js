@@ -1,5 +1,6 @@
 import sinon from 'sinon';
 import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import emptyObj from '../../../src/utils/emptyObj';
 
 describe('shouldUpdate', () => {
     let domNode;
@@ -13,24 +14,24 @@ describe('shouldUpdate', () => {
         document.body.removeChild(domNode);
     });
 
-    it('should be called when new attrs and children are received', () => {
-        const spy = sinon.spy(),
-            C = createComponent({
-                shouldUpdate() {
-                    spy.apply(this, arguments);
-                    return true;
+    it('should be called when attrs and children are changed', done => {
+        const C = createComponent({
+                shouldUpdate(arg1, arg2, arg3) {
+                    expect(this.attrs).to.be.equal(nextAttrs);
+                    expect(this.children).to.be.equal(nextChildren);
+                    expect(arg1).to.be.equal(prevAttrs);
+                    expect(arg2).to.be.equal(prevChildren);
+                    expect(arg3).to.be.equal(emptyObj);
+                    done();
                 }
             }),
-            oldAttrs = { id : 1 },
-            newAttrs = { id : 2 },
-            oldChildren = [node('div')],
-            newChildren = [node('span')];
+            prevAttrs = { id : 1 },
+            nextAttrs = { id : 2 },
+            prevChildren = [node('div')],
+            nextChildren = [node('span')];
 
-        mountSync(domNode, node(C).attrs(oldAttrs).children(oldChildren));
-        mountSync(domNode, node(C).attrs(newAttrs).children(newChildren));
-
-        expect(spy.called).to.be.ok();
-        expect(spy.calledWith(newAttrs, oldAttrs, newChildren, oldChildren)).to.be.ok();
+        mountSync(domNode, node(C).attrs(prevAttrs).children(prevChildren));
+        mountSync(domNode, node(C).attrs(nextAttrs).children(nextChildren));
     });
 
     it('should prevent rendering if returns false', () => {

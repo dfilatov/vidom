@@ -12,12 +12,12 @@ export default createComponent({
         };
     },
 
-    onRender(attrs) {
-        return new TagNode('input').attrs(merge(attrs, this._addAttrs));
+    onRender() {
+        return new TagNode('input').attrs(merge(this.attrs, this._addAttrs));
     },
 
     onChange(e) {
-        const { onChange } = this.getAttrs();
+        const { onChange } = this.attrs;
 
         onChange && onChange(e);
 
@@ -25,7 +25,7 @@ export default createComponent({
 
         if(this.isMounted()) {
             const control = this.getDomNode(),
-                { checked } = this.getAttrs(); // attrs could be changed during applyBatch()
+                { checked } = this.attrs; // attrs could be changed during applyBatch()
 
             if(typeof checked !== 'undefined' && control.checked !== checked) {
                 control.checked = checked;

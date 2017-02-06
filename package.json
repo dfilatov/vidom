@@ -32,7 +32,7 @@
     "browserify": "14.0.0",
     "eslint": "3.12.2",
     "expect.js": "0.3.1",
-    "mocha": "3.0.2",
+    "mocha": "3.2.0",
     "mocha-phantomjs": "4.1.0",
     "rollup": "0.41.4",
     "rollup-plugin-babel": "2.7.1",

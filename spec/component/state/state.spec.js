@@ -1,9 +1,11 @@
 import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
 import { mountSync, unmountSync } from '../../../src/client/mounter';
+import emptyObj from '../../../src/utils/emptyObj';
 
 describe('state', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -16,7 +18,7 @@ describe('state', () => {
     it('should be empty by default', done => {
         const C = createComponent({
             onInit() {
-                expect(this.getState()).to.be.eql({});
+                expect(this.state).to.be.equal(emptyObj);
                 done();
             }
         });
@@ -33,7 +35,7 @@ describe('state', () => {
             },
 
             onMount() {
-                expect(this.getState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+                expect(this.state).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
             }
         });
 
@@ -52,7 +54,7 @@ describe('state', () => {
             },
 
             onUpdate() {
-                expect(this.getState()).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4' });
+                expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4' });
                 done();
             }
         });
@@ -72,8 +74,8 @@ describe('state', () => {
                 this.setState({ prop4 : 'val4' });
             },
 
-            onUpdate() {
-                expect(this.getPrevState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+            onUpdate(prevAttrs, prevChildren, prevState) {
+                expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
             }
         });
@@ -91,9 +93,9 @@ describe('state', () => {
                 this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
             },
 
-            shouldUpdate() {
-                expect(this.getState()).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
-                expect(this.getPrevState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+            shouldUpdate(prevAttrs, prevChildren, prevState) {
+                expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
+                expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
             }
         });
@@ -111,9 +113,9 @@ describe('state', () => {
                 this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
             },
 
-            onUpdate() {
-                expect(this.getState()).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
-                expect(this.getPrevState()).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+            onUpdate(prevAttrs, prevChildren, prevState) {
+                expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
+                expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
             }
         });
