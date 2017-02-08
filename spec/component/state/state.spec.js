@@ -2,6 +2,7 @@ import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
 import { mountSync, unmountSync } from '../../../src/client/mounter';
 import emptyObj from '../../../src/utils/emptyObj';
+import { IS_DEBUG } from '../../../src/utils/debug';
 
 describe('state', () => {
     let domNode;
@@ -122,4 +123,36 @@ describe('state', () => {
 
         mountSync(domNode, createNode(C));
     });
+
+    if(IS_DEBUG) {
+        it('should throw exception if attempt to replace state directly', done => {
+            const C = createComponent({
+                onInit() {
+                    expect(() => {
+                        this.state = { prop1 : 'val1' };
+                    }).to.throwException(function(e) {
+                        expect(e).to.be.a(TypeError);
+                        done();
+                    });
+                }
+            });
+
+            mountSync(domNode, createNode(C));
+        });
+
+        it('should throw exception if attempt to modify state directly', done => {
+            const C = createComponent({
+                onInit() {
+                    expect(() => {
+                        this.state.prop1 = 'val1';
+                    }).to.throwException(function(e) {
+                        expect(e).to.be.a(TypeError);
+                        done();
+                    });
+                }
+            });
+
+            mountSync(domNode, createNode(C));
+        });
+    }
 });
