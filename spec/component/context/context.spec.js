@@ -2,6 +2,7 @@ import createNode from '../../../src/createNode';
 import createComponent from '../../../src/createComponent';
 import { mount, mountSync, unmountSync } from '../../../src/client/mounter';
 import emptyObj from '../../../src/utils/emptyObj';
+import { IS_DEBUG } from '../../../src/utils/debug';
 
 describe('context', () => {
     let domNode;
@@ -175,4 +176,36 @@ describe('context', () => {
                                 createNode(FC).attrs({ prop : 'val4' })))));
             });
     });
+
+    if(IS_DEBUG) {
+        it('should throw exception if attempt to replace context directly', done => {
+            const C = createComponent({
+                onInit() {
+                    expect(() => {
+                        this.context = { prop1 : 'val1' };
+                    }).to.throwException(function(e) {
+                        expect(e).to.be.a(TypeError);
+                        done();
+                    });
+                }
+            });
+
+            mountSync(domNode, createNode(C));
+        });
+
+        it('should throw exception if attempt to modify context directly', done => {
+            const C = createComponent({
+                onInit() {
+                    expect(() => {
+                        this.context.prop1 = 'val1';
+                    }).to.throwException(function(e) {
+                        expect(e).to.be.a(TypeError);
+                        done();
+                    });
+                }
+            });
+
+            mountSync(domNode, createNode(C));
+        });
+    }
 });

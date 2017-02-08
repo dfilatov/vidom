@@ -33,12 +33,30 @@ function patchComponent(nextAttrs, nextChildren, nextContext) {
         this.__isUpdating = true;
 
         if(prevAttrs !== nextAttrs) {
+            if(IS_DEBUG) {
+                this.__isFrozen = false;
+            }
+
             this.attrs = nextAttrs;
+
+            if(IS_DEBUG) {
+                this.__isFrozen = true;
+            }
+
             this.onAttrsChange(prevAttrs);
         }
 
         if(prevChildren !== nextChildren) {
+            if(IS_DEBUG) {
+                this.__isFrozen = false;
+            }
+
             this.children = nextChildren;
+
+            if(IS_DEBUG) {
+                this.__isFrozen = true;
+            }
+
             this.onChildrenChange(prevChildren);
         }
 
@@ -46,7 +64,16 @@ function patchComponent(nextAttrs, nextChildren, nextContext) {
     }
 
     if(this.context !== nextContext) {
+        if(IS_DEBUG) {
+            this.__isFrozen = false;
+        }
+
         this.context = nextContext;
+
+        if(IS_DEBUG) {
+            Object.freeze(this.context);
+            this.__isFrozen = true;
+        }
     }
 
     if(this.__isUpdating) {
@@ -97,12 +124,25 @@ function requestChildContext() {
 }
 
 function setComponentState(state) {
+    let nextState;
+
     if(this.__rootNode) { // was inited
         this.update(this.state === this.__prevState? updateComponentPrevState : null);
-        this.state = merge(this.state, state);
+        nextState = merge(this.state, state);
     }
     else {
-        this.state = state === emptyObj? state : merge(this.state, state);
+        nextState = state === emptyObj? state : merge(this.state, state);
+    }
+
+    if(IS_DEBUG) {
+        this.__isFrozen = false;
+    }
+
+    this.state = nextState;
+
+    if(IS_DEBUG) {
+        Object.freeze(this.state);
+        this.__isFrozen = true;
     }
 }
 
@@ -119,13 +159,18 @@ function renderComponent() {
         }
     }
 
-    const childCtx = this.onChildContextRequest();
+    const childCtx = this.onChildContextRequest(),
+        rootNodeCtx = childCtx === emptyObj?
+            this.context :
+            this.context === emptyObj?
+                childCtx :
+                merge(this.context, childCtx);
 
-    rootNode.ctx(childCtx === emptyObj?
-        this.context :
-        this.context === emptyObj?
-            childCtx :
-            merge(this.context, childCtx));
+    if(IS_DEBUG) {
+        Object.freeze(rootNodeCtx);
+    }
+
+    rootNode.ctx(rootNodeCtx);
 
     return rootNode;
 }
@@ -173,21 +218,35 @@ function buildComponentAttrs(attrs) {
     }
 
     const cons = this.constructor,
-        defaultAttrs = cons.__defaultAttrs || (cons.__defaultAttrs = cons.onDefaultAttrsRequest());
+        defaultAttrs = cons.__defaultAttrs || (cons.__defaultAttrs = cons.onDefaultAttrsRequest()),
+        resAttrs = attrs?
+            defaultAttrs === emptyObj?
+                attrs :
+                merge(defaultAttrs, attrs) :
+            defaultAttrs;
 
-    return attrs?
-        defaultAttrs === emptyObj?
-            attrs :
-            merge(defaultAttrs, attrs) :
-        defaultAttrs;
+    if(IS_DEBUG) {
+        Object.freeze(resAttrs);
+    }
+
+    return resAttrs;
 }
 
 function createComponent(props, staticProps) {
     const res = function(attrs, children, ctx) {
+            if(IS_DEBUG) {
+                enableImmutableRestrictions(this);
+                this.__isFrozen = false;
+            }
+
             this.attrs = this.__buildAttrs(attrs);
             this.children = children;
             this.state = emptyObj;
             this.context = ctx;
+
+            if(IS_DEBUG) {
+                this.__isFrozen = true;
+            }
 
             this.__isMounted = false;
             this.__isUpdating = false;
@@ -239,6 +298,27 @@ function createComponent(props, staticProps) {
     res['__vidom__component__'] = true;
 
     return res;
+}
+
+function enableImmutableRestrictions(instance) {
+    ['attrs', 'children', 'state', 'context'].forEach(prop => {
+        const hiddenProp = `__${prop}`;
+
+        Object.defineProperty(instance, prop, {
+            get() {
+                return instance[hiddenProp];
+            },
+
+            set(value) {
+                if(instance.__isFrozen) {
+                    throw TypeError(`Component#${prop} is restricted to be modified directly`);
+                }
+                else {
+                    instance[hiddenProp] = value;
+                }
+            }
+        });
+    });
 }
 
 export default createComponent;
