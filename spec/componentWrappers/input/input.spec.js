@@ -14,7 +14,7 @@ describe('input', () => {
     });
 
     it('should maintain value', () => {
-        mountSync(domNode, node('input').attrs({ id : 'input', value : 'test' }));
+        mountSync(domNode, node('input').setAttrs({ id : 'input', value : 'test' }));
 
         const input = document.getElementById('input');
 
@@ -33,7 +33,7 @@ describe('input', () => {
         }
 
         function render() {
-            mountSync(domNode, node('input').attrs({ id : 'input', value, onChange }));
+            mountSync(domNode, node('input').setAttrs({ id : 'input', value, onChange }));
         }
 
         render();
@@ -51,7 +51,7 @@ describe('input', () => {
 
         mountSync(
             domNode,
-            node('input').attrs({ id : 'input', ref(_ref) { ref = _ref; } }));
+            node('input').setAttrs({ id : 'input', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('input'));
     });

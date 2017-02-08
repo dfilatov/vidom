@@ -14,7 +14,7 @@ describe('textarea', () => {
     });
 
     it('should maintain value', () => {
-        mountSync(domNode, node('textarea').attrs({ id : 'textarea', value : 'test' }));
+        mountSync(domNode, node('textarea').setAttrs({ id : 'textarea', value : 'test' }));
 
         const input = document.getElementById('textarea');
 
@@ -33,7 +33,7 @@ describe('textarea', () => {
         }
 
         function render() {
-            mountSync(domNode, node('textarea').attrs({ id : 'textarea', value, onChange }));
+            mountSync(domNode, node('textarea').setAttrs({ id : 'textarea', value, onChange }));
         }
 
         render();
@@ -51,7 +51,7 @@ describe('textarea', () => {
 
         mountSync(
             domNode,
-            node('textarea').attrs({ id : 'textarea', ref(_ref) { ref = _ref; } }));
+            node('textarea').setAttrs({ id : 'textarea', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('textarea'));
     });

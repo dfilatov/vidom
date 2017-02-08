@@ -4,15 +4,35 @@ import checkReuse from './utils/checkReuse';
 import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
 import merge from '../utils/merge';
+import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
+import { setKey } from './utils/setters';
+
+const ATTRS_SET = 4,
+    CHILDREN_SET = 8;
 
 export default function FunctionComponentNode(component) {
+    if(IS_DEBUG) {
+        restrictObjProp(this, 'type');
+        restrictObjProp(this, 'key');
+        restrictObjProp(this, 'attrs');
+        restrictObjProp(this, 'children');
+
+        this.__isFrozen = false;
+    }
+
     this.type = NODE_TYPE_FUNCTION_COMPONENT;
+    this.key = null;
+    this.attrs = null;
+    this.children = null;
+
+    if(IS_DEBUG) {
+        this.__isFrozen = true;
+        this._sets = 0;
+    }
+
     this._component = component;
-    this._key = null;
-    this._attrs = null;
-    this._children = null;
     this._rootNode = null;
     this._ctx = emptyObj;
 }
@@ -22,22 +42,48 @@ FunctionComponentNode.prototype = {
         return this._rootNode && this._rootNode.getDomNode();
     },
 
-    key(key) {
-        this._key = key;
+    setKey,
+
+    setAttrs(attrs) {
+        if(IS_DEBUG) {
+            if(this._sets & ATTRS_SET) {
+                console.warn('Attrs are already set and shouldn\'t be set again.');
+            }
+
+            this.__isFrozen = false;
+        }
+
+        this.attrs = this.attrs? merge(this.attrs, attrs) : attrs;
+
+        if(IS_DEBUG) {
+            Object.freeze(this.attrs);
+            this._sets |= ATTRS_SET;
+            this.__isFrozen = true;
+        }
+
         return this;
     },
 
-    attrs(attrs) {
-        this._attrs = this._attrs? merge(this._attrs, attrs) : attrs;
+    setChildren(children) {
+        if(IS_DEBUG) {
+            if(this._sets & CHILDREN_SET) {
+                console.warn('Children are already set and shouldn\'t be set again.');
+            }
+
+            this.__isFrozen = false;
+        }
+
+        this.children = children;
+
+        if(IS_DEBUG) {
+            this._sets |= CHILDREN_SET;
+            this.__isFrozen = true;
+        }
+
         return this;
     },
 
-    children(children) {
-        this._children = children;
-        return this;
-    },
-
-    ctx(ctx) {
+    setCtx(ctx) {
         this._ctx = ctx;
         return this;
     },
@@ -76,9 +122,18 @@ FunctionComponentNode.prototype = {
     clone() {
         const res = new FunctionComponentNode(this._component);
 
-        res._key = this._key;
-        res._attrs = this._attrs;
-        res._children = this._children;
+        if(IS_DEBUG) {
+            res.__isFrozen = false;
+        }
+
+        res.key = this.key;
+        res.attrs = this.attrs;
+        res.children = this.children;
+
+        if(IS_DEBUG) {
+            res.__isFrozen = true;
+        }
+
         res._ctx = this._ctx;
 
         return res;
@@ -106,7 +161,7 @@ FunctionComponentNode.prototype = {
             return this._rootNode;
         }
 
-        const rootNode = this._component(this._attrs || emptyObj, this._children, this._ctx) || createNode('!');
+        const rootNode = this._component(this.attrs || emptyObj, this.children, this._ctx) || createNode('!');
 
         if(IS_DEBUG) {
             if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
@@ -114,14 +169,14 @@ FunctionComponentNode.prototype = {
             }
         }
 
-        rootNode.ctx(this._ctx);
+        rootNode.setCtx(this._ctx);
 
         return this._rootNode = rootNode;
     }
 };
 
 if(IS_DEBUG) {
-    FunctionComponentNode.prototype.ref = function() {
+    FunctionComponentNode.prototype.setRef = function() {
         console.error('Function component nodes don\'t support refs.');
         return this;
     };

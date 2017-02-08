@@ -16,7 +16,7 @@ describe('ref', () => {
         it('should call callback with dom node on tag node mount', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node('div').attrs({ id : 'id1' }).ref(spy));
+            mountSync(domNode, node('div').setAttrs({ id : 'id1' }).setRef(spy));
 
             expect(spy.calledOnce).to.be.ok();
             expect(spy.args[0][0]).to.be.equal(document.getElementById('id1'));
@@ -27,7 +27,7 @@ describe('ref', () => {
         it('should call callback with null on tag node unmount', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node('div').ref(spy));
+            mountSync(domNode, node('div').setRef(spy));
             unmountSync(domNode);
 
             expect(spy.calledTwice).to.be.ok();
@@ -37,7 +37,7 @@ describe('ref', () => {
         it('should call callback with null during patching without reference', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node('div').ref(spy));
+            mountSync(domNode, node('div').setRef(spy));
             mountSync(domNode, node('div'));
 
             expect(spy.calledTwice).to.be.ok();
@@ -50,8 +50,8 @@ describe('ref', () => {
             const spy1 = sinon.spy(),
                 spy2 = sinon.spy();
 
-            mountSync(domNode, node('div').attrs({ id : 'id1' }).ref(spy1));
-            mountSync(domNode, node('div').attrs({ id : 'id1' }).ref(spy2));
+            mountSync(domNode, node('div').setAttrs({ id : 'id1' }).setRef(spy1));
+            mountSync(domNode, node('div').setAttrs({ id : 'id1' }).setRef(spy2));
 
             expect(spy1.calledTwice).to.be.ok();
             expect(spy1.args[1][0]).to.be.equal(null);
@@ -64,8 +64,8 @@ describe('ref', () => {
         it('shouldn\'t call callback during patching with the same reference', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node('div').ref(spy));
-            mountSync(domNode, node('div').ref(spy));
+            mountSync(domNode, node('div').setRef(spy));
+            mountSync(domNode, node('div').setRef(spy));
 
             expect(spy.calledOnce).to.be.ok();
 
@@ -79,7 +79,7 @@ describe('ref', () => {
         it('should call callback with component instance on component node mount', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node(C).ref(spy));
+            mountSync(domNode, node(C).setRef(spy));
 
             expect(spy.calledOnce).to.be.ok();
             expect(spy.args[0][0]).to.be.a(C);
@@ -90,7 +90,7 @@ describe('ref', () => {
         it('should call callback with null on component node unmount', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node(C).ref(spy));
+            mountSync(domNode, node(C).setRef(spy));
             unmountSync(domNode);
 
             expect(spy.calledTwice).to.be.ok();
@@ -100,7 +100,7 @@ describe('ref', () => {
         it('should call callback with null during patching without reference', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node(C).ref(spy));
+            mountSync(domNode, node(C).setRef(spy));
             mountSync(domNode, node(C));
 
             expect(spy.calledTwice).to.be.ok();
@@ -113,8 +113,8 @@ describe('ref', () => {
             const spy1 = sinon.spy(),
                 spy2 = sinon.spy();
 
-            mountSync(domNode, node(C).ref(spy1));
-            mountSync(domNode, node(C).ref(spy2));
+            mountSync(domNode, node(C).setRef(spy1));
+            mountSync(domNode, node(C).setRef(spy2));
 
             expect(spy1.calledTwice).to.be.ok();
             expect(spy1.args[1][0]).to.be.equal(null);
@@ -127,8 +127,8 @@ describe('ref', () => {
         it('shouldn\'t call callback during patching with the same reference', () => {
             const spy = sinon.spy();
 
-            mountSync(domNode, node(C).ref(spy));
-            mountSync(domNode, node(C).ref(spy));
+            mountSync(domNode, node(C).setRef(spy));
+            mountSync(domNode, node(C).setRef(spy));
 
             expect(spy.calledOnce).to.be.ok();
 

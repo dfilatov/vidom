@@ -17,7 +17,7 @@ describe('file', () => {
 
         mountSync(
             domNode,
-            node('input').attrs({ type : 'file', id : 'id1', ref(_ref) { ref = _ref; } }));
+            node('input').setAttrs({ type : 'file', id : 'id1', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('id1'));
     });

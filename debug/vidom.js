@@ -22,21 +22,17 @@ class A extends Component {
     onRender() {
         switch(this.state.b) {
             case 1:
-                return node('a').children('a');
+                return node('a').setChildren('a');
 
             case 2:
-                return node('b').children('b');
+                return node('b').setChildren('b');
 
             case 3:
-                return node('i').children('i');
+                return node('i').setChildren('i');
         }
     }
 
     onMount() {
-        console.log('1', this.attrs);
-        console.log('2', this.attrs.a);
-        this.attrs = 3;
-        console.log('3', this.attrs.a);
         setTimeout(function() {
             // this.attrs = {};
             this.setState({ b : 2 });
@@ -48,7 +44,7 @@ class A extends Component {
 }
 
 const root = document.getElementById('root'),
-    tree = node(A).attrs({ a : 1 });
+    tree = node(A).setAttrs({ a : 1 });
 
 // console.log(renderToString(tree));
 // root.innerHTML = renderToString(tree);

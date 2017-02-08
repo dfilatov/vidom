@@ -5,14 +5,32 @@ import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import emptyObj from '../utils/emptyObj';
 import console from '../utils/console';
+import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { NODE_TYPE_FRAGMENT } from './utils/nodeTypes';
+import { setKey } from './utils/setters';
+
+const CHILDREN_SET = 8;
 
 export default function FragmentNode() {
+    if(IS_DEBUG) {
+        restrictObjProp(this, 'type');
+        restrictObjProp(this, 'key');
+        restrictObjProp(this, 'children');
+
+        this.__isFrozen = false;
+    }
+
     this.type = NODE_TYPE_FRAGMENT;
+    this.key = null;
+    this.children = null;
+
+    if(IS_DEBUG) {
+        this.__isFrozen = true;
+        this._sets = 0;
+    }
+
     this._domNode = null;
-    this._key = null;
-    this._children = null;
     this._ctx = emptyObj;
 }
 
@@ -21,28 +39,43 @@ FragmentNode.prototype = {
         return this._domNode;
     },
 
-    key(key) {
-        this._key = key;
+    setKey,
+
+    setChildren(children) {
+        if(IS_DEBUG) {
+            if(this._sets & CHILDREN_SET) {
+                console.warn('Children are already set and shouldn\'t be set again.');
+            }
+
+            this.__isFrozen = false;
+        }
+
+        this.children = processChildren(children);
+
+        if(IS_DEBUG) {
+            if(Array.isArray(this.children)) {
+                Object.freeze(this.children);
+            }
+
+            this._sets |= CHILDREN_SET;
+            this.__isFrozen = true;
+        }
+
         return this;
     },
 
-    children(children) {
-        this._children = processChildren(children);
-        return this;
-    },
-
-    ctx(ctx) {
+    setCtx(ctx) {
         if(ctx !== emptyObj) {
             this._ctx = ctx;
 
-            const children = this._children;
+            const { children } = this;
 
             if(children) {
                 const len = children.length;
                 let i = 0;
 
                 while(i < len) {
-                    children[i++].ctx(ctx);
+                    children[i++].setCtx(ctx);
                 }
             }
         }
@@ -55,11 +88,8 @@ FragmentNode.prototype = {
             checkReuse(this, 'fragment');
         }
 
-        const children = this._children,
-            domNode = [
-                createElement('!'),
-                createElement('!')
-            ],
+        const { children } = this,
+            domNode = [createElement('!'), createElement('!')],
             domFragment = document.createDocumentFragment();
 
         domFragment.appendChild(domNode[0]);
@@ -81,7 +111,7 @@ FragmentNode.prototype = {
     },
 
     renderToString() {
-        const children = this._children;
+        const { children } = this;
         let res = '<!---->';
 
         if(children) {
@@ -101,7 +131,7 @@ FragmentNode.prototype = {
         }
 
         const domNode = [domNodes[domIdx++]],
-            children = this._children;
+            { children } = this;
 
         if(children) {
             const len = children.length;
@@ -120,7 +150,7 @@ FragmentNode.prototype = {
     },
 
     mount() {
-        const children = this._children;
+        const { children } = this;
 
         if(children) {
             let i = 0;
@@ -133,7 +163,7 @@ FragmentNode.prototype = {
     },
 
     unmount() {
-        const children = this._children;
+        const { children } = this;
 
         if(children) {
             const len = children.length;
@@ -148,8 +178,17 @@ FragmentNode.prototype = {
     clone() {
         const res = new FragmentNode();
 
-        res._key = this._key;
-        res._children = this._children;
+        if(IS_DEBUG) {
+            res.__isFrozen = false;
+        }
+
+        res.key = this.key;
+        res.children = this.children;
+
+        if(IS_DEBUG) {
+            res.__isFrozen = true;
+        }
+
         res._ctx = this._ctx;
 
         return res;
@@ -169,8 +208,8 @@ FragmentNode.prototype = {
     },
 
     _patchChildren(node) {
-        const childrenA = this._children,
-            childrenB = node._children;
+        const childrenA = this.children,
+            childrenB = node.children;
 
         if(!childrenA && !childrenB) {
             return;
@@ -200,7 +239,7 @@ FragmentNode.prototype = {
 };
 
 if(IS_DEBUG) {
-    FragmentNode.prototype.ref = function() {
+    FragmentNode.prototype.setRef = function() {
         console.error('Fragment nodes don\'t support refs.');
         return this;
     };

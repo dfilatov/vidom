@@ -7,15 +7,15 @@ const nodeA = createNode('a'),
 export default {
     'name' : 'complex-remove-from-beginning-without-key',
     'trees' : [
-        createNode('div').children([
+        createNode('div').setChildren([
             nodeA,
             nodeB,
-            createNode('a').key('c'),
-            createNode('a').key('d')
+            createNode('a').setKey('c'),
+            createNode('a').setKey('d')
         ]),
-        createNode('div').children([
-            createNode('a').key('c'),
-            createNode('a').key('d')
+        createNode('div').setChildren([
+            createNode('a').setKey('c'),
+            createNode('a').setKey('d')
         ])
     ],
     'patch' : [

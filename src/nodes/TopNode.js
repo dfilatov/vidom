@@ -11,7 +11,7 @@ TopNode.prototype = {
         return this._childNode.getDomNode();
     },
 
-    ns(ns) {
+    setNs(ns) {
         if(ns) {
             this._ns = ns;
         }
@@ -19,9 +19,9 @@ TopNode.prototype = {
         return this;
     },
 
-    ctx(ctx) {
+    setCtx(ctx) {
         if(ctx) {
-            this._childNode.ctx(ctx);
+            this._childNode.setCtx(ctx);
         }
 
         return this;

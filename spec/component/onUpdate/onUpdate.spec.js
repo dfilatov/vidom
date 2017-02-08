@@ -30,8 +30,8 @@ describe('onUpdate', () => {
             prevChildren = [node('div')],
             nextChildren = [node('span')];
 
-        mountSync(domNode, node(C).attrs(prevAttrs).children(prevChildren));
-        mountSync(domNode, node(C).attrs(nextAttrs).children(nextChildren));
+        mountSync(domNode, node(C).setAttrs(prevAttrs).setChildren(prevChildren));
+        mountSync(domNode, node(C).setAttrs(nextAttrs).setChildren(nextChildren));
     });
 
     it('should not be called if component hasn\'t updated', () => {
@@ -44,8 +44,8 @@ describe('onUpdate', () => {
                 onUpdate : spy
             });
 
-        mountSync(domNode, node(C).attrs({ id : 1 }));
-        mountSync(domNode, node(C).attrs({ id : 2 }));
+        mountSync(domNode, node(C).setAttrs({ id : 1 }));
+        mountSync(domNode, node(C).setAttrs({ id : 2 }));
 
         expect(spy.called).not.to.be.ok();
     });

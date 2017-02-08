@@ -82,7 +82,7 @@ describe('mount', () => {
                     }
                 });
 
-            mount(domNode, node('div').children(node(C)), ctx);
+            mount(domNode, node('div').setChildren(node(C)), ctx);
         });
     });
 });

@@ -9,7 +9,7 @@ export default {
     'name' : 'appendChild3',
     'trees' : [
         createNode('fragment'),
-        parentNode.children([
+        parentNode.setChildren([
             node1,
             node2
         ])

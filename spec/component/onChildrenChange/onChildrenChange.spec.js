@@ -24,8 +24,8 @@ describe('onChildrenChange', () => {
                 }
             });
 
-        mountSync(domNode, node(C).children(prevChildren));
-        mountSync(domNode, node(C).children(nextChildren));
+        mountSync(domNode, node(C).setChildren(prevChildren));
+        mountSync(domNode, node(C).setChildren(nextChildren));
     });
 
     it('shouldn\'t be called when no new children are passed', () => {
@@ -57,6 +57,6 @@ describe('onChildrenChange', () => {
             });
 
         mountSync(domNode, node(C));
-        mountSync(domNode, node(C).children([]));
+        mountSync(domNode, node(C).setChildren([]));
     });
 });

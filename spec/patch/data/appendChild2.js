@@ -9,7 +9,7 @@ export default {
     'name' : 'appendChild2',
     'trees' : [
         createNode('div'),
-        parentNode.children([
+        parentNode.setChildren([
             node1,
             node2
         ])

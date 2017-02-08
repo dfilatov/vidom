@@ -8,13 +8,13 @@ const nodeC = createNode('a'),
 export default {
     'name' : 'complex-insert-to-ending-without-key',
     'trees' : [
-        createNode('div').children([
-            createNode('a').key('a'),
-            createNode('a').key('b')
+        createNode('div').setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b')
         ]),
-        parentNode.children([
-            createNode('a').key('a'),
-            createNode('a').key('b'),
+        parentNode.setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b'),
             nodeC,
             nodeD
         ])

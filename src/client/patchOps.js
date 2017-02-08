@@ -44,7 +44,7 @@ function moveChild(childNode, toChildNode, after) {
 
 function removeChildren(parentNode) {
     const parentDomNode = parentNode.getDomNode(),
-        childNodes = parentNode._children,
+        childNodes = parentNode.children,
         len = childNodes.length;
 
     let j = 0;

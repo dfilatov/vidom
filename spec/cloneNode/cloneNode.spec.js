@@ -4,34 +4,34 @@ describe('cloneNode', () => {
     describe('tag node', () => {
         it('should copy original fields', () => {
             const origNode = node('a')
-                    .key('1')
-                    .attrs({ href : '/' })
-                    .ctx({})
-                    .ref(() => {})
-                    .children('link'),
+                    .setKey('1')
+                    .setAttrs({ href : '/' })
+                    .setCtx({})
+                    .setRef(() => {})
+                    .setChildren('link'),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
-            expect(clonedNode._tag).to.equal(origNode._tag);
-            expect(clonedNode._key).to.equal(origNode._key);
-            expect(clonedNode._attrs).to.equal(origNode._attrs);
+            expect(clonedNode.tag).to.equal(origNode.tag);
+            expect(clonedNode.key).to.equal(origNode.key);
+            expect(clonedNode.attrs).to.equal(origNode.attrs);
             expect(clonedNode._ctx).to.equal(origNode._ctx);
             expect(clonedNode._ref).to.equal(origNode._ref);
-            expect(clonedNode._children).to.equal(origNode._children);
+            expect(clonedNode.children).to.equal(origNode.children);
         });
 
         it('should merge attrs', () => {
-            const origNode = node('a').attrs({ href : '/', tabIndex : 2 }),
-                clonedNode = origNode.clone().attrs({ target : '_blank', tabIndex : 3 });
+            const origNode = node('a').setAttrs({ href : '/', tabIndex : 2 }),
+                clonedNode = origNode.clone().setAttrs({ target : '_blank', tabIndex : 3 });
 
-            expect(clonedNode._attrs).to.eql({ href : '/', target : '_blank', tabIndex : 3 });
+            expect(clonedNode.attrs).to.eql({ href : '/', target : '_blank', tabIndex : 3 });
         });
 
         it('should replace children', () => {
-            const origNode = node('a').children('link1'),
-                clonedNode = origNode.clone().children('link2');
+            const origNode = node('a').setChildren('link1'),
+                clonedNode = origNode.clone().setChildren('link2');
 
-            expect(clonedNode._children).to.equal('link2');
+            expect(clonedNode.children).to.equal('link2');
         });
     });
 
@@ -40,34 +40,34 @@ describe('cloneNode', () => {
 
         it('should copy original fields', () => {
             const origNode = node(C)
-                    .key('1')
-                    .attrs({ href : '/' })
-                    .ctx({})
-                    .ref(() => {})
-                    .children('link'),
+                    .setKey('1')
+                    .setAttrs({ href : '/' })
+                    .setCtx({})
+                    .setRef(() => {})
+                    .setChildren('link'),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
             expect(clonedNode._component).to.equal(origNode._component);
-            expect(clonedNode._key).to.equal(origNode._key);
-            expect(clonedNode._attrs).to.equal(origNode._attrs);
+            expect(clonedNode.key).to.equal(origNode.key);
+            expect(clonedNode.attrs).to.equal(origNode.attrs);
             expect(clonedNode._ctx).to.equal(origNode._ctx);
             expect(clonedNode._ref).to.equal(origNode._ref);
-            expect(clonedNode._children).to.equal(origNode._children);
+            expect(clonedNode.children).to.equal(origNode.children);
         });
 
         it('should merge attrs', () => {
-            const origNode = node(C).attrs({ href : '/', tabIndex : 2 }),
-                clonedNode = origNode.clone().attrs({ target : '_blank', tabIndex : 3 });
+            const origNode = node(C).setAttrs({ href : '/', tabIndex : 2 }),
+                clonedNode = origNode.clone().setAttrs({ target : '_blank', tabIndex : 3 });
 
-            expect(clonedNode._attrs).to.eql({ href : '/', target : '_blank', tabIndex : 3 });
+            expect(clonedNode.attrs).to.eql({ href : '/', target : '_blank', tabIndex : 3 });
         });
 
         it('should replace children', () => {
-            const origNode = node(C).children('link1'),
-                clonedNode = origNode.clone().children('link2');
+            const origNode = node(C).setChildren('link1'),
+                clonedNode = origNode.clone().setChildren('link2');
 
-            expect(clonedNode._children).to.equal('link2');
+            expect(clonedNode.children).to.equal('link2');
         });
     });
 
@@ -75,67 +75,67 @@ describe('cloneNode', () => {
         const C = () => {};
 
         it('should copy original fields', () => {
-            const origNode = node(C).key('1').attrs({ href : '/' }).children('link').ctx({}),
+            const origNode = node(C).setKey('1').setAttrs({ href : '/' }).setChildren('link').setCtx({}),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
             expect(clonedNode._component).to.equal(origNode._component);
-            expect(clonedNode._key).to.equal(origNode._key);
-            expect(clonedNode._attrs).to.equal(origNode._attrs);
-            expect(clonedNode._children).to.equal(origNode._children);
+            expect(clonedNode.key).to.equal(origNode.key);
+            expect(clonedNode.attrs).to.equal(origNode.attrs);
+            expect(clonedNode.children).to.equal(origNode.children);
             expect(clonedNode._ctx).to.equal(origNode._ctx);
         });
 
         it('should merge attrs', () => {
-            const origNode = node(C).attrs({ href : '/', tabIndex : 2 }),
-                clonedNode = origNode.clone().attrs({ target : '_blank', tabIndex : 3 });
+            const origNode = node(C).setAttrs({ href : '/', tabIndex : 2 }),
+                clonedNode = origNode.clone().setAttrs({ target : '_blank', tabIndex : 3 });
 
-            expect(clonedNode._attrs).to.eql({ href : '/', target : '_blank', tabIndex : 3 });
+            expect(clonedNode.attrs).to.eql({ href : '/', target : '_blank', tabIndex : 3 });
         });
 
         it('should replace children', () => {
-            const origNode = node(C).children('link1'),
-                clonedNode = origNode.clone().children('link2');
+            const origNode = node(C).setChildren('link1'),
+                clonedNode = origNode.clone().setChildren('link2');
 
-            expect(clonedNode._children).to.equal('link2');
+            expect(clonedNode.children).to.equal('link2');
         });
     });
 
     describe('fragment node', () => {
         it('should copy original fields', () => {
-            const origNode = node('fragment').key('1').children([node('a'), node('b')]).ctx({}),
+            const origNode = node('fragment').setKey('1').setChildren([node('a'), node('b')]).setCtx({}),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
-            expect(clonedNode._key).to.equal(origNode._key);
-            expect(clonedNode._children).to.equal(origNode._children);
+            expect(clonedNode.key).to.equal(origNode.key);
+            expect(clonedNode.children).to.equal(origNode.children);
             expect(clonedNode._ctx).to.equal(origNode._ctx);
         });
 
         it('should replace children', () => {
-            const origNode = node('fragment').children([node('a'), node('b')]),
+            const origNode = node('fragment').setChildren([node('a'), node('b')]),
                 newChildren = [node('i')],
-                clonedNode = origNode.clone().children(newChildren);
+                clonedNode = origNode.clone().setChildren(newChildren);
 
-            expect(clonedNode._children).to.equal(newChildren);
+            expect(clonedNode.children).to.equal(newChildren);
         });
     });
 
     describe('text node', () => {
         it('should copy original fields', () => {
-            const origNode = node('text').key('1').children('link'),
+            const origNode = node('text').setKey('1').setChildren('link'),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
-            expect(clonedNode._key).to.equal(origNode._key);
-            expect(clonedNode._children).to.equal(origNode._children);
+            expect(clonedNode.key).to.equal(origNode.key);
+            expect(clonedNode.children).to.equal(origNode.children);
         });
 
         it('should replace children', () => {
-            const origNode = node('text').children('link1'),
-                clonedNode = origNode.clone().children('link2');
+            const origNode = node('text').setChildren('link1'),
+                clonedNode = origNode.clone().setChildren('link2');
 
-            expect(clonedNode._children).to.equal('link2');
+            expect(clonedNode.children).to.equal('link2');
         });
     });
 });

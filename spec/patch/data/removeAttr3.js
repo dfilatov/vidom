@@ -6,8 +6,8 @@ const node = createNode('button');
 export default {
     'name' : 'removeAttr3',
     'trees' : [
-        node.attrs({ className : 'button' }),
-        createNode('button').attrs({ className : null })
+        node.setAttrs({ className : 'button' }),
+        createNode('button').setAttrs({ className : null })
     ],
     'patch' : [
         { op : patchOps.removeAttr, args : [node, 'className'] }

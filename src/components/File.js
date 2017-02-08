@@ -3,7 +3,7 @@ import TagNode from '../nodes/TagNode';
 
 export default createComponent({
     onRender() {
-        return new TagNode('input').attrs(this.attrs);
+        return new TagNode('input').setAttrs(this.attrs);
     },
 
     onRefRequest() {

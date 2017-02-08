@@ -6,7 +6,7 @@ const node = createNode('text');
 export default {
     'name' : 'removeText3',
     'trees' : [
-        node.children('text'),
+        node.setChildren('text'),
         createNode('text')
     ],
     'patch' : [

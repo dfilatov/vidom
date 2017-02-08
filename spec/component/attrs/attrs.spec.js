@@ -36,7 +36,7 @@ describe('attrs', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).attrs(attrs));
+        mountSync(domNode, createNode(C1).setAttrs(attrs));
     });
 
     it('should merge passed with default attributes', done => {
@@ -49,7 +49,7 @@ describe('attrs', () => {
             defaultAttrs : { a : 1, b : 2 }
         });
 
-        mountSync(domNode, createNode(C1).attrs({ a : 3 }));
+        mountSync(domNode, createNode(C1).setAttrs({ a : 3 }));
     });
 
     it('should merge passed with default attributes after update', done => {
@@ -62,8 +62,8 @@ describe('attrs', () => {
             defaultAttrs : { a : 1, b : 2 }
         });
 
-        mountSync(domNode, createNode(C1).attrs({ a : 3 }));
-        mountSync(domNode, createNode(C1).attrs({ a : 4 }));
+        mountSync(domNode, createNode(C1).setAttrs({ a : 3 }));
+        mountSync(domNode, createNode(C1).setAttrs({ a : 4 }));
     });
 
     if(IS_DEBUG) {

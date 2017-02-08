@@ -1,20 +1,20 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeC = createNode('a').key('c'),
-    nodeD = createNode('a').key('d'),
+const nodeC = createNode('a').setKey('c'),
+    nodeD = createNode('a').setKey('d'),
     parentNode = createNode('div');
 
 export default {
     'name' : 'complex-insert-to-ending-with-key',
     'trees' : [
-        createNode('div').children([
-            createNode('a').key('a'),
-            createNode('a').key('b')
+        createNode('div').setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b')
         ]),
-        parentNode.children([
-            createNode('a').key('a'),
-            createNode('a').key('b'),
+        parentNode.setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b'),
             nodeC,
             nodeD
         ])

@@ -1,7 +1,7 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('select').attrs({
+const node = createNode('select').setAttrs({
         multiple : true,
         value : [1, 2, 3]
     }),
@@ -12,7 +12,7 @@ export default {
     'trees' : [
         node,
         createNode('select')
-            .attrs({
+            .setAttrs({
                 multiple : true,
                 value : [1, 2, 4]
             })

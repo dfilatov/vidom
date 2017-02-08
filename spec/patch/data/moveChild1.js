@@ -1,19 +1,19 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeA = createNode('input').key('a'),
-    nodeB = createNode('input').key('b');
+const nodeA = createNode('input').setKey('a'),
+    nodeB = createNode('input').setKey('b');
 
 export default {
     'name' : 'moveChild1',
     'trees' : [
-        createNode('div').children([
+        createNode('div').setChildren([
             nodeA,
             nodeB
         ]),
-        createNode('div').children([
-            createNode('input').key('b'),
-            createNode('input').key('a')
+        createNode('div').setChildren([
+            createNode('input').setKey('b'),
+            createNode('input').setKey('a')
         ])
     ],
     'patch' : [

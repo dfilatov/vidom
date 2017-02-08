@@ -7,15 +7,15 @@ const nodeC = createNode('a'),
 export default {
     'name' : 'complex-remove-from-ending-without-key',
     'trees' : [
-        createNode('div').children([
-            createNode('a').key('a'),
-            createNode('a').key('b'),
+        createNode('div').setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b'),
             nodeC,
             nodeD
         ]),
-        createNode('div').children([
-            createNode('a').key('a'),
-            createNode('a').key('b')
+        createNode('div').setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b')
         ])
     ],
     'patch' : [

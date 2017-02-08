@@ -3,20 +3,20 @@ import patchOps from '../../../src/client/patchOps';
 
 const nodeA = createNode('a'),
     nodeB = createNode('a'),
-    nodeC = createNode('a').key('c');
+    nodeC = createNode('a').setKey('c');
 
 export default {
     'name' : 'complex-insert-to-beginning-without-key',
     'trees' : [
-        createNode('div').children([
-            createNode('a').key('c'),
-            createNode('a').key('d')
+        createNode('div').setChildren([
+            createNode('a').setKey('c'),
+            createNode('a').setKey('d')
         ]),
-        createNode('div').children([
+        createNode('div').setChildren([
             nodeA,
             nodeB,
             nodeC,
-            createNode('a').key('d')
+            createNode('a').setKey('d')
         ])
     ],
     'patch' : [

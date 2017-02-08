@@ -15,8 +15,8 @@ export default createComponent({
 
     onRender() {
         return new TagNode('select')
-            .attrs(merge(this.attrs, this._addAttrs))
-            .children(this.children);
+            .setAttrs(merge(this.attrs, this._addAttrs))
+            .setChildren(this.children);
     },
 
     onChange(e) {

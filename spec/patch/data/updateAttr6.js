@@ -6,12 +6,12 @@ export default {
     'name' : 'updateAttr6',
     'trees' : [
         node
-            .attrs({
+            .setAttrs({
                 multiple : true,
                 value : [1, 2, 3]
             }),
         createNode('select')
-            .attrs({
+            .setAttrs({
                 multiple : true,
                 value : [1, 2, 3]
             })

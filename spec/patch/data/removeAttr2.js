@@ -6,7 +6,7 @@ const node = createNode('button');
 export default {
     'name' : 'removeAttr2',
     'trees' : [
-        node.attrs({ value : 'text', className : 'button' }),
+        node.setAttrs({ value : 'text', className : 'button' }),
         createNode('button')
     ],
     'patch' : [
