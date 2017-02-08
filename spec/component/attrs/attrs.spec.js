@@ -46,12 +46,24 @@ describe('attrs', () => {
                 done();
             }
         }, {
-            onDefaultAttrsRequest() {
-                return { a : 1, b : 2 };
-            }
+            defaultAttrs : { a : 1, b : 2 }
         });
 
         mountSync(domNode, createNode(C1).attrs({ a : 3 }));
+    });
+
+    it('should merge passed with default attributes after update', done => {
+        const C1 = createComponent({
+            onUpdate() {
+                expect(this.attrs).to.be.eql({ a : 4, b : 2 });
+                done();
+            }
+        }, {
+            defaultAttrs : { a : 1, b : 2 }
+        });
+
+        mountSync(domNode, createNode(C1).attrs({ a : 3 }));
+        mountSync(domNode, createNode(C1).attrs({ a : 4 }));
     });
 
     if(IS_DEBUG) {
