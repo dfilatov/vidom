@@ -43,6 +43,7 @@ Vidom is just a library to build UI. It's highly inspired from [React](https://f
   * [ComponentNode API](../../wiki/ComponentNode-API)
   * [FunctionComponentNode API](../../wiki/FunctionComponentNode-API)
   * [DOM Events API](../../wiki/DOM-Events-API)
+  * [Component properties](../../wiki/Component-properties)
   * [Component lifecycle](../../wiki/Component-lifecycle)
   * [Component methods](../../wiki/Component-methods)
   * [Function component](../../wiki/Function-Component)
