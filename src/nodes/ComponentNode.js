@@ -188,12 +188,12 @@ ComponentNode.prototype = {
                 this._ref(null);
 
                 if(node._ref) {
-                    node._ref(node._instance);
+                    node._ref(node._instance.onRefRequest());
                 }
             }
         }
         else if(node._ref) {
-            node._ref(node._instance);
+            node._ref(node._instance.onRefRequest());
         }
     },
 
