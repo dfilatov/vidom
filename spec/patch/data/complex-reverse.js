@@ -1,25 +1,25 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeA = createNode('a').key('a'),
-    nodeB = createNode('a').key('b'),
-    nodeC = createNode('a').key('c'),
-    nodeD = createNode('a').key('d');
+const nodeA = createNode('a').setKey('a'),
+    nodeB = createNode('a').setKey('b'),
+    nodeC = createNode('a').setKey('c'),
+    nodeD = createNode('a').setKey('d');
 
 export default {
     'name' : 'complex-reverse',
     'trees' : [
-        createNode('div').children([
+        createNode('div').setChildren([
             nodeA,
             nodeB,
             nodeC,
             nodeD
         ]),
-        createNode('div').children([
-            createNode('a').key('d'),
-            createNode('a').key('c'),
-            createNode('a').key('b'),
-            createNode('a').key('a')
+        createNode('div').setChildren([
+            createNode('a').setKey('d'),
+            createNode('a').setKey('c'),
+            createNode('a').setKey('b'),
+            createNode('a').setKey('a')
         ])
     ],
     'patch' : [

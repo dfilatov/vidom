@@ -20,15 +20,15 @@ describe('onMount', () => {
             C1 = createComponent({
                 onMount : spy1,
                 onRender() {
-                    return node('div').children(
-                        node('fragment').children(
-                            node(C2).children(node(C3))));
+                    return node('div').setChildren(
+                        node('fragment').setChildren(
+                            node(C2).setChildren(node(C3))));
                 }
             }),
             C2 = createComponent({
                 onMount : spy2,
                 onRender() {
-                    return node('div').children(this.children);
+                    return node('div').setChildren(this.children);
                 }
             }),
             C3 = createComponent({
@@ -54,7 +54,7 @@ describe('onMount', () => {
             }),
             attrs = { name : 'value' };
 
-        mountSync(domNode, node(C1).attrs(attrs));
+        mountSync(domNode, node(C1).setAttrs(attrs));
     });
 
     it('should be recursively called when existing dom is adopted', () => {
@@ -63,7 +63,7 @@ describe('onMount', () => {
             C1 = createComponent({
                 onMount : spy1,
                 onRender() {
-                    return node('div').children(node(C2));
+                    return node('div').setChildren(node(C2));
                 }
             }),
             C2 = createComponent({

@@ -14,7 +14,7 @@ export default createComponent({
     },
 
     onRender() {
-        return new TagNode('textarea').attrs(merge(this.attrs, this._addAttrs));
+        return new TagNode('textarea').setAttrs(merge(this.attrs, this._addAttrs));
     },
 
     onInput(e) {

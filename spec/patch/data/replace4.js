@@ -1,8 +1,8 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const oldNode = createNode('div').ns('ns1'),
-    newNode = createNode('div').ns('ns2'),
+const oldNode = createNode('div').setNs('ns1'),
+    newNode = createNode('div').setNs('ns2'),
     replaceOp = patchOps.replace;
 
 export default {

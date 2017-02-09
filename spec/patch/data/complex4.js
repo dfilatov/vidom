@@ -1,22 +1,22 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeB = createNode('fragment').key('b'),
-    nodeC = createNode('a').key('c'),
-    nodeBA = createNode('fragment').key('ba'),
-    nodeBAA = createNode('b').key('baa'),
-    nodeBAB = createNode('b').key('bab'),
-    nodeBB = createNode('a').key('bb'),
-    nodeD = createNode('a').key('d'),
+const nodeB = createNode('fragment').setKey('b'),
+    nodeC = createNode('a').setKey('c'),
+    nodeBA = createNode('fragment').setKey('ba'),
+    nodeBAA = createNode('b').setKey('baa'),
+    nodeBAB = createNode('b').setKey('bab'),
+    nodeBB = createNode('a').setKey('bb'),
+    nodeD = createNode('a').setKey('d'),
     parentNode = createNode('fragment');
 
 export default {
     'name' : 'complex4',
     'trees' : [
-        createNode('fragment').children([
-            createNode('a').key('a'),
-            nodeB.children([
-                nodeBA.children([
+        createNode('fragment').setChildren([
+            createNode('a').setKey('a'),
+            nodeB.setChildren([
+                nodeBA.setChildren([
                     nodeBAA,
                     nodeBAB
                 ]),
@@ -25,14 +25,14 @@ export default {
             nodeC,
             nodeD
         ]),
-        parentNode.children([
-            createNode('a').key('a'),
-            createNode('a').key('c'),
-            createNode('fragment').key('b').children([
-                createNode('a').key('bb'),
-                createNode('fragment').key('ba').children([
-                    createNode('b').key('bab'),
-                    createNode('b').key('baa')
+        parentNode.setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('c'),
+            createNode('fragment').setKey('b').setChildren([
+                createNode('a').setKey('bb'),
+                createNode('fragment').setKey('ba').setChildren([
+                    createNode('b').setKey('bab'),
+                    createNode('b').setKey('baa')
                 ])
             ])
         ])

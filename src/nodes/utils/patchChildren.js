@@ -1,8 +1,8 @@
 import patchOps from '../../client/patchOps';
 
 export default function patchChildren(nodeA, nodeB) {
-    const childrenA = nodeA._children,
-        childrenB = nodeB._children,
+    const childrenA = nodeA.children,
+        childrenB = nodeB.children,
         childrenALen = childrenA.length,
         childrenBLen = childrenB.length;
 
@@ -14,15 +14,15 @@ export default function patchChildren(nodeA, nodeB) {
     let leftIdxA = 0,
         rightIdxA = childrenALen - 1,
         leftChildA = childrenA[leftIdxA],
-        leftChildAKey = leftChildA._key,
+        leftChildAKey = leftChildA.key,
         rightChildA = childrenA[rightIdxA],
-        rightChildAKey = rightChildA._key,
+        rightChildAKey = rightChildA.key,
         leftIdxB = 0,
         rightIdxB = childrenBLen - 1,
         leftChildB = childrenB[leftIdxB],
-        leftChildBKey = leftChildB._key,
+        leftChildBKey = leftChildB.key,
         rightChildB = childrenB[rightIdxB],
-        rightChildBKey = rightChildB._key,
+        rightChildBKey = rightChildB.key,
         updateLeftIdxA = false,
         updateRightIdxA = false,
         updateLeftIdxB = false,
@@ -85,7 +85,7 @@ export default function patchChildren(nodeA, nodeB) {
             updateLeftIdxA = false;
             if(++leftIdxA <= rightIdxA) {
                 leftChildA = childrenA[leftIdxA];
-                leftChildAKey = leftChildA._key;
+                leftChildAKey = leftChildA.key;
             }
         }
 
@@ -93,7 +93,7 @@ export default function patchChildren(nodeA, nodeB) {
             updateRightIdxA = false;
             if(--rightIdxA >= leftIdxA) {
                 rightChildA = childrenA[rightIdxA];
-                rightChildAKey = rightChildA._key;
+                rightChildAKey = rightChildA.key;
             }
         }
 
@@ -101,7 +101,7 @@ export default function patchChildren(nodeA, nodeB) {
             updateLeftIdxB = false;
             if(++leftIdxB <= rightIdxB) {
                 leftChildB = childrenB[leftIdxB];
-                leftChildBKey = leftChildB._key;
+                leftChildBKey = leftChildB.key;
             }
         }
 
@@ -109,7 +109,7 @@ export default function patchChildren(nodeA, nodeB) {
             updateRightIdxB = false;
             if(--rightIdxB >= leftIdxB) {
                 rightChildB = childrenB[rightIdxB];
-                rightChildBKey = rightChildB._key;
+                rightChildBKey = rightChildB.key;
             }
         }
     }
@@ -135,7 +135,7 @@ function buildKeys(children, idxFrom, idxTo) {
 
     while(idxFrom < idxTo) {
         child = children[idxFrom];
-        child._key != null && (res[child._key] = idxFrom);
+        child.key != null && (res[child.key] = idxFrom);
         ++idxFrom;
     }
 

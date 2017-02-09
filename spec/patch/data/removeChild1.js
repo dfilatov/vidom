@@ -6,12 +6,12 @@ const oldNode = createNode('div');
 export default {
     'name' : 'removeChild1',
     'trees' : [
-        createNode('div').children([
+        createNode('div').setChildren([
             createNode('div'),
             createNode('div'),
             oldNode
         ]),
-        createNode('div').children([
+        createNode('div').setChildren([
             createNode('div'),
             createNode('div')
         ])

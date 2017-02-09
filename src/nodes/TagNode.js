@@ -13,8 +13,10 @@ import merge from '../utils/merge';
 import { isTrident, isEdge } from '../client/utils/ua';
 import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
+import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { NODE_TYPE_TAG } from './utils/nodeTypes';
+import { setKey, setRef } from './utils/setters';
 
 const SHORT_TAGS = {
         area : true,
@@ -35,15 +37,34 @@ const SHORT_TAGS = {
         track : true,
         wbr : true
     },
-    USE_DOM_STRINGS = isTrident || isEdge;
+    USE_DOM_STRINGS = isTrident || isEdge,
+    ATTRS_SET = 4,
+    CHILDREN_SET = 8,
+    NS_SET = 16;
 
 export default function TagNode(tag) {
+    if(IS_DEBUG) {
+        restrictObjProp(this, 'type');
+        restrictObjProp(this, 'tag');
+        restrictObjProp(this, 'key');
+        restrictObjProp(this, 'attrs');
+        restrictObjProp(this, 'children');
+
+        this.__isFrozen = false;
+    }
+
     this.type = NODE_TYPE_TAG;
-    this._tag = tag;
+    this.tag = tag;
+    this.key = null;
+    this.attrs = null;
+    this.children = null;
+
+    if(IS_DEBUG) {
+        this.__isFrozen = true;
+        this._sets = 0;
+    }
+
     this._domNode = null;
-    this._key = null;
-    this._attrs = null;
-    this._children = null;
     this._ns = null;
     this._escapeChildren = true;
     this._ctx = emptyObj;
@@ -55,43 +76,102 @@ TagNode.prototype = {
         return this._domNode;
     },
 
-    key(key) {
-        this._key = key;
-        return this;
-    },
+    setKey,
 
-    ns(ns) {
-        this._ns = ns;
-        return this;
-    },
+    setRef,
 
-    attrs(attrs) {
+    setNs(ns) {
         if(IS_DEBUG) {
-            checkAttrs(attrs);
+            if(this._sets & NS_SET) {
+                console.warn('Namespace is already set and shouldn\'t be set again.');
+            }
         }
 
-        this._attrs = this._attrs? merge(this._attrs, attrs) : attrs;
+        this._ns = ns;
+
+        if(IS_DEBUG) {
+            this._sets |= NS_SET;
+        }
 
         return this;
     },
 
-    children(children) {
-        this._children = processChildren(children);
+    setAttrs(attrs) {
+        if(IS_DEBUG) {
+            if(this._sets & ATTRS_SET) {
+                console.warn('Attrs are already set and shouldn\'t be set again.');
+            }
+
+            checkAttrs(attrs);
+            this.__isFrozen = false;
+        }
+
+        this.attrs = this.attrs? merge(this.attrs, attrs) : attrs;
+
+        if(IS_DEBUG) {
+            Object.freeze(this.attrs);
+            this._sets |= ATTRS_SET;
+            this.__isFrozen = true;
+        }
+
         return this;
     },
 
-    ctx(ctx) {
+    setChildren(children) {
+        if(IS_DEBUG) {
+            if(this._sets & CHILDREN_SET) {
+                console.warn('Children are already set and shouldn\'t be set again.');
+            }
+
+            this.__isFrozen = false;
+        }
+
+        this.children = processChildren(children);
+
+        if(IS_DEBUG) {
+            if(Array.isArray(this.children)) {
+                Object.freeze(this.children);
+            }
+
+            this._sets |= CHILDREN_SET;
+            this.__isFrozen = true;
+        }
+
+        return this;
+    },
+
+    setHtml(html) {
+        if(IS_DEBUG) {
+            if(this._sets & CHILDREN_SET) {
+                console.warn('Children are already set and shouldn\'t be set again.');
+            }
+
+            this.__isFrozen = false;
+        }
+
+        this.children = html;
+
+        if(IS_DEBUG) {
+            this._sets |= CHILDREN_SET;
+            this.__isFrozen = true;
+        }
+
+        this._escapeChildren = false;
+        return this;
+    },
+
+    setCtx(ctx) {
         if(ctx !== emptyObj) {
             this._ctx = ctx;
 
-            const children = this._children;
+            const { children } = this;
 
             if(children && typeof children !== 'string') {
                 const len = children.length;
                 let i = 0;
 
                 while(i < len) {
-                    children[i++].ctx(ctx);
+                    children[i++].setCtx(ctx);
                 }
             }
         }
@@ -99,31 +179,13 @@ TagNode.prototype = {
         return this;
     },
 
-    html(html) {
-        if(IS_DEBUG) {
-            if(this._children !== null) {
-                console.warn('You\'re trying to set children or html more than once or pass both children and html.');
-            }
-        }
-
-        this._children = html;
-        this._escapeChildren = false;
-        return this;
-    },
-
-    ref(ref) {
-        this._ref = ref;
-        return this;
-    },
-
     renderToDom(parentNs) {
         if(IS_DEBUG) {
-            checkReuse(this, this._tag);
+            checkReuse(this, this.tag);
         }
 
-        const tag = this._tag,
-            ns = this._ns || parentNs,
-            children = this._children;
+        const { tag, children } = this,
+            ns = this._ns || parentNs;
 
         if(USE_DOM_STRINGS && children && typeof children !== 'string') {
             const domNode = createElementByHtml(this.renderToString(), tag, ns);
@@ -132,7 +194,7 @@ TagNode.prototype = {
         }
 
         const domNode = this._domNode = createElement(tag, ns),
-            attrs = this._attrs;
+            { attrs } = this;
 
         if(children) {
             if(typeof children === 'string') {
@@ -168,15 +230,15 @@ TagNode.prototype = {
     },
 
     renderToString() {
-        const tag = this._tag;
+        const { tag } = this;
 
         if(tag === '!') {
             return '<!---->';
         }
 
         const ns = this._ns,
-            attrs = this._attrs;
-        let children = this._children,
+            { attrs } = this;
+        let { children } = this,
             res = '<' + tag;
 
         if(ns) {
@@ -196,7 +258,7 @@ TagNode.prototype = {
                                 continue;
 
                             case 'select':
-                                this.ctx({ value, multiple : attrs.multiple });
+                                this.setCtx({ value, multiple : attrs.multiple });
                                 continue;
 
                             case 'option':
@@ -245,12 +307,11 @@ TagNode.prototype = {
 
     adoptDom(domNodes, domIdx) {
         if(IS_DEBUG) {
-            checkReuse(this, this._tag);
+            checkReuse(this, this.tag);
         }
 
         const domNode = this._domNode = domNodes[domIdx],
-            attrs = this._attrs,
-            children = this._children;
+            { attrs, children } = this;
 
         if(attrs) {
             let name, value;
@@ -279,7 +340,7 @@ TagNode.prototype = {
     },
 
     mount() {
-        const children = this._children;
+        const { children } = this;
 
         if(children && typeof children !== 'string') {
             let i = 0;
@@ -294,7 +355,7 @@ TagNode.prototype = {
     },
 
     unmount() {
-        const children = this._children;
+        const { children } = this;
 
         if(children && typeof children !== 'string') {
             let i = 0;
@@ -313,11 +374,21 @@ TagNode.prototype = {
     },
 
     clone() {
-        const res = new TagNode(this._tag);
+        const res = new TagNode(this.tag);
 
-        res._key = this._key;
-        res._attrs = this._attrs;
-        res._children = this._children;
+        if(IS_DEBUG) {
+            res.__isFrozen = false;
+        }
+
+        res.key = this.key;
+        res.attrs = this.attrs;
+        res.children = this.children;
+
+        if(IS_DEBUG) {
+            res.__isFrozen = true;
+        }
+
+        res._sets = NS_SET;
         res._ns = this._ns;
         res._escapeChildren = this._escapeChildren;
         res._ctx = this._ctx;
@@ -330,7 +401,7 @@ TagNode.prototype = {
         if(this === node) {
             this._patchChildren(node);
         }
-        else if(this.type === node.type && this._tag === node._tag && this._ns === node._ns) {
+        else if(this.type === node.type && this.tag === node.tag && this._ns === node._ns) {
             node._domNode = this._domNode;
             this._patchChildren(node);
             this._patchAttrs(node);
@@ -342,8 +413,8 @@ TagNode.prototype = {
     },
 
     _patchChildren(node) {
-        const childrenA = this._children,
-            childrenB = node._children;
+        const childrenA = this.children,
+            childrenB = node.children;
 
         if(!childrenA && !childrenB) {
             return;
@@ -395,8 +466,8 @@ TagNode.prototype = {
     },
 
     _patchAttrs(node) {
-        const attrsA = this._attrs,
-            attrsB = node._attrs;
+        const attrsA = this.attrs,
+            attrsB = node.attrs;
 
         if(attrsA === attrsB) {
             return;

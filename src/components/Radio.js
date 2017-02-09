@@ -16,7 +16,7 @@ export default createComponent({
     },
 
     onRender() {
-        return new TagNode('input').attrs(merge(this.attrs, this._addAttrs));
+        return new TagNode('input').setAttrs(merge(this.attrs, this._addAttrs));
     },
 
     onMount() {

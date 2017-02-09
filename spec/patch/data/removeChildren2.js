@@ -6,7 +6,7 @@ const parentNode = createNode('fragment');
 export default {
     'name' : 'removeChildren2',
     'trees' : [
-        parentNode.children([createNode('div'), createNode('div')]),
+        parentNode.setChildren([createNode('div'), createNode('div')]),
         createNode('fragment')
     ],
     'patch' : [

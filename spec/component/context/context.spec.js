@@ -35,7 +35,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').children(createNode('fragment').children(this.children));
+                    return createNode('div').setChildren(createNode('fragment').setChildren(this.children));
                 }
             }),
             C2 = createComponent({
@@ -45,10 +45,10 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).children([
-            createNode('div').children([
-                createNode('div').children([
-                    createNode(() => createNode('div').children([
+        mountSync(domNode, createNode(C1).setChildren([
+            createNode('div').setChildren([
+                createNode('div').setChildren([
+                    createNode(() => createNode('div').setChildren([
                         createNode(C2)
                     ]))
                 ])
@@ -63,7 +63,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').children(this.children);
+                    return createNode('div').setChildren(this.children);
                 }
             }),
             C2 = createComponent({
@@ -72,7 +72,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').children(this.children);
+                    return createNode('div').setChildren(this.children);
                 }
             }),
             C3 = createComponent({
@@ -85,12 +85,12 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).children([
-            createNode('div').children([
-                createNode('div').children([
-                    createNode(() => createNode('div').children([
-                        createNode(C2).children([
-                            createNode('div').children([
+        mountSync(domNode, createNode(C1).setChildren([
+            createNode('div').setChildren([
+                createNode('div').setChildren([
+                    createNode(() => createNode('div').setChildren([
+                        createNode(C2).setChildren([
+                            createNode('div').setChildren([
                                 createNode(C3)
                             ])
                         ])
@@ -107,7 +107,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').children(this.children);
+                    return createNode('div').setChildren(this.children);
                 }
             }),
             C2 = createComponent({
@@ -122,7 +122,7 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).children([
+        mountSync(domNode, createNode(C1).setChildren([
             createNode(C2),
             createNode(C3)
         ]));
@@ -135,7 +135,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').children(this.children);
+                    return createNode('div').setChildren(this.children);
                 }
             }),
             C2 = createComponent({
@@ -144,7 +144,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').children(this.children);
+                    return createNode('div').setChildren(this.children);
                 }
             }),
             C3 = createComponent({
@@ -157,23 +157,23 @@ describe('context', () => {
                 }
             }),
             FC = ({ prop }) =>
-                createNode('div').children(
-                    createNode(C2).attrs({ prop }).children(
-                        createNode('div').children(createNode(C3))));
+                createNode('div').setChildren(
+                    createNode(C2).setAttrs({ prop }).setChildren(
+                        createNode('div').setChildren(createNode(C3))));
 
         mount(
             domNode,
-            createNode(C1).attrs({ prop : 'val1' }).children(
-                createNode('div').children(
-                    createNode('div').children(
-                        createNode(FC).attrs({ prop : 'val2' })))),
+            createNode(C1).setAttrs({ prop : 'val1' }).setChildren(
+                createNode('div').setChildren(
+                    createNode('div').setChildren(
+                        createNode(FC).setAttrs({ prop : 'val2' })))),
             () => {
                 mount(
                     domNode,
-                    createNode(C1).attrs({ prop : 'val3' }).children(
-                        createNode('div').children(
-                            createNode('div').children(
-                                createNode(FC).attrs({ prop : 'val4' })))));
+                    createNode(C1).setAttrs({ prop : 'val3' }).setChildren(
+                        createNode('div').setChildren(
+                            createNode('div').setChildren(
+                                createNode(FC).setAttrs({ prop : 'val4' })))));
             });
     });
 

@@ -14,9 +14,9 @@ describe('select', () => {
     });
 
     it('should maintain value', () => {
-        mountSync(domNode, node('select').attrs({ id : 'select', value : '1' }).children([
-            node('option').attrs({ value : '1', id : 'opt1' }),
-            node('option').attrs({ value : '2', id : 'opt2' })
+        mountSync(domNode, node('select').setAttrs({ id : 'select', value : '1' }).setChildren([
+            node('option').setAttrs({ value : '1', id : 'opt1' }),
+            node('option').setAttrs({ value : '2', id : 'opt2' })
         ]));
 
         const select = document.getElementById('select'),
@@ -32,10 +32,10 @@ describe('select', () => {
     });
 
     it('should maintain multiple value', () => {
-        mountSync(domNode, node('select').attrs({ id : 'select', multiple : true, value : ['1', '2'] }).children([
-            node('option').attrs({ value : '1', id : 'opt1' }),
-            node('option').attrs({ value : '2', id : 'opt2' }),
-            node('option').attrs({ value : '3', id : 'opt3' })
+        mountSync(domNode, node('select').setAttrs({ id : 'select', multiple : true, value : ['1', '2'] }).setChildren([
+            node('option').setAttrs({ value : '1', id : 'opt1' }),
+            node('option').setAttrs({ value : '2', id : 'opt2' }),
+            node('option').setAttrs({ value : '3', id : 'opt3' })
         ]));
 
         const select = document.getElementById('select'),
@@ -61,9 +61,9 @@ describe('select', () => {
         }
 
         function render() {
-            mountSync(domNode, node('select').attrs({ id : 'select', value, onChange }).children([
-                node('option').attrs({ value : '1', id : 'opt1' }),
-                node('option').attrs({ value : '2', id : 'opt2' })
+            mountSync(domNode, node('select').setAttrs({ id : 'select', value, onChange }).setChildren([
+                node('option').setAttrs({ value : '1', id : 'opt1' }),
+                node('option').setAttrs({ value : '2', id : 'opt2' })
             ]));
         }
 
@@ -88,9 +88,9 @@ describe('select', () => {
         }
 
         function render() {
-            mountSync(domNode, node('select').attrs({ id : 'select', multiple : true, value, onChange }).children([
-                node('option').attrs({ value : '1', id : 'opt1' }),
-                node('option').attrs({ value : '2', id : 'opt2' })
+            mountSync(domNode, node('select').setAttrs({ id : 'select', multiple : true, value, onChange }).setChildren([
+                node('option').setAttrs({ value : '1', id : 'opt1' }),
+                node('option').setAttrs({ value : '2', id : 'opt2' })
             ]));
         }
 
@@ -112,7 +112,7 @@ describe('select', () => {
 
         mountSync(
             domNode,
-            node('select').attrs({ id : 'select', ref(_ref) { ref = _ref; } }));
+            node('select').setAttrs({ id : 'select', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('select'));
     });

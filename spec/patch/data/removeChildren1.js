@@ -6,7 +6,7 @@ const parentNode = createNode('div');
 export default {
     'name' : 'removeChildren1',
     'trees' : [
-        parentNode.children([createNode('div'), createNode('div')]),
+        parentNode.setChildren([createNode('div'), createNode('div')]),
         createNode('div')
     ],
     'patch' : [

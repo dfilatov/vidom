@@ -24,8 +24,8 @@ describe('onAttrsChange', () => {
                 }
             });
 
-        mountSync(domNode, node(C).attrs(prevAttrs));
-        mountSync(domNode, node(C).attrs(newAttrs));
+        mountSync(domNode, node(C).setAttrs(prevAttrs));
+        mountSync(domNode, node(C).setAttrs(newAttrs));
     });
 
     it('shouldn\'t be called when no new attrs are passed', () => {
@@ -57,6 +57,6 @@ describe('onAttrsChange', () => {
             });
 
         mountSync(domNode, node(C));
-        mountSync(domNode, node(C).attrs({}));
+        mountSync(domNode, node(C).setAttrs({}));
     });
 });

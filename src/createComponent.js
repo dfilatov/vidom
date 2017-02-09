@@ -4,6 +4,7 @@ import createNode from './createNode';
 import merge from './utils/merge';
 import console from './utils/console';
 import emptyObj from './utils/emptyObj';
+import restrictObjProp from './utils/restrictObjProp';
 import { IS_DEBUG } from './utils/debug';
 import globalHook from './globalHook';
 
@@ -170,7 +171,7 @@ function renderComponent() {
         Object.freeze(rootNodeCtx);
     }
 
-    rootNode.ctx(rootNodeCtx);
+    rootNode.setCtx(rootNodeCtx);
 
     return rootNode;
 }
@@ -230,7 +231,11 @@ function buildComponentAttrs(attrs) {
 function createComponent(props, staticProps) {
     const res = function(attrs, children, ctx) {
             if(IS_DEBUG) {
-                enableImmutableRestrictions(this);
+                restrictObjProp(this, 'attrs');
+                restrictObjProp(this, 'children');
+                restrictObjProp(this, 'state');
+                restrictObjProp(this, 'context');
+
                 this.__isFrozen = false;
             }
 
@@ -291,27 +296,6 @@ function createComponent(props, staticProps) {
     res['__vidom__component__'] = true;
 
     return res;
-}
-
-function enableImmutableRestrictions(instance) {
-    ['attrs', 'children', 'state', 'context'].forEach(prop => {
-        const hiddenProp = `__${prop}`;
-
-        Object.defineProperty(instance, prop, {
-            get() {
-                return instance[hiddenProp];
-            },
-
-            set(value) {
-                if(instance.__isFrozen) {
-                    throw TypeError(`Component#${prop} is restricted to be modified directly`);
-                }
-                else {
-                    instance[hiddenProp] = value;
-                }
-            }
-        });
-    });
 }
 
 export default createComponent;

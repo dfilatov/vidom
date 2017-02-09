@@ -6,12 +6,12 @@ const oldNode = createNode('div');
 export default {
     'name' : 'removeChild2',
     'trees' : [
-        createNode('fragment').children([
+        createNode('fragment').setChildren([
             createNode('div'),
             createNode('div'),
             oldNode
         ]),
-        createNode('fragment').children([
+        createNode('fragment').setChildren([
             createNode('div'),
             createNode('div')
         ])

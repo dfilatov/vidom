@@ -1,18 +1,18 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('button').attrs({ value : 'text' });
+const node = createNode('button').setAttrs({ value : 'text' });
 
 export default {
     'name' : 'updateAttr3',
     'trees' : [
-        createNode('div').children([
-            createNode('button').attrs({ value : 'text' }),
+        createNode('div').setChildren([
+            createNode('button').setAttrs({ value : 'text' }),
             node
         ]),
-        createNode('div').children([
-            createNode('button').attrs({ value : 'text' }),
-            createNode('button').attrs({ value : 'new text' })
+        createNode('div').setChildren([
+            createNode('button').setAttrs({ value : 'text' }),
+            createNode('button').setAttrs({ value : 'new text' })
         ])
     ],
     'patch' : [

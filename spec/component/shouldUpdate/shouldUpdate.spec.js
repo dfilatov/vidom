@@ -30,8 +30,8 @@ describe('shouldUpdate', () => {
             prevChildren = [node('div')],
             nextChildren = [node('span')];
 
-        mountSync(domNode, node(C).attrs(prevAttrs).children(prevChildren));
-        mountSync(domNode, node(C).attrs(nextAttrs).children(nextChildren));
+        mountSync(domNode, node(C).setAttrs(prevAttrs).setChildren(prevChildren));
+        mountSync(domNode, node(C).setAttrs(nextAttrs).setChildren(nextChildren));
     });
 
     it('should prevent rendering if returns false', () => {

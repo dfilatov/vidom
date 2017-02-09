@@ -20,15 +20,15 @@ describe('onUnmount', () => {
             C1 = createComponent({
                 onUnmount : spy1,
                 onRender() {
-                    return node('div').children(
-                        node('fragment').children(
-                            node(C2).children(node(C3))));
+                    return node('div').setChildren(
+                        node('fragment').setChildren(
+                            node(C2).setChildren(node(C3))));
                 }
             }),
             C2 = createComponent({
                 onUnmount : spy2,
                 onRender() {
-                    return node('div').children(this.children);
+                    return node('div').setChildren(this.children);
                 }
             }),
             C3 = createComponent({

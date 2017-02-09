@@ -3,19 +3,19 @@ import patchOps from '../../../src/client/patchOps';
 
 const nodeC = createNode('a'),
     nodeD = createNode('a'),
-    nodeE = createNode('a').key('e');
+    nodeE = createNode('a').setKey('e');
 
 export default {
     'name' : 'complex-insert-to-middle-without-key',
     'trees' : [
-        createNode('div').children([
-            createNode('a').key('a'),
-            createNode('a').key('b'),
-            createNode('a').key('e')
+        createNode('div').setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b'),
+            createNode('a').setKey('e')
         ]),
-        createNode('div').children([
-            createNode('a').key('a'),
-            createNode('a').key('b'),
+        createNode('div').setChildren([
+            createNode('a').setKey('a'),
+            createNode('a').setKey('b'),
             nodeC,
             nodeD,
             nodeE

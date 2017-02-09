@@ -7,11 +7,11 @@ const oldNode = createNode('div'),
 export default {
     'name' : 'replace2',
     'trees' : [
-        createNode('div').children([
+        createNode('div').setChildren([
             createNode('div'),
             oldNode
         ]),
-        createNode('div').children([
+        createNode('div').setChildren([
             createNode('div'),
             newNode
         ])

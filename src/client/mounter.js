@@ -24,8 +24,8 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
                     newTree = new TopNode(node);
 
                 newTree
-                    .ns(prevTree._ns)
-                    .ctx(ctx);
+                    .setNs(prevTree._ns)
+                    .setCtx(ctx);
 
                 prevTree.patch(newTree);
                 mounted.tree = newTree;
@@ -49,8 +49,8 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
                 const tree = mounted.tree = new TopNode(node);
 
                 tree
-                    .ns(getNs(domNode))
-                    .ctx(ctx);
+                    .setNs(getNs(domNode))
+                    .setCtx(ctx);
 
                 tree.adoptDom(topDomChildNodes);
                 tree.mount();
@@ -74,8 +74,8 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
                 const tree = mounted.tree = new TopNode(node);
 
                 tree
-                    .ns(getNs(domNode))
-                    .ctx(ctx);
+                    .setNs(getNs(domNode))
+                    .setCtx(ctx);
 
                 domOps.append(domNode, tree.renderToDom());
                 tree.mount();

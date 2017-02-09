@@ -14,9 +14,9 @@ describe('radio', () => {
     });
 
     it('should maintain checked property', () => {
-        mountSync(domNode, node('div').children([
-            node('input').attrs({ type : 'radio', name : 'test', id : 'id1', checked : true }),
-            node('input').attrs({ type : 'radio', name : 'test', id : 'id2', checked : false })
+        mountSync(domNode, node('div').setChildren([
+            node('input').setAttrs({ type : 'radio', name : 'test', id : 'id1', checked : true }),
+            node('input').setAttrs({ type : 'radio', name : 'test', id : 'id2', checked : false })
         ]));
 
         const secondRadio = document.getElementById('id2');
@@ -36,9 +36,9 @@ describe('radio', () => {
         }
 
         function render() {
-            mountSync(domNode, node('div').children([
-                node('input').attrs({ type : 'radio', name : 'test', id : 'id1', checked : !checkedState }),
-                node('input').attrs({ type : 'radio', name : 'test', id : 'id2', checked : checkedState, onChange })
+            mountSync(domNode, node('div').setChildren([
+                node('input').setAttrs({ type : 'radio', name : 'test', id : 'id1', checked : !checkedState }),
+                node('input').setAttrs({ type : 'radio', name : 'test', id : 'id2', checked : checkedState, onChange })
             ]));
         }
 
@@ -58,7 +58,7 @@ describe('radio', () => {
 
         mountSync(
             domNode,
-            node('input').attrs({ type : 'radio', id : 'id1', ref(_ref) { ref = _ref; } }));
+            node('input').setAttrs({ type : 'radio', id : 'id1', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('id1'));
     });
