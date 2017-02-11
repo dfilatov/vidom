@@ -18,5 +18,9 @@ export default Object.assign(
                 }),
                 uglify()
             ] :
-            [])
+            [
+                replace({
+                    'process.env.NODE_ENV': '\'development\''
+                })
+            ])
     });
