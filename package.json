@@ -7,7 +7,9 @@
     "dom",
     "component",
     "ui",
-    "react"
+    "react",
+    "ssr",
+    "reactive"
   ],
   "main": "lib/vidom.js",
   "author": "Dmitry Filatov <dfilatov@yandex-team.ru>",
