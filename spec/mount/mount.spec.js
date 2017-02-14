@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mount, unmount } from '../../src/vidom';
+import { node, createComponent, mount, unmount, IS_DEBUG } from '../../src/vidom';
 
 describe('mount', () => {
     let domNode;
@@ -14,6 +14,19 @@ describe('mount', () => {
             done();
         });
     });
+
+    if(IS_DEBUG) {
+        describe('exceptions', () => {
+            it('should throw TypeError exception if not a node is passed', done => {
+                expect(() => {
+                    mount(domNode, {});
+                }).to.throwException(function(e) {
+                    expect(e).to.be.a(TypeError);
+                    done();
+                });
+            });
+        });
+    }
 
     describe('callbacks', () => {
         it('should properly call callback on initial mount', done => {

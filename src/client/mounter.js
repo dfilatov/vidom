@@ -4,6 +4,7 @@ import globalHook from '../globalHook';
 import domOps from './domOps';
 import { getNs } from './utils/ns';
 import TopNode from '../nodes/TopNode';
+import isNode from '../nodes/utils/isNode';
 import { IS_DEBUG } from '../utils/debug';
 import SimpleMap from '../utils/SimpleMap';
 
@@ -11,6 +12,12 @@ const mountedNodes = new SimpleMap();
 let counter = 0;
 
 function mountToDomNode(domNode, node, ctx, cb, syncMode) {
+    if(IS_DEBUG) {
+        if(!isNode(node)) {
+            throw TypeError(`Unexpected type of node is passed to mount. Only a virtual node is expected to be here.`);
+        }
+    }
+
     const domNodeId = getDomNodeId(domNode);
     let mounted = mountedNodes.get(domNodeId),
         mountId;
