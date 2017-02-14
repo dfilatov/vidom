@@ -1,3 +1,4 @@
+import isNode from './isNode';
 import console from '../../utils/console';
 
 export default function checkChildren(children) {
@@ -10,10 +11,11 @@ export default function checkChildren(children) {
     while(i < len) {
         child = children[i++];
 
-        if(typeof child !== 'object') {
-            console.error('You mustn\'t use simple child in case of multiple children.');
+        if(!isNode(child)) {
+            throw TypeError(`Unexpected type of child. Only a virtual node is expected to be here.`);
         }
-        else if(child.key != null) {
+
+        if(child.key != null) {
             if(child.key in keys) {
                 console.error(
                     `Childrens\' keys must be unique across the children. Found duplicate of "${child._key}" key.`);
