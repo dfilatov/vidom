@@ -240,8 +240,7 @@ FragmentNode.prototype = {
 
 if(IS_DEBUG) {
     FragmentNode.prototype.setRef = function() {
-        console.error('Fragment nodes don\'t support refs.');
-        return this;
+        throw Error('vidom: Fragment nodes don\'t support refs.');
     };
 }
 

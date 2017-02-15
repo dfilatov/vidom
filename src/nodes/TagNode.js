@@ -608,7 +608,7 @@ function processChildren(children) {
 function checkAttrs(attrs) {
     for(const name in attrs) {
         if(name.substr(0, 2) === 'on' && !ATTRS_TO_EVENTS[name]) {
-            console.error(`You\'re trying to add unsupported event listener "${name}".`);
+            throw Error(`vidom: Unsupported type of dom event listener "${name}".`);
         }
     }
 }

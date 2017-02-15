@@ -1,7 +1,6 @@
 import escapeAttr from '../utils/escapeAttr';
 import isInArray from '../utils/isInArray';
 import dasherize from '../utils/dasherize';
-import console from '../utils/console';
 import { IS_DEBUG } from '../utils/debug';
 
 function setAttr(node, name, val) {
@@ -34,8 +33,7 @@ function setObjProp(node, name, val) {
         const typeOfVal = typeof val;
 
         if(typeOfVal !== 'object') {
-            console.error(`"${name}" attribute expects an object as a value, not a ${typeOfVal}`);
-            return;
+            throw TypeError(`vidom: "${name}" attribute value must be an object, not a ${typeOfVal}`);
         }
     }
 

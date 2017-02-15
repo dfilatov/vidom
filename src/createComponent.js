@@ -156,7 +156,7 @@ function renderComponent() {
 
     if(IS_DEBUG) {
         if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
-            console.error('Component#onRender must return a single node object on the top level');
+            throw TypeError('vidom: Component#onRender must return a single node on the top level.');
         }
     }
 

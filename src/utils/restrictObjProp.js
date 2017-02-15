@@ -8,7 +8,7 @@ export default function restrictObjProp(obj, prop) {
 
         set(value) {
             if(obj.__isFrozen) {
-                throw TypeError(`${prop} is readonly`);
+                throw TypeError(`vidom: ${prop} is readonly`);
             }
 
             obj[hiddenProp] = value;

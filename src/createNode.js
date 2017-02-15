@@ -6,7 +6,6 @@ import TextNode from './nodes/TextNode';
 import Input from './components/Input';
 import TextArea from './components/TextArea';
 import Select from './components/Select';
-import console from './utils/console';
 import { IS_DEBUG } from './utils/debug';
 
 export default function createNode(type) {
@@ -39,7 +38,7 @@ export default function createNode(type) {
 
         default:
             if(IS_DEBUG) {
-                console.error('Unsupported type of node');
+                throw TypeError('vidom: Unexpected type of node is passed to the node factory.');
             }
     }
 }

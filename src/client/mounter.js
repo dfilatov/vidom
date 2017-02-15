@@ -14,7 +14,7 @@ let counter = 0;
 function mountToDomNode(domNode, node, ctx, cb, syncMode) {
     if(IS_DEBUG) {
         if(!isNode(node)) {
-            throw TypeError(`Unexpected type of node is passed to mount. Only a virtual node is expected to be here.`);
+            throw TypeError(`vidom: Unexpected type of node is passed to mount.`);
         }
     }
 

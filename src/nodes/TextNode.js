@@ -153,8 +153,7 @@ TextNode.prototype = {
 
 if(IS_DEBUG) {
     TextNode.prototype.setRef = function() {
-        console.error('Text nodes don\'t support refs.');
-        return this;
+        throw Error('vidom: Text nodes don\'t support refs.');
     };
 }
 

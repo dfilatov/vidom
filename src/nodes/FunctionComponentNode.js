@@ -165,7 +165,7 @@ FunctionComponentNode.prototype = {
 
         if(IS_DEBUG) {
             if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
-                console.error('Function component must return a single node object on the top level');
+                throw Error('vidom: Function component must return a single node on the top level.');
             }
         }
 
@@ -177,7 +177,6 @@ FunctionComponentNode.prototype = {
 
 if(IS_DEBUG) {
     FunctionComponentNode.prototype.setRef = function() {
-        console.error('Function component nodes don\'t support refs.');
-        return this;
+        throw Error('vidom: Function component nodes don\'t support refs.');
     };
 }
