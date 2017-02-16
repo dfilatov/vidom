@@ -1,0 +1,63 @@
+html,
+body
+{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.Playground__in,
+.Playground__out,
+.Playground__error
+{
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    transition: all .2s;
+}
+
+.Playground__in,
+.Playground__out,
+.Playground__error
+{
+    left: 0;
+}
+
+.Playground__in
+{
+    top: 0;
+}
+
+.Playground__out,
+.Playground__error
+{
+    top: 50%;
+    overflow: auto;
+}
+
+.Playground__error
+{
+    background: red;
+    color: #fff;
+    margin: 0;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+@media (min-width: 1000px)
+{
+    .Playground__in,
+    .Playground__out,
+    .Playground__error
+    {
+        width: 50%;
+        height: 100%;
+    }
+
+    .Playground__out,
+    .Playground__error
+    {
+        left: 50%;
+        top: 0;
+    }
+}
