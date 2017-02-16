@@ -34,6 +34,9 @@ Vidom is just a library to build UI. It's highly inspired from [React](https://f
   react v15.4.2            14.511ms  69
 ```
 
+## Playground
+Try [live playground](http://dfilatov.github.io/vidom/playground/) to play with Vidom in your browser.
+
 ## Documentation
   * [Getting started](../../wiki/Getting-started)
   * [Tutorial](../../wiki/Tutorial)
