@@ -210,16 +210,16 @@ function onComponentRefRequest() {
 }
 
 function buildComponentAttrs(attrs) {
-    if(this.attrs && attrs === this.attrs) {
+    if(attrs === this.attrs) {
         return attrs;
     }
 
     const { defaultAttrs } = this.constructor,
-        resAttrs = attrs?
+        resAttrs = attrs === emptyObj?
+            defaultAttrs || attrs :
             defaultAttrs?
                 merge(defaultAttrs, attrs) :
-                attrs :
-            defaultAttrs || emptyObj;
+                attrs;
 
     if(IS_DEBUG) {
         Object.freeze(resAttrs);

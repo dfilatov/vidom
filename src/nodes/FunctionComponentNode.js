@@ -24,7 +24,7 @@ export default function FunctionComponentNode(component) {
 
     this.type = NODE_TYPE_FUNCTION_COMPONENT;
     this.key = null;
-    this.attrs = null;
+    this.attrs = emptyObj;
     this.children = null;
 
     if(IS_DEBUG) {
@@ -53,7 +53,7 @@ FunctionComponentNode.prototype = {
             this.__isFrozen = false;
         }
 
-        this.attrs = this.attrs? merge(this.attrs, attrs) : attrs;
+        this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
 
         if(IS_DEBUG) {
             Object.freeze(this.attrs);
@@ -161,7 +161,7 @@ FunctionComponentNode.prototype = {
             return this._rootNode;
         }
 
-        const rootNode = this._component(this.attrs || emptyObj, this.children, this._ctx) || createNode('!');
+        const rootNode = this._component(this.attrs, this.children, this._ctx) || createNode('!');
 
         if(IS_DEBUG) {
             if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {

@@ -26,7 +26,7 @@ export default function ComponentNode(component) {
 
     this.type = NODE_TYPE_COMPONENT;
     this.key = null;
-    this.attrs = null;
+    this.attrs = emptyObj;
     this.children = null;
 
     if(IS_DEBUG) {
@@ -58,7 +58,7 @@ ComponentNode.prototype = {
             this.__isFrozen = false;
         }
 
-        this.attrs = this.attrs? merge(this.attrs, attrs) : attrs;
+        this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
 
         if(IS_DEBUG) {
             Object.freeze(this.attrs);
