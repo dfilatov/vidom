@@ -56,7 +56,7 @@ export default function TagNode(tag) {
     this.type = NODE_TYPE_TAG;
     this.tag = tag;
     this.key = null;
-    this.attrs = null;
+    this.attrs = emptyObj;
     this.children = null;
 
     if(IS_DEBUG) {
@@ -106,7 +106,7 @@ TagNode.prototype = {
             this.__isFrozen = false;
         }
 
-        this.attrs = this.attrs? merge(this.attrs, attrs) : attrs;
+        this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
 
         if(IS_DEBUG) {
             Object.freeze(this.attrs);
@@ -212,7 +212,7 @@ TagNode.prototype = {
             }
         }
 
-        if(attrs) {
+        if(attrs !== emptyObj) {
             let name, value;
             for(name in attrs) {
                 if((value = attrs[name]) != null) {
@@ -245,7 +245,7 @@ TagNode.prototype = {
             res += ' xmlns="' + ns + '"';
         }
 
-        if(attrs) {
+        if(attrs !== emptyObj) {
             let name, value, attrHtml;
             for(name in attrs) {
                 value = attrs[name];
@@ -313,7 +313,7 @@ TagNode.prototype = {
         const domNode = this._domNode = domNodes[domIdx],
             { attrs, children } = this;
 
-        if(attrs) {
+        if(attrs !== emptyObj) {
             let name, value;
             for(name in attrs) {
                 if((value = attrs[name]) != null && ATTRS_TO_EVENTS[name]) {
@@ -475,12 +475,12 @@ TagNode.prototype = {
 
         let attrName;
 
-        if(attrsB) {
+        if(attrsB !== emptyObj) {
             let attrAVal, attrBVal, isAttrAValArray, isAttrBValArray;
 
             for(attrName in attrsB) {
                 attrBVal = attrsB[attrName];
-                if(!attrsA || (attrAVal = attrsA[attrName]) == null) {
+                if(attrsA === emptyObj || (attrAVal = attrsA[attrName]) == null) {
                     if(attrBVal != null) {
                         patchOps.updateAttr(this, attrName, attrBVal);
                     }
@@ -509,9 +509,9 @@ TagNode.prototype = {
             }
         }
 
-        if(attrsA) {
+        if(attrsA !== emptyObj) {
             for(attrName in attrsA) {
-                if((!attrsB || !(attrName in attrsB)) && attrsA[attrName] != null) {
+                if((attrsB === emptyObj || !(attrName in attrsB)) && attrsA[attrName] != null) {
                     patchOps.removeAttr(this, attrName);
                 }
             }
