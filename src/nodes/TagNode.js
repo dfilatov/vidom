@@ -403,8 +403,8 @@ TagNode.prototype = {
         }
         else if(this.type === node.type && this.tag === node.tag && this._ns === node._ns) {
             node._domNode = this._domNode;
-            this._patchChildren(node);
             this._patchAttrs(node);
+            this._patchChildren(node);
             this._patchRef(node);
         }
         else {
