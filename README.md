@@ -60,6 +60,7 @@ Try [live playground](http://dfilatov.github.io/vidom/playground/) to play with 
    
 ## Addons
   * [vidom-css-animation-group](https://github.com/dfilatov/vidom-css-animation-group) API for "appearance", "entering" and "leaving" animation via CSS transitions and animation
+  * [vidom-ui](https://dfilatov.github.io/vidom-ui/) Set of basic UI components
   * [vidom-redux](https://github.com/dfilatov/vidom-redux) Redux bindings 
  
 ## Examples
