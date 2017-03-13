@@ -8,6 +8,7 @@ describe('component', () => {
     require('./onUnmount/onUnmount.spec.js');
     require('./onAttrsChange/onAttrsChange.spec.js');
     require('./onChildrenChange/onChildrenChange.spec.js');
+    require('./onContextChange/onContextChange.spec.js');
     require('./shouldUpdate/shouldUpdate.spec.js');
     require('./onUpdate/onUpdate.spec.js');
 });
