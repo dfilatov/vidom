@@ -26,9 +26,10 @@ function patchComponent(nextAttrs, nextChildren, nextContext) {
     nextAttrs = this.__buildAttrs(nextAttrs);
 
     const prevAttrs = this.attrs,
-        prevChildren = this.children;
+        prevChildren = this.children,
+        prevContext = this.context;
 
-    if(prevAttrs !== nextAttrs || prevChildren !== nextChildren) {
+    if(prevAttrs !== nextAttrs || prevChildren !== nextChildren || prevContext !== nextContext) {
         const isUpdating = this.__isUpdating;
 
         this.__isUpdating = true;
@@ -61,27 +62,29 @@ function patchComponent(nextAttrs, nextChildren, nextContext) {
             this.onChildrenChange(prevChildren);
         }
 
+        if(prevContext !== nextContext) {
+            if(IS_DEBUG) {
+                this.__isFrozen = false;
+            }
+
+            this.context = nextContext;
+
+            if(IS_DEBUG) {
+                Object.freeze(this.context);
+                this.__isFrozen = true;
+            }
+
+            this.onContextChange(prevContext);
+        }
+
         this.__isUpdating = isUpdating;
-    }
-
-    if(this.context !== nextContext) {
-        if(IS_DEBUG) {
-            this.__isFrozen = false;
-        }
-
-        this.context = nextContext;
-
-        if(IS_DEBUG) {
-            Object.freeze(this.context);
-            this.__isFrozen = true;
-        }
     }
 
     if(this.__isUpdating) {
         return;
     }
 
-    const shouldUpdate = this.shouldUpdate(prevAttrs, prevChildren, this.__prevState);
+    const shouldUpdate = this.shouldUpdate(prevAttrs, prevChildren, this.__prevState, prevContext);
 
     if(IS_DEBUG) {
         const shouldUpdateResType = typeof shouldUpdate;
@@ -96,7 +99,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext) {
 
         this.__rootNode = this.render();
         prevRootNode.patch(this.__rootNode);
-        this.onUpdate(prevAttrs, prevChildren, this.__prevState);
+        this.onUpdate(prevAttrs, prevChildren, this.__prevState, prevContext);
     }
 }
 
@@ -265,6 +268,7 @@ function createComponent(props, staticProps) {
             onUnmount : noOp,
             onAttrsChange : noOp,
             onChildrenChange : noOp,
+            onContextChange : noOp,
             shouldUpdate : shouldComponentUpdate,
             onUpdate : noOp,
             isMounted : isComponentMounted,
