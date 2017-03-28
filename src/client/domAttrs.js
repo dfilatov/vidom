@@ -11,7 +11,7 @@ function setAttr(node, name, val) {
         node.value = value;
     }
     else {
-        node.setAttribute(ATTR_NAMES[name] || name, '' + val);
+        node.setAttribute(getAttrName(name), '' + val);
     }
 }
 
@@ -54,7 +54,7 @@ function setPropWithCheck(node, name, val) {
 }
 
 function removeAttr(node, name) {
-    node.removeAttribute(ATTR_NAMES[name] || name);
+    node.removeAttribute(getAttrName(name));
 }
 
 function removeProp(node, name) {
@@ -101,11 +101,11 @@ function removeSelectValue(node) {
 function attrToString(name, value) {
     return value === false?
         '' :
-        (ATTR_NAMES[name] || name) + (value === true? '' : '="' + escapeAttr(value) + '"');
+        getAttrName(name) + (value === true? '' : '="' + escapeAttr(value) + '"');
 }
 
 function booleanAttrToString(name, value) {
-    return value? name : '';
+    return value? getAttrName(name) : '';
 }
 
 function stylePropToString(name, value) {
@@ -131,23 +131,15 @@ function getDefaultPropVal(tag, attrName) {
         tagAttrs[attrName] = document.createElement(tag)[attrName];
 }
 
+function getAttrName(attrName) {
+    return ATTR_NAMES[attrName] || (ATTR_NAMES[attrName] = attrName.toLowerCase());
+}
+
 const ATTR_NAMES = {
         acceptCharset : 'accept-charset',
         className : 'class',
         htmlFor : 'for',
-        httpEquiv : 'http-equiv',
-        autoCapitalize : 'autocapitalize',
-        autoComplete : 'autocomplete',
-        autoCorrect : 'autocorrect',
-        autoFocus : 'autofocus',
-        autoPlay : 'autoplay',
-        encType : 'encoding',
-        hrefLang : 'hreflang',
-        radioGroup : 'radiogroup',
-        spellCheck : 'spellcheck',
-        srcDoc : 'srcdoc',
-        srcSet : 'srcset',
-        tabIndex : 'tabindex'
+        httpEquiv : 'http-equiv'
     },
     DEFAULT_ATTR_CFG = {
         set : setAttr,
@@ -170,6 +162,7 @@ const ATTR_NAMES = {
         toString : booleanAttrToString
     },
     attrsCfg = {
+        autoPlay : BOOLEAN_ATTR_CFG,
         checked : BOOLEAN_PROP_CFG,
         controls : DEFAULT_PROP_CFG,
         disabled : BOOLEAN_ATTR_CFG,
