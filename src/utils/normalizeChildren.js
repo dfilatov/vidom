@@ -15,7 +15,7 @@ export default function normalizeChildren(children) {
         return children;
     }
 
-    if(!children.length) {
+    if(children.length === 0) {
         return null;
     }
 

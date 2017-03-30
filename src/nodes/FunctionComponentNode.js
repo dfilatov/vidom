@@ -39,7 +39,9 @@ export default function FunctionComponentNode(component) {
 
 FunctionComponentNode.prototype = {
     getDomNode() {
-        return this._rootNode && this._rootNode.getDomNode();
+        return this._rootNode === null?
+            null:
+            this._rootNode.getDomNode();
     },
 
     setKey,
@@ -113,7 +115,7 @@ FunctionComponentNode.prototype = {
     },
 
     unmount() {
-        if(this._rootNode) {
+        if(this._rootNode !== null) {
             this._rootNode.unmount();
             this._rootNode = null;
         }
@@ -157,7 +159,7 @@ FunctionComponentNode.prototype = {
     },
 
     _getRootNode() {
-        if(this._rootNode) {
+        if(this._rootNode !== null) {
             return this._rootNode;
         }
 

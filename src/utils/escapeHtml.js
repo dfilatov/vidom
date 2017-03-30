@@ -8,7 +8,7 @@ export default function escapeHtml(str) {
     let i = str.length,
         escapes = 0; // 1 — escape '&', 2 — escape '<', 4 — escape '>'
 
-    while(i--) {
+    while(i-- > 0) {
         switch(str[i]) {
             case '&':
                 escapes |= 1;
@@ -24,15 +24,15 @@ export default function escapeHtml(str) {
         }
     }
 
-    if(escapes & 1) {
+    if(escapes & 1 === 1) {
         str = str.replace(AMP_RE, '&amp;');
     }
 
-    if(escapes & 2) {
+    if(escapes & 2 === 2) {
         str = str.replace(LT_RE, '&lt;');
     }
 
-    if(escapes & 4) {
+    if(escapes & 4 === 4) {
         str = str.replace(GT_RE, '&gt;');
     }
 

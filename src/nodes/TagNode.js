@@ -166,7 +166,7 @@ TagNode.prototype = {
 
             const { children } = this;
 
-            if(children && typeof children !== 'string') {
+            if(children !== null && typeof children !== 'string') {
                 const len = children.length;
                 let i = 0;
 
@@ -189,6 +189,7 @@ TagNode.prototype = {
 
         if(USE_DOM_STRINGS && children && typeof children !== 'string') {
             const domNode = createElementByHtml(this.renderToString(), tag, ns);
+
             this.adoptDom([domNode], 0);
             return domNode;
         }
@@ -196,7 +197,7 @@ TagNode.prototype = {
         const domNode = this._domNode = createElement(tag, ns),
             { attrs } = this;
 
-        if(children) {
+        if(children !== null) {
             if(typeof children === 'string') {
                 this._escapeChildren?
                     domNode.textContent = children :
@@ -214,6 +215,7 @@ TagNode.prototype = {
 
         if(attrs !== emptyObj) {
             let name, value;
+
             for(name in attrs) {
                 if((value = attrs[name]) != null) {
                     if(ATTRS_TO_EVENTS[name]) {
@@ -247,6 +249,7 @@ TagNode.prototype = {
 
         if(attrs !== emptyObj) {
             let name, value, attrHtml;
+
             for(name in attrs) {
                 value = attrs[name];
 
@@ -270,20 +273,20 @@ TagNode.prototype = {
                         }
                     }
 
-                    if(!ATTRS_TO_EVENTS[name] && (attrHtml = domAttrs(name).toString(name, value))) {
+                    if(!(name in ATTRS_TO_EVENTS) && (attrHtml = domAttrs(name).toString(name, value)) !== '') {
                         res += ' ' + attrHtml;
                     }
                 }
             }
         }
 
-        if(SHORT_TAGS[tag]) {
+        if(tag in SHORT_TAGS) {
             res += '/>';
         }
         else {
             res += '>';
 
-            if(children) {
+            if(children !== null) {
                 if(typeof children === 'string') {
                     res += this._escapeChildren?
                         escapeHtml(children) :
@@ -322,11 +325,11 @@ TagNode.prototype = {
             }
         }
 
-        if(children && typeof children !== 'string') {
+        if(children !== null && typeof children !== 'string') {
             let i = 0;
             const len = children.length;
 
-            if(len) {
+            if(len > 0) {
                 const domChildren = domNode.childNodes;
                 let domChildIdx = 0;
 
@@ -342,7 +345,7 @@ TagNode.prototype = {
     mount() {
         const { children } = this;
 
-        if(children && typeof children !== 'string') {
+        if(children !== null && typeof children !== 'string') {
             let i = 0;
             const len = children.length;
 
@@ -431,17 +434,25 @@ TagNode.prototype = {
                 return;
             }
 
-            childrenA && childrenA.length && patchOps.removeChildren(this);
-            childrenB && patchOps.updateText(this, childrenB, node._escapeChildren);
+            if(childrenA !== null && childrenA.length > 0) {
+                patchOps.removeChildren(this);
+            }
+
+            if(childrenB) {
+                patchOps.updateText(this, childrenB, node._escapeChildren);
+            }
 
             return;
         }
 
-        if(!childrenB || !childrenB.length) {
+        if(childrenB === null || childrenB.length === 0) {
             if(childrenA) {
-                isChildrenAText?
-                    patchOps.removeText(this) :
-                    childrenA.length && patchOps.removeChildren(this);
+                if(isChildrenAText) {
+                    patchOps.removeText(this);
+                }
+                else if(childrenA.length > 0) {
+                    patchOps.removeChildren(this);
+                }
             }
 
             return;
@@ -451,7 +462,7 @@ TagNode.prototype = {
             patchOps.removeText(this);
         }
 
-        if(isChildrenAText || !childrenA || !childrenA.length) {
+        if(isChildrenAText || childrenA === null || childrenA.length === 0) {
             const childrenBLen = childrenB.length;
             let iB = 0;
 
@@ -568,16 +579,16 @@ TagNode.prototype = {
     },
 
     _patchRef(node) {
-        if(this._ref) {
+        if(this._ref !== null) {
             if(this._ref !== node._ref) {
                 this._ref(null);
 
-                if(node._ref) {
+                if(node._ref !== null) {
                     node._ref(node._domNode);
                 }
             }
         }
-        else if(node._ref) {
+        else if(node._ref !== null) {
             node._ref(node._domNode);
         }
     }
@@ -602,12 +613,12 @@ function processChildren(children) {
 
     return typeOfChildren === 'string'?
         children :
-        children.toString();
+        '' + children;
 }
 
 function checkAttrs(attrs) {
     for(const name in attrs) {
-        if(name.substr(0, 2) === 'on' && !ATTRS_TO_EVENTS[name]) {
+        if(name.substr(0, 2) === 'on' && !(name in ATTRS_TO_EVENTS)) {
             throw Error(`vidom: Unsupported type of dom event listener "${name}".`);
         }
     }

@@ -65,12 +65,12 @@ TextNode.prototype = {
         }
 
         const domFragment = document.createDocumentFragment(),
-            domNode = [createElement('!'), createElement('!')],
+            domNode = [createElement('!', null), createElement('!', null)],
             { children } = this;
 
         domFragment.appendChild(domNode[0]);
 
-        if(children) {
+        if(children !== null) {
             domFragment.appendChild(document.createTextNode(children));
         }
 

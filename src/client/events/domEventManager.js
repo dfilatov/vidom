@@ -47,7 +47,7 @@ function globalEventListener(e, type = e.type) {
             listeners = listenersStorage.get(domNodeId);
             if(listeners && (listener = listeners[type])) {
                 listener(syntheticEvent || (syntheticEvent = createSyntheticEvent(type, e)));
-                if(!--listenersCount || syntheticEvent.isPropagationStopped()) {
+                if(--listenersCount === 0 || syntheticEvent.isPropagationStopped()) {
                     return;
                 }
             }
@@ -102,43 +102,53 @@ if(typeof document !== 'undefined') {
         eventsCfg[NON_BUBBLEABLE_NATIVE_EVENTS[i++]] = {
             type : type,
             bubbles : false,
-            set : false
+            set : false,
+            setup : null
         };
     }
 }
 
 function addListener(domNode, type, listener) {
+    if(!(type in eventsCfg)) {
+        return;
+    }
+
     const cfg = eventsCfg[type];
 
-    if(cfg) {
-        if(!cfg.set) {
-            cfg.setup?
-                cfg.setup() :
-                cfg.bubbles && document.addEventListener(type, globalEventListener, false);
-            cfg.set = true;
+    if(!cfg.set) {
+        if(cfg.setup !== null) {
+            cfg.setup();
+        }
+        else if(cfg.bubbles) {
+            document.addEventListener(type, globalEventListener, false);
         }
 
-        const domNodeId = getDomNodeId(domNode);
-        let listeners = listenersStorage.get(domNodeId);
-
-        if(!listeners) {
-            listenersStorage.set(domNodeId, listeners = {});
-        }
-
-        if(!listeners[type]) {
-            cfg.bubbles?
-                ++cfg.listenersCount :
-                domNode.addEventListener(type, eventListener, false);
-        }
-
-        listeners[type] = listener;
+        cfg.set = true;
     }
+
+    const domNodeId = getDomNodeId(domNode);
+    let listeners = listenersStorage.get(domNodeId);
+
+    if(typeof listeners === 'undefined') {
+        listenersStorage.set(domNodeId, listeners = {});
+    }
+
+    if(!(type in listeners)) {
+        if(cfg.bubbles) {
+            ++cfg.listenersCount;
+        }
+        else {
+            domNode.addEventListener(type, eventListener, false);
+        }
+    }
+
+    listeners[type] = listener;
 }
 
 function doRemoveListener(domNode, type) {
-    const cfg = eventsCfg[type];
+    if(type in eventsCfg) {
+        const cfg = eventsCfg[type];
 
-    if(cfg) {
         if(cfg.bubbles) {
             --cfg.listenersCount;
         }
@@ -151,10 +161,10 @@ function doRemoveListener(domNode, type) {
 function removeListener(domNode, type) {
     const domNodeId = getDomNodeId(domNode, true);
 
-    if(domNodeId) {
+    if(domNodeId !== null) {
         const listeners = listenersStorage.get(domNodeId);
 
-        if(listeners && listeners[type]) {
+        if(typeof listeners !== 'undefined' && type in listeners) {
             listeners[type] = null;
             doRemoveListener(domNode, type);
         }
@@ -164,10 +174,10 @@ function removeListener(domNode, type) {
 function removeListeners(domNode) {
     const domNodeId = getDomNodeId(domNode, true);
 
-    if(domNodeId) {
+    if(domNodeId !== null) {
         const listeners = listenersStorage.get(domNodeId);
 
-        if(listeners) {
+        if(typeof listeners !== 'undefined') {
             for(const type in listeners) {
                 if(listeners[type]) {
                     doRemoveListener(domNode, type);

@@ -22,7 +22,7 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
     let mounted = mountedNodes.get(domNodeId),
         mountId;
 
-    if(mounted && mounted.tree) {
+    if(mounted && mounted.tree !== null) {
         mountId = ++mounted.id;
         const patchFn = () => {
             mounted = mountedNodes.get(domNodeId);
@@ -49,10 +49,13 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
     else {
         mountedNodes.set(domNodeId, mounted = { tree : null, id : mountId = ++counter });
 
-        if(domNode.childNodes.length) {
+        if(domNode.childNodes.length > 0) {
             const topDomChildNodes = collectTopDomChildNodes(domNode);
 
-            if(topDomChildNodes) {
+            if(topDomChildNodes === null) {
+                domNode.textContent = '';
+            }
+            else {
                 const tree = mounted.tree = new TopNode(node);
 
                 tree
@@ -68,9 +71,6 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
                 }
 
                 return;
-            }
-            else {
-                domNode.textContent = '';
             }
         }
 
@@ -109,7 +109,7 @@ function unmountFromDomNode(domNode, cb, syncMode) {
                     mountedNodes.delete(domNodeId);
                     const tree = mounted.tree;
 
-                    if(tree) {
+                    if(tree !== null) {
                         const treeDomNode = tree.getDomNode();
 
                         tree.unmount();
@@ -140,7 +140,7 @@ function collectTopDomChildNodes(node) {
     const childNodes = node.childNodes,
         len = childNodes.length;
     let i = 0,
-        res,
+        res = null,
         childNode;
 
     while(i < len) {

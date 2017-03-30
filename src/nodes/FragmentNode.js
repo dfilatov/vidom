@@ -70,7 +70,7 @@ FragmentNode.prototype = {
 
             const { children } = this;
 
-            if(children) {
+            if(children !== null) {
                 const len = children.length;
                 let i = 0;
 
@@ -89,12 +89,12 @@ FragmentNode.prototype = {
         }
 
         const { children } = this,
-            domNode = [createElement('!'), createElement('!')],
+            domNode = [createElement('!', null), createElement('!', null)],
             domFragment = document.createDocumentFragment();
 
         domFragment.appendChild(domNode[0]);
 
-        if(children) {
+        if(children !== null) {
             const len = children.length;
             let i = 0;
 
@@ -114,7 +114,7 @@ FragmentNode.prototype = {
         const { children } = this;
         let res = '<!---->';
 
-        if(children) {
+        if(children !== null) {
             let i = children.length - 1;
 
             while(i >= 0) {
@@ -133,7 +133,7 @@ FragmentNode.prototype = {
         const domNode = [domNodes[domIdx++]],
             { children } = this;
 
-        if(children) {
+        if(children !== null) {
             const len = children.length;
             let i = 0;
 
@@ -152,7 +152,7 @@ FragmentNode.prototype = {
     mount() {
         const { children } = this;
 
-        if(children) {
+        if(children !== null) {
             let i = 0;
             const len = children.length;
 
@@ -165,7 +165,7 @@ FragmentNode.prototype = {
     unmount() {
         const { children } = this;
 
-        if(children) {
+        if(children !== null) {
             const len = children.length;
             let i = 0;
 
@@ -211,19 +211,19 @@ FragmentNode.prototype = {
         const childrenA = this.children,
             childrenB = node.children;
 
-        if(!childrenA && !childrenB) {
+        if(childrenA === null && childrenB === null) {
             return;
         }
 
-        if(!childrenB || !childrenB.length) {
-            if(childrenA && childrenA.length) {
+        if(childrenB === null || childrenB.length === 0) {
+            if(childrenA !== null && childrenA.length > 0) {
                 patchOps.removeChildren(this);
             }
 
             return;
         }
 
-        if(!childrenA || !childrenA.length) {
+        if(childrenA === null || childrenA.length === 0) {
             const childrenBLen = childrenB.length;
             let iB = 0;
 

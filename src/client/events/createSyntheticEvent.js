@@ -45,15 +45,17 @@ SyntheticEvent.prototype = {
 const eventsPool = {};
 
 export default function createSyntheticEvent(type, nativeEvent) {
-    const pooledEvent = eventsPool[type];
+    if(type in eventsPool) {
+        const pooledEvent = eventsPool[type];
 
-    if(pooledEvent && !pooledEvent._isPersisted) {
-        pooledEvent.target = nativeEvent.target;
-        pooledEvent.nativeEvent = nativeEvent;
-        pooledEvent._isPropagationStopped = false;
-        pooledEvent._isDefaultPrevented = false;
+        if(!pooledEvent._isPersisted) {
+            pooledEvent.target = nativeEvent.target;
+            pooledEvent.nativeEvent = nativeEvent;
+            pooledEvent._isPropagationStopped = false;
+            pooledEvent._isDefaultPrevented = false;
 
-        return pooledEvent;
+            return pooledEvent;
+        }
     }
 
     return eventsPool[type] = new SyntheticEvent(type, nativeEvent);

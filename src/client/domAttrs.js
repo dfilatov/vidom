@@ -124,7 +124,9 @@ function stylePropToString(name, value) {
 const defaultPropVals = {};
 
 function getDefaultPropVal(tag, attrName) {
-    const tagAttrs = defaultPropVals[tag] || (defaultPropVals[tag] = {});
+    const tagAttrs = tag in defaultPropVals?
+        defaultPropVals[tag] :
+        defaultPropVals[tag] = {};
 
     return attrName in tagAttrs?
         tagAttrs[attrName] :
@@ -132,7 +134,9 @@ function getDefaultPropVal(tag, attrName) {
 }
 
 function getAttrName(attrName) {
-    return ATTR_NAMES[attrName] || (ATTR_NAMES[attrName] = attrName.toLowerCase());
+    return attrName in ATTR_NAMES?
+        ATTR_NAMES[attrName] :
+        ATTR_NAMES[attrName] = attrName.toLowerCase();
 }
 
 const ATTR_NAMES = {
@@ -188,5 +192,7 @@ const ATTR_NAMES = {
     };
 
 export default function(attrName) {
-    return attrsCfg[attrName] || DEFAULT_ATTR_CFG;
+    return attrName in attrsCfg?
+        attrsCfg[attrName] :
+        DEFAULT_ATTR_CFG;
 }

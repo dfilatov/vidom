@@ -42,7 +42,9 @@ export default function ComponentNode(component) {
 
 ComponentNode.prototype = {
     getDomNode() {
-        return this._instance && this._instance.getDomNode();
+        return this._instance === null?
+            null :
+            this._instance.getDomNode();
     },
 
     setKey,
@@ -136,7 +138,7 @@ ComponentNode.prototype = {
     },
 
     unmount() {
-        if(this._instance) {
+        if(this._instance !== null) {
             this._instance.getRootNode().unmount();
             this._instance.unmount();
             this._instance = null;
@@ -183,21 +185,23 @@ ComponentNode.prototype = {
     },
 
     _patchRef(node) {
-        if(this._ref) {
+        if(this._ref !== null) {
             if(this._ref !== node._ref) {
                 this._ref(null);
 
-                if(node._ref) {
+                if(node._ref !== null) {
                     node._ref(node._instance.onRefRequest());
                 }
             }
         }
-        else if(node._ref) {
+        else if(node._ref !== null) {
             node._ref(node._instance.onRefRequest());
         }
     },
 
     _getInstance() {
-        return this._instance || (this._instance = new this._component(this.attrs, this.children, this._ctx));
+        return this._instance === null?
+            this._instance = new this._component(this.attrs, this.children, this._ctx) :
+            this._instance;
     }
 };

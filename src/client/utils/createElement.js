@@ -1,16 +1,33 @@
-const elementProtos = {};
+import SimpleMap from '../../utils/SimpleMap';
+
+const elementProtos = new SimpleMap();
 
 export default function createElement(tag, ns) {
     let baseElement;
 
-    if(ns) {
-        const key = ns + ':' + tag;
-
-        baseElement = elementProtos[key] || (elementProtos[key] = document.createElementNS(ns, tag));
+    if(ns === null) {
+        if(elementProtos.has(tag)) {
+            baseElement = elementProtos.get(tag);
+        }
+        else {
+            elementProtos.set(
+                tag,
+                baseElement = tag === '!'?
+                    document.createComment('') :
+                    document.createElement(tag));
+        }
     }
     else {
-        baseElement = elementProtos[tag] ||
-            (elementProtos[tag] = tag === '!'? document.createComment('') : document.createElement(tag));
+        const key = `${ns}:${tag}`;
+
+        if(elementProtos.has(key)) {
+            baseElement = elementProtos.get(key);
+        }
+        else {
+            elementProtos.set(
+                key,
+                baseElement = document.createElementNS(ns, tag));
+        }
     }
 
     return baseElement.cloneNode();

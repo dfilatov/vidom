@@ -7,7 +7,7 @@ export default function escapeAttr(str) {
     let i = str.length,
         escapes = 0; // 1 — escape '&', 2 — escape '"'
 
-    while(i--) {
+    while(i-- > 0) {
         switch(str[i]) {
             case '&':
                 escapes |= 1;
@@ -19,11 +19,11 @@ export default function escapeAttr(str) {
         }
     }
 
-    if(escapes & 1) {
+    if(escapes & 1 === 1) {
         str = str.replace(AMP_RE, '&amp;');
     }
 
-    if(escapes & 2) {
+    if(escapes & 2 === 2) {
         str = str.replace(QUOT_RE, '&quot;');
     }
 
