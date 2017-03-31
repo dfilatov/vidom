@@ -2,7 +2,7 @@ import sinon from 'sinon';
 import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
 
-describe('shouldUpdate', () => {
+describe('shouldRerender', () => {
     let domNode;
 
     beforeEach(() => {
@@ -16,7 +16,7 @@ describe('shouldUpdate', () => {
 
     it('should be called before rerender with proper arguments', done => {
         const C = createComponent({
-                shouldUpdate(arg1, arg2, arg3, arg4) {
+                shouldRerender(arg1, arg2, arg3, arg4) {
                     expect(this.attrs).to.be.equal(nextAttrs);
                     expect(this.children).to.be.equal(nextChildren);
                     expect(this.context).to.be.equal(nextContext);
@@ -47,7 +47,7 @@ describe('shouldUpdate', () => {
                     return node('div');
                 },
 
-                shouldUpdate() {
+                shouldRerender() {
                     return false;
                 }
             });

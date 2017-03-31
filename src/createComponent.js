@@ -78,17 +78,17 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         return;
     }
 
-    const shouldUpdate = this.shouldUpdate(prevAttrs, prevChildren, this.__prevState, prevContext);
+    const shouldRerender = this.shouldRerender(prevAttrs, prevChildren, this.__prevState, prevContext);
 
     if(IS_DEBUG) {
-        const shouldUpdateResType = typeof shouldUpdate;
+        const shouldRerenderResType = typeof shouldRerender;
 
-        if(shouldUpdateResType !== 'boolean') {
-            console.warn(`Component#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
+        if(shouldRerenderResType !== 'boolean') {
+            console.warn(`Component#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
         }
     }
 
-    if(shouldUpdate) {
+    if(shouldRerender) {
         const prevRootNode = this.__rootNode;
 
         this.__rootNode = this.render();
@@ -97,7 +97,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
     }
 }
 
-function shouldComponentUpdate() {
+function shouldComponentRerender() {
     return true;
 }
 
@@ -267,7 +267,7 @@ function createComponent(props, staticProps) {
             onAttrsReceive : noOp,
             onChildrenReceive : noOp,
             onContextReceive : noOp,
-            shouldUpdate : shouldComponentUpdate,
+            shouldRerender : shouldComponentRerender,
             onRender : onComponentRender,
             onUpdate : noOp,
             isMounted : isComponentMounted,
