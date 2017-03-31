@@ -1,7 +1,7 @@
 import sinon from 'sinon';
 import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
-describe('onChildrenChange', () => {
+describe('onChildrenReceive', () => {
     let domNode;
 
     beforeEach(() => {
@@ -17,7 +17,7 @@ describe('onChildrenChange', () => {
         const prevChildren = [node('div')],
             nextChildren = [node('span')],
             C = createComponent({
-                onChildrenChange(_prevChildren) {
+                onChildrenReceive(_prevChildren) {
                     expect(this.children).to.be.equal(nextChildren);
                     expect(_prevChildren).to.be.equal(prevChildren);
                     done();
@@ -28,16 +28,19 @@ describe('onChildrenChange', () => {
         mountSync(domNode, node(C).setChildren(nextChildren));
     });
 
-    it('shouldn\'t be called when no new children are passed', () => {
+    it('shouldn\'t be called if component updates itself', done => {
         const spy = sinon.spy(),
             C = createComponent({
-                onChildrenChange : spy
+                onChildrenReceive : spy,
+                onMount() {
+                    this.update(() => {
+                        expect(spy.called).not.to.be.ok();
+                        done();
+                    });
+                }
             });
 
         mountSync(domNode, node(C));
-        mountSync(domNode, node(C));
-
-        expect(spy.called).not.to.be.ok();
     });
 
     it('shouldn\'t cause additional render if calls update()', done => {
@@ -48,7 +51,7 @@ describe('onChildrenChange', () => {
                     return node('div');
                 },
 
-                onChildrenChange() {
+                onChildrenReceive() {
                     this.update(() => {
                         expect(spy.calledTwice).to.be.ok();
                         done();

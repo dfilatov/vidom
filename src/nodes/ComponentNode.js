@@ -171,10 +171,10 @@ ComponentNode.prototype = {
         const instance = this._getInstance();
 
         if(this === node) {
-            instance.patch(node.attrs, node.children, node._ctx);
+            instance.patch(node.attrs, node.children, node._ctx, true);
         }
         else if(this.type === node.type && this._component === node._component) {
-            instance.patch(node.attrs, node.children, node._ctx);
+            instance.patch(node.attrs, node.children, node._ctx, true);
             node._instance = instance;
             this._patchRef(node);
         }

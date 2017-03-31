@@ -98,6 +98,7 @@ describe('state', () => {
                 expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
                 expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
+                return true;
             }
         });
 

@@ -18,7 +18,7 @@ function unmountComponent() {
     this.onUnmount();
 }
 
-function patchComponent(nextAttrs, nextChildren, nextContext) {
+function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
     if(!this.isMounted()) {
         return;
     }
@@ -29,53 +29,47 @@ function patchComponent(nextAttrs, nextChildren, nextContext) {
         prevChildren = this.children,
         prevContext = this.context;
 
-    if(prevAttrs !== nextAttrs || prevChildren !== nextChildren || prevContext !== nextContext) {
+    if(callReceivers) {
         const isUpdating = this.__isUpdating;
 
         this.__isUpdating = true;
 
-        if(prevAttrs !== nextAttrs) {
-            if(IS_DEBUG) {
-                this.__isFrozen = false;
-            }
-
-            this.attrs = nextAttrs;
-
-            if(IS_DEBUG) {
-                this.__isFrozen = true;
-            }
-
-            this.onAttrsChange(prevAttrs);
+        if(IS_DEBUG) {
+            this.__isFrozen = false;
         }
 
-        if(prevChildren !== nextChildren) {
-            if(IS_DEBUG) {
-                this.__isFrozen = false;
-            }
+        this.attrs = nextAttrs;
 
-            this.children = nextChildren;
-
-            if(IS_DEBUG) {
-                this.__isFrozen = true;
-            }
-
-            this.onChildrenChange(prevChildren);
+        if(IS_DEBUG) {
+            this.__isFrozen = true;
         }
 
-        if(prevContext !== nextContext) {
-            if(IS_DEBUG) {
-                this.__isFrozen = false;
-            }
+        this.onAttrsReceive(prevAttrs);
 
-            this.context = nextContext;
-
-            if(IS_DEBUG) {
-                Object.freeze(this.context);
-                this.__isFrozen = true;
-            }
-
-            this.onContextChange(prevContext);
+        if(IS_DEBUG) {
+            this.__isFrozen = false;
         }
+
+        this.children = nextChildren;
+
+        if(IS_DEBUG) {
+            this.__isFrozen = true;
+        }
+
+        this.onChildrenReceive(prevChildren);
+
+        if(IS_DEBUG) {
+            this.__isFrozen = false;
+        }
+
+        this.context = nextContext;
+
+        if(IS_DEBUG) {
+            Object.freeze(this.context);
+            this.__isFrozen = true;
+        }
+
+        this.onContextReceive(prevContext);
 
         this.__isUpdating = isUpdating;
     }
@@ -195,7 +189,7 @@ function updateComponent(cb) {
                 this.__isUpdating = false;
                 const prevRootNode = this.__rootNode;
 
-                this.patch(this.attrs, this.children, this.context);
+                this.patch(this.attrs, this.children, this.context, false);
                 cb && cb.call(this);
                 if(IS_DEBUG) {
                     globalHook.emit('replace', prevRootNode, this.__rootNode);
@@ -270,9 +264,9 @@ function createComponent(props, staticProps) {
             unmount : unmountComponent,
             onMount : noOp,
             onUnmount : noOp,
-            onAttrsChange : noOp,
-            onChildrenChange : noOp,
-            onContextChange : noOp,
+            onAttrsReceive : noOp,
+            onChildrenReceive : noOp,
+            onContextReceive : noOp,
             shouldUpdate : shouldComponentUpdate,
             onRender : onComponentRender,
             onUpdate : noOp,

@@ -25,6 +25,7 @@ describe('shouldUpdate', () => {
                     expect(arg3).to.be.equal(emptyObj);
                     expect(arg4).to.be.equal(prevContext);
                     done();
+                    return true;
                 }
             }),
             prevAttrs = { id : 1 },
