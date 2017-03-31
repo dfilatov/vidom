@@ -41,7 +41,7 @@ describe('onUpdate', () => {
     it('should not be called if component hasn\'t updated', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                shouldUpdate() {
+                shouldRerender() {
                     return false;
                 },
 

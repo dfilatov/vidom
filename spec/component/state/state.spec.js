@@ -84,7 +84,7 @@ describe('state', () => {
         mountSync(domNode, createNode(C));
     });
 
-    it('should be possible to get both state and previous state inside shouldUpdate', done => {
+    it('should be possible to get both state and previous state inside shouldRerender', done => {
         const C = createComponent({
             onInit() {
                 this.setState({ prop1 : 'val1', prop2 : 'val2' });
@@ -94,7 +94,7 @@ describe('state', () => {
                 this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
             },
 
-            shouldUpdate(prevAttrs, prevChildren, prevState) {
+            shouldRerender(prevAttrs, prevChildren, prevState) {
                 expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
                 expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
