@@ -244,7 +244,7 @@ TagNode.prototype = {
         let { children } = this,
             res = '<' + tag;
 
-        if(ns) {
+        if(ns !== null) {
             res += ' xmlns="' + ns + '"';
         }
 
