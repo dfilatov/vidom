@@ -1,8 +1,14 @@
 let SimpleMap;
 
 if(typeof Map === 'undefined') {
-    SimpleMap = function() {
+    SimpleMap = function(items) {
         this._storage = {};
+
+        if(items) {
+            for(let i = 0; i < items.length; i++) {
+                this._storage[items[i][0]] = items[i][1];
+            }
+        }
     };
 
     SimpleMap.prototype = {

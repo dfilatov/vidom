@@ -14,9 +14,12 @@ SyntheticEvent.prototype = {
 
         const nativeEvent = this.nativeEvent;
 
-        nativeEvent.stopPropagation?
-            nativeEvent.stopPropagation() :
+        if(nativeEvent.stopPropagation) {
+            nativeEvent.stopPropagation();
+        }
+        else {
             nativeEvent.cancelBubble = true;
+        }
     },
 
     isPropagationStopped() {
@@ -28,9 +31,12 @@ SyntheticEvent.prototype = {
 
         const nativeEvent = this.nativeEvent;
 
-        nativeEvent.preventDefault?
-            nativeEvent.preventDefault() :
+        if(nativeEvent.preventDefault) {
+            nativeEvent.preventDefault();
+        }
+        else {
             nativeEvent.returnValue = false;
+        }
     },
 
     isDefaultPrevented() {

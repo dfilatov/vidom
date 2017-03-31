@@ -223,7 +223,9 @@ describe('renderToDom', () => {
 
         it('should render comment if onRender() returns nothing', () => {
             const Component = createComponent({
-                    onRender() {}
+                    onRender() {
+                        return null;
+                    }
                 }),
                 domNode = (topNode = node(Component)).renderToDom(null);
 

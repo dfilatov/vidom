@@ -67,9 +67,12 @@ function move(child, toChild, after) {
         Array.isArray(toChild) && (toChild = toChild[1]);
         const nextSibling = toChild.nextSibling;
 
-        nextSibling?
-            insertBefore(child, nextSibling) :
+        if(nextSibling) {
+            insertBefore(child, nextSibling);
+        }
+        else {
             append(toChild.parentNode, child);
+        }
     }
     else {
         insertBefore(child, toChild);
@@ -119,9 +122,12 @@ function updateText(node, text, escape) {
     else if(escape) {
         const firstChild = node.firstChild;
 
-        firstChild?
-            firstChild.nodeValue = text :
+        if(firstChild) {
+            firstChild.nodeValue = text;
+        }
+        else {
             node.textContent = text;
+        }
     }
     else {
         node.innerHTML = text;

@@ -107,6 +107,10 @@ function shouldComponentUpdate() {
     return true;
 }
 
+function onComponentRender() {
+    return null;
+}
+
 function renderComponentToDom(parentNs) {
     return this.__rootNode.renderToDom(parentNs);
 }
@@ -130,12 +134,12 @@ function requestChildContext() {
 function setComponentState(state) {
     let nextState;
 
-    if(this.__rootNode) { // was inited
-        this.update(this.state === this.__prevState? updateComponentPrevState : null);
-        nextState = merge(this.state, state);
+    if(this.__rootNode === null) { // wasn't inited
+        nextState = state === emptyObj? state : merge(this.state, state);
     }
     else {
-        nextState = state === emptyObj? state : merge(this.state, state);
+        this.update(this.state === this.__prevState? updateComponentPrevState : null);
+        nextState = merge(this.state, state);
     }
 
     if(IS_DEBUG) {
@@ -155,11 +159,12 @@ function updateComponentPrevState() {
 }
 
 function renderComponent() {
-    const rootNode = this.onRender() || createNode('!');
+    const onRenderRes = this.onRender(),
+        rootNode = onRenderRes === null? createNode('!') : onRenderRes;
 
     if(IS_DEBUG) {
         if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
-            throw TypeError('vidom: Component#onRender must return a single node on the top level.');
+            throw TypeError('vidom: Component#onRender must return a single node on the top level or null.');
         }
     }
 
@@ -218,17 +223,16 @@ function buildComponentAttrs(attrs) {
     }
 
     const { defaultAttrs } = this.constructor,
-        resAttrs = attrs === emptyObj?
-            defaultAttrs || attrs :
-            defaultAttrs?
-                merge(defaultAttrs, attrs) :
-                attrs;
+        hasDefaultAttrs = defaultAttrs != null,
+        res = attrs === emptyObj?
+            hasDefaultAttrs? defaultAttrs : attrs :
+            hasDefaultAttrs? merge(defaultAttrs, attrs) : attrs;
 
     if(IS_DEBUG) {
-        Object.freeze(resAttrs);
+        Object.freeze(res);
     }
 
-    return resAttrs;
+    return res;
 }
 
 function createComponent(props, staticProps) {
@@ -270,6 +274,7 @@ function createComponent(props, staticProps) {
             onChildrenChange : noOp,
             onContextChange : noOp,
             shouldUpdate : shouldComponentUpdate,
+            onRender : onComponentRender,
             onUpdate : noOp,
             isMounted : isComponentMounted,
             setState : setComponentState,
@@ -279,7 +284,6 @@ function createComponent(props, staticProps) {
             getDomNode : getComponentDomNode,
             getRootNode : getComponentRootNode,
             render : renderComponent,
-            onRender : noOp,
             update : updateComponent,
             patch : patchComponent,
             onChildContextRequest : requestChildContext,

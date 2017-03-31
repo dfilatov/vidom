@@ -67,17 +67,23 @@ function replace(oldNode, newNode) {
 function updateAttr(node, attrName, attrVal) {
     const domNode = node.getDomNode();
 
-    ATTRS_TO_EVENTS[attrName]?
-        addListener(domNode, ATTRS_TO_EVENTS[attrName], attrVal) :
+    if(ATTRS_TO_EVENTS.has(attrName)) {
+        addListener(domNode, ATTRS_TO_EVENTS.get(attrName), attrVal);
+    }
+    else {
         domAttrs(attrName).set(domNode, attrName, attrVal);
+    }
 }
 
 function removeAttr(node, attrName) {
     const domNode = node.getDomNode();
 
-    ATTRS_TO_EVENTS[attrName]?
-        removeListener(domNode, ATTRS_TO_EVENTS[attrName]) :
+    if(ATTRS_TO_EVENTS.has(attrName)) {
+        removeListener(domNode, ATTRS_TO_EVENTS.get(attrName));
+    }
+    else {
         domAttrs(attrName).remove(domNode, attrName);
+    }
 }
 
 function updateText(node, text, escape) {

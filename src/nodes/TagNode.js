@@ -15,28 +15,29 @@ import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
+import SimpleMap from '../utils/SimpleMap';
 import { NODE_TYPE_TAG } from './utils/nodeTypes';
 import { setKey, setRef } from './utils/setters';
 
-const SHORT_TAGS = {
-        area : true,
-        base : true,
-        br : true,
-        col : true,
-        command : true,
-        embed : true,
-        hr : true,
-        img : true,
-        input : true,
-        keygen : true,
-        link : true,
-        menuitem : true,
-        meta : true,
-        param : true,
-        source : true,
-        track : true,
-        wbr : true
-    },
+const SHORT_TAGS = new SimpleMap([
+        ['area', true],
+        ['base', true],
+        ['br', true],
+        ['col', true],
+        ['command', true],
+        ['embed', true],
+        ['hr', true],
+        ['img', true],
+        ['input', true],
+        ['keygen', true],
+        ['link', true],
+        ['menuitem', true],
+        ['meta', true],
+        ['param', true],
+        ['source', true],
+        ['track', true],
+        ['wbr', true]
+    ]),
     USE_DOM_STRINGS = isTrident || isEdge,
     ATTRS_SET = 4,
     CHILDREN_SET = 8,
@@ -218,8 +219,8 @@ TagNode.prototype = {
 
             for(name in attrs) {
                 if((value = attrs[name]) != null) {
-                    if(ATTRS_TO_EVENTS[name]) {
-                        addListener(domNode, ATTRS_TO_EVENTS[name], value);
+                    if(ATTRS_TO_EVENTS.has(name)) {
+                        addListener(domNode, ATTRS_TO_EVENTS.get(name), value);
                     }
                     else {
                         domAttrs(name).set(domNode, name, value);
@@ -273,14 +274,14 @@ TagNode.prototype = {
                         }
                     }
 
-                    if(!(name in ATTRS_TO_EVENTS) && (attrHtml = domAttrs(name).toString(name, value)) !== '') {
+                    if(!ATTRS_TO_EVENTS.has(name) && (attrHtml = domAttrs(name).toString(name, value)) !== '') {
                         res += ' ' + attrHtml;
                     }
                 }
             }
         }
 
-        if(tag in SHORT_TAGS) {
+        if(SHORT_TAGS.has(tag)) {
             res += '/>';
         }
         else {
@@ -319,8 +320,8 @@ TagNode.prototype = {
         if(attrs !== emptyObj) {
             let name, value;
             for(name in attrs) {
-                if((value = attrs[name]) != null && ATTRS_TO_EVENTS[name]) {
-                    addListener(domNode, ATTRS_TO_EVENTS[name], value);
+                if((value = attrs[name]) != null && ATTRS_TO_EVENTS.has(name)) {
+                    addListener(domNode, ATTRS_TO_EVENTS.get(name), value);
                 }
             }
         }
@@ -618,7 +619,7 @@ function processChildren(children) {
 
 function checkAttrs(attrs) {
     for(const name in attrs) {
-        if(name.substr(0, 2) === 'on' && !(name in ATTRS_TO_EVENTS)) {
+        if(name.substr(0, 2) === 'on' && !ATTRS_TO_EVENTS.has(name)) {
             throw Error(`vidom: Unsupported type of dom event listener "${name}".`);
         }
     }

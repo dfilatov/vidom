@@ -19,7 +19,9 @@ function applyBatch() {
 }
 
 export default function rafBatch(fn) {
-    batch.push(fn) === 1 && raf(applyBatch);
+    if(batch.push(fn) === 1) {
+        raf(applyBatch);
+    }
 }
 
 export { applyBatch };

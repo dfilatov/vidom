@@ -59,6 +59,11 @@ describe('renderToString', () => {
                 .to.equal('<input/>');
         });
 
+        it('shouldn\'t render event handlers', () => {
+            expect(createNode('div').setAttrs({ onClick : () => {} }).renderToString())
+                .to.equal('<div></div>');
+        });
+
         it('should not be rendered if boolean attribute is false', () => {
             expect(createNode('input').setAttrs({ checked : false }).renderToString())
                 .to.equal('<input/>');
@@ -201,7 +206,9 @@ describe('renderToString', () => {
 
         it('should render comment if onRender() returns nothing', () => {
             const Component = createComponent({
-                onRender : () => {}
+                onRender() {
+                    return null;
+                }
             });
 
             expect(createNode(Component).renderToString())

@@ -1,3 +1,5 @@
+import SimpleMap from '../../utils/SimpleMap';
+
 const attrs = [
         'onAnimationEnd',
         'onAnimationIteration',
@@ -62,10 +64,10 @@ const attrs = [
         'onWaiting',
         'onWheel'
     ],
-    attrsToEvents = {};
+    ATTRS_TO_EVENTS = new SimpleMap();
 
 for(let i = 0; i < attrs.length; i++) {
-    attrsToEvents[attrs[i]] = attrs[i].substr(2).toLowerCase();
+    ATTRS_TO_EVENTS.set(attrs[i], attrs[i].substr(2).toLowerCase());
 }
 
-export default attrsToEvents;
+export default ATTRS_TO_EVENTS;
