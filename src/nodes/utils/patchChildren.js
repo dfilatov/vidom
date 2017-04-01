@@ -27,7 +27,8 @@ export default function patchChildren(nodeA, nodeB) {
         updateRightIdxA = false,
         updateLeftIdxB = false,
         updateRightIdxB = false,
-        childrenAKeys, foundAChildIdx, foundAChild;
+        childrenAKeys = null,
+        foundAChildIdx, foundAChild;
     const childrenAIndicesToSkip = {};
 
     while(leftIdxA <= rightIdxA && leftIdxB <= rightIdxB) {
@@ -47,37 +48,42 @@ export default function patchChildren(nodeA, nodeB) {
             updateRightIdxA = true;
             updateRightIdxB = true;
         }
-        else if(leftChildAKey != null && leftChildAKey === rightChildBKey) {
+        else if(leftChildAKey !== null && leftChildAKey === rightChildBKey) {
             patchOps.moveChild(leftChildA, rightChildA, true);
             leftChildA.patch(rightChildB);
             updateLeftIdxA = true;
             updateRightIdxB = true;
         }
-        else if(rightChildAKey != null && rightChildAKey === leftChildBKey) {
+        else if(rightChildAKey !== null && rightChildAKey === leftChildBKey) {
             patchOps.moveChild(rightChildA, leftChildA, false);
             rightChildA.patch(leftChildB);
             updateRightIdxA = true;
             updateLeftIdxB = true;
         }
-        else if(leftChildAKey != null && leftChildBKey == null) {
+        else if(leftChildAKey !== null && leftChildBKey === null) {
             patchOps.insertChild(leftChildB, leftChildA);
             updateLeftIdxB = true;
         }
-        else if(leftChildAKey == null && leftChildBKey != null) {
+        else if(leftChildAKey === null && leftChildBKey !== null) {
             patchOps.removeChild(leftChildA);
             updateLeftIdxA = true;
         }
         else {
-            childrenAKeys || (childrenAKeys = buildKeys(childrenA, leftIdxA, rightIdxA));
-            if((foundAChildIdx = childrenAKeys[leftChildBKey]) == null) {
-                patchOps.insertChild(leftChildB, leftChildA);
+            if(childrenAKeys === null) {
+                childrenAKeys = buildKeys(childrenA, leftIdxA, rightIdxA);
             }
-            else {
+
+            if(leftChildBKey in childrenAKeys) {
+                foundAChildIdx = childrenAKeys[leftChildBKey];
                 foundAChild = childrenA[foundAChildIdx];
                 childrenAIndicesToSkip[foundAChildIdx] = true;
                 patchOps.moveChild(foundAChild, leftChildA, false);
                 foundAChild.patch(leftChildB);
             }
+            else {
+                patchOps.insertChild(leftChildB, leftChildA);
+            }
+
             updateLeftIdxB = true;
         }
 
@@ -131,11 +137,13 @@ export default function patchChildren(nodeA, nodeB) {
 
 function buildKeys(children, idxFrom, idxTo) {
     const res = {};
-    let child;
+    let childKey;
 
     while(idxFrom < idxTo) {
-        child = children[idxFrom];
-        child.key != null && (res[child.key] = idxFrom);
+        childKey = children[idxFrom].key;
+        if(childKey !== null) {
+            res[childKey] = idxFrom;
+        }
         ++idxFrom;
     }
 

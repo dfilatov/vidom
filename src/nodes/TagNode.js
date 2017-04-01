@@ -420,7 +420,7 @@ TagNode.prototype = {
         const childrenA = this.children,
             childrenB = node.children;
 
-        if(!childrenA && !childrenB) {
+        if(childrenA === null && childrenB === null) {
             return;
         }
 
@@ -439,7 +439,7 @@ TagNode.prototype = {
                 patchOps.removeChildren(this);
             }
 
-            if(childrenB) {
+            if(childrenB !== '') {
                 patchOps.updateText(this, childrenB, node._escapeChildren);
             }
 
@@ -459,7 +459,7 @@ TagNode.prototype = {
             return;
         }
 
-        if(isChildrenAText && childrenA) {
+        if(isChildrenAText && childrenA !== '') {
             patchOps.removeText(this);
         }
 
