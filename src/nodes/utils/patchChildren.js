@@ -23,50 +23,43 @@ export default function patchChildren(nodeA, nodeB) {
         leftChildBKey = leftChildB.key,
         rightChildB = childrenB[rightIdxB],
         rightChildBKey = rightChildB.key,
-        updateLeftIdxA = false,
-        updateRightIdxA = false,
-        updateLeftIdxB = false,
-        updateRightIdxB = false,
+        updateIdxs = 0, // 1 — left A, 2 — right A, 4 — left B, 8 — right B
         childrenAKeys = null,
         foundAChildIdx, foundAChild;
     const childrenAIndicesToSkip = {};
 
     while(leftIdxA <= rightIdxA && leftIdxB <= rightIdxB) {
-        if(childrenAIndicesToSkip[leftIdxA]) {
-            updateLeftIdxA = true;
+        if(leftIdxA in childrenAIndicesToSkip) {
+            updateIdxs = 1;
         }
-        else if(childrenAIndicesToSkip[rightIdxA]) {
-            updateRightIdxA = true;
+        else if(rightIdxA in childrenAIndicesToSkip) {
+            updateIdxs = 2;
         }
         else if(leftChildAKey === leftChildBKey) {
             leftChildA.patch(leftChildB);
-            updateLeftIdxA = true;
-            updateLeftIdxB = true;
+            updateIdxs = 5;
         }
         else if(rightChildAKey === rightChildBKey) {
             rightChildA.patch(rightChildB);
-            updateRightIdxA = true;
-            updateRightIdxB = true;
+            updateIdxs = 10;
         }
         else if(leftChildAKey !== null && leftChildAKey === rightChildBKey) {
             patchOps.moveChild(leftChildA, rightChildA, true);
             leftChildA.patch(rightChildB);
-            updateLeftIdxA = true;
-            updateRightIdxB = true;
+            updateIdxs = 9;
         }
         else if(rightChildAKey !== null && rightChildAKey === leftChildBKey) {
             patchOps.moveChild(rightChildA, leftChildA, false);
             rightChildA.patch(leftChildB);
-            updateRightIdxA = true;
-            updateLeftIdxB = true;
+            updateIdxs = 6;
         }
         else if(leftChildAKey !== null && leftChildBKey === null) {
             patchOps.insertChild(leftChildB, leftChildA);
-            updateLeftIdxB = true;
+            updateIdxs = 4;
         }
         else if(leftChildAKey === null && leftChildBKey !== null) {
             patchOps.removeChild(leftChildA);
-            updateLeftIdxA = true;
+            updateIdxs = 1;
         }
         else {
             if(childrenAKeys === null) {
@@ -84,40 +77,38 @@ export default function patchChildren(nodeA, nodeB) {
                 patchOps.insertChild(leftChildB, leftChildA);
             }
 
-            updateLeftIdxB = true;
+            updateIdxs = 4;
         }
 
-        if(updateLeftIdxA) {
-            updateLeftIdxA = false;
+        if((updateIdxs & 1) === 1) {
             if(++leftIdxA <= rightIdxA) {
                 leftChildA = childrenA[leftIdxA];
                 leftChildAKey = leftChildA.key;
             }
         }
 
-        if(updateRightIdxA) {
-            updateRightIdxA = false;
+        if((updateIdxs & 2) === 2) {
             if(--rightIdxA >= leftIdxA) {
                 rightChildA = childrenA[rightIdxA];
                 rightChildAKey = rightChildA.key;
             }
         }
 
-        if(updateLeftIdxB) {
-            updateLeftIdxB = false;
+        if((updateIdxs & 4) === 4) {
             if(++leftIdxB <= rightIdxB) {
                 leftChildB = childrenB[leftIdxB];
                 leftChildBKey = leftChildB.key;
             }
         }
 
-        if(updateRightIdxB) {
-            updateRightIdxB = false;
+        if((updateIdxs & 8) === 8) {
             if(--rightIdxB >= leftIdxB) {
                 rightChildB = childrenB[rightIdxB];
                 rightChildBKey = rightChildB.key;
             }
         }
+
+        updateIdxs = 0;
     }
 
     while(leftIdxA <= rightIdxA) {

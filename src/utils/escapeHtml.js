@@ -24,15 +24,15 @@ export default function escapeHtml(str) {
         }
     }
 
-    if(escapes & 1 === 1) {
+    if((escapes & 1) === 1) {
         str = str.replace(AMP_RE, '&amp;');
     }
 
-    if(escapes & 2 === 2) {
+    if((escapes & 2) === 2) {
         str = str.replace(LT_RE, '&lt;');
     }
 
-    if(escapes & 4 === 4) {
+    if((escapes & 4) === 4) {
         str = str.replace(GT_RE, '&gt;');
     }
 
