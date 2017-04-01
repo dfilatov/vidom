@@ -1,6 +1,7 @@
 import escapeAttr from '../utils/escapeAttr';
 import isInArray from '../utils/isInArray';
 import dasherize from '../utils/dasherize';
+import SimpleMap from '../utils/SimpleMap';
 import { IS_DEBUG } from '../utils/debug';
 
 function setAttr(node, name, val) {
@@ -165,34 +166,34 @@ const ATTR_NAMES = {
         remove : removeProp,
         toString : booleanAttrToString
     },
-    attrsCfg = {
-        autoPlay : BOOLEAN_ATTR_CFG,
-        checked : BOOLEAN_PROP_CFG,
-        controls : DEFAULT_PROP_CFG,
-        disabled : BOOLEAN_ATTR_CFG,
-        id : DEFAULT_PROP_CFG,
-        ismap : BOOLEAN_ATTR_CFG,
-        loop : DEFAULT_PROP_CFG,
-        multiple : BOOLEAN_PROP_CFG,
-        muted : DEFAULT_PROP_CFG,
-        open : BOOLEAN_ATTR_CFG,
-        readOnly : BOOLEAN_PROP_CFG,
-        selected : BOOLEAN_PROP_CFG,
-        srcDoc : DEFAULT_PROP_CFG,
-        style : {
+    attrsCfg = new SimpleMap([
+        ['autoPlay', BOOLEAN_ATTR_CFG],
+        ['checked', BOOLEAN_PROP_CFG],
+        ['controls', DEFAULT_PROP_CFG],
+        ['disabled', BOOLEAN_ATTR_CFG],
+        ['id', DEFAULT_PROP_CFG],
+        ['ismap', BOOLEAN_ATTR_CFG],
+        ['loop', DEFAULT_PROP_CFG],
+        ['multiple', BOOLEAN_PROP_CFG],
+        ['muted', DEFAULT_PROP_CFG],
+        ['open', BOOLEAN_ATTR_CFG],
+        ['readOnly', BOOLEAN_PROP_CFG],
+        ['selected', BOOLEAN_PROP_CFG],
+        ['srcDoc', DEFAULT_PROP_CFG],
+        ['style', {
             set : setObjProp,
             remove : removeProp,
             toString : stylePropToString
-        },
-        value : {
+        }],
+        ['value', {
             set : setPropWithCheck,
             remove : removeProp,
             toString : attrToString
-        }
-    };
+        }]
+    ]);
 
 export default function(attrName) {
-    return attrName in attrsCfg?
-        attrsCfg[attrName] :
+    return attrsCfg.has(attrName)?
+        attrsCfg.get(attrName) :
         DEFAULT_ATTR_CFG;
 }
