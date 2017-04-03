@@ -11,7 +11,6 @@
     "ssr",
     "reactive"
   ],
-  "main": "lib/vidom.js",
   "author": "Dmitry Filatov <dfilatov@yandex-team.ru>",
   "repository": {
     "type": "git",
@@ -21,6 +20,8 @@
     "dist",
     "lib"
   ],
+  "main": "lib/vidom.js",
+  "types": "lib/vidom.d.ts",
   "devDependencies": {
     "babel-cli": "6.24.0",
     "babel-core": "6.24.0",
@@ -62,7 +63,7 @@
     "test-server": "zuul --local 3000 -- spec/boot.js",
     "build": "npm run build:lib & npm run build:dist",
     "prebuild:lib": "rm -rf lib && mkdir -p lib",
-    "build:lib": "rollup -c configs/rollup.lib.js",
+    "build:lib": "rollup -c configs/rollup.lib.js && cp src/vidom.d.ts lib",
     "prebuild:dist": "rm -rf dist && mkdir -p dist",
     "build:dist": "rollup -c configs/rollup.dist.js & NODE_ENV=production rollup -c configs/rollup.dist.js",
     "debug-server": "webpack-dev-server --config debug/webpack.debug.config.js --progress --colors --port 3000",
