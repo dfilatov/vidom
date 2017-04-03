@@ -10,10 +10,10 @@ class App extends InfernoComponent {
     render(props) {
         const childrenNum = props.childrenNum;
 
-        return createVNode(66, 'div', { className : 'app' }, [
-            createVNode(4, Header, { childrenNum }, null, null, null, true),
-            createVNode(4, Content, { childrenNum }, null, null, null, true),
-            createVNode(4, Footer, { childrenNum }, null, null, null, true)
+        return createVNode(66, 'div', 'app', [
+            createVNode(4, Header, null, null, { childrenNum }, null, null, true),
+            createVNode(4, Content, null, null, { childrenNum }, null, null, true),
+            createVNode(4, Footer, null, null, { childrenNum }, null, null, true)
         ], null, null, false);
     }
 }
@@ -25,10 +25,10 @@ class Header extends InfernoComponent {
         let i = 0;
 
         while(i < childrenNum) {
-            children.push(createVNode(2, 'div', { id : 'header-' + i++ }, null, null, null, true));
+            children.push(createVNode(2, 'div', null, null, { id : 'header-' + i++ }, null, null, true));
         }
 
-        return createVNode(2, 'div', { className : 'header' }, children, null, null, true);
+        return createVNode(2, 'div', 'header', children, null, null, null, true);
     }
 }
 
@@ -43,12 +43,12 @@ class Content extends InfernoComponent {
                 createVNode(2, 'b', null, 'bold' + i, null, null, null, true),
                 createVNode(2,
                     'span',
-                    { className : 'link' },
-                    createVNode(4, Link, {
+                    'link',
+                    createVNode(4, Link, null, null, {
                         href : '/',
                         value : 'link-' + i
-                    }, null, null, null, true), null, null, true),
-                createVNode(2, 'i', null, 'italic' + i++, null, null, true),
+                    }, null, null, null, true), null, null, null, true),
+                createVNode(2, 'i', null, 'italic' + i++, null, null, null, true),
                 createVNode(2,
                     'div',
                     null,
@@ -61,16 +61,16 @@ class Content extends InfernoComponent {
                             createVNode(2,
                                 'div',
                                 null,
-                                'div', null, null, true), null, null, true), null, null, true), null, null, true));
+                                'div', null, null, null, true), null, null, null, true), null, null, null, true), null, null, null, true));
         }
 
-        return createVNode(66, 'div', { className : 'content' }, children, null, null, true);
+        return createVNode(66, 'div', 'content', children, null, null, null, true);
     }
 }
 
 class Link extends InfernoComponent {
     render(props) {
-        return createVNode(2, 'a', { href : props.href }, props.value, null, null, true);
+        return createVNode(2, 'a', null, props.value, { href : props.href }, null, null, true);
     }
 }
 
@@ -81,11 +81,11 @@ class Footer extends InfernoComponent {
         let i = 0;
 
         while(i < childrenNum) {
-            children.push(createVNode(2, 'div', { id : 'footer-' + i++ }, null, null, true));
+            children.push(createVNode(2, 'div', null, null, { id : 'footer-' + i++ }, null, null, true));
         }
 
-        return createVNode(2, 'div', { className : 'footer' }, children, null, null, true);
+        return createVNode(2, 'div', 'footer', children, null, null, null, true);
     }
 }
 
-module.exports = childrenNum => () => InfernoServer.renderToString(createVNode(4, App, { childrenNum }, null, null, null, true));
+module.exports = childrenNum => () => InfernoServer.renderToString(createVNode(4, App, null, null, { childrenNum }, null, null, true));
