@@ -122,16 +122,30 @@ function stylePropToString(name, value) {
     return styles? name + '="' + styles + '"' : styles;
 }
 
-const defaultPropVals = {};
+const defaultNodes = new SimpleMap(),
+    defaultPropVals = new SimpleMap();
 
 function getDefaultPropVal(tag, attrName) {
-    const tagAttrs = tag in defaultPropVals?
-        defaultPropVals[tag] :
-        defaultPropVals[tag] = {};
+    const key = `${tag}:${attrName}`;
 
-    return attrName in tagAttrs?
-        tagAttrs[attrName] :
-        tagAttrs[attrName] = document.createElement(tag)[attrName];
+    if(defaultPropVals.has(key)) {
+        return defaultPropVals.get(key);
+    }
+
+    let node;
+
+    if(defaultNodes.has(tag)) {
+        node = defaultNodes.get(tag);
+    }
+    else {
+        defaultNodes.set(tag, node = document.createElement(tag));
+    }
+
+    const val = node[attrName];
+
+    defaultPropVals.set(key, val);
+
+    return val;
 }
 
 function getAttrName(attrName) {
