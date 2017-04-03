@@ -27,7 +27,7 @@ else {
 }
 
 const listenersStorage = new SimpleMap(),
-    eventsCfg = {};
+    eventsCfg = new SimpleMap();
 let areListenersEnabled = true;
 
 function globalEventListener(e, type = e.type) {
@@ -36,7 +36,7 @@ function globalEventListener(e, type = e.type) {
     }
 
     let { target } = e,
-        { listenersCount } = eventsCfg[type],
+        { listenersCount } = eventsCfg.get(type),
         listeners,
         listener,
         domNodeId,
@@ -74,7 +74,7 @@ if(typeof document !== 'undefined') {
 
     while(i < BUBBLEABLE_NATIVE_EVENTS.length) {
         type = BUBBLEABLE_NATIVE_EVENTS[i++];
-        eventsCfg[type] = {
+        eventsCfg.set(type, {
             type : type,
             bubbles : true,
             listenersCount : 0,
@@ -94,26 +94,26 @@ if(typeof document !== 'undefined') {
                             true);
                     } :
                 null
-        };
+        });
     }
 
     i = 0;
     while(i < NON_BUBBLEABLE_NATIVE_EVENTS.length) {
-        eventsCfg[NON_BUBBLEABLE_NATIVE_EVENTS[i++]] = {
+        eventsCfg.set(NON_BUBBLEABLE_NATIVE_EVENTS[i++], {
             type : type,
             bubbles : false,
             set : false,
             setup : null
-        };
+        });
     }
 }
 
 function addListener(domNode, type, listener) {
-    if(!(type in eventsCfg)) {
+    if(!eventsCfg.has(type)) {
         return;
     }
 
-    const cfg = eventsCfg[type];
+    const cfg = eventsCfg.get(type);
 
     if(!cfg.set) {
         if(cfg.setup !== null) {
@@ -146,8 +146,8 @@ function addListener(domNode, type, listener) {
 }
 
 function doRemoveListener(domNode, type) {
-    if(type in eventsCfg) {
-        const cfg = eventsCfg[type];
+    if(eventsCfg.has(type)) {
+        const cfg = eventsCfg.get(type);
 
         if(cfg.bubbles) {
             --cfg.listenersCount;
