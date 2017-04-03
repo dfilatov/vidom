@@ -16,6 +16,7 @@ Vidom is just a library to build UI. It's highly inspired from [React](https://f
   * Ability to render multiple components without unwanted DOM wrappers
   * No extra markup in the result HTML
   * JSX support via [babel plugin](https://github.com/dfilatov/babel-plugin-vidom-jsx)
+  * TypeScript support
   * Small footprint, 9KB after gzip
   * Zero dependencies
   
