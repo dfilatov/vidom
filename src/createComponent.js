@@ -252,6 +252,8 @@ function createComponent(props, staticProps) {
             this.__isMounted = false;
             this.__isUpdating = false;
 
+            this.__rootNode = null;
+
             this.onInit();
 
             this.__prevState = this.state;
