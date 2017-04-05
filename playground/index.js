@@ -5,7 +5,7 @@ import 'codemirror/mode/jsx/jsx';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/night.css';
 import vidomJsx from 'babel-plugin-vidom-jsx';
-import code from '!raw!./code.js';
+import code from '!raw-loader!./code.js';
 
 const ERROR_TIMEOUT = 300;
 

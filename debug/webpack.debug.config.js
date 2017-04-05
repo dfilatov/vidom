@@ -1,5 +1,3 @@
-var jsLoaders = ['babel'];
-
 module.exports = {
     entry : __dirname + '/vidom.js',
     output : {
@@ -9,7 +7,7 @@ module.exports = {
     },
     module : {
         loaders: [
-            { test : /\.js$/, loaders : jsLoaders }
+            { test : /\.js$/, loader : 'babel-loader' }
         ]
     }
 };

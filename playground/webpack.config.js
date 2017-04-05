@@ -1,4 +1,4 @@
-var webpack = require('webpack');
+var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry : __dirname + '/index.js',
@@ -9,8 +9,8 @@ module.exports = {
     },
     module : {
         loaders: [
-            { test : /\.js$/, loader : 'babel' },
-            { test: /\.css$/, loaders : ['style', 'css'] }
+            { test : /\.js$/, loader : 'babel-loader' },
+            { test: /\.css$/, loaders : ['style-loader', 'css-loader'] }
         ]
     },
     resolve : {
@@ -19,8 +19,6 @@ module.exports = {
         }
     },
     plugins : [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': `"${process.env.NODE_ENV || 'development'}"`
-        })
+        new UglifyJSPlugin()
     ]
 };
