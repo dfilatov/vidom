@@ -133,7 +133,7 @@ function addListener(domNode, type, listener) {
         listenersStorage.set(domNodeId, listeners = {});
     }
 
-    if(!(type in listeners)) {
+    if(listeners[type] == null) {
         if(cfg.bubbles) {
             ++cfg.listenersCount;
         }
