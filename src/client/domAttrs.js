@@ -149,17 +149,23 @@ function getDefaultPropVal(tag, attrName) {
 }
 
 function getAttrName(attrName) {
-    return attrName in ATTR_NAMES?
-        ATTR_NAMES[attrName] :
-        ATTR_NAMES[attrName] = attrName.toLowerCase();
+    if(attrNames.has(attrName)) {
+        return attrNames.get(attrName);
+    }
+
+    const res = attrName.toLowerCase();
+
+    attrNames.set(attrName, res);
+
+    return res;
 }
 
-const ATTR_NAMES = {
-        acceptCharset : 'accept-charset',
-        className : 'class',
-        htmlFor : 'for',
-        httpEquiv : 'http-equiv'
-    },
+const attrNames = new SimpleMap([
+        ['acceptCharset', 'accept-charset'],
+        ['className', 'class'],
+        ['htmlFor', 'for'],
+        ['httpEquiv', 'http-equiv']
+    ]),
     DEFAULT_ATTR_CFG = {
         set : setAttr,
         remove : removeAttr,
