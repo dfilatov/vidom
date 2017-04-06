@@ -108,6 +108,15 @@ if(typeof document !== 'undefined') {
     }
 }
 
+function doAddListener(cfg, domNode, type) {
+    if(cfg.bubbles) {
+        ++cfg.listenersCount;
+    }
+    else {
+        domNode.addEventListener(type, eventListener, false);
+    }
+}
+
 function addListener(domNode, type, listener) {
     if(!eventsCfg.has(type)) {
         return;
@@ -127,34 +136,28 @@ function addListener(domNode, type, listener) {
     }
 
     const domNodeId = getDomNodeId(domNode);
-    let listeners = listenersStorage.get(domNodeId);
+    let listeners;
 
-    if(typeof listeners === 'undefined') {
-        listenersStorage.set(domNodeId, listeners = {});
+    if(listenersStorage.has(domNodeId)) {
+        listeners = listenersStorage.get(domNodeId);
+        if(listeners[type] == null) {
+            doAddListener(cfg, domNode, type);
+        }
     }
-
-    if(listeners[type] == null) {
-        if(cfg.bubbles) {
-            ++cfg.listenersCount;
-        }
-        else {
-            domNode.addEventListener(type, eventListener, false);
-        }
+    else {
+        listenersStorage.set(domNodeId, listeners = {});
+        doAddListener(cfg, domNode, type);
     }
 
     listeners[type] = listener;
 }
 
-function doRemoveListener(domNode, type) {
-    if(eventsCfg.has(type)) {
-        const cfg = eventsCfg.get(type);
-
-        if(cfg.bubbles) {
-            --cfg.listenersCount;
-        }
-        else {
-            domNode.removeEventListener(type, eventListener);
-        }
+function doRemoveListener(cfg, domNode, type) {
+    if(cfg.bubbles) {
+        --cfg.listenersCount;
+    }
+    else {
+        domNode.removeEventListener(type, eventListener);
     }
 }
 
@@ -162,11 +165,11 @@ function removeListener(domNode, type) {
     const domNodeId = getDomNodeId(domNode, true);
 
     if(domNodeId !== null) {
-        const listeners = listenersStorage.get(domNodeId);
+        if(listenersStorage.has(domNodeId)) {
+            const listeners = listenersStorage.get(domNodeId);
 
-        if(typeof listeners !== 'undefined' && type in listeners) {
             listeners[type] = null;
-            doRemoveListener(domNode, type);
+            doRemoveListener(eventsCfg.get(type), domNode, type);
         }
     }
 }
@@ -174,18 +177,16 @@ function removeListener(domNode, type) {
 function removeListeners(domNode) {
     const domNodeId = getDomNodeId(domNode, true);
 
-    if(domNodeId !== null) {
+    if(domNodeId !== null && listenersStorage.has(domNodeId)) {
         const listeners = listenersStorage.get(domNodeId);
 
-        if(typeof listeners !== 'undefined') {
-            for(const type in listeners) {
-                if(listeners[type]) {
-                    doRemoveListener(domNode, type);
-                }
+        for(const type in listeners) {
+            if(listeners[type] !== null) {
+                doRemoveListener(eventsCfg.get(type), domNode, type);
             }
-
-            listenersStorage.delete(domNodeId);
         }
+
+        listenersStorage.delete(domNodeId);
     }
 }
 
