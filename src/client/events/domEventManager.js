@@ -37,18 +37,20 @@ function globalEventListener(e, type = e.type) {
 
     let { target } = e,
         { listenersCount } = eventsCfg.get(type),
-        listeners,
         listener,
         domNodeId,
         syntheticEvent;
 
     while(listenersCount && target && target !== document) { // need to check target for detached dom
         if(domNodeId = getDomNodeId(target, true)) {
-            listeners = listenersStorage.get(domNodeId);
-            if(listeners && (listener = listeners[type])) {
-                listener(syntheticEvent || (syntheticEvent = createSyntheticEvent(type, e)));
-                if(--listenersCount === 0 || syntheticEvent.isPropagationStopped()) {
-                    return;
+            if(listenersStorage.has(domNodeId)) {
+                listener = listenersStorage.get(domNodeId)[type];
+
+                if(listener != null) {
+                    listener(syntheticEvent || (syntheticEvent = createSyntheticEvent(type, e)));
+                    if(--listenersCount === 0 || syntheticEvent.isPropagationStopped()) {
+                        return;
+                    }
                 }
             }
         }
