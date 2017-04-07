@@ -1,6 +1,6 @@
 import { IS_DEBUG } from './debug';
 
-const obj = {};
+const obj = Object.create(null);
 
 if(IS_DEBUG) {
     Object.freeze(obj);
