@@ -9,7 +9,7 @@ const TOP_LEVEL_NS_TAGS = {
         tr : 'tbody',
         td : 'tr'
     },
-    helperDomNodes = {};
+    helperDomNodes = Object.create(null);
 
 export default function createElementByHtml(html, tag, ns) {
     const parentTag = parentTags[tag] || 'div',

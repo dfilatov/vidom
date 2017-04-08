@@ -1,4 +1,6 @@
-const ID_PROP = '__vidom__id__';
+const ID_PROP = typeof Symbol === 'undefined'?
+    '__vidom__id__' :
+    Symbol();
 let counter = 1;
 
 function getDomNodeId(node, onlyGet) {

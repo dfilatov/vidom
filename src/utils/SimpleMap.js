@@ -2,7 +2,7 @@ let SimpleMap;
 
 if(typeof Map === 'undefined') {
     SimpleMap = function(items) {
-        this._storage = {};
+        this._storage = Object.create(null);
 
         if(items) {
             for(let i = 0; i < items.length; i++) {

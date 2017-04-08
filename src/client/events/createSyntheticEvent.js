@@ -1,3 +1,5 @@
+import SimpleMap from '../../utils/SimpleMap';
+
 function SyntheticEvent(type, nativeEvent) {
     this.type = type;
     this.target = nativeEvent.target;
@@ -48,11 +50,11 @@ SyntheticEvent.prototype = {
     }
 };
 
-const eventsPool = {};
+const eventsPool = new SimpleMap();
 
 export default function createSyntheticEvent(type, nativeEvent) {
-    if(type in eventsPool) {
-        const pooledEvent = eventsPool[type];
+    if(eventsPool.has(type)) {
+        const pooledEvent = eventsPool.get(type);
 
         if(!pooledEvent._isPersisted) {
             pooledEvent.target = nativeEvent.target;
@@ -64,5 +66,9 @@ export default function createSyntheticEvent(type, nativeEvent) {
         }
     }
 
-    return eventsPool[type] = new SyntheticEvent(type, nativeEvent);
+    const res = new SyntheticEvent(type, nativeEvent);
+
+    eventsPool.set(type, res);
+
+    return res;
 }

@@ -1,5 +1,5 @@
 function Emitter() {
-    this._listeners = {};
+    this._listeners = Object.create(null);
 }
 
 Emitter.prototype = {
