@@ -47,7 +47,7 @@
     "simulate": "git://github.com/dfilatov/simulate.js",
     "sinon": "1.17.4",
     "style-loader": "0.16.1",
-    "uglify-js": "2.8.21",
+    "uglify-js": "2.7.5",
     "uglifyjs-webpack-plugin": "0.4.0",
     "vow": "0.4.13",
     "vow-node": "0.3.0",
