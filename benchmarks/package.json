@@ -7,9 +7,9 @@
     "inferno-server": "1.6.2",
     "preact": "8.0.1",
     "preact-render-to-string": "3.6.0",
-    "react": "15.4.2",
-    "react-dom": "15.4.2",
-    "vidom": "0.9.3",
+    "react": "15.5.3",
+    "react-dom": "15.5.3",
+    "vidom": "0.9.4",
     "vue": "2.2.6",
     "vue-server-renderer": "2.2.6"
   },
