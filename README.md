@@ -27,12 +27,12 @@ Vidom is just a library to build UI. It's highly inspired from [React](https://f
   * server-side rendering (nodejs 6.10.1)
 ```    
                            mean time ops/sec
-  vidom v0.9.3             0.647ms   1547
-  inferno v1.6.2           1.129ms   886
-  preact v8.0.1            2.164ms   462
-  react.with-hack v15.4.2  6.942ms   144
-  vue v2.2.6               10.594ms  94
-  react v15.4.2            14.517ms  69
+  vidom v0.9.4             0.643ms   1555
+  inferno v1.6.2           1.127ms   887
+  preact v8.0.1            2.169ms   461
+  react.with-hack v15.5.3  6.640ms   151
+  vue v2.2.6               10.880ms  92
+  react v15.5.3            14.858ms  67
 ```
 
 ## Playground
