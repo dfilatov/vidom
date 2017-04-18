@@ -20,4 +20,14 @@ describe('functionComponent', () => {
 
         expect(spy.args[0][0]).to.be.equal(emptyObj);
     });
+
+    it('should merge passed with default attributes', () => {
+        const spy = sinon.spy();
+
+        spy.defaultAttrs = { a : 1, b : 2 };
+
+        mountSync(domNode, node(spy).setAttrs({ a : 3 }));
+
+        expect(spy.args[0][0]).to.be.eql({ a : 3, b : 2 });
+    });
 });
