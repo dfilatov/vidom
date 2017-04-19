@@ -163,7 +163,19 @@ FunctionComponentNode.prototype = {
             return this._rootNode;
         }
 
-        const rootNode = this._component(this.attrs, this.children, this._ctx) || createNode('!');
+        const { attrs } = this,
+            component = this._component,
+            { defaultAttrs } = component,
+            hasDefaultAttrs = defaultAttrs != null,
+            resAttrs = attrs === emptyObj?
+                hasDefaultAttrs? defaultAttrs : attrs :
+                hasDefaultAttrs? merge(defaultAttrs, attrs) : attrs;
+
+        if(IS_DEBUG) {
+            Object.freeze(resAttrs);
+        }
+
+        const rootNode = component(resAttrs, this.children, this._ctx) || createNode('!');
 
         if(IS_DEBUG) {
             if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
