@@ -733,52 +733,52 @@ declare global {
     }
 }
 
-declare namespace vidom {
-    interface FunctionComponent<A, C> {
-         (attrs: A, children: C, context: MapLike<any>): VNode;
-    }
-
-    abstract class Component<A, C, S> {
-        protected readonly attrs: Readonly<A>;
-        protected readonly children: Readonly<C>;
-        protected readonly state: Readonly<S>;
-        protected readonly context: MapLike<any>;
-
-        constructor(attrs: A, children: C);
-        protected setState(state: Partial<S>): void;
-        protected update(callback?: () => void): void;
-        protected isMounted(): boolean;
-
-        protected onInit(): void;
-        protected onMount(): void;
-        protected onAttrsReceive(prevAttrs: A): void;
-        protected onChildrenReceive(prevChildren: C): void;
-        protected onContextReceive(prevContext: MapLike<any>): void;
-        protected onChildContextRequest(): MapLike<any>;
-        protected shouldRerender(prevAttrs: A, prevChildren: C, prevState: S, prevContext: MapLike<any>): boolean;
-        protected abstract onRender(): VNode | null;
-        protected onUpdate(prevAttrs: A, prevChildren: C, prevState: S, prevContext: MapLike<any>): void;
-        protected onUnmount(): void;
-    }
-
-    function node(tag: 'fragment'): FragmentVNode;
-    function node(tag: 'text'): TextVNode;
-    function node(tag: string): TagVNode;
-    function node<A, C, S, T extends Component<A, C, S>, U extends ComponentClass<A, C, T>>(
-        component: U & ComponentClass<A, C, T>
-        ): ComponentVNode<A, C, T, U>;
-    function node<A, C, T extends FunctionComponent<A, C>> (
-        component: T & FunctionComponent<A, C>
-        ): FunctionComponentVNode<A, C, T>;
-
-    function mount(elem: Element, rootVNode: VNode, callback?: () => void);
-    function mountSync(elem: Element, rootVNode: VNode);
-    function unmount(elem: Element, callback?: () => void);
-    function unmountSync(elem: Element);
-
-    function renderToString(rootVNode: VNode): string;
-
-    const IS_DEBUG: boolean;
+interface FunctionComponent<A, C> {
+    (attrs: A, children: C, context: MapLike<any>): VNode;
 }
 
-export = vidom;
+declare abstract class Component<A, C, S> {
+    protected readonly attrs: Readonly<A>;
+    protected readonly children: Readonly<C>;
+    protected readonly state: Readonly<S>;
+    protected readonly context: MapLike<any>;
+
+    constructor(attrs: A, children: C);
+    protected setState(state: Partial<S>): void;
+    protected update(callback?: () => void): void;
+    protected isMounted(): boolean;
+
+    protected onInit(): void;
+    protected onMount(): void;
+    protected onAttrsReceive(prevAttrs: A): void;
+    protected onChildrenReceive(prevChildren: C): void;
+    protected onContextReceive(prevContext: MapLike<any>): void;
+    protected onChildContextRequest(): MapLike<any>;
+    protected shouldRerender(prevAttrs: A, prevChildren: C, prevState: S, prevContext: MapLike<any>): boolean;
+    protected abstract onRender(): VNode | null;
+    protected onUpdate(prevAttrs: A, prevChildren: C, prevState: S, prevContext: MapLike<any>): void;
+    protected onUnmount(): void;
+}
+
+declare function node(tag: 'fragment'): FragmentVNode;
+declare function node(tag: 'text'): TextVNode;
+declare function node(tag: string): TagVNode;
+declare function node<A, C, S, T extends Component<A, C, S>, U extends ComponentClass<A, C, T>>(
+    component: U & ComponentClass<A, C, T>
+    ): ComponentVNode<A, C, T, U>;
+declare function node<A, C, T extends FunctionComponent<A, C>> (
+    component: T & FunctionComponent<A, C>
+    ): FunctionComponentVNode<A, C, T>;
+
+declare function mount(elem: Element, rootVNode: VNode, callback?: () => void): void;
+declare function mountSync(elem: Element, rootVNode: VNode): void;
+declare function unmount(elem: Element, callback?: () => void): void;
+declare function unmountSync(elem: Element): void;
+
+declare function renderToString(rootVNode: VNode): string;
+
+declare const IS_DEBUG: boolean;
+
+export { node, Component, mount, mountSync, unmount, unmountSync, renderToString, IS_DEBUG };
+
+export default { node, Component, mount, mountSync, unmount, unmountSync, renderToString, IS_DEBUG };
