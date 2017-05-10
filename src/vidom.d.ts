@@ -1,3 +1,8 @@
+// TypeScript Version: 2.3
+
+export = vidom;
+export as namespace vidom;
+
 interface MapLike<T> {
     readonly [key: string]: T
 }
@@ -40,25 +45,25 @@ declare class FragmentVNode extends VNode {
     clone(): FragmentVNode;
 }
 
-declare class ComponentVNode<A, C, T, CC> {
-    readonly component: CC;
-    readonly attrs: Readonly<A>;
-    readonly children?: Readonly<C>;
+declare class ComponentVNode<Attrs, Children, Component, ComponentClass> {
+    readonly component: ComponentClass;
+    readonly attrs: Readonly<Attrs>;
+    readonly children?: Readonly<Children>;
 
-    setAttrs(attrs: A): this;
-    setChildren(children: C): this;
-    setRef(callback: Ref<T>): this;
-    clone(): ComponentVNode<A, C, T, CC>;
+    setAttrs(attrs: Attrs): this;
+    setChildren(children: Children): this;
+    setRef(callback: Ref<Component>): this;
+    clone(): ComponentVNode<Attrs, Children, Component, ComponentClass>;
 }
 
-declare class FunctionComponentVNode<A, C, T> {
-    readonly component: T;
-    readonly attrs: Readonly<A>;
-    readonly children?: Readonly<C>;
+declare class FunctionComponentVNode<Attrs, Children, ComponentClass> {
+    readonly component: ComponentClass;
+    readonly attrs: Readonly<Attrs>;
+    readonly children?: Readonly<Children>;
 
-    setAttrs(attrs: A): this;
-    setChildren(children: C): this;
-    clone(): FunctionComponentVNode<A, C, T>;
+    setAttrs(attrs: Attrs): this;
+    setChildren(children: Children): this;
+    clone(): FunctionComponentVNode<Attrs, Children, ComponentClass>;
 }
 
 interface ComponentClass<A, C, T> {
@@ -733,52 +738,50 @@ declare global {
     }
 }
 
-interface FunctionComponent<A, C> {
-    (attrs: A, children: C, context: MapLike<any>): VNode;
+declare namespace vidom {
+    interface FunctionComponent<Attrs = {}, Children = any, Context = {}> {
+         (attrs: Attrs, children: Children, context: Context): VNode;
+    }
+
+    abstract class Component<Attrs = {}, State = {}, Children = any, Context = {}> {
+        protected readonly attrs: Readonly<Attrs>;
+        protected readonly children: Readonly<Children>;
+        protected readonly state: Readonly<State>;
+        protected readonly context: Readonly<Context>;
+
+        constructor(attrs: Attrs, children: Children);
+        protected setState(state: Partial<State>): void;
+        protected update(callback?: () => void): void;
+        protected isMounted(): boolean;
+
+        protected onInit(): void;
+        protected onMount(): void;
+        protected onAttrsReceive(prevAttrs: Attrs): void;
+        protected onChildrenReceive(prevChildren: Children): void;
+        protected onContextReceive(prevContext: Context): void;
+        protected onChildContextRequest(): MapLike<any>;
+        protected shouldRerender(prevAttrs: Attrs, prevChildren: Children, prevState: State, prevContext: Context): boolean;
+        protected abstract onRender(): VNode | null;
+        protected onUpdate(prevAttrs: Attrs, prevChildren: Children, prevState: State, prevContext: Context): void;
+        protected onUnmount(): void;
+    }
+
+    function node(tag: 'fragment'): FragmentVNode;
+    function node(tag: 'text'): TextVNode;
+    function node(tag: string): TagVNode;
+    function node<Attrs, State, Children, T extends Component<Attrs, State, Children>, U extends ComponentClass<Attrs, Children, T>>(
+        component: U & ComponentClass<Attrs, Children, T>
+        ): ComponentVNode<Attrs, Children, T, U>;
+    function node<Attrs, Children, T extends FunctionComponent<Attrs, Children>> (
+        component: T & FunctionComponent<Attrs, Children>
+        ): FunctionComponentVNode<Attrs, Children, T>;
+
+    function mount(elem: Element, rootVNode: VNode, callback?: () => void): void;
+    function mountSync(elem: Element, rootVNode: VNode): void;
+    function unmount(elem: Element, callback?: () => void): void;
+    function unmountSync(elem: Element): void;
+
+    function renderToString(rootVNode: VNode): string;
+
+    const IS_DEBUG: boolean;
 }
-
-declare abstract class Component<A, C, S> {
-    protected readonly attrs: Readonly<A>;
-    protected readonly children: Readonly<C>;
-    protected readonly state: Readonly<S>;
-    protected readonly context: MapLike<any>;
-
-    constructor(attrs: A, children: C);
-    protected setState(state: Partial<S>): void;
-    protected update(callback?: () => void): void;
-    protected isMounted(): boolean;
-
-    protected onInit(): void;
-    protected onMount(): void;
-    protected onAttrsReceive(prevAttrs: A): void;
-    protected onChildrenReceive(prevChildren: C): void;
-    protected onContextReceive(prevContext: MapLike<any>): void;
-    protected onChildContextRequest(): MapLike<any>;
-    protected shouldRerender(prevAttrs: A, prevChildren: C, prevState: S, prevContext: MapLike<any>): boolean;
-    protected abstract onRender(): VNode | null;
-    protected onUpdate(prevAttrs: A, prevChildren: C, prevState: S, prevContext: MapLike<any>): void;
-    protected onUnmount(): void;
-}
-
-declare function node(tag: 'fragment'): FragmentVNode;
-declare function node(tag: 'text'): TextVNode;
-declare function node(tag: string): TagVNode;
-declare function node<A, C, S, T extends Component<A, C, S>, U extends ComponentClass<A, C, T>>(
-    component: U & ComponentClass<A, C, T>
-    ): ComponentVNode<A, C, T, U>;
-declare function node<A, C, T extends FunctionComponent<A, C>> (
-    component: T & FunctionComponent<A, C>
-    ): FunctionComponentVNode<A, C, T>;
-
-declare function mount(elem: Element, rootVNode: VNode, callback?: () => void): void;
-declare function mountSync(elem: Element, rootVNode: VNode): void;
-declare function unmount(elem: Element, callback?: () => void): void;
-declare function unmountSync(elem: Element): void;
-
-declare function renderToString(rootVNode: VNode): string;
-
-declare const IS_DEBUG: boolean;
-
-export { node, Component, mount, mountSync, unmount, unmountSync, renderToString, IS_DEBUG };
-
-export default { node, Component, mount, mountSync, unmount, unmountSync, renderToString, IS_DEBUG };
