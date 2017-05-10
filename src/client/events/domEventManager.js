@@ -1,4 +1,3 @@
-import isEventSupported from './isEventSupported';
 import createSyntheticEvent from './createSyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
 import SimpleMap from '../../utils/SimpleMap';
@@ -72,7 +71,13 @@ if(typeof document !== 'undefined') {
     };
 
     let i = 0,
+        isBubblingFocusSupported = true,
         type;
+    const matchFirefox = navigator.userAgent.toLowerCase().match(/firefox\/(\d+)/);
+
+    if(matchFirefox !== null && Number(matchFirefox[1]) < 52) {
+        isBubblingFocusSupported = false;
+    }
 
     while(i < BUBBLEABLE_NATIVE_EVENTS.length) {
         type = BUBBLEABLE_NATIVE_EVENTS[i++];
@@ -81,8 +86,8 @@ if(typeof document !== 'undefined') {
             bubbles : true,
             listenersCount : 0,
             set : false,
-            setup : focusEvents[type]?
-                isEventSupported(focusEvents[type])?
+            setup : type in focusEvents?
+                isBubblingFocusSupported?
                     function() {
                         const type = this.type;
                         document.addEventListener(

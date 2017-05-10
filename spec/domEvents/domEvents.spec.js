@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import createNode from '../../src/createNode';
 import { mountSync, unmountSync } from '../../src/client/mounter';
-import isEventSupported from '../../src/client/events/isEventSupported';
 import simulate from 'simulate';
 
 describe('domEvents', () => {
@@ -137,7 +136,7 @@ describe('domEvents', () => {
                 createNode('div').setAttrs({ id : 'id1', onFocus : spy })
                     .setChildren(createNode('input')));
 
-            simulate[isEventSupported('focusin')? 'focusin' : 'focus'](document.getElementById('id1'));
+            simulate.focusin(document.getElementById('id1'));
 
             expect(spy.called).to.be.ok();
         });
@@ -151,7 +150,7 @@ describe('domEvents', () => {
                     createNode('input').setAttrs({ id : 'id1' })));
 
             simulate.focus(document.getElementById('id1'));
-            simulate[isEventSupported('focusout')? 'focusout' : 'blur'](document.getElementById('id1'));
+            simulate.focusout(document.getElementById('id1'));
 
             expect(spy.called).to.be.ok();
         });
