@@ -89,7 +89,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
     }
 
     if(shouldRerender) {
-        const prevRootNode = this.__rootNode;
+        const prevRootNode = this.getRootNode();
 
         this.__rootNode = this.render();
         prevRootNode.patch(this.__rootNode);
@@ -106,19 +106,19 @@ function onComponentRender() {
 }
 
 function renderComponentToDom(parentNs) {
-    return this.__rootNode.renderToDom(parentNs);
+    return this.getRootNode().renderToDom(parentNs);
 }
 
 function renderComponentToString() {
-    return this.__rootNode.renderToString();
+    return this.getRootNode().renderToString();
 }
 
 function adoptComponentDom(domNode, domIdx) {
-    return this.__rootNode.adoptDom(domNode, domIdx);
+    return this.getRootNode().adoptDom(domNode, domIdx);
 }
 
 function getComponentDomNode() {
-    return this.__rootNode.getDomNode();
+    return this.getRootNode().getDomNode();
 }
 
 function requestChildContext() {
@@ -200,7 +200,9 @@ function updateComponent(cb) {
 }
 
 function getComponentRootNode() {
-    return this.__rootNode;
+    return this.__rootNode === null?
+        this.__rootNode = this.render() :
+        this.__rootNode;
 }
 
 function isComponentMounted() {
@@ -257,7 +259,6 @@ function createComponent(props, staticProps) {
             this.onInit();
 
             this.__prevState = this.state;
-            this.__rootNode = this.render();
         },
         ptp = {
             constructor : res,
