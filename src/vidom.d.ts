@@ -66,10 +66,6 @@ declare class FunctionComponentVNode<Attrs, Children, ComponentClass> {
     clone(): FunctionComponentVNode<Attrs, Children, ComponentClass>;
 }
 
-interface ComponentClass<A, C, T> {
-    new (attrs: A, children: C): T;
-}
-
 interface Attributes {
     key?: Key;
 }
@@ -267,7 +263,7 @@ interface HTMLAttributes<T> extends DOMAttributes<T>, ClassAttributes<T> {
     srcSet?: string;
     start?: number;
     step?: number | string;
-    style?: MapLike<string | number>;
+    style?: MapLike<string | number | null>;
     summary?: string;
     tabIndex?: number;
     target?: string;
@@ -295,8 +291,6 @@ interface HTMLAttributes<T> extends DOMAttributes<T>, ClassAttributes<T> {
 }
 
 interface SVGAttributes<T> extends DOMAttributes<T>, ClassAttributes<T> {
-    ns: string;
-
     class?: string;
     color?: string;
     height?: number | string;
@@ -556,12 +550,13 @@ interface SVGAttributes<T> extends DOMAttributes<T>, ClassAttributes<T> {
 declare global {
     namespace JSX {
         interface Element extends VNode {}
-        interface ElementClass extends vidom.Component<any, any, any> {}
+        interface ElementClass extends vidom.Component {}
         interface ElementAttributesProperty { attrs: {}; }
         interface IntrinsicAttributes extends Attributes {}
         interface IntrinsicClassAttributes<T> extends ClassAttributes<T> {}
         interface IntrinsicElements {
             fragment: Attributes;
+            plaintext: Attributes,
 
             a: HTMLAttributes<HTMLAnchorElement>;
             abbr: HTMLAttributes<HTMLElement>;
@@ -679,7 +674,7 @@ declare global {
             wbr: HTMLAttributes<HTMLElement>;
 
             // SVG
-            svg: SVGAttributes<SVGSVGElement>;
+            svg: SVGAttributes<SVGSVGElement> & { ns: string };
 
             animate: SVGAttributes<SVGElement>;
             circle: SVGAttributes<SVGCircleElement>;
@@ -739,6 +734,11 @@ declare global {
 }
 
 declare namespace vidom {
+    interface ComponentClass<Attrs = {}, Children = any, T = Component> {
+        new (attrs: Attrs, children: Children): T;
+        defaultAttrs: Partial<Attrs>;
+    }
+
     interface FunctionComponent<Attrs = {}, Children = any, Context = {}> {
          (attrs: Attrs, children: Children, context: Context): VNode;
     }
@@ -767,7 +767,7 @@ declare namespace vidom {
     }
 
     function node(tag: 'fragment'): FragmentVNode;
-    function node(tag: 'text'): TextVNode;
+    function node(tag: 'plaintext'): TextVNode;
     function node(tag: string): TagVNode;
     function node<Attrs, State, Children, T extends Component<Attrs, State, Children>, U extends ComponentClass<Attrs, Children, T>>(
         component: U & ComponentClass<Attrs, Children, T>
@@ -777,7 +777,8 @@ declare namespace vidom {
         ): FunctionComponentVNode<Attrs, Children, T>;
 
     function mount(elem: Element, rootVNode: VNode, callback?: () => void): void;
-    function mountSync(elem: Element, rootVNode: VNode): void;
+    function mount(elem: Element, rootVNode: VNode, context?: MapLike<any>, callback?: () => void): void;
+    function mountSync(elem: Element, rootVNode: VNode, context?: MapLike<any>): void;
     function unmount(elem: Element, callback?: () => void): void;
     function unmountSync(elem: Element): void;
 
