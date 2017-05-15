@@ -120,9 +120,9 @@ describe('renderToDom', () => {
 
         it('should be rendered as a text node', () => {
             const domNode = (topNode = node('div')).setChildren([
-                node('text').setChildren('text1'),
-                node('text').setChildren(''),
-                node('text').setChildren('text2')
+                node('plaintext').setChildren('text1'),
+                node('plaintext').setChildren(''),
+                node('plaintext').setChildren('text2')
             ]).renderToDom(null);
 
             expect(domNode.innerHTML)

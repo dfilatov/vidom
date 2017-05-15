@@ -1,7 +1,7 @@
 import createNode from '../../../src/createNode';
 import patchOps from '../../../src/client/patchOps';
 
-const oldNode = createNode('text'),
+const oldNode = createNode('plaintext'),
     newNode = createNode('div'),
     replaceOp = patchOps.replace;
 

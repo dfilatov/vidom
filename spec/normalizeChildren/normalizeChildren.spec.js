@@ -48,11 +48,11 @@ describe('normalizeChildren', () => {
 
         expect(normalizeChildren(['str', node1, 0, node2, true]))
             .to.be.eql([
-                createNode('text').setChildren('str'),
+                createNode('plaintext').setChildren('str'),
                 node1,
-                createNode('text').setChildren(0),
+                createNode('plaintext').setChildren(0),
                 node2,
-                createNode('text').setChildren('true')
+                createNode('plaintext').setChildren('true')
             ]);
     });
 
@@ -61,9 +61,9 @@ describe('normalizeChildren', () => {
 
         expect(normalizeChildren(['t1', 't2', node, 't3', 't4', ['t5', ['t6']]]))
             .to.be.eql([
-                createNode('text').setChildren('t1t2'),
+                createNode('plaintext').setChildren('t1t2'),
                 node,
-                createNode('text').setChildren('t3t4t5t6')
+                createNode('plaintext').setChildren('t3t4t5t6')
             ]);
     });
 
@@ -74,7 +74,7 @@ describe('normalizeChildren', () => {
         expect(normalizeChildren([node1, 't1', 't2', node2]))
             .to.be.eql([
                 node1,
-                createNode('text').setChildren('t1t2'),
+                createNode('plaintext').setChildren('t1t2'),
                 node2
             ]);
     });
@@ -88,7 +88,7 @@ describe('normalizeChildren', () => {
         const node = createNode('a');
 
         expect(normalizeChildren([node, 'test']))
-            .to.be.eql([node, createNode('text').setChildren('test')]);
+            .to.be.eql([node, createNode('plaintext').setChildren('test')]);
     });
 
     it('should concat simple children to only child', () => {

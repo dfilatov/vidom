@@ -123,7 +123,7 @@ describe('cloneNode', () => {
 
     describe('text node', () => {
         it('should copy original fields', () => {
-            const origNode = node('text').setKey('1').setChildren('link'),
+            const origNode = node('plaintext').setKey('1').setChildren('link'),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
@@ -132,7 +132,7 @@ describe('cloneNode', () => {
         });
 
         it('should replace children', () => {
-            const origNode = node('text').setChildren('link1'),
+            const origNode = node('plaintext').setChildren('link1'),
                 clonedNode = origNode.clone().setChildren('link2');
 
             expect(clonedNode.children).to.equal('link2');

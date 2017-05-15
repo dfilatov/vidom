@@ -116,5 +116,5 @@ export default function normalizeChildren(children) {
 }
 
 function toNode(obj) {
-    return typeof obj === 'object'? obj : createNode('text').setChildren(obj);
+    return typeof obj === 'object'? obj : createNode('plaintext').setChildren(obj);
 }
