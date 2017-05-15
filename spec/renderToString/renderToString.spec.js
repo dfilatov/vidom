@@ -117,7 +117,7 @@ describe('renderToString', () => {
         });
 
         it('should be rendered as a text node', () => {
-            expect(createNode('text').setChildren('text').renderToString())
+            expect(createNode('plaintext').setChildren('text').renderToString())
                 .to.equal('<!---->text<!---->');
         });
     });

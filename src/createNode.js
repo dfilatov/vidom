@@ -15,7 +15,7 @@ export default function createNode(type) {
                 case 'fragment':
                     return new FragmentNode();
 
-                case 'text':
+                case 'plaintext':
                     return new TextNode();
 
                 case 'input':

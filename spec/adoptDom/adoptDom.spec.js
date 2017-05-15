@@ -34,8 +34,8 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing text dom nodes', () => {
-        const firstChildNode = node('text').setChildren('text1'),
-            secondChildNode = node('text').setChildren('text2'),
+        const firstChildNode = node('plaintext').setChildren('text1'),
+            secondChildNode = node('plaintext').setChildren('text2'),
             tree = node('div').setChildren([firstChildNode, secondChildNode]),
             treeDomNode = document.createElement('div'),
             firstChildDomNode = [document.createComment(''), document.createComment('')],
@@ -56,7 +56,7 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing top level text dom node', () => {
-        const tree = node('text').setChildren('text1'),
+        const tree = node('plaintext').setChildren('text1'),
             textDomNode = [document.createComment(''), document.createComment('')];
 
         domNode.appendChild(textDomNode[0]);

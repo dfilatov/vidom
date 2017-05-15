@@ -31,16 +31,16 @@ describe('patchDom', () => {
         });
 
         it('should update empty text node', () => {
-            mountSync(domNode, node('span').setChildren(node('text')));
-            mountSync(domNode, node('span').setChildren(node('text').setChildren('text')));
+            mountSync(domNode, node('span').setChildren(node('plaintext')));
+            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('text')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->text<!---->');
         });
 
         it('should update not empty text node', () => {
-            mountSync(domNode, node('span').setChildren(node('text').setChildren('text')));
-            mountSync(domNode, node('span').setChildren(node('text').setChildren('new text')));
+            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('text')));
+            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('new text')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->new text<!---->');
@@ -57,8 +57,8 @@ describe('patchDom', () => {
         });
 
         it('should remove text node text', () => {
-            mountSync(domNode, node('span').setChildren(node('text').setChildren('text')));
-            mountSync(domNode, node('span').setChildren(node('text')));
+            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('text')));
+            mountSync(domNode, node('span').setChildren(node('plaintext')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!----><!---->');
@@ -220,14 +220,14 @@ describe('patchDom', () => {
 
         it('should replace node with text node', () => {
             mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
-            mountSync(domNode, node('div').setChildren([node('a'), node('text')]));
+            mountSync(domNode, node('div').setChildren([node('a'), node('plaintext')]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><!---->');
         });
 
         it('should replace text node with node', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('text')]));
+            mountSync(domNode, node('div').setChildren([node('a'), node('plaintext')]));
             mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
 
             expect(domNode.firstChild.innerHTML)
@@ -515,7 +515,7 @@ describe('patchDom', () => {
             mountSync(
                 domNode,
                 node('div').setChildren([
-                    node('text').setKey('b').setChildren('text'),
+                    node('plaintext').setKey('b').setChildren('text'),
                     node('a').setKey('a'),
                     node('span').setKey('c')
                 ]));
@@ -523,7 +523,7 @@ describe('patchDom', () => {
                 domNode,
                 node('div').setChildren([
                     node('a').setKey('a'),
-                    node('text').setKey('b').setChildren('text'),
+                    node('plaintext').setKey('b').setChildren('text'),
                     node('span').setKey('c')
                 ]));
 
@@ -535,18 +535,18 @@ describe('patchDom', () => {
             mountSync(
                 domNode,
                 node('div').setChildren([
-                    node('text').setKey('c').setChildren('c'),
-                    node('text').setKey('a').setChildren('a'),
-                    node('text').setKey('b').setChildren('b'),
-                    node('text').setKey('d').setChildren('d')
+                    node('plaintext').setKey('c').setChildren('c'),
+                    node('plaintext').setKey('a').setChildren('a'),
+                    node('plaintext').setKey('b').setChildren('b'),
+                    node('plaintext').setKey('d').setChildren('d')
                 ]));
             mountSync(
                 domNode,
                 node('div').setChildren([
-                    node('text').setKey('a').setChildren('a'),
-                    node('text').setKey('b').setChildren('b'),
-                    node('text').setKey('c').setChildren('c'),
-                    node('text').setKey('e').setChildren('e')
+                    node('plaintext').setKey('a').setChildren('a'),
+                    node('plaintext').setKey('b').setChildren('b'),
+                    node('plaintext').setKey('c').setChildren('c'),
+                    node('plaintext').setKey('e').setChildren('e')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -557,16 +557,16 @@ describe('patchDom', () => {
             mountSync(
                 domNode,
                 node('div').setChildren([
-                    node('text').setKey('a').setChildren('a'),
-                    node('text').setKey('b').setChildren('b'),
-                    node('text').setKey('c').setChildren('c')
+                    node('plaintext').setKey('a').setChildren('a'),
+                    node('plaintext').setKey('b').setChildren('b'),
+                    node('plaintext').setKey('c').setChildren('c')
                 ]));
             mountSync(
                 domNode,
                 node('div').setChildren([
-                    node('text').setKey('a').setChildren('a'),
-                    node('text').setKey('c').setChildren('c'),
-                    node('text').setKey('b').setChildren('b')
+                    node('plaintext').setKey('a').setChildren('a'),
+                    node('plaintext').setKey('c').setChildren('c'),
+                    node('plaintext').setKey('b').setChildren('b')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
