@@ -199,7 +199,6 @@ TagNode.prototype = {
             { attrs } = this;
 
         if(children !== null) {
-            console.log(tag, typeof children);
             if(typeof children === 'string') {
                 this._escapeChildren?
                     domNode.textContent = children :
