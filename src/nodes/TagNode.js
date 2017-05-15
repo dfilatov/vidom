@@ -150,7 +150,7 @@ TagNode.prototype = {
             this.__isFrozen = false;
         }
 
-        this.children = html;
+        this.children = '' + html;
 
         if(IS_DEBUG) {
             this._sets |= CHILDREN_SET;
@@ -199,6 +199,7 @@ TagNode.prototype = {
             { attrs } = this;
 
         if(children !== null) {
+            console.log(tag, typeof children);
             if(typeof children === 'string') {
                 this._escapeChildren?
                     domNode.textContent = children :
