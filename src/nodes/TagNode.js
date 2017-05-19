@@ -107,12 +107,14 @@ TagNode.prototype = {
             this.__isFrozen = false;
         }
 
-        this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
+        if(attrs != null) {
+            this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
 
-        if(IS_DEBUG) {
-            Object.freeze(this.attrs);
-            this._sets |= ATTRS_SET;
-            this.__isFrozen = true;
+            if(IS_DEBUG) {
+                Object.freeze(this.attrs);
+                this._sets |= ATTRS_SET;
+                this.__isFrozen = true;
+            }
         }
 
         return this;

@@ -60,27 +60,29 @@ ComponentNode.prototype = {
             this.__isFrozen = false;
         }
 
-        this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
+        if(attrs != null) {
+            this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
 
-        if(IS_DEBUG) {
-            Object.freeze(this.attrs);
-            this._sets |= ATTRS_SET;
-            this.__isFrozen = true;
-        }
+            if(IS_DEBUG) {
+                Object.freeze(this.attrs);
+                this._sets |= ATTRS_SET;
+                this.__isFrozen = true;
+            }
 
-        if(this._component === Input) {
-            switch(this.attrs.type) {
-                case 'radio':
-                    this._component = Radio;
-                    break;
+            if(this._component === Input) {
+                switch(this.attrs.type) {
+                    case 'radio':
+                        this._component = Radio;
+                        break;
 
-                case 'checkbox':
-                    this._component = CheckBox;
-                    break;
+                    case 'checkbox':
+                        this._component = CheckBox;
+                        break;
 
-                case 'file':
-                    this._component = File;
-                    break;
+                    case 'file':
+                        this._component = File;
+                        break;
+                }
             }
         }
 
