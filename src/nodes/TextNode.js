@@ -158,8 +158,19 @@ if(IS_DEBUG) {
 }
 
 function processChildren(children) {
-    return children == null || typeof children === 'string'?
-        children :
-        children.toString();
+    if(children == null) {
+        return null;
+    }
+
+    switch(typeof children) {
+        case 'string':
+            return children;
+
+        case 'boolean':
+            return null;
+
+        default:
+            return '' + children;
+    }
 }
 
