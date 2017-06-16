@@ -111,14 +111,20 @@ describe('renderToDom', () => {
     });
 
     describe('text', () => {
-        it('should be rendered as wrapped text node', () => {
+        it('should be rendered as a wrapped text node', () => {
             const domNode = (topNode = node('span')).setChildren('some text').renderToDom(null);
 
             expect(domNode.childNodes.length).to.equal(1);
             expect(domNode.textContent).to.equal('some text');
         });
 
-        it('should be rendered as a text node', () => {
+        it('should not render booleans in a wrapped text node', () => {
+            const domNode = (topNode = node('span')).setChildren(true).renderToDom(null);
+
+            expect(domNode.childNodes.length).to.equal(0);
+        });
+
+        it('should be rendered as a plain text node', () => {
             const domNode = (topNode = node('div')).setChildren([
                 node('plaintext').setChildren('text1'),
                 node('plaintext').setChildren(''),
@@ -127,6 +133,16 @@ describe('renderToDom', () => {
 
             expect(domNode.innerHTML)
                 .to.equal('<!---->text1<!----><!----><!----><!---->text2<!---->');
+        });
+
+        it('should not render booleans in a plain text node', () => {
+            const domNode = (topNode = node('div')).setChildren([
+                node('plaintext').setChildren(true),
+                node('plaintext').setChildren(false)
+            ]).renderToDom(null);
+
+            expect(domNode.innerHTML)
+                .to.equal('<!----><!----><!----><!---->');
         });
     });
 

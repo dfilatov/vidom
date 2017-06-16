@@ -602,21 +602,25 @@ function processChildren(children) {
         return null;
     }
 
-    const typeOfChildren = typeof children;
+    switch(typeof children) {
+        case 'string':
+            return children;
 
-    if(typeOfChildren === 'object') {
-        const res = Array.isArray(children)? children : [children];
+        case 'boolean':
+            return null;
 
-        if(IS_DEBUG) {
-            checkChildren(res);
-        }
+        case 'object':
+            const res = Array.isArray(children)? children : [children];
 
-        return res;
+            if(IS_DEBUG) {
+                checkChildren(res);
+            }
+
+            return res;
+
+        default:
+            return '' + children;
     }
-
-    return typeOfChildren === 'string'?
-        children :
-        '' + children;
 }
 
 function checkAttrs(attrs) {
