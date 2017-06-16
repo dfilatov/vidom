@@ -1,6 +1,7 @@
 let SimpleMap;
 
-if(typeof Map === 'undefined') {
+// check for native Map and support of constructor arguments since IE11 doesn't support them
+if(typeof Map === 'undefined' || !new Map([['test', true]]).has('test')) {
     SimpleMap = function(items) {
         this._storage = Object.create(null);
 
