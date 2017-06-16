@@ -24,15 +24,15 @@ Vidom is just a library to build UI. It's highly inspired from [React](https://f
   * [repaint rate challenge](http://mathieuancelin.github.io/js-repaint-perfs/)
   * [vdom-benchmark](http://vdom-benchmark.github.io/vdom-benchmark/)
   * [uibench](https://localvoid.github.io/uibench/)
-  * server-side rendering (nodejs 6.10.1)
+  * server-side rendering (nodejs 6.11.0)
 ```
                            mean time ops/sec
-  vidom v0.9.9             0.634ms   1578
-  inferno v3.1.2           1.115ms   897
-  preact v8.1.0            2.334ms   428
-  react.with-hack v15.5.4  6.829ms   146
-  vue v2.3.3               12.490ms  80
-  react v15.5.4            14.209ms  70
+  vidom v0.9.11            0.634ms   1578
+  inferno v3.5.0           1.153ms   867
+  preact v8.1.0            2.358ms   424
+  react.with-hack v15.6.1  6.800ms   147
+  vue v2.3.4               10.740ms  93
+  react v15.6.1            14.164ms  71
 ```
 
 ## Playground
