@@ -49,7 +49,7 @@ declare namespace vidom {
     class ComponentVNode<Attrs, Children, Component, ComponentClass> extends BaseVNode {
         readonly component: ComponentClass;
         readonly attrs: Readonly<Attrs>;
-        readonly children?: Readonly<Children>;
+        readonly children?: Children;
 
         setAttrs(attrs: Attrs): this;
         setChildren(children: Children): this;
@@ -60,7 +60,7 @@ declare namespace vidom {
     class FunctionComponentVNode<Attrs, Children, FunctionComponent> extends BaseVNode {
         readonly component: FunctionComponent;
         readonly attrs: Readonly<Attrs>;
-        readonly children?: Readonly<Children>;
+        readonly children?: Children;
 
         setAttrs(attrs: Attrs): this;
         setChildren(children: Children): this;
@@ -575,7 +575,7 @@ declare namespace vidom {
 
     abstract class Component<Attrs = {}, State = {}, Children = any, Context = {}> {
         protected readonly attrs: Readonly<Attrs>;
-        protected readonly children: Readonly<Children>;
+        protected readonly children: Children;
         protected readonly state: Readonly<State>;
         protected readonly context: Readonly<Context>;
 
