@@ -10,6 +10,7 @@ interface MapLike<T> {
 declare namespace vidom {
     type Key = string | number;
     type Ref<T> = (instance: T) => void;
+    type Attrs = {};
 
     abstract class BaseVNode {
         readonly key: Key | null;
@@ -46,33 +47,42 @@ declare namespace vidom {
         clone(): FragmentVNode;
     }
 
-    class ComponentVNode<Attrs, Children, Component, ComponentClass> extends BaseVNode {
-        readonly component: ComponentClass;
-        readonly attrs: Readonly<Attrs>;
-        readonly children?: Children;
+    class ComponentVNode<
+        VNodeAttrs extends Attrs = Attrs,
+        VNodeChildren = any,
+        VNodeComponent extends Component = Component,
+        VNodeComponentClass extends ComponentClass = ComponentClass
+    > extends BaseVNode {
+        readonly component: VNodeComponentClass;
+        readonly attrs: Readonly<VNodeAttrs>;
+        readonly children?: VNodeChildren;
 
-        setAttrs(attrs: Attrs): this;
-        setChildren(children: Children): this;
-        setRef(callback: Ref<Component>): this;
-        clone(): ComponentVNode<Attrs, Children, Component, ComponentClass>;
+        setAttrs(attrs: VNodeAttrs): this;
+        setChildren(children: VNodeChildren): this;
+        setRef(callback: Ref<VNodeComponent>): this;
+        clone(): ComponentVNode<VNodeAttrs, VNodeChildren, VNodeComponent, VNodeComponentClass>;
     }
 
-    class FunctionComponentVNode<Attrs, Children, FunctionComponent> extends BaseVNode {
-        readonly component: FunctionComponent;
-        readonly attrs: Readonly<Attrs>;
-        readonly children?: Children;
+    class FunctionComponentVNode<
+        VNodeAttrs extends Attrs = Attrs,
+        VNodeChildren = any,
+        VNodeFunctionComponent extends FunctionComponent = FunctionComponent
+    > extends BaseVNode {
+        readonly component: VNodeFunctionComponent;
+        readonly attrs: Readonly<VNodeAttrs>;
+        readonly children?: VNodeChildren;
 
-        setAttrs(attrs: Attrs): this;
-        setChildren(children: Children): this;
-        clone(): FunctionComponentVNode<Attrs, Children, FunctionComponent>;
+        setAttrs(attrs: VNodeAttrs): this;
+        setChildren(children: VNodeChildren): this;
+        clone(): FunctionComponentVNode<VNodeAttrs, VNodeChildren, VNodeFunctionComponent>;
     }
 
     type VNode =
         TagVNode |
         TextVNode |
         FragmentVNode |
-        ComponentVNode<{}, any, Component, ComponentClass> |
-        FunctionComponentVNode<{}, any, FunctionComponent>;
+        ComponentVNode |
+        FunctionComponentVNode;
 
     interface Attributes {
         key?: Key;
@@ -564,36 +574,51 @@ declare namespace vidom {
         zoomAndPan?: string;
     }
 
-    interface ComponentClass<Attrs = {}, Children = any, T = Component> {
-        new (attrs: Attrs, children: Children): T;
-        defaultAttrs?: Partial<Attrs>;
+    interface ComponentClass<ComponentClassAttrs extends Attrs = Attrs, Children = any, T = Component> {
+        new (attrs: ComponentClassAttrs, children: Children): T;
+        defaultAttrs?: Partial<ComponentClassAttrs>;
     }
 
     interface FunctionComponent<Attrs = {}, Children = any, Context = {}> {
          (attrs: Attrs, children: Children, context: Context): VNode;
     }
 
-    abstract class Component<Attrs = {}, State = {}, Children = any, Context = {}> {
-        protected readonly attrs: Readonly<Attrs>;
-        protected readonly children: Children;
-        protected readonly state: Readonly<State>;
-        protected readonly context: Readonly<Context>;
+    abstract class Component<
+        ComponentAttrs extends Attrs = Attrs,
+        ComponentState extends {} = {},
+        ComponentChildren = any,
+        ComponentContext extends {} = {}
+    > {
+        protected readonly attrs: Readonly<ComponentAttrs>;
+        protected readonly children: ComponentChildren;
+        protected readonly state: Readonly<ComponentState>;
+        protected readonly context: Readonly<ComponentContext>;
 
-        constructor(attrs: Attrs, children: Children);
-        protected setState(state: Partial<State>): void;
+        constructor(attrs: ComponentAttrs, children: ComponentChildren);
+        protected setState(state: Partial<ComponentState>): void;
         protected update(callback?: () => void): void;
         protected isMounted(): boolean;
         protected getDomNode(): Element | Element[];
 
         protected onInit(): void;
         protected onMount(): void;
-        protected onAttrsReceive(prevAttrs: Attrs): void;
-        protected onChildrenReceive(prevChildren: Children): void;
-        protected onContextReceive(prevContext: Context): void;
+        protected onAttrsReceive(prevAttrs: ComponentAttrs): void;
+        protected onChildrenReceive(prevChildren: ComponentChildren): void;
+        protected onContextReceive(prevContext: ComponentContext): void;
         protected onChildContextRequest(): MapLike<any>;
-        protected shouldRerender(prevAttrs: Attrs, prevChildren: Children, prevState: State, prevContext: Context): boolean;
+        protected shouldRerender(
+            prevAttrs: ComponentAttrs,
+            prevChildren: ComponentChildren,
+            prevState: ComponentState,
+            prevContext: ComponentContext
+        ): boolean;
         protected abstract onRender(): VNode | null;
-        protected onUpdate(prevAttrs: Attrs, prevChildren: Children, prevState: State, prevContext: Context): void;
+        protected onUpdate(
+            prevAttrs: ComponentAttrs,
+            prevChildren: ComponentChildren,
+            prevState: ComponentState,
+            prevContext: ComponentContext
+        ): void;
         protected onUnmount(): void;
     }
 
