@@ -25,6 +25,7 @@ export default function ComponentNode(component) {
     }
 
     this.type = NODE_TYPE_COMPONENT;
+    this.component = component;
     this.key = null;
     this.attrs = emptyObj;
     this.children = null;
@@ -34,7 +35,6 @@ export default function ComponentNode(component) {
         this._sets = 0;
     }
 
-    this._component = component;
     this._instance = null;
     this._ctx = emptyObj;
     this._ref = null;
@@ -69,18 +69,18 @@ ComponentNode.prototype = {
                 this.__isFrozen = true;
             }
 
-            if(this._component === Input) {
+            if(this.component === Input) {
                 switch(this.attrs.type) {
                     case 'radio':
-                        this._component = Radio;
+                        this.component = Radio;
                         break;
 
                     case 'checkbox':
-                        this._component = CheckBox;
+                        this.component = CheckBox;
                         break;
 
                     case 'file':
-                        this._component = File;
+                        this.component = File;
                         break;
                 }
             }
@@ -115,7 +115,7 @@ ComponentNode.prototype = {
 
     renderToDom(parentNs) {
         if(IS_DEBUG) {
-            checkReuse(this, this._component.name || 'Anonymous');
+            checkReuse(this, this.component.name || 'Anonymous');
         }
 
         return this._getInstance().renderToDom(parentNs);
@@ -127,7 +127,7 @@ ComponentNode.prototype = {
 
     adoptDom(domNode, domIdx) {
         if(IS_DEBUG) {
-            checkReuse(this, this._component.name || 'Anonymous');
+            checkReuse(this, this.component.name || 'Anonymous');
         }
 
         return this._getInstance().adoptDom(domNode, domIdx);
@@ -155,7 +155,7 @@ ComponentNode.prototype = {
     },
 
     clone() {
-        const res = new ComponentNode(this._component);
+        const res = new ComponentNode(this.component);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
@@ -181,7 +181,7 @@ ComponentNode.prototype = {
         if(this === node) {
             instance.patch(node.attrs, node.children, node._ctx, true);
         }
-        else if(this.type === node.type && this._component === node._component) {
+        else if(this.type === node.type && this.component === node.component) {
             instance.patch(node.attrs, node.children, node._ctx, true);
             node._instance = instance;
             this._patchRef(node);
@@ -209,7 +209,7 @@ ComponentNode.prototype = {
 
     _getInstance() {
         return this._instance === null?
-            this._instance = new this._component(this.attrs, this.children, this._ctx) :
+            this._instance = new this.component(this.attrs, this.children, this._ctx) :
             this._instance;
     }
 };

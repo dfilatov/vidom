@@ -23,6 +23,7 @@ export default function FunctionComponentNode(component) {
     }
 
     this.type = NODE_TYPE_FUNCTION_COMPONENT;
+    this.component = component;
     this.key = null;
     this.attrs = emptyObj;
     this.children = null;
@@ -32,7 +33,6 @@ export default function FunctionComponentNode(component) {
         this._sets = 0;
     }
 
-    this._component = component;
     this._rootNode = null;
     this._ctx = emptyObj;
 }
@@ -94,7 +94,7 @@ FunctionComponentNode.prototype = {
 
     renderToDom(parentNs) {
         if(IS_DEBUG) {
-            checkReuse(this, this._component.name || 'Anonymous');
+            checkReuse(this, this.component.name || 'Anonymous');
         }
 
         return this._getRootNode().renderToDom(parentNs);
@@ -106,7 +106,7 @@ FunctionComponentNode.prototype = {
 
     adoptDom(domNode, domIdx) {
         if(IS_DEBUG) {
-            checkReuse(this, this._component.name || 'Anonymous');
+            checkReuse(this, this.component.name || 'Anonymous');
         }
 
         return this._getRootNode().adoptDom(domNode, domIdx);
@@ -124,7 +124,7 @@ FunctionComponentNode.prototype = {
     },
 
     clone() {
-        const res = new FunctionComponentNode(this._component);
+        const res = new FunctionComponentNode(this.component);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
@@ -150,7 +150,7 @@ FunctionComponentNode.prototype = {
             this._rootNode = null;
             prevRootNode.patch(this._getRootNode());
         }
-        else if(this.type === node.type && this._component === node._component) {
+        else if(this.type === node.type && this.component === node.component) {
             this._getRootNode().patch(node._getRootNode());
             this._rootNode = null;
         }
@@ -165,8 +165,7 @@ FunctionComponentNode.prototype = {
             return this._rootNode;
         }
 
-        const { attrs } = this,
-            component = this._component,
+        const { attrs, component } = this,
             { defaultAttrs } = component,
             hasDefaultAttrs = defaultAttrs != null,
             resAttrs = attrs === emptyObj?
