@@ -114,6 +114,9 @@ declare namespace vidom {
     }
 
     interface DOMAttributes<T = HTMLElement> {
+        onAnimationEnd?: DOMEventHandler<SyntheticEvent<T>>;
+        onAnimationIteration?: DOMEventHandler<SyntheticEvent<T>>;
+        onAnimationStart?: DOMEventHandler<SyntheticEvent<T>>;
         onBlur?: DOMEventHandler<SyntheticEvent<T>>;
         onCanPlay?: DOMEventHandler<SyntheticEvent<T>>;
         onCanPlayThrough?: DOMEventHandler<SyntheticEvent<T>>;
@@ -169,6 +172,7 @@ declare namespace vidom {
         onTouchEnd?: DOMEventHandler<TouchSyntheticEvent<T>>;
         onTouchMove?: DOMEventHandler<TouchSyntheticEvent<T>>;
         onTouchStart?: DOMEventHandler<TouchSyntheticEvent<T>>;
+        onTransitionEnd?: DOMEventHandler<SyntheticEvent<T>>;
         onVolumeChange?: DOMEventHandler<SyntheticEvent<T>>;
         onWaiting?: DOMEventHandler<SyntheticEvent<T>>;
         onWheel?: DOMEventHandler<SyntheticEvent<T>>;
