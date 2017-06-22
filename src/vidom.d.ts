@@ -108,6 +108,7 @@ declare namespace vidom {
     type KeyboardSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, KeyboardEvent>;
     type DragSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, DragEvent>;
     type TouchSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, TouchEvent>;
+    type FocusSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, FocusEvent>;
 
     interface DOMEventHandler<T = SyntheticEvent> {
         (event: T): void;
