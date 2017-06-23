@@ -17,11 +17,11 @@ describe('normalizeChildren', () => {
             .to.be.equal(null);
     });
 
-    it('should skip null and undefined children', () => {
+    it('should skip null, undefined and boolean children', () => {
         const node1 = createNode('a'),
             node2 = createNode('b');
 
-        expect(normalizeChildren([node1, null, node2, undefined]))
+        expect(normalizeChildren([node1, true, null, node2, false, undefined]))
             .to.be.eql([node1, node2]);
     });
 
@@ -42,7 +42,7 @@ describe('normalizeChildren', () => {
             .to.be.eql([node1, node2]);
     });
 
-    it('should create text nodes for strings, numbers and booleans', () => {
+    it('should create text nodes for strings and numbers', () => {
         const node1 = createNode('a'),
             node2 = createNode('b');
 
@@ -51,8 +51,7 @@ describe('normalizeChildren', () => {
                 createNode('plaintext').setChildren('str'),
                 node1,
                 createNode('plaintext').setChildren(0),
-                node2,
-                createNode('plaintext').setChildren('true')
+                node2
             ]);
     });
 

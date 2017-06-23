@@ -8,7 +8,11 @@ export default function normalizeChildren(children) {
     const typeOfChildren = typeof children;
 
     if(typeOfChildren !== 'object') {
-        return typeOfChildren === 'string'? children || null : '' + children;
+        return typeOfChildren === 'string'?
+            children || null :
+            typeOfChildren === 'boolean'?
+                null :
+                '' + children;
     }
 
     if(!Array.isArray(children)) {
