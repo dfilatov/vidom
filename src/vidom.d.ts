@@ -9,7 +9,7 @@ interface MapLike<T> {
 
 declare namespace vidom {
     type Key = string | number;
-    type Ref<T> = (instance: T) => void;
+    type Ref<T> = (instance: T | null) => void;
     type Attrs = {};
 
     abstract class BaseVNode {
