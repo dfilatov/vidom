@@ -29,7 +29,7 @@ export function setRef(ref) {
         }
     }
 
-    this._ref = ref;
+    this._ref = ref == null? null : ref;
 
     if(IS_DEBUG) {
         this._sets |= REF_SET;

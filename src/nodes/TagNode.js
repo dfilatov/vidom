@@ -357,7 +357,9 @@ TagNode.prototype = {
             }
         }
 
-        this._ref && this._ref(this._domNode);
+        if(this._ref !== null) {
+            this._ref(this._domNode);
+        }
     },
 
     unmount() {
@@ -376,7 +378,9 @@ TagNode.prototype = {
 
         this._domNode = null;
 
-        this._ref && this._ref(null);
+        if(this._ref !== null) {
+            this._ref(null);
+        }
     },
 
     clone() {
