@@ -122,7 +122,7 @@ declare namespace vidom {
         onCanPlay?: DOMEventHandler<SyntheticEvent<T>>;
         onCanPlayThrough?: DOMEventHandler<SyntheticEvent<T>>;
         onChange?: DOMEventHandler<SyntheticEvent<T>>;
-        onClick?: DOMEventHandler<SyntheticEvent<T>>;
+        onClick?: DOMEventHandler<MouseSyntheticEvent<T>>;
         onComplete?: DOMEventHandler<SyntheticEvent<T>>;
         onContextMenu?: DOMEventHandler<SyntheticEvent<T>>;
         onCopy?: DOMEventHandler<SyntheticEvent<T>>;
