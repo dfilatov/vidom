@@ -150,7 +150,36 @@ describe('renderToDom', () => {
         it('should be rendered as inner html', () => {
             const domNode = (topNode = node('span')).setHtml('<span></span><i></i>').renderToDom(null);
 
-            expect(domNode.childNodes.length).to.equal(2);
+            expect(domNode.innerHTML)
+                .to.equal('<span></span><i></i>');
+        });
+
+        it('should not render "null"', () => {
+            const domNode = (topNode = node('span')).setHtml(null).renderToDom(null);
+
+            expect(domNode.innerHTML)
+                .to.equal('');
+        });
+
+        it('should not render "undefined"', () => {
+            const domNode = (topNode = node('span')).setHtml(undefined).renderToDom(null);
+
+            expect(domNode.innerHTML)
+                .to.equal('');
+        });
+
+        it('should not render "true"', () => {
+            const domNode = (topNode = node('span')).setHtml(true).renderToDom(null);
+
+            expect(domNode.innerHTML)
+                .to.equal('');
+        });
+
+        it('should not render "false"', () => {
+            const domNode = (topNode = node('span')).setHtml(false).renderToDom(null);
+
+            expect(domNode.innerHTML)
+                .to.equal('');
         });
     });
 

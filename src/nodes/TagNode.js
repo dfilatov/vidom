@@ -152,7 +152,9 @@ TagNode.prototype = {
             this.__isFrozen = false;
         }
 
-        this.children = '' + html;
+        if(html != null && typeof html !== 'boolean') {
+            this.children = '' + html;
+        }
 
         if(IS_DEBUG) {
             this._sets |= CHILDREN_SET;
