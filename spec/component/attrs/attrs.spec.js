@@ -42,28 +42,28 @@ describe('attrs', () => {
     it('should merge passed with default attributes', done => {
         const C1 = createComponent({
             onInit() {
-                expect(this.attrs).to.be.eql({ a : 3, b : 2 });
+                expect(this.attrs).to.be.eql({ a : 3, b : 2, c : 3 });
                 done();
             }
         }, {
-            defaultAttrs : { a : 1, b : 2 }
+            defaultAttrs : { a : 1, b : 2, c : 3 }
         });
 
-        mountSync(domNode, createNode(C1).setAttrs({ a : 3 }));
+        mountSync(domNode, createNode(C1).setAttrs({ a : 3, c : undefined }));
     });
 
     it('should merge passed with default attributes after update', done => {
         const C1 = createComponent({
             onUpdate() {
-                expect(this.attrs).to.be.eql({ a : 4, b : 2 });
+                expect(this.attrs).to.be.eql({ a : 4, b : 2, c : 3 });
                 done();
             }
         }, {
-            defaultAttrs : { a : 1, b : 2 }
+            defaultAttrs : { a : 1, b : 2, c : 3 }
         });
 
-        mountSync(domNode, createNode(C1).setAttrs({ a : 3 }));
-        mountSync(domNode, createNode(C1).setAttrs({ a : 4 }));
+        mountSync(domNode, createNode(C1).setAttrs({ a : 3, c : undefined }));
+        mountSync(domNode, createNode(C1).setAttrs({ a : 4, c : undefined }));
     });
 
     if(IS_DEBUG) {
