@@ -584,8 +584,9 @@ declare namespace vidom {
         defaultAttrs?: Partial<ComponentClassAttrs>;
     }
 
-    interface FunctionComponent<Attrs = {}, Children = any, Context = {}> {
-         (attrs: Attrs, children: Children, context: Context): VNode;
+    interface FunctionComponent<FunctionComponentAttrs extends Attrs = Attrs, Children = any, Context = {}> {
+         (attrs: FunctionComponentAttrs, children: Children, context: Context): VNode;
+         defaultAttrs?: Partial<FunctionComponentAttrs>;
     }
 
     abstract class Component<
