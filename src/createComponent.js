@@ -179,8 +179,14 @@ function renderComponent() {
 }
 
 function updateComponent(cb) {
+    if(!this.isMounted()) {
+        return;
+    }
+
     if(this.__isUpdating) {
-        cb && rafBatch(() => cb.call(this));
+        if(cb) {
+            rafBatch(() => cb.call(this));
+        }
     }
     else {
         this.__isUpdating = true;
