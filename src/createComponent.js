@@ -23,13 +23,11 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         return;
     }
 
-    nextAttrs = this.__buildAttrs(nextAttrs);
-
-    const prevAttrs = this.attrs,
-        prevChildren = this.children,
-        prevContext = this.context;
-
     if(callReceivers) {
+        this.__prevAttrs = this.attrs;
+        this.__prevChildren = this.children;
+        this.__prevContext = this.context;
+
         const isUpdating = this.__isUpdating;
 
         this.__isUpdating = true;
@@ -38,13 +36,13 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
             this.__isFrozen = false;
         }
 
-        this.attrs = nextAttrs;
+        this.attrs = this.__buildAttrs(nextAttrs);
 
         if(IS_DEBUG) {
             this.__isFrozen = true;
         }
 
-        this.onAttrsReceive(prevAttrs);
+        this.onAttrsReceive(this.__prevAttrs);
 
         if(IS_DEBUG) {
             this.__isFrozen = false;
@@ -56,7 +54,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
             this.__isFrozen = true;
         }
 
-        this.onChildrenReceive(prevChildren);
+        this.onChildrenReceive(this.__prevChildren);
 
         if(IS_DEBUG) {
             this.__isFrozen = false;
@@ -69,7 +67,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
             this.__isFrozen = true;
         }
 
-        this.onContextReceive(prevContext);
+        this.onContextReceive(this.__prevContext);
 
         this.__isUpdating = isUpdating;
     }
@@ -78,7 +76,11 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         return;
     }
 
-    const shouldRerender = this.shouldRerender(prevAttrs, prevChildren, this.__prevState, prevContext);
+    const shouldRerender = this.shouldRerender(
+        this.__prevAttrs,
+        this.__prevChildren,
+        this.__prevState,
+        this.__prevContext);
 
     if(IS_DEBUG) {
         const shouldRerenderResType = typeof shouldRerender;
@@ -93,8 +95,17 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
 
         this.__rootNode = this.render();
         prevRootNode.patch(this.__rootNode);
-        this.onUpdate(prevAttrs, prevChildren, this.__prevState, prevContext);
+        this.onUpdate(
+            this.__prevAttrs,
+            this.__prevChildren,
+            this.__prevState,
+            this.__prevContext);
     }
+
+    this.__prevAttrs = this.attrs;
+    this.__prevChildren = this.children;
+    this.__prevState = this.state;
+    this.__prevContext = this.context;
 }
 
 function shouldComponentRerender() {
@@ -132,7 +143,7 @@ function setComponentState(state) {
         nextState = state === emptyObj? state : merge(this.state, state);
     }
     else {
-        this.update(this.state === this.__prevState? updateComponentPrevState : null);
+        this.update();
         nextState = merge(this.state, state);
     }
 
@@ -146,10 +157,6 @@ function setComponentState(state) {
         Object.freeze(this.state);
         this.__isFrozen = true;
     }
-}
-
-function updateComponentPrevState() {
-    this.__prevState = this.state;
 }
 
 function renderComponent() {
@@ -196,7 +203,11 @@ function updateComponent(cb) {
                 const prevRootNode = this.__rootNode;
 
                 this.patch(this.attrs, this.children, this.context, false);
-                cb && cb.call(this);
+
+                if(cb) {
+                    cb.call(this);
+                }
+
                 if(IS_DEBUG) {
                     globalHook.emit('replace', prevRootNode, this.__rootNode);
                 }
@@ -264,7 +275,10 @@ function createComponent(props, staticProps) {
 
             this.onInit();
 
+            this.__prevAttrs = this.attrs;
+            this.__prevChildren = this.children;
             this.__prevState = this.state;
+            this.__prevContext = this.context;
         },
         ptp = {
             constructor : res,
