@@ -189,6 +189,7 @@ declare namespace vidom {
         alt?: string;
         'aria-checked'?: string,
         'aria-disabled'?: boolean,
+        'aria-hidden'?: boolean,
         'aria-pressed'?: string,
         async?: boolean;
         autoComplete?: string;
