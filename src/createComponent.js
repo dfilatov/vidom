@@ -6,6 +6,7 @@ import console from './utils/console';
 import emptyObj from './utils/emptyObj';
 import restrictObjProp from './utils/restrictObjProp';
 import { IS_DEBUG } from './utils/debug';
+import isNode from './nodes/utils/isNode';
 import globalHook from './globalHook';
 
 function mountComponent() {
@@ -86,7 +87,9 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         const shouldRerenderResType = typeof shouldRerender;
 
         if(shouldRerenderResType !== 'boolean') {
-            console.warn(`Component#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
+            const name = this.constructor.name || 'Component';
+
+            console.warn(`${name}#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
         }
     }
 
@@ -164,8 +167,10 @@ function renderComponent() {
         rootNode = onRenderRes === null? createNode('!') : onRenderRes;
 
     if(IS_DEBUG) {
-        if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
-            throw TypeError('vidom: Component#onRender must return a single node on the top level or null.');
+        if(!isNode(rootNode)) {
+            const name = this.constructor.name || 'Component';
+
+            throw TypeError(`vidom: ${name}#onRender must return a single node or null on the top level.`);
         }
     }
 

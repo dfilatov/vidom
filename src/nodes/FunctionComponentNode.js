@@ -8,6 +8,7 @@ import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
 import { setKey } from './utils/setters';
+import isNode from './utils/isNode';
 
 const ATTRS_SET = 4,
     CHILDREN_SET = 8;
@@ -176,11 +177,14 @@ FunctionComponentNode.prototype = {
             Object.freeze(resAttrs);
         }
 
-        const rootNode = component(resAttrs, this.children, this._ctx) || createNode('!');
+        const res = component(resAttrs, this.children, this._ctx),
+            rootNode = res === null? createNode('!') : res;
 
         if(IS_DEBUG) {
-            if(typeof rootNode !== 'object' || Array.isArray(rootNode)) {
-                throw Error('vidom: Function component must return a single node on the top level.');
+            if(!isNode(rootNode)) {
+                const name = component.name || 'Function';
+
+                throw Error(`vidom: ${name} component must return a single node or null on the top level.`);
             }
         }
 
