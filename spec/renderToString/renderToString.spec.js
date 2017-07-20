@@ -192,7 +192,7 @@ describe('renderToString', () => {
     describe('component', () => {
         it('should be rendered as component', () => {
             const Component = createComponent({
-                onRender : function() {
+                onRender() {
                     return createNode('div').setAttrs(this.attrs).setChildren([
                         createNode('a'),
                         createNode('span')
@@ -229,8 +229,8 @@ describe('renderToString', () => {
                 .to.equal('<div id="id1"><a></a><span></span><i></i></div>');
         });
 
-        it('should render comment if returns nothing', () => {
-            const Component = () => {};
+        it('should render comment if returns null', () => {
+            const Component = () => null;
 
             expect(createNode(Component).renderToString())
                 .to.equal('<!---->');

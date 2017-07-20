@@ -14,20 +14,24 @@ describe('functionComponent', () => {
     });
 
     it('should pass empty object as attrs if they aren\'t specified', () => {
-        const spy = sinon.spy();
+        const stub = sinon.stub();
 
-        mountSync(domNode, node(spy));
+        stub.returns(null);
 
-        expect(spy.args[0][0]).to.be.equal(emptyObj);
+        mountSync(domNode, node(stub));
+
+        expect(stub.args[0][0]).to.be.equal(emptyObj);
     });
 
     it('should merge passed with default attributes', () => {
-        const spy = sinon.spy();
+        const stub = sinon.stub();
 
-        spy.defaultAttrs = { a : 1, b : 2 };
+        stub.returns(null);
 
-        mountSync(domNode, node(spy).setAttrs({ a : 3 }));
+        stub.defaultAttrs = { a : 1, b : 2 };
 
-        expect(spy.args[0][0]).to.be.eql({ a : 3, b : 2 });
+        mountSync(domNode, node(stub).setAttrs({ a : 3 }));
+
+        expect(stub.args[0][0]).to.be.eql({ a : 3, b : 2 });
     });
 });

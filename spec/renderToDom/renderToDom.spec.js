@@ -306,8 +306,8 @@ describe('renderToDom', () => {
             expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
         });
 
-        it('should render comment if onRender() returns nothing', () => {
-            const Component = () => {},
+        it('should render comment if onRender() returns null', () => {
+            const Component = () => null,
                 domNode = (topNode = node(Component)).renderToDom(null);
 
             expect(domNode.nodeType).to.equal(Node.COMMENT_NODE);
