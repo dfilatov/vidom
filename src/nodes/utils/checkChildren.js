@@ -18,7 +18,7 @@ export default function checkChildren(children) {
             if(child.key in keys) {
                 throw Error(
                     'vidom: Childrens\' keys must be unique across the children. ' +
-                    `Found duplicate of "${child._key}" key.`);
+                    `Found duplicate of "${child.key}" key.`);
             }
             else {
                 keys[child.key] = true;
