@@ -84,11 +84,11 @@ declare namespace vidom {
         ComponentVNode |
         FunctionComponentVNode;
 
-    interface Attributes {
+    interface WithKey {
         key?: Key;
     }
 
-    interface ClassAttributes<T> extends Attributes {
+    interface WithRef<T> {
         ref?: Ref<T>;
     }
 
@@ -179,7 +179,7 @@ declare namespace vidom {
         onWheel?: DOMEventHandler<SyntheticEvent<T>>;
     }
 
-    interface HTMLAttributes<T = HTMLElement> extends DOMAttributes<T>, ClassAttributes<T> {
+    interface HTMLAttributes<T = HTMLElement> extends DOMAttributes<T> {
         accept?: string;
         acceptCharset?: string;
         accessKey?: string;
@@ -323,7 +323,7 @@ declare namespace vidom {
         unselectable?: boolean;
     }
 
-    interface SVGAttributes<T> extends DOMAttributes<T>, ClassAttributes<T> {
+    interface SVGAttributes<T> extends DOMAttributes<T> {
         class?: string;
         color?: string;
         height?: number | string;
@@ -655,184 +655,187 @@ declare global {
         type Element = vidom.VNode;
         type ElementClass = vidom.Component;
         type ElementAttributesProperty = { attrs: {}; };
-        type IntrinsicAttributes = vidom.Attributes;
-        interface IntrinsicClassAttributes<T> extends vidom.ClassAttributes<T> {
-        }
-        interface IntrinsicElements {
-            fragment: vidom.Attributes;
-            plaintext: vidom.Attributes,
 
-            a: vidom.HTMLAttributes<HTMLAnchorElement>;
-            abbr: vidom.HTMLAttributes;
-            address: vidom.HTMLAttributes;
-            area: vidom.HTMLAttributes<HTMLAreaElement>;
-            article: vidom.HTMLAttributes;
-            aside: vidom.HTMLAttributes;
-            audio: vidom.HTMLAttributes<HTMLAudioElement>;
-            b: vidom.HTMLAttributes;
-            base: vidom.HTMLAttributes<HTMLBaseElement>;
-            bdi: vidom.HTMLAttributes;
-            bdo: vidom.HTMLAttributes;
-            big: vidom.HTMLAttributes;
-            blockquote: vidom.HTMLAttributes;
-            body: vidom.HTMLAttributes<HTMLBodyElement>;
-            br: vidom.HTMLAttributes<HTMLBRElement>;
-            button: vidom.HTMLAttributes<HTMLButtonElement>;
-            canvas: vidom.HTMLAttributes<HTMLCanvasElement>;
-            caption: vidom.HTMLAttributes;
-            cite: vidom.HTMLAttributes;
-            code: vidom.HTMLAttributes;
-            col: vidom.HTMLAttributes<HTMLTableColElement>;
-            colgroup: vidom.HTMLAttributes<HTMLTableColElement>;
-            data: vidom.HTMLAttributes;
-            datalist: vidom.HTMLAttributes<HTMLDataListElement>;
-            dd: vidom.HTMLAttributes;
-            del: vidom.HTMLAttributes;
-            details: vidom.HTMLAttributes;
-            dfn: vidom.HTMLAttributes;
-            dialog: vidom.HTMLAttributes;
-            div: vidom.HTMLAttributes<HTMLDivElement>;
-            dl: vidom.HTMLAttributes<HTMLDListElement>;
-            dt: vidom.HTMLAttributes;
-            em: vidom.HTMLAttributes;
-            embed: vidom.HTMLAttributes<HTMLEmbedElement>;
-            fieldset: vidom.HTMLAttributes<HTMLFieldSetElement>;
-            figcaption: vidom.HTMLAttributes;
-            figure: vidom.HTMLAttributes;
-            footer: vidom.HTMLAttributes;
-            form: vidom.HTMLAttributes<HTMLFormElement>;
-            h1: vidom.HTMLAttributes<HTMLHeadingElement>;
-            h2: vidom.HTMLAttributes<HTMLHeadingElement>;
-            h3: vidom.HTMLAttributes<HTMLHeadingElement>;
-            h4: vidom.HTMLAttributes<HTMLHeadingElement>;
-            h5: vidom.HTMLAttributes<HTMLHeadingElement>;
-            h6: vidom.HTMLAttributes<HTMLHeadingElement>;
-            head: vidom.HTMLAttributes<HTMLHeadElement>;
-            header: vidom.HTMLAttributes;
-            hgroup: vidom.HTMLAttributes;
-            hr: vidom.HTMLAttributes<HTMLHRElement>;
-            html: vidom.HTMLAttributes<HTMLHtmlElement>;
-            i: vidom.HTMLAttributes;
-            iframe: vidom.HTMLAttributes<HTMLIFrameElement>;
-            img: vidom.HTMLAttributes<HTMLImageElement>;
-            input: vidom.HTMLAttributes<HTMLInputElement>;
-            ins: vidom.HTMLAttributes<HTMLModElement>;
-            kbd: vidom.HTMLAttributes;
-            keygen: vidom.HTMLAttributes;
-            label: vidom.HTMLAttributes<HTMLLabelElement>;
-            legend: vidom.HTMLAttributes<HTMLLegendElement>;
-            li: vidom.HTMLAttributes<HTMLLIElement>;
-            link: vidom.HTMLAttributes<HTMLLinkElement>;
-            main: vidom.HTMLAttributes;
-            map: vidom.HTMLAttributes<HTMLMapElement>;
-            mark: vidom.HTMLAttributes;
-            menu: vidom.HTMLAttributes;
-            menuitem: vidom.HTMLAttributes;
-            meta: vidom.HTMLAttributes<HTMLMetaElement>;
-            meter: vidom.HTMLAttributes;
-            nav: vidom.HTMLAttributes;
-            noindex: vidom.HTMLAttributes;
-            noscript: vidom.HTMLAttributes;
-            object: vidom.HTMLAttributes<HTMLObjectElement>;
-            ol: vidom.HTMLAttributes<HTMLOListElement>;
-            optgroup: vidom.HTMLAttributes<HTMLOptGroupElement>;
-            option: vidom.HTMLAttributes<HTMLOptionElement>;
-            output: vidom.HTMLAttributes;
-            p: vidom.HTMLAttributes<HTMLParagraphElement>;
-            param: vidom.HTMLAttributes<HTMLParamElement>;
-            picture: vidom.HTMLAttributes;
-            pre: vidom.HTMLAttributes<HTMLPreElement>;
-            progress: vidom.HTMLAttributes<HTMLProgressElement>;
-            q: vidom.HTMLAttributes<HTMLQuoteElement>;
-            rp: vidom.HTMLAttributes;
-            rt: vidom.HTMLAttributes;
-            ruby: vidom.HTMLAttributes;
-            s: vidom.HTMLAttributes;
-            samp: vidom.HTMLAttributes;
-            script: vidom.HTMLAttributes;
-            section: vidom.HTMLAttributes;
-            select: vidom.HTMLAttributes<HTMLSelectElement>;
-            small: vidom.HTMLAttributes;
-            source: vidom.HTMLAttributes<HTMLSourceElement>;
-            span: vidom.HTMLAttributes<HTMLSpanElement>;
-            strong: vidom.HTMLAttributes;
-            style: vidom.HTMLAttributes<HTMLStyleElement>;
-            sub: vidom.HTMLAttributes;
-            summary: vidom.HTMLAttributes;
-            sup: vidom.HTMLAttributes;
-            table: vidom.HTMLAttributes<HTMLTableElement>;
-            tbody: vidom.HTMLAttributes<HTMLTableSectionElement>;
-            td: vidom.HTMLAttributes<HTMLTableDataCellElement>;
-            textarea: vidom.HTMLAttributes<HTMLTextAreaElement>;
-            tfoot: vidom.HTMLAttributes<HTMLTableSectionElement>;
-            th: vidom.HTMLAttributes<HTMLTableHeaderCellElement>;
-            thead: vidom.HTMLAttributes<HTMLTableSectionElement>;
-            time: vidom.HTMLAttributes;
-            title: vidom.HTMLAttributes<HTMLTitleElement>;
-            tr: vidom.HTMLAttributes<HTMLTableRowElement>;
-            track: vidom.HTMLAttributes<HTMLTrackElement>;
-            u: vidom.HTMLAttributes;
-            ul: vidom.HTMLAttributes<HTMLUListElement>;
-            'var': vidom.HTMLAttributes;
-            video: vidom.HTMLAttributes<HTMLVideoElement>;
-            wbr: vidom.HTMLAttributes;
+        interface IntrinsicAttributes extends vidom.WithKey {}
+        interface IntrinsicClassAttributes<T> extends vidom.WithKey, vidom.WithRef<T> {}
+        interface IntrinsicHMTLAttributes<T = HTMLElement> extends vidom.HTMLAttributes<T>, vidom.WithRef<T>, vidom.WithKey {}
+        interface IntrinsicSVGAttributes<T> extends vidom.SVGAttributes<T>, vidom.WithRef<T>, vidom.WithKey {}
+
+        interface IntrinsicElements {
+            fragment: vidom.WithKey;
+            plaintext: vidom.WithKey;
+
+            a: IntrinsicHMTLAttributes<HTMLAnchorElement>;
+            abbr: IntrinsicHMTLAttributes;
+            address: IntrinsicHMTLAttributes;
+            area: IntrinsicHMTLAttributes<HTMLAreaElement>;
+            article: IntrinsicHMTLAttributes;
+            aside: IntrinsicHMTLAttributes;
+            audio: IntrinsicHMTLAttributes<HTMLAudioElement>;
+            b: IntrinsicHMTLAttributes;
+            base: IntrinsicHMTLAttributes<HTMLBaseElement>;
+            bdi: IntrinsicHMTLAttributes;
+            bdo: IntrinsicHMTLAttributes;
+            big: IntrinsicHMTLAttributes;
+            blockquote: IntrinsicHMTLAttributes;
+            body: IntrinsicHMTLAttributes<HTMLBodyElement>;
+            br: IntrinsicHMTLAttributes<HTMLBRElement>;
+            button: IntrinsicHMTLAttributes<HTMLButtonElement>;
+            canvas: IntrinsicHMTLAttributes<HTMLCanvasElement>;
+            caption: IntrinsicHMTLAttributes;
+            cite: IntrinsicHMTLAttributes;
+            code: IntrinsicHMTLAttributes;
+            col: IntrinsicHMTLAttributes<HTMLTableColElement>;
+            colgroup: IntrinsicHMTLAttributes<HTMLTableColElement>;
+            data: IntrinsicHMTLAttributes;
+            datalist: IntrinsicHMTLAttributes<HTMLDataListElement>;
+            dd: IntrinsicHMTLAttributes;
+            del: IntrinsicHMTLAttributes;
+            details: IntrinsicHMTLAttributes;
+            dfn: IntrinsicHMTLAttributes;
+            dialog: IntrinsicHMTLAttributes;
+            div: IntrinsicHMTLAttributes<HTMLDivElement>;
+            dl: IntrinsicHMTLAttributes<HTMLDListElement>;
+            dt: IntrinsicHMTLAttributes;
+            em: IntrinsicHMTLAttributes;
+            embed: IntrinsicHMTLAttributes<HTMLEmbedElement>;
+            fieldset: IntrinsicHMTLAttributes<HTMLFieldSetElement>;
+            figcaption: IntrinsicHMTLAttributes;
+            figure: IntrinsicHMTLAttributes;
+            footer: IntrinsicHMTLAttributes;
+            form: IntrinsicHMTLAttributes<HTMLFormElement>;
+            h1: IntrinsicHMTLAttributes<HTMLHeadingElement>;
+            h2: IntrinsicHMTLAttributes<HTMLHeadingElement>;
+            h3: IntrinsicHMTLAttributes<HTMLHeadingElement>;
+            h4: IntrinsicHMTLAttributes<HTMLHeadingElement>;
+            h5: IntrinsicHMTLAttributes<HTMLHeadingElement>;
+            h6: IntrinsicHMTLAttributes<HTMLHeadingElement>;
+            head: IntrinsicHMTLAttributes<HTMLHeadElement>;
+            header: IntrinsicHMTLAttributes;
+            hgroup: IntrinsicHMTLAttributes;
+            hr: IntrinsicHMTLAttributes<HTMLHRElement>;
+            html: IntrinsicHMTLAttributes<HTMLHtmlElement>;
+            i: IntrinsicHMTLAttributes;
+            iframe: IntrinsicHMTLAttributes<HTMLIFrameElement>;
+            img: IntrinsicHMTLAttributes<HTMLImageElement>;
+            input: IntrinsicHMTLAttributes<HTMLInputElement>;
+            ins: IntrinsicHMTLAttributes<HTMLModElement>;
+            kbd: IntrinsicHMTLAttributes;
+            keygen: IntrinsicHMTLAttributes;
+            label: IntrinsicHMTLAttributes<HTMLLabelElement>;
+            legend: IntrinsicHMTLAttributes<HTMLLegendElement>;
+            li: IntrinsicHMTLAttributes<HTMLLIElement>;
+            link: IntrinsicHMTLAttributes<HTMLLinkElement>;
+            main: IntrinsicHMTLAttributes;
+            map: IntrinsicHMTLAttributes<HTMLMapElement>;
+            mark: IntrinsicHMTLAttributes;
+            menu: IntrinsicHMTLAttributes;
+            menuitem: IntrinsicHMTLAttributes;
+            meta: IntrinsicHMTLAttributes<HTMLMetaElement>;
+            meter: IntrinsicHMTLAttributes;
+            nav: IntrinsicHMTLAttributes;
+            noindex: IntrinsicHMTLAttributes;
+            noscript: IntrinsicHMTLAttributes;
+            object: IntrinsicHMTLAttributes<HTMLObjectElement>;
+            ol: IntrinsicHMTLAttributes<HTMLOListElement>;
+            optgroup: IntrinsicHMTLAttributes<HTMLOptGroupElement>;
+            option: IntrinsicHMTLAttributes<HTMLOptionElement>;
+            output: IntrinsicHMTLAttributes;
+            p: IntrinsicHMTLAttributes<HTMLParagraphElement>;
+            param: IntrinsicHMTLAttributes<HTMLParamElement>;
+            picture: IntrinsicHMTLAttributes;
+            pre: IntrinsicHMTLAttributes<HTMLPreElement>;
+            progress: IntrinsicHMTLAttributes<HTMLProgressElement>;
+            q: IntrinsicHMTLAttributes<HTMLQuoteElement>;
+            rp: IntrinsicHMTLAttributes;
+            rt: IntrinsicHMTLAttributes;
+            ruby: IntrinsicHMTLAttributes;
+            s: IntrinsicHMTLAttributes;
+            samp: IntrinsicHMTLAttributes;
+            script: IntrinsicHMTLAttributes;
+            section: IntrinsicHMTLAttributes;
+            select: IntrinsicHMTLAttributes<HTMLSelectElement>;
+            small: IntrinsicHMTLAttributes;
+            source: IntrinsicHMTLAttributes<HTMLSourceElement>;
+            span: IntrinsicHMTLAttributes<HTMLSpanElement>;
+            strong: IntrinsicHMTLAttributes;
+            style: IntrinsicHMTLAttributes<HTMLStyleElement>;
+            sub: IntrinsicHMTLAttributes;
+            summary: IntrinsicHMTLAttributes;
+            sup: IntrinsicHMTLAttributes;
+            table: IntrinsicHMTLAttributes<HTMLTableElement>;
+            tbody: IntrinsicHMTLAttributes<HTMLTableSectionElement>;
+            td: IntrinsicHMTLAttributes<HTMLTableDataCellElement>;
+            textarea: IntrinsicHMTLAttributes<HTMLTextAreaElement>;
+            tfoot: IntrinsicHMTLAttributes<HTMLTableSectionElement>;
+            th: IntrinsicHMTLAttributes<HTMLTableHeaderCellElement>;
+            thead: IntrinsicHMTLAttributes<HTMLTableSectionElement>;
+            time: IntrinsicHMTLAttributes;
+            title: IntrinsicHMTLAttributes<HTMLTitleElement>;
+            tr: IntrinsicHMTLAttributes<HTMLTableRowElement>;
+            track: IntrinsicHMTLAttributes<HTMLTrackElement>;
+            u: IntrinsicHMTLAttributes;
+            ul: IntrinsicHMTLAttributes<HTMLUListElement>;
+            'var': IntrinsicHMTLAttributes;
+            video: IntrinsicHMTLAttributes<HTMLVideoElement>;
+            wbr: IntrinsicHMTLAttributes;
 
             // SVG
-            svg: vidom.SVGAttributes<SVGSVGElement> & { ns: string };
+            svg: IntrinsicSVGAttributes<SVGSVGElement> & { ns: string };
 
-            animate: vidom.SVGAttributes<SVGElement>;
-            circle: vidom.SVGAttributes<SVGCircleElement>;
-            clipPath: vidom.SVGAttributes<SVGClipPathElement>;
-            defs: vidom.SVGAttributes<SVGDefsElement>;
-            desc: vidom.SVGAttributes<SVGDescElement>;
-            ellipse: vidom.SVGAttributes<SVGEllipseElement>;
-            feBlend: vidom.SVGAttributes<SVGFEBlendElement>;
-            feColorMatrix: vidom.SVGAttributes<SVGFEColorMatrixElement>;
-            feComponentTransfer: vidom.SVGAttributes<SVGFEComponentTransferElement>;
-            feComposite: vidom.SVGAttributes<SVGFECompositeElement>;
-            feConvolveMatrix: vidom.SVGAttributes<SVGFEConvolveMatrixElement>;
-            feDiffuseLighting: vidom.SVGAttributes<SVGFEDiffuseLightingElement>;
-            feDisplacementMap: vidom.SVGAttributes<SVGFEDisplacementMapElement>;
-            feDistantLight: vidom.SVGAttributes<SVGFEDistantLightElement>;
-            feFlood: vidom.SVGAttributes<SVGFEFloodElement>;
-            feFuncA: vidom.SVGAttributes<SVGFEFuncAElement>;
-            feFuncB: vidom.SVGAttributes<SVGFEFuncBElement>;
-            feFuncG: vidom.SVGAttributes<SVGFEFuncGElement>;
-            feFuncR: vidom.SVGAttributes<SVGFEFuncRElement>;
-            feGaussianBlur: vidom.SVGAttributes<SVGFEGaussianBlurElement>;
-            feImage: vidom.SVGAttributes<SVGFEImageElement>;
-            feMerge: vidom.SVGAttributes<SVGFEMergeElement>;
-            feMergeNode: vidom.SVGAttributes<SVGFEMergeNodeElement>;
-            feMorphology: vidom.SVGAttributes<SVGFEMorphologyElement>;
-            feOffset: vidom.SVGAttributes<SVGFEOffsetElement>;
-            fePointLight: vidom.SVGAttributes<SVGFEPointLightElement>;
-            feSpecularLighting: vidom.SVGAttributes<SVGFESpecularLightingElement>;
-            feSpotLight: vidom.SVGAttributes<SVGFESpotLightElement>;
-            feTile: vidom.SVGAttributes<SVGFETileElement>;
-            feTurbulence: vidom.SVGAttributes<SVGFETurbulenceElement>;
-            filter: vidom.SVGAttributes<SVGFilterElement>;
-            foreignObject: vidom.SVGAttributes<SVGForeignObjectElement>;
-            g: vidom.SVGAttributes<SVGGElement>;
-            image: vidom.SVGAttributes<SVGImageElement>;
-            line: vidom.SVGAttributes<SVGLineElement>;
-            linearGradient: vidom.SVGAttributes<SVGLinearGradientElement>;
-            marker: vidom.SVGAttributes<SVGMarkerElement>;
-            mask: vidom.SVGAttributes<SVGMaskElement>;
-            metadata: vidom.SVGAttributes<SVGMetadataElement>;
-            path: vidom.SVGAttributes<SVGPathElement>;
-            pattern: vidom.SVGAttributes<SVGPatternElement>;
-            polygon: vidom.SVGAttributes<SVGPolygonElement>;
-            polyline: vidom.SVGAttributes<SVGPolylineElement>;
-            radialGradient: vidom.SVGAttributes<SVGRadialGradientElement>;
-            rect: vidom.SVGAttributes<SVGRectElement>;
-            stop: vidom.SVGAttributes<SVGStopElement>;
-            switch: vidom.SVGAttributes<SVGSwitchElement>;
-            symbol: vidom.SVGAttributes<SVGSymbolElement>;
-            text: vidom.SVGAttributes<SVGTextElement>;
-            textPath: vidom.SVGAttributes<SVGTextPathElement>;
-            tspan: vidom.SVGAttributes<SVGTSpanElement>;
-            use: vidom.SVGAttributes<SVGUseElement>;
-            view: vidom.SVGAttributes<SVGViewElement>;
+            animate: IntrinsicSVGAttributes<SVGElement>;
+            circle: IntrinsicSVGAttributes<SVGCircleElement>;
+            clipPath: IntrinsicSVGAttributes<SVGClipPathElement>;
+            defs: IntrinsicSVGAttributes<SVGDefsElement>;
+            desc: IntrinsicSVGAttributes<SVGDescElement>;
+            ellipse: IntrinsicSVGAttributes<SVGEllipseElement>;
+            feBlend: IntrinsicSVGAttributes<SVGFEBlendElement>;
+            feColorMatrix: IntrinsicSVGAttributes<SVGFEColorMatrixElement>;
+            feComponentTransfer: IntrinsicSVGAttributes<SVGFEComponentTransferElement>;
+            feComposite: IntrinsicSVGAttributes<SVGFECompositeElement>;
+            feConvolveMatrix: IntrinsicSVGAttributes<SVGFEConvolveMatrixElement>;
+            feDiffuseLighting: IntrinsicSVGAttributes<SVGFEDiffuseLightingElement>;
+            feDisplacementMap: IntrinsicSVGAttributes<SVGFEDisplacementMapElement>;
+            feDistantLight: IntrinsicSVGAttributes<SVGFEDistantLightElement>;
+            feFlood: IntrinsicSVGAttributes<SVGFEFloodElement>;
+            feFuncA: IntrinsicSVGAttributes<SVGFEFuncAElement>;
+            feFuncB: IntrinsicSVGAttributes<SVGFEFuncBElement>;
+            feFuncG: IntrinsicSVGAttributes<SVGFEFuncGElement>;
+            feFuncR: IntrinsicSVGAttributes<SVGFEFuncRElement>;
+            feGaussianBlur: IntrinsicSVGAttributes<SVGFEGaussianBlurElement>;
+            feImage: IntrinsicSVGAttributes<SVGFEImageElement>;
+            feMerge: IntrinsicSVGAttributes<SVGFEMergeElement>;
+            feMergeNode: IntrinsicSVGAttributes<SVGFEMergeNodeElement>;
+            feMorphology: IntrinsicSVGAttributes<SVGFEMorphologyElement>;
+            feOffset: IntrinsicSVGAttributes<SVGFEOffsetElement>;
+            fePointLight: IntrinsicSVGAttributes<SVGFEPointLightElement>;
+            feSpecularLighting: IntrinsicSVGAttributes<SVGFESpecularLightingElement>;
+            feSpotLight: IntrinsicSVGAttributes<SVGFESpotLightElement>;
+            feTile: IntrinsicSVGAttributes<SVGFETileElement>;
+            feTurbulence: IntrinsicSVGAttributes<SVGFETurbulenceElement>;
+            filter: IntrinsicSVGAttributes<SVGFilterElement>;
+            foreignObject: IntrinsicSVGAttributes<SVGForeignObjectElement>;
+            g: IntrinsicSVGAttributes<SVGGElement>;
+            image: IntrinsicSVGAttributes<SVGImageElement>;
+            line: IntrinsicSVGAttributes<SVGLineElement>;
+            linearGradient: IntrinsicSVGAttributes<SVGLinearGradientElement>;
+            marker: IntrinsicSVGAttributes<SVGMarkerElement>;
+            mask: IntrinsicSVGAttributes<SVGMaskElement>;
+            metadata: IntrinsicSVGAttributes<SVGMetadataElement>;
+            path: IntrinsicSVGAttributes<SVGPathElement>;
+            pattern: IntrinsicSVGAttributes<SVGPatternElement>;
+            polygon: IntrinsicSVGAttributes<SVGPolygonElement>;
+            polyline: IntrinsicSVGAttributes<SVGPolylineElement>;
+            radialGradient: IntrinsicSVGAttributes<SVGRadialGradientElement>;
+            rect: IntrinsicSVGAttributes<SVGRectElement>;
+            stop: IntrinsicSVGAttributes<SVGStopElement>;
+            switch: IntrinsicSVGAttributes<SVGSwitchElement>;
+            symbol: IntrinsicSVGAttributes<SVGSymbolElement>;
+            text: IntrinsicSVGAttributes<SVGTextElement>;
+            textPath: IntrinsicSVGAttributes<SVGTextPathElement>;
+            tspan: IntrinsicSVGAttributes<SVGTSpanElement>;
+            use: IntrinsicSVGAttributes<SVGUseElement>;
+            view: IntrinsicSVGAttributes<SVGViewElement>;
         }
     }
 }
