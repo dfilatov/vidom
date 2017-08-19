@@ -87,7 +87,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         const shouldRerenderResType = typeof shouldRerender;
 
         if(shouldRerenderResType !== 'boolean') {
-            const name = this.constructor.name || 'Component';
+            const name = getComponentName(this);
 
             console.warn(`${name}#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
         }
@@ -140,6 +140,14 @@ function requestChildContext() {
 }
 
 function setComponentState(state) {
+    if(IS_DEBUG) {
+        if(this.__disallowSetState) {
+            const name = getComponentName(this);
+
+            console.warn(`${name}#setState() should not be called during rendering`);
+        }
+    }
+
     let nextState;
 
     if(this.__rootNode === null) { // wasn't inited
@@ -163,12 +171,18 @@ function setComponentState(state) {
 }
 
 function renderComponent() {
+    if(IS_DEBUG) {
+        this.__disallowSetState = true;
+    }
+
     const onRenderRes = this.onRender(),
         rootNode = onRenderRes === null? createNode('!') : onRenderRes;
 
     if(IS_DEBUG) {
+        this.__disallowSetState = false;
+
         if(!isNode(rootNode)) {
-            const name = this.constructor.name || 'Component';
+            const name = getComponentName(this);
 
             throw TypeError(`vidom: ${name}#onRender must return a single node or null on the top level.`);
         }
@@ -253,6 +267,10 @@ function buildComponentAttrs(attrs) {
     return res;
 }
 
+function getComponentName(component) {
+    return component.constructor.name || 'Component';
+}
+
 function createComponent(props, staticProps) {
     const res = function(attrs, children, ctx) {
             if(IS_DEBUG) {
@@ -262,6 +280,7 @@ function createComponent(props, staticProps) {
                 restrictObjProp(this, 'context');
 
                 this.__isFrozen = false;
+                this.__disallowSetState = false;
             }
 
             this.attrs = this.__buildAttrs(attrs);
