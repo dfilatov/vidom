@@ -9,16 +9,16 @@ export default function escapeHtml(str) {
         escapes = 0; // 1 — escape '&', 2 — escape '<', 4 — escape '>'
 
     while(i-- > 0) {
-        switch(str[i]) {
-            case '&':
+        switch(str.charCodeAt(i)) {
+            case 38:
                 escapes |= 1;
                 break;
 
-            case '<':
+            case 60:
                 escapes |= 2;
                 break;
 
-            case '>':
+            case 62:
                 escapes |= 4;
                 break;
         }

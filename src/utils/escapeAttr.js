@@ -8,12 +8,12 @@ export default function escapeAttr(str) {
         escapes = 0; // 1 — escape '&', 2 — escape '"'
 
     while(i-- > 0) {
-        switch(str[i]) {
-            case '&':
+        switch(str.charCodeAt(i)) {
+            case 38:
                 escapes |= 1;
                 break;
 
-            case '"':
+            case 34:
                 escapes |= 2;
                 break;
         }
