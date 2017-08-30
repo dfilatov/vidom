@@ -8,9 +8,11 @@ export default Object.assign(
     {},
     baseConfig,
     {
-        format : 'umd',
-        moduleName : 'vidom',
-        dest : 'dist/vidom' + (isProduction? '.min' : '') + '.js',
+        name : 'vidom',
+        output : {
+            file : 'dist/vidom' + (isProduction? '.min' : '') + '.js',
+            format : 'umd'
+        },
         plugins : baseConfig.plugins.concat(isProduction?
             [
                 replace({
