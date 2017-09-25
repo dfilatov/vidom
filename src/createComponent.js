@@ -11,11 +11,13 @@ import globalHook from './globalHook';
 
 function mountComponent() {
     this.__isMounted = true;
+    this.getRootNode().mount();
     this.onMount();
 }
 
 function unmountComponent() {
     this.__isMounted = false;
+    this.getRootNode().unmount();
     this.onUnmount();
 }
 

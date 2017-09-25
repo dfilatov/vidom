@@ -134,7 +134,6 @@ ComponentNode.prototype = {
     },
 
     mount() {
-        this._instance.getRootNode().mount();
         this._instance.mount();
 
         if(this._ref !== null) {
@@ -144,7 +143,6 @@ ComponentNode.prototype = {
 
     unmount() {
         if(this._instance !== null) {
-            this._instance.getRootNode().unmount();
             this._instance.unmount();
             this._instance = null;
         }
