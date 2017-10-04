@@ -109,6 +109,7 @@ declare namespace vidom {
     type DragSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, DragEvent>;
     type TouchSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, TouchEvent>;
     type FocusSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, FocusEvent>;
+    type WheelSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, WheelEvent>;
 
     interface DOMEventHandler<T = SyntheticEvent> {
         (event: T): void;
@@ -176,7 +177,7 @@ declare namespace vidom {
         onTransitionEnd?: DOMEventHandler<SyntheticEvent<T>>;
         onVolumeChange?: DOMEventHandler<SyntheticEvent<T>>;
         onWaiting?: DOMEventHandler<SyntheticEvent<T>>;
-        onWheel?: DOMEventHandler<SyntheticEvent<T>>;
+        onWheel?: DOMEventHandler<WheelSyntheticEvent<T>>;
     }
 
     interface HTMLAttributes<T = HTMLElement> extends DOMAttributes<T> {
