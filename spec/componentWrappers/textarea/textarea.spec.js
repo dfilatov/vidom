@@ -1,3 +1,4 @@
+import sinon from 'sinon';
 import simulate from 'simulate';
 import { node, mountSync, unmountSync } from '../../../src/vidom';
 
@@ -44,6 +45,20 @@ describe('textarea', () => {
         simulate.input(input);
 
         expect(input.value).to.equal('test-changed');
+    });
+
+    it('should not call onChange if actual value is not changed', () => {
+        const spy = sinon.spy();
+
+        mountSync(
+            domNode,
+            node('textarea').setAttrs({ id : 'input', value : 'test', onChange : spy }));
+
+        const input = document.getElementById('input');
+
+        simulate.input(input);
+
+        expect(spy.called).not.to.be.ok();
     });
 
     it('should return dom node as ref', () => {

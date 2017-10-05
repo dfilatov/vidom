@@ -18,18 +18,22 @@ export default createComponent({
     },
 
     onInput(e) {
-        const { onChange } = this.attrs;
+        const { onChange, value = '' } = this.attrs,
+            control = this.getDomNode();
 
-        onChange && onChange(e);
+        if(value !== control.value) {
+            if(onChange) {
+                onChange(e);
+            }
 
-        applyBatch();
+            applyBatch();
 
-        if(this.isMounted()) {
-            const control = this.getDomNode(),
-                { value } = this.attrs; // attrs could be changed during applyBatch()
+            if(this.isMounted()) {
+                const { value } = this.attrs; // attrs could be changed during applyBatch()
 
-            if(typeof value !== 'undefined' && control.value !== value) {
-                control.value = value;
+                if(typeof value !== 'undefined' && control.value !== value) {
+                    control.value = value;
+                }
             }
         }
     },
