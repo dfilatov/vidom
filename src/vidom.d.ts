@@ -119,7 +119,7 @@ declare namespace vidom {
         onAnimationEnd?: DOMEventHandler<SyntheticEvent<T>>;
         onAnimationIteration?: DOMEventHandler<SyntheticEvent<T>>;
         onAnimationStart?: DOMEventHandler<SyntheticEvent<T>>;
-        onBlur?: DOMEventHandler<SyntheticEvent<T>>;
+        onBlur?: DOMEventHandler<FocusSyntheticEvent<T>>;
         onCanPlay?: DOMEventHandler<SyntheticEvent<T>>;
         onCanPlayThrough?: DOMEventHandler<SyntheticEvent<T>>;
         onChange?: DOMEventHandler<SyntheticEvent<T>>;
@@ -140,7 +140,7 @@ declare namespace vidom {
         onEmptied?: DOMEventHandler<SyntheticEvent<T>>;
         onEnded?: DOMEventHandler<SyntheticEvent<T>>;
         onError?: DOMEventHandler<SyntheticEvent<T>>;
-        onFocus?: DOMEventHandler<SyntheticEvent<T>>;
+        onFocus?: DOMEventHandler<FocusSyntheticEvent<T>>;
         onInput?: DOMEventHandler<SyntheticEvent<T>>;
         onKeyDown?: DOMEventHandler<KeyboardSyntheticEvent<T>>;
         onKeyPress?: DOMEventHandler<KeyboardSyntheticEvent<T>>;
