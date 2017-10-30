@@ -5,7 +5,7 @@
 [![NPM Downloads](https://img.shields.io/npm/dm/vidom.svg?style=flat-square)](https://www.npmjs.org/package/vidom)
 <!---[![Sauce Test Status](https://saucelabs.com/browser-matrix/dfilatov81.svg)](https://saucelabs.com/u/dfilatov81)/]-->
 
-Vidom is just a library to build UI. It's highly inspired from [React](https://facebook.github.io/react/) and based on the same ideas. Its main goal is to provide as fast as possible lightweight implementation with API similar to React. According to the corresponding benchmarks Vidom is 6x faster in Chrome, 5x faster in Firefox, 2x faster in IE and up to 12x faster in server-side rendering than React.
+Vidom is just a library to build UI. It's highly inspired from [React](https://facebook.github.io/react/) and based on the same ideas. Its main goal is to provide as fast as possible lightweight implementation with API similar to React.
 
 ## Main features
   * Fast virtual DOM builder and patcher under the hood
@@ -24,15 +24,14 @@ Vidom is just a library to build UI. It's highly inspired from [React](https://f
   * [repaint rate challenge](http://mathieuancelin.github.io/js-repaint-perfs/)
   * [vdom-benchmark](http://vdom-benchmark.github.io/vdom-benchmark/)
   * [uibench](https://localvoid.github.io/uibench/)
-  * server-side rendering (nodejs 8.4.0)
+  * server-side rendering (nodejs 8.8.1)
 ```
-                           mean time ops/sec
-  vidom v0.9.21            0.624ms   1603
-  inferno v3.8.2           0.716ms   1397
-  preact v8.2.5            1.398ms   715
-  react.with-hack v15.6.1  4.484ms   223
-  vue v2.4.2               7.479ms   134
-  react v15.6.1            12.310ms  81
+                   mean time ops/sec
+  vidom v0.9.23    0.505ms   1981
+  inferno v3.10.1  0.511ms   1958
+  preact v8.2.6    1.414ms   707
+  react v16.0.0    1.479ms   676
+  vue v2.5.2       8.883ms   113
 ```
 
 ## Playground
