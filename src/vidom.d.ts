@@ -1,4 +1,4 @@
-// TypeScript Version: 2.3
+// TypeScript Version: 2.6
 
 export = vidom;
 export as namespace vidom;
@@ -50,8 +50,8 @@ declare namespace vidom {
     class ComponentVNode<
         VNodeAttrs extends Attrs = Attrs,
         VNodeChildren = any,
-        VNodeComponent extends Component = Component,
-        VNodeComponentClass extends ComponentClass = ComponentClass
+        VNodeComponent extends Component<VNodeAttrs> = Component<VNodeAttrs>,
+        VNodeComponentClass extends ComponentClass<VNodeAttrs> = ComponentClass<VNodeAttrs>
     > extends BaseVNode {
         readonly component: VNodeComponentClass;
         readonly attrs: Readonly<VNodeAttrs>;
@@ -66,7 +66,7 @@ declare namespace vidom {
     class FunctionComponentVNode<
         VNodeAttrs extends Attrs = Attrs,
         VNodeChildren = any,
-        VNodeFunctionComponent extends FunctionComponent = FunctionComponent
+        VNodeFunctionComponent extends FunctionComponent<VNodeAttrs> = FunctionComponent<VNodeAttrs>
     > extends BaseVNode {
         readonly component: VNodeFunctionComponent;
         readonly attrs: Readonly<VNodeAttrs>;
@@ -782,7 +782,7 @@ declare global {
             wbr: IntrinsicHMTLAttributes;
 
             // SVG
-            svg: IntrinsicSVGAttributes<SVGSVGElement> & { ns: string };
+            svg: IntrinsicSVGAttributes<SVGSVGElement> & { ns: string; };
 
             animate: IntrinsicSVGAttributes<SVGElement>;
             circle: IntrinsicSVGAttributes<SVGCircleElement>;
