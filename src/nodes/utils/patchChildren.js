@@ -119,9 +119,13 @@ export default function patchChildren(nodeA, nodeB) {
     }
 
     while(leftIdxB <= rightIdxB) {
-        rightIdxB < childrenBLen - 1?
-            patchOps.insertChild(childrenB[leftIdxB], childrenB[rightIdxB + 1]) :
+        if(rightIdxB < childrenBLen - 1) {
+            patchOps.insertChild(childrenB[leftIdxB], childrenB[rightIdxB + 1]);
+        }
+        else {
             patchOps.appendChild(nodeB, childrenB[leftIdxB]);
+        }
+
         ++leftIdxB;
     }
 };

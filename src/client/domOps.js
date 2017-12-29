@@ -41,7 +41,9 @@ function remove(child) {
 }
 
 function insertBefore(child, beforeChild) {
-    Array.isArray(beforeChild) && (beforeChild = beforeChild[0]);
+    if(Array.isArray(beforeChild)) {
+        beforeChild = beforeChild[0];
+    }
 
     if(Array.isArray(child)) {
         let currentChild = child[0],
@@ -64,7 +66,10 @@ function insertBefore(child, beforeChild) {
 
 function move(child, toChild, after) {
     if(after) {
-        Array.isArray(toChild) && (toChild = toChild[1]);
+        if(Array.isArray(toChild)) {
+            toChild = toChild[1];
+        }
+
         const nextSibling = toChild.nextSibling;
 
         if(nextSibling) {
@@ -120,7 +125,7 @@ function updateText(node, text, escape) {
         }
     }
     else if(escape) {
-        const firstChild = node.firstChild;
+        const { firstChild } = node;
 
         if(firstChild) {
             firstChild.nodeValue = text;

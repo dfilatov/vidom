@@ -12,7 +12,7 @@ SyntheticEvent.prototype = {
     stopPropagation() {
         this._isPropagationStopped = true;
 
-        const nativeEvent = this.nativeEvent;
+        const { nativeEvent } = this;
 
         if(nativeEvent.stopPropagation) {
             nativeEvent.stopPropagation();
@@ -29,7 +29,7 @@ SyntheticEvent.prototype = {
     preventDefault() {
         this._isDefaultPrevented = true;
 
-        const nativeEvent = this.nativeEvent;
+        const { nativeEvent } = this;
 
         if(nativeEvent.preventDefault) {
             nativeEvent.preventDefault();

@@ -23,6 +23,6 @@ export default function createElementByHtml(html, tag, ns) {
 
     const topLevelTag = TOP_LEVEL_NS_TAGS[ns];
 
-    helperDomNode.innerHTML = '<' + topLevelTag + ' xmlns="' + ns + '">' + html + '</' + topLevelTag + '>';
+    helperDomNode.innerHTML = `<${topLevelTag} xmlns="${ns}">${html}</${topLevelTag}>`;
     return helperDomNode.removeChild(helperDomNode.firstChild).firstChild;
 }
