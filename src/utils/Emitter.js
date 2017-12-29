@@ -38,6 +38,7 @@ Emitter.prototype = {
 
             while(i < eventListeners.length) {
                 const { fn, fnCtx } = eventListeners[i++];
+
                 fn.call(fnCtx, ...args);
             }
         }

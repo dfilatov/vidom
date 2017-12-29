@@ -26,7 +26,7 @@ export default function patchChildren(nodeA, nodeB) {
         updateIdxs = 0, // 1 — left A, 2 — right A, 4 — left B, 8 — right B
         childrenAKeys = null,
         foundAChildIdx, foundAChild;
-    const childrenAIndicesToSkip = {};
+    const childrenAIndicesToSkip = Object.create(null);
 
     while(leftIdxA <= rightIdxA && leftIdxB <= rightIdxB) {
         if(leftIdxA in childrenAIndicesToSkip) {
@@ -112,7 +112,7 @@ export default function patchChildren(nodeA, nodeB) {
     }
 
     while(leftIdxA <= rightIdxA) {
-        if(!childrenAIndicesToSkip[leftIdxA]) {
+        if(!(leftIdxA in childrenAIndicesToSkip)) {
             patchOps.removeChild(childrenA[leftIdxA]);
         }
         ++leftIdxA;
@@ -127,7 +127,7 @@ export default function patchChildren(nodeA, nodeB) {
 };
 
 function buildKeys(children, idxFrom, idxTo) {
-    const res = {};
+    const res = Object.create(null);
     let childKey;
 
     while(idxFrom < idxTo) {

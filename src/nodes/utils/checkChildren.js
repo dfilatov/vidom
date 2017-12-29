@@ -1,7 +1,7 @@
 import isNode from './isNode';
 
 export default function checkChildren(children) {
-    const keys = {},
+    const keys = Object.create(null),
         len = children.length;
 
     let i = 0,

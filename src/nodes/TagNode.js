@@ -559,7 +559,9 @@ TagNode.prototype = {
             hasDiff = true;
         }
 
-        hasDiff && patchOps.updateAttr(this, attrName, arrB);
+        if(hasDiff) {
+            patchOps.updateAttr(this, attrName, arrB);
+        }
     },
 
     _patchAttrObj(attrName, objA, objB) {
@@ -567,7 +569,7 @@ TagNode.prototype = {
             return;
         }
 
-        const diffObj = {};
+        const diffObj = Object.create(null);
         let hasDiff = false;
 
         for(const i in objB) {
@@ -584,7 +586,9 @@ TagNode.prototype = {
             }
         }
 
-        hasDiff && patchOps.updateAttr(this, attrName, diffObj);
+        if(hasDiff) {
+            patchOps.updateAttr(this, attrName, diffObj);
+        }
     },
 
     _patchRef(node) {

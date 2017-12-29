@@ -28,7 +28,7 @@ export default function normalizeChildren(children) {
         hasContentBefore = false,
         child;
     const len = children.length,
-        alreadyNormalizeChildren = {};
+        alreadyNormalizeChildren = Object.create(null);
 
     while(i < len) {
         child = i in alreadyNormalizeChildren?

@@ -153,7 +153,7 @@ function addListener(domNode, type, listener) {
         }
     }
     else {
-        listenersStorage.set(domNodeId, listeners = {});
+        listenersStorage.set(domNodeId, listeners = Object.create(null));
         doAddListener(cfg, domNode, type);
     }
 
