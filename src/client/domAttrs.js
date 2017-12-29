@@ -1,7 +1,6 @@
 import escapeAttr from '../utils/escapeAttr';
 import isInArray from '../utils/isInArray';
 import dasherize from '../utils/dasherize';
-import SimpleMap from '../utils/SimpleMap';
 import { IS_DEBUG } from '../utils/debug';
 
 function setAttr(node, name, val) {
@@ -49,8 +48,8 @@ function setPropWithCheck(node, name, val) {
     if(name === 'value' && node.tagName === 'SELECT') {
         setSelectValue(node, val);
     }
-    else {
-        node[name] !== val && (node[name] = val);
+    else if(node[name] !== val) {
+        node[name] = val;
     }
 }
 
@@ -122,50 +121,30 @@ function stylePropToString(name, value) {
     return styles? name + '="' + styles + '"' : styles;
 }
 
-const defaultNodes = new SimpleMap(),
-    defaultPropVals = new SimpleMap();
+const defaultNodes = Object.create(null),
+    defaultPropVals = Object.create(null);
 
 function getDefaultPropVal(tag, attrName) {
     const key = `${tag}:${attrName}`;
 
-    if(defaultPropVals.has(key)) {
-        return defaultPropVals.get(key);
+    if(key in defaultPropVals) {
+        return defaultPropVals[key];
     }
 
-    let node;
+    const node = tag in defaultNodes?
+        defaultNodes[tag] :
+        defaultNodes[tag] = document.createElement(tag);
 
-    if(defaultNodes.has(tag)) {
-        node = defaultNodes.get(tag);
-    }
-    else {
-        defaultNodes.set(tag, node = document.createElement(tag));
-    }
-
-    const val = node[attrName];
-
-    defaultPropVals.set(key, val);
-
-    return val;
+    return defaultPropVals[key] = node[attrName];
 }
 
 function getAttrName(attrName) {
-    if(attrNames.has(attrName)) {
-        return attrNames.get(attrName);
-    }
-
-    const res = attrName.toLowerCase();
-
-    attrNames.set(attrName, res);
-
-    return res;
+    return attrName in attrNames?
+        attrNames[attrName] :
+        attrNames[attrName] = attrName.toLowerCase();
 }
 
-const attrNames = new SimpleMap([
-        ['acceptCharset', 'accept-charset'],
-        ['className', 'class'],
-        ['htmlFor', 'for'],
-        ['httpEquiv', 'http-equiv']
-    ]),
+const attrNames = Object.create(null),
     DEFAULT_ATTR_CFG = {
         set : setAttr,
         remove : removeAttr,
@@ -186,34 +165,39 @@ const attrNames = new SimpleMap([
         remove : removeProp,
         toString : booleanAttrToString
     },
-    attrsCfg = new SimpleMap([
-        ['autoPlay', BOOLEAN_ATTR_CFG],
-        ['checked', BOOLEAN_PROP_CFG],
-        ['controls', DEFAULT_PROP_CFG],
-        ['disabled', BOOLEAN_ATTR_CFG],
-        ['id', DEFAULT_PROP_CFG],
-        ['ismap', BOOLEAN_ATTR_CFG],
-        ['loop', DEFAULT_PROP_CFG],
-        ['multiple', BOOLEAN_PROP_CFG],
-        ['muted', DEFAULT_PROP_CFG],
-        ['open', BOOLEAN_ATTR_CFG],
-        ['readOnly', BOOLEAN_PROP_CFG],
-        ['selected', BOOLEAN_PROP_CFG],
-        ['srcDoc', DEFAULT_PROP_CFG],
-        ['style', {
-            set : setObjProp,
-            remove : removeProp,
-            toString : stylePropToString
-        }],
-        ['value', {
-            set : setPropWithCheck,
-            remove : removeProp,
-            toString : attrToString
-        }]
-    ]);
+    attrsCfg = Object.create(null);
+
+attrNames.acceptCharset = 'accept-charset';
+attrNames.className = 'class';
+attrNames.htmlFor = 'for';
+attrNames.httpEquiv = 'http-equiv';
+
+attrsCfg.autoPlay = BOOLEAN_ATTR_CFG;
+attrsCfg.checked = BOOLEAN_PROP_CFG;
+attrsCfg.controls = DEFAULT_PROP_CFG;
+attrsCfg.disabled = BOOLEAN_ATTR_CFG;
+attrsCfg.id = DEFAULT_PROP_CFG;
+attrsCfg.ismap = BOOLEAN_ATTR_CFG;
+attrsCfg.loop = DEFAULT_PROP_CFG;
+attrsCfg.multiple = BOOLEAN_PROP_CFG;
+attrsCfg.muted = DEFAULT_PROP_CFG;
+attrsCfg.open = BOOLEAN_ATTR_CFG;
+attrsCfg.readOnly = BOOLEAN_PROP_CFG;
+attrsCfg.selected = BOOLEAN_PROP_CFG;
+attrsCfg.srcDoc = DEFAULT_PROP_CFG;
+attrsCfg.style = {
+    set : setObjProp,
+    remove : removeProp,
+    toString : stylePropToString
+};
+attrsCfg.value = {
+    set : setPropWithCheck,
+    remove : removeProp,
+    toString : attrToString
+};
 
 export default function(attrName) {
-    return attrsCfg.has(attrName)?
-        attrsCfg.get(attrName) :
+    return attrName in attrsCfg?
+        attrsCfg[attrName] :
         DEFAULT_ATTR_CFG;
 }

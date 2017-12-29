@@ -1,6 +1,5 @@
 import createSyntheticEvent from './createSyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
-import SimpleMap from '../../utils/SimpleMap';
 import { isIos } from '../utils/ua';
 
 const MOUSE_NATIVE_EVENTS = ['click', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup'];
@@ -26,8 +25,8 @@ else {
     BUBBLEABLE_NATIVE_EVENTS = [...BUBBLEABLE_NATIVE_EVENTS, ...MOUSE_NATIVE_EVENTS];
 }
 
-const listenersStorage = new SimpleMap(),
-    eventsCfg = new SimpleMap();
+const listenersStorage = Object.create(null),
+    eventsCfg = Object.create(null);
 let areListenersEnabled = true;
 
 function globalEventListener(e, type = e.type) {
@@ -36,15 +35,15 @@ function globalEventListener(e, type = e.type) {
     }
 
     let { target } = e,
-        { listenersCount } = eventsCfg.get(type),
+        { listenersCount } = eventsCfg[type],
         listener,
         domNodeId,
         syntheticEvent;
 
     while(listenersCount && target && target !== document) { // need to check target for detached dom
         if(domNodeId = getDomNodeId(target, true)) {
-            if(listenersStorage.has(domNodeId)) {
-                listener = listenersStorage.get(domNodeId)[type];
+            if(domNodeId in listenersStorage) {
+                listener = listenersStorage[domNodeId][type];
 
                 if(listener != null) {
                     listener(syntheticEvent || (syntheticEvent = createSyntheticEvent(type, e)));
@@ -61,7 +60,7 @@ function globalEventListener(e, type = e.type) {
 
 function eventListener(e) {
     if(areListenersEnabled) {
-        listenersStorage.get(getDomNodeId(e.currentTarget))[e.type](createSyntheticEvent(e.type, e));
+        listenersStorage[getDomNodeId(e.currentTarget)][e.type](createSyntheticEvent(e.type, e));
     }
 }
 
@@ -82,7 +81,7 @@ if(typeof document !== 'undefined') {
 
     while(i < BUBBLEABLE_NATIVE_EVENTS.length) {
         type = BUBBLEABLE_NATIVE_EVENTS[i++];
-        eventsCfg.set(type, {
+        eventsCfg[type] = {
             type : type,
             bubbles : true,
             listenersCount : 0,
@@ -102,17 +101,17 @@ if(typeof document !== 'undefined') {
                             true);
                     } :
                 null
-        });
+        };
     }
 
     i = 0;
     while(i < NON_BUBBLEABLE_NATIVE_EVENTS.length) {
-        eventsCfg.set(NON_BUBBLEABLE_NATIVE_EVENTS[i++], {
+        eventsCfg[NON_BUBBLEABLE_NATIVE_EVENTS[i++]] = {
             type : type,
             bubbles : false,
             set : false,
             setup : null
-        });
+        };
     }
 }
 
@@ -126,11 +125,11 @@ function doAddListener(cfg, domNode, type) {
 }
 
 function addListener(domNode, type, listener) {
-    if(!eventsCfg.has(type)) {
+    if(!(type in eventsCfg)) {
         return;
     }
 
-    const cfg = eventsCfg.get(type);
+    const cfg = eventsCfg[type];
 
     if(!cfg.set) {
         if(cfg.setup !== null) {
@@ -146,14 +145,14 @@ function addListener(domNode, type, listener) {
     const domNodeId = getDomNodeId(domNode);
     let listeners;
 
-    if(listenersStorage.has(domNodeId)) {
-        listeners = listenersStorage.get(domNodeId);
+    if(domNodeId in listenersStorage) {
+        listeners = listenersStorage[domNodeId];
         if(listeners[type] == null) {
             doAddListener(cfg, domNode, type);
         }
     }
     else {
-        listenersStorage.set(domNodeId, listeners = Object.create(null));
+        listeners = listenersStorage[domNodeId] = Object.create(null);
         doAddListener(cfg, domNode, type);
     }
 
@@ -173,11 +172,11 @@ function removeListener(domNode, type) {
     const domNodeId = getDomNodeId(domNode, true);
 
     if(domNodeId !== null) {
-        if(listenersStorage.has(domNodeId)) {
-            const listeners = listenersStorage.get(domNodeId);
+        if(domNodeId in listenersStorage) {
+            const listeners = listenersStorage[domNodeId];
 
             listeners[type] = null;
-            doRemoveListener(eventsCfg.get(type), domNode, type);
+            doRemoveListener(eventsCfg[type], domNode, type);
         }
     }
 }
@@ -185,16 +184,16 @@ function removeListener(domNode, type) {
 function removeListeners(domNode) {
     const domNodeId = getDomNodeId(domNode, true);
 
-    if(domNodeId !== null && listenersStorage.has(domNodeId)) {
-        const listeners = listenersStorage.get(domNodeId);
+    if(domNodeId !== null && domNodeId in listenersStorage) {
+        const listeners = listenersStorage[domNodeId];
 
         for(const type in listeners) {
             if(listeners[type] !== null) {
-                doRemoveListener(eventsCfg.get(type), domNode, type);
+                doRemoveListener(eventsCfg[type], domNode, type);
             }
         }
 
-        listenersStorage.delete(domNodeId);
+        delete listenersStorage[domNodeId];
     }
 }
 

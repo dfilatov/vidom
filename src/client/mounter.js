@@ -6,9 +6,8 @@ import { getNs } from './utils/ns';
 import TopNode from '../nodes/TopNode';
 import isNode from '../nodes/utils/isNode';
 import { IS_DEBUG } from '../utils/debug';
-import SimpleMap from '../utils/SimpleMap';
 
-const mountedNodes = new SimpleMap();
+const mountedNodes = Object.create(null);
 let counter = 0;
 
 function mountToDomNode(domNode, node, ctx, cb, syncMode) {
@@ -19,13 +18,13 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
     }
 
     const domNodeId = getDomNodeId(domNode);
-    let mounted = mountedNodes.get(domNodeId),
+    let mounted = mountedNodes[domNodeId],
         mountId;
 
     if(mounted && mounted.tree !== null) {
         mountId = ++mounted.id;
         const patchFn = () => {
-            mounted = mountedNodes.get(domNodeId);
+            mounted = mountedNodes[domNodeId];
             if(mounted && mounted.id === mountId) {
                 const prevTree = mounted.tree,
                     newTree = new TopNode(node);
@@ -47,7 +46,7 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
         syncMode? patchFn() : rafBatch(patchFn);
     }
     else {
-        mountedNodes.set(domNodeId, mounted = { tree : null, id : mountId = ++counter });
+        mounted = mountedNodes[domNodeId] = { tree : null, id : mountId = ++counter };
 
         if(domNode.childNodes.length > 0) {
             const topDomChildNodes = collectTopDomChildNodes(domNode);
@@ -75,7 +74,7 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
         }
 
         const renderFn = () => {
-            const mounted = mountedNodes.get(domNodeId);
+            const mounted = mountedNodes[domNodeId];
 
             if(mounted && mounted.id === mountId) {
                 const tree = mounted.tree = new TopNode(node);
@@ -99,14 +98,14 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
 
 function unmountFromDomNode(domNode, cb, syncMode) {
     const domNodeId = getDomNodeId(domNode);
-    let mounted = mountedNodes.get(domNodeId);
+    let mounted = mountedNodes[domNodeId];
 
     if(mounted) {
         const mountId = ++mounted.id,
             unmountFn = () => {
-                mounted = mountedNodes.get(domNodeId);
+                mounted = mountedNodes[domNodeId];
                 if(mounted && mounted.id === mountId) {
-                    mountedNodes.delete(domNodeId);
+                    delete mountedNodes[domNodeId];
                     const tree = mounted.tree;
 
                     if(tree !== null) {
@@ -181,11 +180,13 @@ export function unmountSync(domNode) {
 export function getMountedRootNodes() {
     const res = [];
 
-    mountedNodes.forEach(({ tree }) => {
+    for(const domNodeId in mountedNodes) {
+        const { tree } = mountedNodes[domNodeId];
+
         if(tree) {
             res.push(tree);
         }
-    });
+    }
 
     return res;
 }

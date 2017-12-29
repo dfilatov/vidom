@@ -2,9 +2,8 @@ import createComponent from '../createComponent';
 import TagNode from '../nodes/TagNode';
 import { applyBatch } from '../client/rafBatch';
 import merge from '../utils/merge';
-import SimpleMap from '../utils/SimpleMap';
 
-const namedRadioInputs = new SimpleMap();
+const namedRadioInputs = Object.create(null);
 
 export default createComponent({
     onInit() {
@@ -62,7 +61,7 @@ export default createComponent({
 
             if(typeof checked !== 'undefined' && control.checked !== checked) {
                 if(name) {
-                    const radioInputs = namedRadioInputs.get(name),
+                    const radioInputs = namedRadioInputs[name],
                         len = radioInputs.length;
                     let i = 0,
                         radioInput,
@@ -94,25 +93,23 @@ export default createComponent({
 });
 
 function addToNamedRadioInputs(name, input) {
-    const radioInputs = namedRadioInputs.get(name);
-
-    if(radioInputs) {
-        radioInputs.push(input);
+    if(name in namedRadioInputs) {
+        namedRadioInputs[name].push(input);
     }
     else {
-        namedRadioInputs.set(name, [input]);
+        namedRadioInputs[name] = [input];
     }
 }
 
 function removeFromNamedRadioInputs(name, input) {
-    const radioInputs = namedRadioInputs.get(name),
+    const radioInputs = namedRadioInputs[name],
         len = radioInputs.length;
     let i = 0;
 
     while(i < len) {
         if(radioInputs[i] === input) {
             if(len === 1) {
-                namedRadioInputs.delete(name);
+                delete namedRadioInputs[name];
             }
             else {
                 radioInputs.splice(i, 1);
