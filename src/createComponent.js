@@ -1,12 +1,11 @@
 import noOp from './utils/noOp';
 import rafBatch from './client/rafBatch';
-import createNode from './createNode';
 import merge from './utils/merge';
 import console from './utils/console';
 import emptyObj from './utils/emptyObj';
 import restrictObjProp from './utils/restrictObjProp';
 import { IS_DEBUG } from './utils/debug';
-import isNode from './nodes/utils/isNode';
+import normalizeRootNode from './nodes/utils/normalizeRootNode';
 import globalHook from './globalHook';
 
 function mountComponent() {
@@ -177,17 +176,10 @@ function renderComponent() {
         this.__disallowSetState = true;
     }
 
-    const onRenderRes = this.onRender(),
-        rootNode = onRenderRes === null? createNode('!') : onRenderRes;
+    const rootNode = normalizeRootNode(this.onRender());
 
     if(IS_DEBUG) {
         this.__disallowSetState = false;
-
-        if(!isNode(rootNode)) {
-            const name = getComponentName(this);
-
-            throw TypeError(`vidom: ${name}#onRender must return a single node or null on the top level.`);
-        }
     }
 
     const childCtx = this.onChildContextRequest(),

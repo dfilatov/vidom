@@ -1,5 +1,4 @@
 import patchOps from '../client/patchOps';
-import createNode from '../createNode';
 import checkReuse from './utils/checkReuse';
 import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
@@ -7,8 +6,8 @@ import merge from '../utils/merge';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
+import normalizeRootNode from './utils/normalizeRootNode';
 import { setKey } from './utils/setters';
-import isNode from './utils/isNode';
 
 const ATTRS_SET = 4,
     CHILDREN_SET = 8;
@@ -177,20 +176,10 @@ FunctionComponentNode.prototype = {
             Object.freeze(resAttrs);
         }
 
-        const res = component(resAttrs, this.children, this._ctx),
-            rootNode = res === null? createNode('!') : res;
+        this._rootNode = normalizeRootNode(component(resAttrs, this.children, this._ctx));
+        this._rootNode.setCtx(this._ctx);
 
-        if(IS_DEBUG) {
-            if(!isNode(rootNode)) {
-                const name = component.name || 'Function';
-
-                throw Error(`vidom: ${name} component must return a single node or null on the top level.`);
-            }
-        }
-
-        rootNode.setCtx(this._ctx);
-
-        return this._rootNode = rootNode;
+        return this._rootNode;
     }
 };
 

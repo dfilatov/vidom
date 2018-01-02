@@ -244,12 +244,18 @@ describe('renderToDom', () => {
                 }),
                 domNode = (topNode = node(Component)).setAttrs({ id : 'id1' }).setChildren(node('i')).renderToDom(null);
 
-            expect(domNode.tagName).to.equal('DIV');
-            expect(domNode.getAttribute('id')).to.equal('id1');
-            expect(domNode.children.length).to.equal(3);
-            expect(domNode.children[0].tagName).to.equal('A');
-            expect(domNode.children[1].tagName).to.equal('SPAN');
-            expect(domNode.children[2].tagName).to.equal('I');
+            expect(domNode.tagName)
+                .to.equal('DIV');
+            expect(domNode.getAttribute('id'))
+                .to.equal('id1');
+            expect(domNode.children.length)
+                .to.equal(3);
+            expect(domNode.children[0].tagName)
+                .to.equal('A');
+            expect(domNode.children[1].tagName)
+                .to.equal('SPAN');
+            expect(domNode.children[2].tagName)
+                .to.equal('I');
         });
 
         it('should pass parent namespace', () => {
@@ -263,10 +269,11 @@ describe('renderToDom', () => {
                     .setChildren(node('g').setChildren(node(Component)))
                     .renderToDom(null);
 
-            expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+            expect(domNode.firstChild.firstChild.namespaceURI)
+                .to.equal('http://www.w3.org/2000/svg');
         });
 
-        it('should render comment if onRender() returns nothing', () => {
+        it('should be rendered as an empty comment if onRender() returns null', () => {
             const Component = createComponent({
                     onRender() {
                         return null;
@@ -274,7 +281,62 @@ describe('renderToDom', () => {
                 }),
                 domNode = (topNode = node(Component)).renderToDom(null);
 
-            expect(domNode.nodeType).to.equal(Node.COMMENT_NODE);
+            expect(domNode.nodeType)
+                .to.equal(Node.COMMENT_NODE);
+            expect(domNode.data)
+                .to.equal('');
+        });
+
+        it('should be rendered as an empty comment if onRender() returns undefined', () => {
+            const Component = createComponent({
+                    onRender() {
+                        return undefined;
+                    }
+                }),
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.COMMENT_NODE);
+            expect(domNode.data)
+                .to.equal('');
+        });
+
+        it('should be rendered as an empty comment if onRender() returns boolean', () => {
+            const Component = createComponent({
+                    onRender() {
+                        return true;
+                    }
+                }),
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.COMMENT_NODE);
+            expect(domNode.data)
+                .to.equal('');
+        });
+
+        it('should be rendered as a fragment if onRender() returns string', () => {
+            const Component = createComponent({
+                    onRender() {
+                        return 'text';
+                    }
+                }),
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.DOCUMENT_FRAGMENT_NODE);
+        });
+
+        it('should be rendered as a fragment if onRender() returns array', () => {
+            const Component = createComponent({
+                    onRender() {
+                        return [node('div'), node('span')];
+                    }
+                }),
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.DOCUMENT_FRAGMENT_NODE);
         });
     });
 
@@ -288,12 +350,18 @@ describe('renderToDom', () => {
                 },
                 domNode = (topNode = node(Component)).setAttrs({ id : 'id1' }).setChildren(node('i')).renderToDom(null);
 
-            expect(domNode.tagName).to.equal('DIV');
-            expect(domNode.getAttribute('id')).to.equal('id1');
-            expect(domNode.children.length).to.equal(3);
-            expect(domNode.children[0].tagName).to.equal('A');
-            expect(domNode.children[1].tagName).to.equal('SPAN');
-            expect(domNode.children[2].tagName).to.equal('I');
+            expect(domNode.tagName)
+                .to.equal('DIV');
+            expect(domNode.getAttribute('id'))
+                .to.equal('id1');
+            expect(domNode.children.length)
+                .to.equal(3);
+            expect(domNode.children[0].tagName)
+                .to.equal('A');
+            expect(domNode.children[1].tagName)
+                .to.equal('SPAN');
+            expect(domNode.children[2].tagName)
+                .to.equal('I');
         });
 
         it('should pass parent namespace', () => {
@@ -303,14 +371,48 @@ describe('renderToDom', () => {
                     .setChildren(node('g').setChildren(node(Component)))
                     .renderToDom(null);
 
-            expect(domNode.firstChild.firstChild.namespaceURI).to.equal('http://www.w3.org/2000/svg');
+            expect(domNode.firstChild.firstChild.namespaceURI)
+                .to.equal('http://www.w3.org/2000/svg');
         });
 
-        it('should render comment if onRender() returns null', () => {
+        it('should be rendered as any empty comment if it returns null', () => {
             const Component = () => null,
                 domNode = (topNode = node(Component)).renderToDom(null);
 
-            expect(domNode.nodeType).to.equal(Node.COMMENT_NODE);
+            expect(domNode.nodeType)
+                .to.equal(Node.COMMENT_NODE);
+        });
+
+        it('should be rendered as an empty comment if it returns undefined', () => {
+            const Component = () => undefined,
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.COMMENT_NODE);
+        });
+
+        it('should be rendered as an empty comment if it returns boolean', () => {
+            const Component = () => true,
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.COMMENT_NODE);
+        });
+
+        it('should be rendered as a fragment if it returns string', () => {
+            const Component = () => 'text',
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.DOCUMENT_FRAGMENT_NODE);
+        });
+
+        it('should be rendered as a fragment if it returns array', () => {
+            const Component = () => [node('div'), node('span')],
+                domNode = (topNode = node(Component)).renderToDom(null);
+
+            expect(domNode.nodeType)
+                .to.equal(Node.DOCUMENT_FRAGMENT_NODE);
         });
     });
 });
