@@ -3,7 +3,7 @@ import emptyObj from '../utils/emptyObj';
 import checkReuse from './utils/checkReuse';
 import merge from '../utils/merge';
 import restrictObjProp from '../utils/restrictObjProp';
-import { NODE_TYPE_COMPONENT } from './utils/nodeTypes';
+import { ELEMENT_TYPE_COMPONENT } from './utils/elementTypes';
 import { setKey, setRef } from './utils/setters';
 import { IS_DEBUG } from '../utils/debug';
 import Input from '../components/Input';
@@ -14,7 +14,7 @@ import File from '../components/File';
 const ATTRS_SET = 4,
     CHILDREN_SET = 8;
 
-export default function ComponentNode(component) {
+export default function ComponentElement(component) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -24,7 +24,7 @@ export default function ComponentNode(component) {
         this.__isFrozen = false;
     }
 
-    this.type = NODE_TYPE_COMPONENT;
+    this.type = ELEMENT_TYPE_COMPONENT;
     this.component = component;
     this.key = null;
     this.attrs = emptyObj;
@@ -40,7 +40,7 @@ export default function ComponentNode(component) {
     this._ref = null;
 }
 
-ComponentNode.prototype = {
+ComponentElement.prototype = {
     getDomNode() {
         return this._instance === null?
             null :
@@ -153,7 +153,7 @@ ComponentNode.prototype = {
     },
 
     clone() {
-        const res = new ComponentNode(this.component);
+        const res = new ComponentElement(this.component);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
@@ -173,35 +173,35 @@ ComponentNode.prototype = {
         return res;
     },
 
-    patch(node) {
+    patch(element) {
         const instance = this._getInstance();
 
-        if(this === node) {
-            instance.patch(node.attrs, node.children, node._ctx, true);
+        if(this === element) {
+            instance.patch(element.attrs, element.children, element._ctx, true);
         }
-        else if(this.type === node.type && this.component === node.component) {
-            instance.patch(node.attrs, node.children, node._ctx, true);
-            node._instance = instance;
-            this._patchRef(node);
+        else if(this.type === element.type && this.component === element.component) {
+            instance.patch(element.attrs, element.children, element._ctx, true);
+            element._instance = instance;
+            this._patchRef(element);
         }
         else {
-            patchOps.replace(this, node);
+            patchOps.replace(this, element);
             this._instance = null;
         }
     },
 
-    _patchRef(node) {
+    _patchRef(element) {
         if(this._ref !== null) {
-            if(this._ref !== node._ref) {
+            if(this._ref !== element._ref) {
                 this._ref(null);
 
-                if(node._ref !== null) {
-                    node._ref(node._instance.onRefRequest());
+                if(element._ref !== null) {
+                    element._ref(element._instance.onRefRequest());
                 }
             }
         }
-        else if(node._ref !== null) {
-            node._ref(node._instance.onRefRequest());
+        else if(element._ref !== null) {
+            element._ref(element._instance.onRefRequest());
         }
     },
 

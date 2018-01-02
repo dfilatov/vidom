@@ -1,15 +1,15 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import createComponent from '../../../src/createComponent';
 import patchOps from '../../../src/client/patchOps';
 
-const C1 = () => createNode('div'),
+const C1 = () => createElement('div'),
     C2 = createComponent({
         onRender() {
-            return createNode('div');
+            return createElement('div');
         }
     }),
-    oldNode = createNode(C1),
-    newNode = createNode(C2),
+    oldNode = createElement(C1),
+    newNode = createElement(C2),
     replaceOp = patchOps.replace;
 
 export default {

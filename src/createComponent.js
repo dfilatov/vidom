@@ -5,18 +5,18 @@ import console from './utils/console';
 import emptyObj from './utils/emptyObj';
 import restrictObjProp from './utils/restrictObjProp';
 import { IS_DEBUG } from './utils/debug';
-import normalizeRootNode from './nodes/utils/normalizeRootNode';
+import nodeToElement from './nodes/utils/nodeToElement';
 import globalHook from './globalHook';
 
 function mountComponent() {
     this.__isMounted = true;
-    this.getRootNode().mount();
+    this.getRootElement().mount();
     this.onMount();
 }
 
 function unmountComponent() {
     this.__isMounted = false;
-    this.getRootNode().unmount();
+    this.getRootElement().unmount();
     this.onUnmount();
 }
 
@@ -95,10 +95,10 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
     }
 
     if(shouldRerender) {
-        const prevRootNode = this.getRootNode();
+        const prevRootElem = this.getRootElement();
 
-        this.__rootNode = this.render();
-        prevRootNode.patch(this.__rootNode);
+        this.__rootElement = this.render();
+        prevRootElem.patch(this.__rootElement);
         this.onUpdate(
             this.__prevAttrs,
             this.__prevChildren,
@@ -121,19 +121,19 @@ function onComponentRender() {
 }
 
 function renderComponentToDom(parentNs) {
-    return this.getRootNode().renderToDom(parentNs);
+    return this.getRootElement().renderToDom(parentNs);
 }
 
 function renderComponentToString() {
-    return this.getRootNode().renderToString();
+    return this.getRootElement().renderToString();
 }
 
 function adoptComponentDom(domNode, domIdx) {
-    return this.getRootNode().adoptDom(domNode, domIdx);
+    return this.getRootElement().adoptDom(domNode, domIdx);
 }
 
 function getComponentDomNode() {
-    return this.getRootNode().getDomNode();
+    return this.getRootElement().getDomNode();
 }
 
 function requestChildContext() {
@@ -151,7 +151,7 @@ function setComponentState(state) {
 
     let nextState;
 
-    if(this.__rootNode === null) { // wasn't inited
+    if(this.__rootElement === null) { // wasn't inited
         nextState = state === emptyObj? state : merge(this.state, state);
     }
     else {
@@ -176,26 +176,26 @@ function renderComponent() {
         this.__disallowSetState = true;
     }
 
-    const rootNode = normalizeRootNode(this.onRender());
+    const rootElem = nodeToElement(this.onRender());
 
     if(IS_DEBUG) {
         this.__disallowSetState = false;
     }
 
     const childCtx = this.onChildContextRequest(),
-        rootNodeCtx = childCtx === emptyObj?
+        rootElemCtx = childCtx === emptyObj?
             this.context :
             this.context === emptyObj?
                 childCtx :
                 merge(this.context, childCtx);
 
     if(IS_DEBUG) {
-        Object.freeze(rootNodeCtx);
+        Object.freeze(rootElemCtx);
     }
 
-    rootNode.setCtx(rootNodeCtx);
+    rootElem.setCtx(rootElemCtx);
 
-    return rootNode;
+    return rootElem;
 }
 
 function updateComponent(cb) {
@@ -213,7 +213,7 @@ function updateComponent(cb) {
         rafBatch(() => {
             if(this.isMounted()) {
                 this.__isUpdating = false;
-                const prevRootNode = this.__rootNode;
+                const prevRootElem = this.__rootElement;
 
                 this.patch(this.attrs, this.children, this.context, false);
 
@@ -222,17 +222,17 @@ function updateComponent(cb) {
                 }
 
                 if(IS_DEBUG) {
-                    globalHook.emit('replace', prevRootNode, this.__rootNode);
+                    globalHook.emit('replace', prevRootElem, this.__rootElement);
                 }
             }
         });
     }
 }
 
-function getComponentRootNode() {
-    return this.__rootNode === null?
-        this.__rootNode = this.render() :
-        this.__rootNode;
+function getComponentRootElem() {
+    return this.__rootElement === null?
+        this.__rootElement = this.render() :
+        this.__rootElement;
 }
 
 function isComponentMounted() {
@@ -289,7 +289,7 @@ function createComponent(props, staticProps) {
             this.__isMounted = false;
             this.__isUpdating = false;
 
-            this.__rootNode = null;
+            this.__rootElement = null;
 
             this.onInit();
 
@@ -317,7 +317,7 @@ function createComponent(props, staticProps) {
             renderToString : renderComponentToString,
             adoptDom : adoptComponentDom,
             getDomNode : getComponentDomNode,
-            getRootNode : getComponentRootNode,
+            getRootElement : getComponentRootElem,
             render : renderComponent,
             update : updateComponent,
             patch : patchComponent,

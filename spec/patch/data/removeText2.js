@@ -1,12 +1,12 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 
-const node = createNode('a');
+const node = createElement('a');
 
 export default {
     'name' : 'removeText2',
     'trees' : [
         node.setChildren(''),
-        createNode('a')
+        createElement('a')
     ],
     'patch' : []
 };

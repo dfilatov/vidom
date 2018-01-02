@@ -1,30 +1,30 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeA = createNode('a').setKey('a'),
-    nodeB = createNode('a').setKey('b'),
-    nodeC = createNode('a').setKey('c'),
-    nodeD = createNode('a').setKey('d'),
-    nodeE = createNode('a').setKey('e'),
-    nodeF = createNode('a').setKey('f'),
-    nodeG = createNode('a').setKey('g');
+const nodeA = createElement('a').setKey('a'),
+    nodeB = createElement('a').setKey('b'),
+    nodeC = createElement('a').setKey('c'),
+    nodeD = createElement('a').setKey('d'),
+    nodeE = createElement('a').setKey('e'),
+    nodeF = createElement('a').setKey('f'),
+    nodeG = createElement('a').setKey('g');
 
 export default {
     'name' : 'complex-shuffle-with-inserts-removes',
     'trees' : [
-        createNode('div').setChildren([
+        createElement('div').setChildren([
             nodeA,
             nodeB,
             nodeC,
             nodeD
         ]),
-        createNode('div').setChildren([
+        createElement('div').setChildren([
             nodeE,
-            createNode('a').setKey('b'),
+            createElement('a').setKey('b'),
             nodeF,
             nodeG,
-            createNode('a').setKey('c'),
-            createNode('a').setKey('a')
+            createElement('a').setKey('c'),
+            createElement('a').setKey('a')
         ])
     ],
     'patch' : [

@@ -1,7 +1,5 @@
 import sinon from 'sinon';
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mountSync, unmountSync } from '../../../src/client/mounter';
+import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onInit', () => {
     let domNode;
@@ -21,7 +19,7 @@ describe('onInit', () => {
                 onInit : spy
             });
 
-        mountSync(domNode, createNode(C1));
+        mountSync(domNode, elem(C1));
 
         expect(spy.called).to.be.ok();
     });

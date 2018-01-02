@@ -1,5 +1,4 @@
-import createNode from '../../src/createNode';
-import { mount, unmount } from '../../src/client/mounter';
+import { elem, mount, unmount } from '../../src/vidom';
 
 describe('unmount', () => {
     var domNode;
@@ -13,7 +12,7 @@ describe('unmount', () => {
 
     describe('callbacks', () => {
         it('should properly call callback on unmount', function(done) {
-            mount(domNode, createNode('div'), () => {
+            mount(domNode, elem('div'), () => {
                 unmount(domNode, () => {
                     expect(domNode.childNodes.length).to.equal(0);
                     done();

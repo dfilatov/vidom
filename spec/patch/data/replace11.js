@@ -1,8 +1,8 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const oldNode = createNode('div'),
-    newNode = createNode('fragment'),
+const oldNode = createElement('div'),
+    newNode = createElement('fragment'),
     replaceOp = patchOps.replace;
 
 export default {

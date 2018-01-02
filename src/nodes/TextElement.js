@@ -4,12 +4,12 @@ import checkReuse from './utils/checkReuse';
 import restrictObjProp from '../utils/restrictObjProp';
 import noOp from '../utils/noOp';
 import { IS_DEBUG } from '../utils/debug';
-import { NODE_TYPE_TEXT } from './utils/nodeTypes';
+import { ELEMENT_TYPE_TEXT } from './utils/elementTypes';
 import { setKey } from './utils/setters';
 
 const CHILDREN_SET = 8;
 
-export default function TextNode() {
+export default function TextElement() {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -18,7 +18,7 @@ export default function TextNode() {
         this.__isFrozen = false;
     }
 
-    this.type = NODE_TYPE_TEXT;
+    this.type = ELEMENT_TYPE_TEXT;
     this.key = null;
     this.children = null;
 
@@ -29,7 +29,7 @@ export default function TextNode() {
     this._domNode = null;
 }
 
-TextNode.prototype = {
+TextElement.prototype = {
     getDomNode() {
         return this._domNode;
     },
@@ -108,7 +108,7 @@ TextNode.prototype = {
     unmount : noOp,
 
     clone() {
-        const res = new TextNode();
+        const res = new TextElement();
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
@@ -124,21 +124,21 @@ TextNode.prototype = {
         return res;
     },
 
-    patch(node) {
-        if(this !== node) {
-            if(this.type === node.type) {
-                node._domNode = this._domNode;
-                this._patchChildren(node);
+    patch(element) {
+        if(this !== element) {
+            if(this.type === element.type) {
+                element._domNode = this._domNode;
+                this._patchChildren(element);
             }
             else {
-                patchOps.replace(this, node);
+                patchOps.replace(this, element);
             }
         }
     },
 
-    _patchChildren(node) {
+    _patchChildren(element) {
         const childrenA = this.children,
-            childrenB = node.children;
+            childrenB = element.children;
 
         if(childrenA !== childrenB) {
             if(childrenB) {
@@ -152,8 +152,8 @@ TextNode.prototype = {
 };
 
 if(IS_DEBUG) {
-    TextNode.prototype.setRef = function() {
-        throw Error('vidom: Text nodes don\'t support refs.');
+    TextElement.prototype.setRef = function() {
+        throw Error('vidom: Text elements don\'t support refs.');
     };
 }
 

@@ -1,5 +1,5 @@
 import createComponent from '../createComponent';
-import TagNode from '../nodes/TagNode';
+import TagElement from '../nodes/TagElement';
 import { applyBatch } from '../client/rafBatch';
 import merge from '../utils/merge';
 
@@ -13,13 +13,15 @@ export default createComponent({
     },
 
     onRender() {
-        return new TagNode('input').setAttrs(merge(this.attrs, this._addAttrs));
+        return new TagElement('input').setAttrs(merge(this.attrs, this._addAttrs));
     },
 
     onChange(e) {
         const { onChange } = this.attrs;
 
-        onChange && onChange(e);
+        if(onChange) {
+            onChange(e);
+        }
 
         applyBatch();
 

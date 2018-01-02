@@ -1,6 +1,6 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 
-const node = createNode('select');
+const node = createElement('select');
 
 export default {
     'name' : 'updateAttr6',
@@ -10,7 +10,7 @@ export default {
                 multiple : true,
                 value : [1, 2, 3]
             }),
-        createNode('select')
+        createElement('select')
             .setAttrs({
                 multiple : true,
                 value : [1, 2, 3]

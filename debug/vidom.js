@@ -1,4 +1,4 @@
-import { Component, mount, unmount, node, renderToString } from '../src/vidom';
+import { Component, mount, unmount, elem, renderToString } from '../src/vidom';
 import patchOps from '../src/client/patchOps';
 
 const origPatchOps = {};
@@ -22,13 +22,13 @@ class A extends Component {
     onRender() {
         switch(this.state.b) {
             case 1:
-                return node('a').setChildren('a');
+                return elem('a').setChildren('a');
 
             case 2:
-                return node('b').setChildren('b');
+                return elem('b').setChildren('b');
 
             case 3:
-                return node('i').setChildren('i');
+                return elem('i').setChildren('i');
         }
     }
 
@@ -44,12 +44,16 @@ class A extends Component {
 }
 
 const root = document.getElementById('root'),
-    tree = node(A).setAttrs({ a : 1 });
+    tree = elem(A).setAttrs({ a : 1 });
 
 // console.log(renderToString(tree));
 // root.innerHTML = renderToString(tree);
 
-mount(root, tree);
+mount(root, ['a', 'b']);
+
+setTimeout(() => {
+    mount(root, ['b', 'a']);
+}, 500)
 
 // setTimeout(function() {
 //     mount(root, node(A).attrs({ a : 2 }));

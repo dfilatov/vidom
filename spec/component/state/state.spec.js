@@ -1,8 +1,5 @@
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mountSync, unmountSync } from '../../../src/client/mounter';
+import { elem, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
-import { IS_DEBUG } from '../../../src/utils/debug';
 
 describe('state', () => {
     let domNode;
@@ -24,7 +21,7 @@ describe('state', () => {
             }
         });
 
-        mountSync(domNode, createNode(C));
+        mountSync(domNode, elem(C));
     });
 
     it('should be possible to fill it from init', done => {
@@ -40,7 +37,7 @@ describe('state', () => {
             }
         });
 
-        mountSync(domNode, createNode(C));
+        mountSync(domNode, elem(C));
     });
 
     it('should be properly updated with setState', done => {
@@ -60,7 +57,7 @@ describe('state', () => {
             }
         });
 
-        mountSync(domNode, createNode(C));
+        mountSync(domNode, elem(C));
     });
 
     it('shouldn\'t affect prev state till updating', done => {
@@ -81,7 +78,7 @@ describe('state', () => {
             }
         });
 
-        mountSync(domNode, createNode(C));
+        mountSync(domNode, elem(C));
     });
 
     it('should be possible to get both state and previous state inside shouldRerender', done => {
@@ -102,7 +99,7 @@ describe('state', () => {
             }
         });
 
-        mountSync(domNode, createNode(C));
+        mountSync(domNode, elem(C));
     });
 
     it('should be possible to get both state and previous state inside onUpdate', done => {
@@ -122,7 +119,7 @@ describe('state', () => {
             }
         });
 
-        mountSync(domNode, createNode(C));
+        mountSync(domNode, elem(C));
     });
 
     if(IS_DEBUG) {
@@ -138,7 +135,7 @@ describe('state', () => {
                 }
             });
 
-            mountSync(domNode, createNode(C));
+            mountSync(domNode, elem(C));
         });
 
         it('should throw exception if attempt to modify state directly', done => {
@@ -153,7 +150,7 @@ describe('state', () => {
                 }
             });
 
-            mountSync(domNode, createNode(C));
+            mountSync(domNode, elem(C));
         });
     }
 });

@@ -1,5 +1,3 @@
-import isNode from './isNode';
-
 export default function checkChildren(children) {
     const keys = Object.create(null),
         len = children.length;
@@ -9,10 +7,6 @@ export default function checkChildren(children) {
 
     while(i < len) {
         child = children[i++];
-
-        if(!isNode(child)) {
-            throw TypeError(`vidom: Unexpected type of child. Only a node is expected to be here.`);
-        }
 
         if(child.key != null) {
             if(child.key in keys) {

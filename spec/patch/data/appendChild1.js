@@ -1,16 +1,16 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const node1 = createNode('div'),
-    node2 = createNode('span'),
-    parentNode = createNode('div');
+const node1 = createElement('div'),
+    node2 = createElement('span'),
+    parentNode = createElement('div');
 
 export default {
     'name' : 'appendChild1',
     'trees' : [
-        createNode('div').setChildren(createNode('div')),
+        createElement('div').setChildren(createElement('div')),
         parentNode.setChildren([
-            createNode('div'),
+            createElement('div'),
             node1,
             node2
         ])

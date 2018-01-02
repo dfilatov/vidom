@@ -1,13 +1,13 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('plaintext');
+const node = createElement('plaintext');
 
 export default {
     'name' : 'removeText3',
     'trees' : [
         node.setChildren('text'),
-        createNode('plaintext')
+        createElement('plaintext')
     ],
     'patch' : [
         { op : patchOps.removeText, args : [node] }

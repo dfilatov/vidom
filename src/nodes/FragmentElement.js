@@ -7,12 +7,13 @@ import emptyObj from '../utils/emptyObj';
 import console from '../utils/console';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
-import { NODE_TYPE_FRAGMENT } from './utils/nodeTypes';
+import { ELEMENT_TYPE_FRAGMENT } from './utils/elementTypes';
 import { setKey } from './utils/setters';
+import normalizeNode from './utils/normalizeNode';
 
 const CHILDREN_SET = 8;
 
-export default function FragmentNode() {
+export default function FragmentElement() {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -21,7 +22,7 @@ export default function FragmentNode() {
         this.__isFrozen = false;
     }
 
-    this.type = NODE_TYPE_FRAGMENT;
+    this.type = ELEMENT_TYPE_FRAGMENT;
     this.key = null;
     this.children = null;
 
@@ -34,7 +35,7 @@ export default function FragmentNode() {
     this._ctx = emptyObj;
 }
 
-FragmentNode.prototype = {
+FragmentElement.prototype = {
     getDomNode() {
         return this._domNode;
     },
@@ -176,7 +177,7 @@ FragmentNode.prototype = {
     },
 
     clone() {
-        const res = new FragmentNode();
+        const res = new FragmentElement();
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
@@ -194,22 +195,22 @@ FragmentNode.prototype = {
         return res;
     },
 
-    patch(node) {
-        if(this === node) {
-            this._patchChildren(node);
+    patch(element) {
+        if(this === element) {
+            this._patchChildren(element);
         }
-        else if(this.type === node.type) {
-            node._domNode = this._domNode;
-            this._patchChildren(node);
+        else if(this.type === element.type) {
+            element._domNode = this._domNode;
+            this._patchChildren(element);
         }
         else {
-            patchOps.replace(this, node);
+            patchOps.replace(this, element);
         }
     },
 
-    _patchChildren(node) {
+    _patchChildren(element) {
         const childrenA = this.children,
-            childrenB = node.children;
+            childrenB = element.children;
 
         if(childrenA === null && childrenB === null) {
             return;
@@ -228,32 +229,41 @@ FragmentNode.prototype = {
             let iB = 0;
 
             while(iB < childrenBLen) {
-                patchOps.appendChild(node, childrenB[iB++]);
+                patchOps.appendChild(element, childrenB[iB++]);
             }
 
             return;
         }
 
-        patchChildren(this, node);
+        patchChildren(this, element);
     }
 };
 
 if(IS_DEBUG) {
-    FragmentNode.prototype.setRef = function() {
-        throw Error('vidom: Fragment nodes don\'t support refs.');
+    FragmentElement.prototype.setRef = function() {
+        throw Error('vidom: Fragment elements don\'t support refs.');
     };
 }
 
 function processChildren(children) {
-    if(children == null) {
-        return null;
-    }
-
-    const res = Array.isArray(children)? children : [children];
+    const normalizedChildren = normalizeNode(children);
 
     if(IS_DEBUG) {
-        checkChildren(res);
+        if(typeof normalizedChildren === 'string') {
+            throw TypeError('vidom: Unexpected type of child. Only an element is expected to be here.');
+        }
+    }
+
+    const res = normalizedChildren !== null && !Array.isArray(normalizedChildren)?
+        [normalizedChildren] :
+        normalizedChildren;
+
+    if(IS_DEBUG) {
+        if(Array.isArray(res)) {
+            checkChildren(res);
+        }
     }
 
     return res;
 }
+

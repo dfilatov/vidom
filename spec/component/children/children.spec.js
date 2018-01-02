@@ -1,7 +1,4 @@
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mountSync, unmountSync } from '../../../src/client/mounter';
-import { IS_DEBUG } from '../../../src/utils/debug';
+import { elem, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 
 describe('children', () => {
     let domNode;
@@ -28,7 +25,7 @@ describe('children', () => {
                 }
             });
 
-            mountSync(domNode, createNode(C));
+            mountSync(domNode, elem(C));
         });
     }
 });

@@ -1,8 +1,5 @@
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mountSync, unmountSync } from '../../../src/client/mounter';
+import { elem, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
-import { IS_DEBUG } from '../../../src/utils/debug';
 
 describe('attrs', () => {
     let domNode;
@@ -24,7 +21,7 @@ describe('attrs', () => {
             }
         });
 
-        mountSync(domNode, createNode(C1));
+        mountSync(domNode, elem(C1));
     });
 
     it('should provide passed attributes if not defined', done => {
@@ -36,7 +33,7 @@ describe('attrs', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).setAttrs(attrs));
+        mountSync(domNode, elem(C1).setAttrs(attrs));
     });
 
     it('should merge passed with default attributes', done => {
@@ -49,7 +46,7 @@ describe('attrs', () => {
             defaultAttrs : { a : 1, b : 2, c : 3 }
         });
 
-        mountSync(domNode, createNode(C1).setAttrs({ a : 3, c : undefined }));
+        mountSync(domNode, elem(C1).setAttrs({ a : 3, c : undefined }));
     });
 
     it('should merge passed with default attributes after update', done => {
@@ -62,8 +59,8 @@ describe('attrs', () => {
             defaultAttrs : { a : 1, b : 2, c : 3 }
         });
 
-        mountSync(domNode, createNode(C1).setAttrs({ a : 3, c : undefined }));
-        mountSync(domNode, createNode(C1).setAttrs({ a : 4, c : undefined }));
+        mountSync(domNode, elem(C1).setAttrs({ a : 3, c : undefined }));
+        mountSync(domNode, elem(C1).setAttrs({ a : 4, c : undefined }));
     });
 
     if(IS_DEBUG) {
@@ -79,7 +76,7 @@ describe('attrs', () => {
                 }
             });
 
-            mountSync(domNode, createNode(C));
+            mountSync(domNode, elem(C));
         });
 
         it('should throw exception if attempt to modify attrs directly', done => {
@@ -94,7 +91,7 @@ describe('attrs', () => {
                 }
             });
 
-            mountSync(domNode, createNode(C));
+            mountSync(domNode, elem(C));
         });
     }
 });

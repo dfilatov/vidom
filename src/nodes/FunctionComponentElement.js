@@ -5,14 +5,14 @@ import emptyObj from '../utils/emptyObj';
 import merge from '../utils/merge';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
-import { NODE_TYPE_FUNCTION_COMPONENT } from './utils/nodeTypes';
-import normalizeRootNode from './utils/normalizeRootNode';
+import { ELEMENT_TYPE_FUNCTION_COMPONENT } from './utils/elementTypes';
+import nodeToElement from './utils/nodeToElement';
 import { setKey } from './utils/setters';
 
 const ATTRS_SET = 4,
     CHILDREN_SET = 8;
 
-export default function FunctionComponentNode(component) {
+export default function FunctionComponentElement(component) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -22,7 +22,7 @@ export default function FunctionComponentNode(component) {
         this.__isFrozen = false;
     }
 
-    this.type = NODE_TYPE_FUNCTION_COMPONENT;
+    this.type = ELEMENT_TYPE_FUNCTION_COMPONENT;
     this.component = component;
     this.key = null;
     this.attrs = emptyObj;
@@ -33,15 +33,15 @@ export default function FunctionComponentNode(component) {
         this._sets = 0;
     }
 
-    this._rootNode = null;
+    this._rootElement = null;
     this._ctx = emptyObj;
 }
 
-FunctionComponentNode.prototype = {
+FunctionComponentElement.prototype = {
     getDomNode() {
-        return this._rootNode === null?
+        return this._rootElement === null?
             null:
-            this._rootNode.getDomNode();
+            this._rootElement.getDomNode();
     },
 
     setKey,
@@ -97,11 +97,11 @@ FunctionComponentNode.prototype = {
             checkReuse(this, this.component.name || 'Anonymous');
         }
 
-        return this._getRootNode().renderToDom(parentNs);
+        return this._getRootElement().renderToDom(parentNs);
     },
 
     renderToString() {
-        return this._getRootNode().renderToString();
+        return this._getRootElement().renderToString();
     },
 
     adoptDom(domNode, domIdx) {
@@ -109,22 +109,22 @@ FunctionComponentNode.prototype = {
             checkReuse(this, this.component.name || 'Anonymous');
         }
 
-        return this._getRootNode().adoptDom(domNode, domIdx);
+        return this._getRootElement().adoptDom(domNode, domIdx);
     },
 
     mount() {
-        this._getRootNode().mount();
+        this._getRootElement().mount();
     },
 
     unmount() {
-        if(this._rootNode !== null) {
-            this._rootNode.unmount();
-            this._rootNode = null;
+        if(this._rootElement !== null) {
+            this._rootElement.unmount();
+            this._rootElement = null;
         }
     },
 
     clone() {
-        const res = new FunctionComponentNode(this.component);
+        const res = new FunctionComponentElement(this.component);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
@@ -143,26 +143,26 @@ FunctionComponentNode.prototype = {
         return res;
     },
 
-    patch(node) {
-        if(this === node) {
-            const prevRootNode = this._getRootNode();
+    patch(element) {
+        if(this === element) {
+            const prevRootElement = this._getRootElement();
 
-            this._rootNode = null;
-            prevRootNode.patch(this._getRootNode());
+            this._rootElement = null;
+            prevRootElement.patch(this._getRootElement());
         }
-        else if(this.type === node.type && this.component === node.component) {
-            this._getRootNode().patch(node._getRootNode());
-            this._rootNode = null;
+        else if(this.type === element.type && this.component === element.component) {
+            this._getRootElement().patch(element._getRootElement());
+            this._rootElement = null;
         }
         else {
-            patchOps.replace(this, node);
-            this._rootNode = null;
+            patchOps.replace(this, element);
+            this._rootElement = null;
         }
     },
 
-    _getRootNode() {
-        if(this._rootNode !== null) {
-            return this._rootNode;
+    _getRootElement() {
+        if(this._rootElement !== null) {
+            return this._rootElement;
         }
 
         const { attrs, component } = this,
@@ -176,15 +176,15 @@ FunctionComponentNode.prototype = {
             Object.freeze(resAttrs);
         }
 
-        this._rootNode = normalizeRootNode(component(resAttrs, this.children, this._ctx));
-        this._rootNode.setCtx(this._ctx);
+        this._rootElement = nodeToElement(component(resAttrs, this.children, this._ctx));
+        this._rootElement.setCtx(this._ctx);
 
-        return this._rootNode;
+        return this._rootElement;
     }
 };
 
 if(IS_DEBUG) {
-    FunctionComponentNode.prototype.setRef = function() {
-        throw Error('vidom: Function component nodes don\'t support refs.');
+    FunctionComponentElement.prototype.setRef = function() {
+        throw Error('vidom: Function component elements don\'t support refs.');
     };
 }

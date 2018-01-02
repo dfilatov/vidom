@@ -1,22 +1,22 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeA = createNode('a').setKey('a'),
-    nodeB = createNode('a').setKey('b'),
-    nodeC = createNode('a').setKey('c');
+const nodeA = createElement('a').setKey('a'),
+    nodeB = createElement('a').setKey('b'),
+    nodeC = createElement('a').setKey('c');
 
 export default {
     'name' : 'complex-insert-to-beginning-with-key',
     'trees' : [
-        createNode('div').setChildren([
-            createNode('a').setKey('c'),
-            createNode('a').setKey('d')
+        createElement('div').setChildren([
+            createElement('a').setKey('c'),
+            createElement('a').setKey('d')
         ]),
-        createNode('div').setChildren([
+        createElement('div').setChildren([
             nodeA,
             nodeB,
             nodeC,
-            createNode('a').setKey('d')
+            createElement('a').setKey('d')
         ])
     ],
     'patch' : [

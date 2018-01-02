@@ -5,35 +5,35 @@ import { getNs, getParentNs } from './utils/ns';
 import { addListener, removeListener } from './events/domEventManager';
 import ATTRS_TO_EVENTS from './events/attrsToEvents';
 
-function appendChild(parentNode, childNode) {
-    const parentDomNode = parentNode.getDomNode();
+function appendChild(parentElement, childElement) {
+    const parentDomNode = parentElement.getDomNode();
 
-    domOps.append(parentDomNode, childNode.renderToDom(getNs(parentDomNode)));
-    childNode.mount();
+    domOps.append(parentDomNode, childElement.renderToDom(getNs(parentDomNode)));
+    childElement.mount();
 }
 
-function insertChild(childNode, beforeChildNode) {
-    const beforeChildDomNode = beforeChildNode.getDomNode();
+function insertChild(childElement, beforeChildElement) {
+    const beforeChildDomNode = beforeChildElement.getDomNode();
 
     domOps.insertBefore(
-        childNode.renderToDom(getParentNs(beforeChildDomNode)),
+        childElement.renderToDom(getParentNs(beforeChildDomNode)),
         beforeChildDomNode);
-    childNode.mount();
+    childElement.mount();
 }
 
-function removeChild(childNode) {
-    const childDomNode = childNode.getDomNode();
+function removeChild(childElement) {
+    const childDomNode = childElement.getDomNode();
 
-    childNode.unmount();
+    childElement.unmount();
     domOps.remove(childDomNode);
 }
 
-function moveChild(childNode, toChildNode, after) {
+function moveChild(childElement, toChildelement, after) {
     const activeDomNode = document.activeElement;
 
     disableListeners();
 
-    domOps.move(childNode.getDomNode(), toChildNode.getDomNode(), after);
+    domOps.move(childElement.getDomNode(), toChildelement.getDomNode(), after);
 
     if(document.activeElement !== activeDomNode) {
         activeDomNode.focus();
@@ -42,9 +42,9 @@ function moveChild(childNode, toChildNode, after) {
     enableListeners();
 }
 
-function removeChildren(parentNode) {
-    const parentDomNode = parentNode.getDomNode(),
-        childNodes = parentNode.children,
+function removeChildren(parentElement) {
+    const parentDomNode = parentElement.getDomNode(),
+        childNodes = parentElement.children,
         len = childNodes.length;
 
     let j = 0;
@@ -56,16 +56,16 @@ function removeChildren(parentNode) {
     domOps.removeChildren(parentDomNode);
 }
 
-function replace(oldNode, newNode) {
-    const oldDomNode = oldNode.getDomNode();
+function replace(oldElement, newElement) {
+    const oldDomNode = oldElement.getDomNode();
 
-    oldNode.unmount();
-    domOps.replace(oldDomNode, newNode.renderToDom(getParentNs(oldDomNode)));
-    newNode.mount();
+    oldElement.unmount();
+    domOps.replace(oldDomNode, newElement.renderToDom(getParentNs(oldDomNode)));
+    newElement.mount();
 }
 
-function updateAttr(node, attrName, attrVal) {
-    const domNode = node.getDomNode();
+function updateAttr(element, attrName, attrVal) {
+    const domNode = element.getDomNode();
 
     if(attrName in ATTRS_TO_EVENTS) {
         addListener(domNode, ATTRS_TO_EVENTS[attrName], attrVal);
@@ -75,8 +75,8 @@ function updateAttr(node, attrName, attrVal) {
     }
 }
 
-function removeAttr(node, attrName) {
-    const domNode = node.getDomNode();
+function removeAttr(element, attrName) {
+    const domNode = element.getDomNode();
 
     if(attrName in ATTRS_TO_EVENTS) {
         removeListener(domNode, ATTRS_TO_EVENTS[attrName]);
@@ -86,12 +86,12 @@ function removeAttr(node, attrName) {
     }
 }
 
-function updateText(node, text, escape) {
-    domOps.updateText(node.getDomNode(), text, escape);
+function updateText(element, text, escape) {
+    domOps.updateText(element.getDomNode(), text, escape);
 }
 
-function removeText(node) {
-    domOps.removeText(node.getDomNode());
+function removeText(element) {
+    domOps.removeText(element.getDomNode());
 }
 
 export default {

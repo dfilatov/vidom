@@ -1,9 +1,9 @@
 import createComponent from '../createComponent';
-import TagNode from '../nodes/TagNode';
+import TagElement from '../nodes/TagElement';
 
 export default createComponent({
     onRender() {
-        return new TagNode('input').setAttrs(this.attrs);
+        return new TagElement('input').setAttrs(this.attrs);
     },
 
     onRefRequest() {

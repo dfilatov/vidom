@@ -1,21 +1,21 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeC = createNode('a'),
-    nodeD = createNode('a');
+const nodeC = createElement('a'),
+    nodeD = createElement('a');
 
 export default {
     'name' : 'complex-remove-from-ending-without-key',
     'trees' : [
-        createNode('div').setChildren([
-            createNode('a').setKey('a'),
-            createNode('a').setKey('b'),
+        createElement('div').setChildren([
+            createElement('a').setKey('a'),
+            createElement('a').setKey('b'),
             nodeC,
             nodeD
         ]),
-        createNode('div').setChildren([
-            createNode('a').setKey('a'),
-            createNode('a').setKey('b')
+        createElement('div').setChildren([
+            createElement('a').setKey('a'),
+            createElement('a').setKey('b')
         ])
     ],
     'patch' : [

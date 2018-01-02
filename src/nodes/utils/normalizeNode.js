@@ -1,59 +1,59 @@
-import createNode from '../createNode';
+import createElement from '../../createElement';
 
-export default function normalizeChildren(children) {
-    if(children == null) {
+export default function normalizeNode(obj) {
+    if(obj == null) {
         return null;
     }
 
-    const typeOfChildren = typeof children;
+    const typeOfObj = typeof obj;
 
-    if(typeOfChildren !== 'object') {
-        return typeOfChildren === 'string'?
-            children || null :
-            typeOfChildren === 'boolean'?
+    if(typeOfObj !== 'object') {
+        return typeOfObj === 'string'?
+            obj || null :
+            typeOfObj === 'boolean'?
                 null :
-                '' + children;
+                '' + obj;
     }
 
-    if(!Array.isArray(children)) {
-        return children;
+    if(!Array.isArray(obj)) {
+        return obj;
     }
 
-    if(children.length === 0) {
+    if(obj.length === 0) {
         return null;
     }
 
-    let res = children,
+    let res = obj,
         i = 0,
         hasContentBefore = false,
         child;
-    const len = children.length,
+    const len = obj.length,
         alreadyNormalizeChildren = Object.create(null);
 
     while(i < len) {
         child = i in alreadyNormalizeChildren?
             alreadyNormalizeChildren[i] :
-            normalizeChildren(children[i]);
+            normalizeNode(obj[i]);
 
         if(child === null) {
             if(res !== null) {
                 if(!hasContentBefore) {
                     res = null;
                 }
-                else if(res === children) {
-                    res = children.slice(0, i);
+                else if(res === obj) {
+                    res = obj.slice(0, i);
                 }
             }
         }
         else if(typeof child === 'object') {
             if(Array.isArray(child)) {
                 res = hasContentBefore?
-                    (res === children?
+                    (res === obj?
                         res.slice(0, i) :
-                        Array.isArray(res)? res : [toNode(res)]).concat(child) :
+                        Array.isArray(res)? res : [nodeToElement(res)]).concat(child) :
                     child;
             }
-            else if(res !== children) {
+            else if(res !== obj) {
                 if(!hasContentBefore) {
                     res = child;
                 }
@@ -61,10 +61,10 @@ export default function normalizeChildren(children) {
                     res.push(child);
                 }
                 else {
-                    res = [toNode(res), child];
+                    res = [nodeToElement(res), child];
                 }
             }
-            else if(child !== children[i]) {
+            else if(child !== obj[i]) {
                 if(hasContentBefore) {
                     res = res.slice(0, i);
                     res.push(child);
@@ -82,7 +82,7 @@ export default function normalizeChildren(children) {
 
             // join all next text nodes
             while(++j < len) {
-                nextChild = alreadyNormalizeChildren[j] = normalizeChildren(children[j]);
+                nextChild = alreadyNormalizeChildren[j] = normalizeNode(obj[j]);
 
                 if(typeof nextChild === 'string') {
                     child += nextChild;
@@ -94,14 +94,14 @@ export default function normalizeChildren(children) {
 
             if(hasContentBefore) {
                 if(Array.isArray(res)) {
-                    if(res === children) {
+                    if(res === obj) {
                         res = res.slice(0, i);
                     }
 
-                    res.push(toNode(child));
+                    res.push(nodeToElement(child));
                 }
                 else {
-                    res = [res, toNode(child)];
+                    res = [res, nodeToElement(child)];
                 }
             }
             else {
@@ -119,6 +119,6 @@ export default function normalizeChildren(children) {
     return res;
 }
 
-function toNode(obj) {
-    return typeof obj === 'object'? obj : createNode('plaintext').setChildren(obj);
+function nodeToElement(obj) {
+    return typeof obj === 'object'? obj : createElement('plaintext').setChildren(obj);
 }

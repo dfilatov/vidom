@@ -1,8 +1,5 @@
-import createNode from '../../../src/createNode';
-import createComponent from '../../../src/createComponent';
-import { mount, mountSync, unmountSync } from '../../../src/client/mounter';
+import { elem, createComponent, mount, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
-import { IS_DEBUG } from '../../../src/utils/debug';
 
 describe('context', () => {
     let domNode;
@@ -24,7 +21,7 @@ describe('context', () => {
             }
         });
 
-        mountSync(domNode, createNode(C));
+        mountSync(domNode, elem(C));
     });
 
     it('should be passed through tree', done => {
@@ -35,7 +32,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').setChildren(createNode('fragment').setChildren(this.children));
+                    return elem('div').setChildren(elem('fragment').setChildren(this.children));
                 }
             }),
             C2 = createComponent({
@@ -45,11 +42,11 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).setChildren([
-            createNode('div').setChildren([
-                createNode('div').setChildren([
-                    createNode(() => createNode('div').setChildren([
-                        createNode(C2)
+        mountSync(domNode, elem(C1).setChildren([
+            elem('div').setChildren([
+                elem('div').setChildren([
+                    elem(() => elem('div').setChildren([
+                        elem(C2)
                     ]))
                 ])
             ])
@@ -63,7 +60,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').setChildren(this.children);
+                    return elem('div').setChildren(this.children);
                 }
             }),
             C2 = createComponent({
@@ -72,7 +69,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').setChildren(this.children);
+                    return elem('div').setChildren(this.children);
                 }
             }),
             C3 = createComponent({
@@ -85,13 +82,13 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).setChildren([
-            createNode('div').setChildren([
-                createNode('div').setChildren([
-                    createNode(() => createNode('div').setChildren([
-                        createNode(C2).setChildren([
-                            createNode('div').setChildren([
-                                createNode(C3)
+        mountSync(domNode, elem(C1).setChildren([
+            elem('div').setChildren([
+                elem('div').setChildren([
+                    elem(() => elem('div').setChildren([
+                        elem(C2).setChildren([
+                            elem('div').setChildren([
+                                elem(C3)
                             ])
                         ])
                     ]))
@@ -107,7 +104,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').setChildren(this.children);
+                    return elem('div').setChildren(this.children);
                 }
             }),
             C2 = createComponent({
@@ -122,9 +119,9 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, createNode(C1).setChildren([
-            createNode(C2),
-            createNode(C3)
+        mountSync(domNode, elem(C1).setChildren([
+            elem(C2),
+            elem(C3)
         ]));
     });
 
@@ -135,7 +132,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').setChildren(this.children);
+                    return elem('div').setChildren(this.children);
                 }
             }),
             C2 = createComponent({
@@ -144,7 +141,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return createNode('div').setChildren(this.children);
+                    return elem('div').setChildren(this.children);
                 }
             }),
             C3 = createComponent({
@@ -157,23 +154,23 @@ describe('context', () => {
                 }
             }),
             FC = ({ prop }) =>
-                createNode('div').setChildren(
-                    createNode(C2).setAttrs({ prop }).setChildren(
-                        createNode('div').setChildren(createNode(C3))));
+                elem('div').setChildren(
+                    elem(C2).setAttrs({ prop }).setChildren(
+                        elem('div').setChildren(elem(C3))));
 
         mount(
             domNode,
-            createNode(C1).setAttrs({ prop : 'val1' }).setChildren(
-                createNode('div').setChildren(
-                    createNode('div').setChildren(
-                        createNode(FC).setAttrs({ prop : 'val2' })))),
+            elem(C1).setAttrs({ prop : 'val1' }).setChildren(
+                elem('div').setChildren(
+                    elem('div').setChildren(
+                        elem(FC).setAttrs({ prop : 'val2' })))),
             () => {
                 mount(
                     domNode,
-                    createNode(C1).setAttrs({ prop : 'val3' }).setChildren(
-                        createNode('div').setChildren(
-                            createNode('div').setChildren(
-                                createNode(FC).setAttrs({ prop : 'val4' })))));
+                    elem(C1).setAttrs({ prop : 'val3' }).setChildren(
+                        elem('div').setChildren(
+                            elem('div').setChildren(
+                                elem(FC).setAttrs({ prop : 'val4' })))));
             });
     });
 
@@ -190,7 +187,7 @@ describe('context', () => {
                 }
             });
 
-            mountSync(domNode, createNode(C));
+            mountSync(domNode, elem(C));
         });
 
         it('should throw exception if attempt to modify context directly', done => {
@@ -205,7 +202,7 @@ describe('context', () => {
                 }
             });
 
-            mountSync(domNode, createNode(C));
+            mountSync(domNode, elem(C));
         });
     }
 });

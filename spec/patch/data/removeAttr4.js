@@ -1,10 +1,10 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 
 export default {
     'name' : 'removeAttr4',
     'trees' : [
-        createNode('input').setAttrs({ className : null }),
-        createNode('input')
+        createElement('input').setAttrs({ className : null }),
+        createElement('input')
     ],
     'patch' : []
 };
