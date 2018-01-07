@@ -1,10 +1,10 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 
 export default {
     'name' : 'updateText2',
     'trees' : [
-        createNode('span').setChildren('text'),
-        createNode('span').setChildren('text')
+        createElement('span').setChildren('text'),
+        createElement('span').setChildren('text')
     ],
     'patch' : []
 };

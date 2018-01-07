@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onAttrsReceive', () => {
     let domNode;
@@ -24,8 +24,8 @@ describe('onAttrsReceive', () => {
                 }
             });
 
-        mountSync(domNode, node(C).setAttrs(prevAttrs));
-        mountSync(domNode, node(C).setAttrs(newAttrs));
+        mountSync(domNode, elem(C).setAttrs(prevAttrs));
+        mountSync(domNode, elem(C).setAttrs(newAttrs));
     });
 
     it('shouldn\'t be called if component updates itself', done => {
@@ -40,7 +40,7 @@ describe('onAttrsReceive', () => {
                 }
             });
 
-        mountSync(domNode, node(C));
+        mountSync(domNode, elem(C));
     });
 
     it('shouldn\'t cause additional render if calls update()', done => {
@@ -48,7 +48,7 @@ describe('onAttrsReceive', () => {
             C = createComponent({
                 onRender() {
                     spy();
-                    return node('div');
+                    return elem('div');
                 },
 
                 onAttrsReceive() {
@@ -59,7 +59,7 @@ describe('onAttrsReceive', () => {
                 }
             });
 
-        mountSync(domNode, node(C));
-        mountSync(domNode, node(C).setAttrs({}));
+        mountSync(domNode, elem(C));
+        mountSync(domNode, elem(C).setAttrs({}));
     });
 });

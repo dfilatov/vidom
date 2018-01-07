@@ -1,4 +1,4 @@
-import { node, mountSync, unmountSync } from '../../src/vidom';
+import { elem, mountSync, unmountSync } from '../../src/vidom';
 import sinon from 'sinon';
 
 describe('patchDom', () => {
@@ -15,32 +15,32 @@ describe('patchDom', () => {
 
     describe('updateText', () => {
         it('should update node text', () => {
-            mountSync(domNode, node('span').setChildren('text'));
-            mountSync(domNode, node('span').setChildren('new text'));
+            mountSync(domNode, elem('span').setChildren('text'));
+            mountSync(domNode, elem('span').setChildren('new text'));
 
             expect(domNode.firstChild.textContent)
                 .to.equal('new text');
         });
 
         it('should update node html', () => {
-            mountSync(domNode, node('span').setHtml('<span></span>'));
-            mountSync(domNode, node('span').setHtml('<span></span><i></i>'));
+            mountSync(domNode, elem('span').setHtml('<span></span>'));
+            mountSync(domNode, elem('span').setHtml('<span></span><i></i>'));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<span></span><i></i>');
         });
 
         it('should update empty text node', () => {
-            mountSync(domNode, node('span').setChildren(node('plaintext')));
-            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('text')));
+            mountSync(domNode, elem('span').setChildren(elem('plaintext')));
+            mountSync(domNode, elem('span').setChildren(elem('plaintext').setChildren('text')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->text<!---->');
         });
 
         it('should update not empty text node', () => {
-            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('text')));
-            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('new text')));
+            mountSync(domNode, elem('span').setChildren(elem('plaintext').setChildren('text')));
+            mountSync(domNode, elem('span').setChildren(elem('plaintext').setChildren('new text')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->new text<!---->');
@@ -49,16 +49,16 @@ describe('patchDom', () => {
 
     describe('removeText', () => {
         it('should remove node text', () => {
-            mountSync(domNode, node('span').setChildren('text'));
-            mountSync(domNode, node('span'));
+            mountSync(domNode, elem('span').setChildren('text'));
+            mountSync(domNode, elem('span'));
 
             expect(domNode.firstChild.textContent)
                 .to.equal('');
         });
 
         it('should remove text node text', () => {
-            mountSync(domNode, node('span').setChildren(node('plaintext').setChildren('text')));
-            mountSync(domNode, node('span').setChildren(node('plaintext')));
+            mountSync(domNode, elem('span').setChildren(elem('plaintext').setChildren('text')));
+            mountSync(domNode, elem('span').setChildren(elem('plaintext')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!----><!---->');
@@ -67,22 +67,22 @@ describe('patchDom', () => {
 
     describe('updateAttr', () => {
         it('should update node attribute', () => {
-            mountSync(domNode, node('textarea').setAttrs({ cols : 5 }));
-            mountSync(domNode, node('textarea').setAttrs({ cols : 3 }));
+            mountSync(domNode, elem('textarea').setAttrs({ cols : 5 }));
+            mountSync(domNode, elem('textarea').setAttrs({ cols : 3 }));
 
             expect(domNode.firstChild.getAttribute('cols')).to.equal('3');
         });
 
         it('should update node property', () => {
-            mountSync(domNode, node('input').setAttrs({ value : 'val' }));
-            mountSync(domNode, node('input').setAttrs({ value : 'new val' }));
+            mountSync(domNode, elem('input').setAttrs({ value : 'val' }));
+            mountSync(domNode, elem('input').setAttrs({ value : 'new val' }));
 
             expect(domNode.firstChild.value).to.equal('new val');
         });
 
         it('should keep value of input if type is changed', () => {
-            mountSync(domNode, node('input').setAttrs({ type : 'text', value : 'val' }));
-            mountSync(domNode, node('input').setAttrs({ type : 'checkbox', value : 'val' }));
+            mountSync(domNode, elem('input').setAttrs({ type : 'text', value : 'val' }));
+            mountSync(domNode, elem('input').setAttrs({ type : 'checkbox', value : 'val' }));
 
             expect(domNode.firstChild.value).to.equal('val');
         });
@@ -90,21 +90,21 @@ describe('patchDom', () => {
         it('should update select children', () => {
             mountSync(
                 domNode,
-                node('select')
+                elem('select')
                     .setAttrs({ multiple : true, value : [1] })
                     .setChildren([
-                        node('option').setAttrs({ value : 1 }),
-                        node('option').setAttrs({ value : 2 }),
-                        node('option').setAttrs({ value : 3 })
+                        elem('option').setAttrs({ value : 1 }),
+                        elem('option').setAttrs({ value : 2 }),
+                        elem('option').setAttrs({ value : 3 })
                     ]));
             mountSync(
                 domNode,
-                node('select')
+                elem('select')
                     .setAttrs({ multiple : true, value : [2, 3] })
                     .setChildren([
-                        node('option').setAttrs({ value : 1 }),
-                        node('option').setAttrs({ value : 2 }),
-                        node('option').setAttrs({ value : 3 })
+                        elem('option').setAttrs({ value : 1 }),
+                        elem('option').setAttrs({ value : 2 }),
+                        elem('option').setAttrs({ value : 3 })
                     ]));
 
             const { options } = domNode.firstChild;
@@ -117,22 +117,22 @@ describe('patchDom', () => {
 
     describe('removeAttr', () => {
         it('should remove node attribute', () => {
-            mountSync(domNode, node('textarea').setAttrs({ disabled : true }));
-            mountSync(domNode, node('textarea'));
+            mountSync(domNode, elem('textarea').setAttrs({ disabled : true }));
+            mountSync(domNode, elem('textarea'));
 
             expect(domNode.firstChild.hasAttribute('disabled')).not.to.ok();
         });
 
         it('should remove node property', () => {
-            mountSync(domNode, node('input').setAttrs({ value : 'val' }));
-            mountSync(domNode, node('input'));
+            mountSync(domNode, elem('input').setAttrs({ value : 'val' }));
+            mountSync(domNode, elem('input'));
 
             expect(domNode.firstChild.value).to.equal('');
         });
 
         it('should remove style node property', () => {
-            mountSync(domNode, node('div').setAttrs({ style : { width : '20px' } }));
-            mountSync(domNode, node('div'));
+            mountSync(domNode, elem('div').setAttrs({ style : { width : '20px' } }));
+            mountSync(domNode, elem('div'));
 
             expect(domNode.firstChild.style).to.eql(document.createElement('div').style);
         });
@@ -140,19 +140,19 @@ describe('patchDom', () => {
         it('should update select children', () => {
             mountSync(
                 domNode,
-                node('select')
+                elem('select')
                     .setAttrs({ value : 1 })
                     .setChildren([
-                        node('option').setAttrs({ value : 1 }),
-                        node('option').setAttrs({ value : 2 })
+                        elem('option').setAttrs({ value : 1 }),
+                        elem('option').setAttrs({ value : 2 })
                     ]));
             mountSync(
                 domNode,
-                node('select')
+                elem('select')
                     .setAttrs({ multiple : true })
                     .setChildren([
-                        node('option').setAttrs({ value : 1 }),
-                        node('option').setAttrs({ value : 2 })
+                        elem('option').setAttrs({ value : 1 }),
+                        elem('option').setAttrs({ value : 2 })
                     ]));
 
             const { options } = domNode.firstChild;
@@ -164,8 +164,8 @@ describe('patchDom', () => {
 
     describe('replace', () => {
         it('should replace node', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
-            mountSync(domNode, node('div').setChildren([node('a'), node('div')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('div')]));
 
             expect(domNode.firstChild.childNodes[1].tagName.toLowerCase())
                 .to.equal('div');
@@ -174,14 +174,14 @@ describe('patchDom', () => {
         it('should keep parent namespace', () => {
             mountSync(
                 domNode,
-                node('svg')
+                elem('svg')
                     .setNs('http://www.w3.org/2000/svg')
-                    .setChildren(node('g').setChildren(node('circle'))));
+                    .setChildren(elem('g').setChildren(elem('circle'))));
             mountSync(
                 domNode,
-                node('svg')
+                elem('svg')
                     .setNs('http://www.w3.org/2000/svg')
-                    .setChildren(node('g').setChildren(node('path'))));
+                    .setChildren(elem('g').setChildren(elem('path'))));
 
             expect(domNode.firstChild.firstChild.firstChild.namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
@@ -190,15 +190,15 @@ describe('patchDom', () => {
         it('should replace fragment with single node', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a'),
-                    node('fragment').setChildren([node('b'), node('i')])
+                elem('div').setChildren([
+                    elem('a'),
+                    elem('fragment').setChildren([elem('b'), elem('i')])
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a'),
-                    node('span')
+                elem('div').setChildren([
+                    elem('a'),
+                    elem('span')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -206,12 +206,12 @@ describe('patchDom', () => {
         });
 
         it('should replace node with fragment', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span')]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a'),
-                    node('fragment').setChildren([node('b'), node('i')])
+                elem('div').setChildren([
+                    elem('a'),
+                    elem('fragment').setChildren([elem('b'), elem('i')])
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -219,16 +219,16 @@ describe('patchDom', () => {
         });
 
         it('should replace node with text node', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
-            mountSync(domNode, node('div').setChildren([node('a'), node('plaintext')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('plaintext')]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><!---->');
         });
 
         it('should replace text node with node', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('plaintext')]));
-            mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('plaintext')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span')]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><span></span>');
@@ -237,8 +237,8 @@ describe('patchDom', () => {
 
     describe('appendChild', () => {
         it('should append child node', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
-            mountSync(domNode, node('div').setChildren([node('a'), node('span'), node('div')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span')]));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span'), elem('div')]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><span></span><div></div>');
@@ -247,26 +247,26 @@ describe('patchDom', () => {
         it('should keep parent namespace', () => {
             mountSync(
                 domNode,
-                node('svg')
+                elem('svg')
                     .setNs('http://www.w3.org/2000/svg')
-                    .setChildren(node('circle')));
+                    .setChildren(elem('circle')));
             mountSync(
                 domNode,
-                node('svg')
+                elem('svg')
                     .setNs('http://www.w3.org/2000/svg')
-                    .setChildren([node('circle'), node('circle')]));
+                    .setChildren([elem('circle'), elem('circle')]));
 
             expect(domNode.firstChild.childNodes[1].namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should append child fragment', () => {
-            mountSync(domNode, node('div').setChildren([node('a')]));
+            mountSync(domNode, elem('div').setChildren([elem('a')]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a'),
-                    node('fragment').setChildren([node('b'), node('i')])
+                elem('div').setChildren([
+                    elem('a'),
+                    elem('fragment').setChildren([elem('b'), elem('i')])
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -276,24 +276,24 @@ describe('patchDom', () => {
         it('should append child fragment to another one', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('fragment').setKey('b').setChildren([
-                        node('b'),
-                        node('i')
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('fragment').setKey('b').setChildren([
+                        elem('b'),
+                        elem('i')
                     ]),
-                    node('u').setKey('c')
+                    elem('u').setKey('c')
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('fragment').setKey('b').setChildren([
-                        node('b').setKey('a'),
-                        node('i').setKey('b'),
-                        node('fragment').setKey('c').setChildren([node('h1'), node('h2')])
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('fragment').setKey('b').setChildren([
+                        elem('b').setKey('a'),
+                        elem('i').setKey('b'),
+                        elem('fragment').setKey('c').setChildren([elem('h1'), elem('h2')])
                     ]),
-                    node('u').setKey('c')
+                    elem('u').setKey('c')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -303,8 +303,8 @@ describe('patchDom', () => {
 
     describe('removeChild', () => {
         it('should remove child node', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
-            mountSync(domNode, node('div').setChildren(node('a')));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span')]));
+            mountSync(domNode, elem('div').setChildren(elem('a')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a>');
@@ -313,11 +313,11 @@ describe('patchDom', () => {
         it('should remove child fragment', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a'),
-                    node('fragment').setChildren([node('b'), node('i')])
+                elem('div').setChildren([
+                    elem('a'),
+                    elem('fragment').setChildren([elem('b'), elem('i')])
                 ]));
-            mountSync(domNode, node('div').setChildren([node('a')]));
+            mountSync(domNode, elem('div').setChildren([elem('a')]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a>');
@@ -328,16 +328,16 @@ describe('patchDom', () => {
         it('should insert child node', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('span').setKey('c')
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('div').setKey('b'),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('div').setKey('b'),
+                    elem('span').setKey('c')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -347,14 +347,14 @@ describe('patchDom', () => {
         it('should keep parent namespace', () => {
             mountSync(
                 domNode,
-                node('svg')
+                elem('svg')
                     .setNs('http://www.w3.org/2000/svg')
-                    .setChildren(node('circle').setKey('b')));
+                    .setChildren(elem('circle').setKey('b')));
             mountSync(
                 domNode,
-                node('svg')
+                elem('svg')
                     .setNs('http://www.w3.org/2000/svg')
-                    .setChildren([node('circle').setKey('a'), node('circle').setKey('b')]));
+                    .setChildren([elem('circle').setKey('a'), elem('circle').setKey('b')]));
 
             expect(domNode.firstChild.firstChild.namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
@@ -363,16 +363,16 @@ describe('patchDom', () => {
         it('should insert child fragment', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('span').setKey('c')
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('fragment').setKey('b').setChildren([node('b'), node('i')]),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('fragment').setKey('b').setChildren([elem('b'), elem('i')]),
+                    elem('span').setKey('c')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -382,14 +382,14 @@ describe('patchDom', () => {
         it('should insert child fragment before another one', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('fragment').setKey('b').setChildren([node('i'), node('u')])
+                elem('div').setChildren([
+                    elem('fragment').setKey('b').setChildren([elem('i'), elem('u')])
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('fragment').setKey('a').setChildren([node('a'), node('b')]),
-                    node('fragment').setKey('b').setChildren([node('i'), node('u')])
+                elem('div').setChildren([
+                    elem('fragment').setKey('a').setChildren([elem('a'), elem('b')]),
+                    elem('fragment').setKey('b').setChildren([elem('i'), elem('u')])
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -399,12 +399,12 @@ describe('patchDom', () => {
 
     describe('moveChild', () => {
         it('should move child node', () => {
-            mountSync(domNode, node('div').setChildren([node('a').setKey('a'), node('b').setKey('b')]));
+            mountSync(domNode, elem('div').setChildren([elem('a').setKey('a'), elem('b').setKey('b')]));
 
             const aDomNode = domNode.firstChild.childNodes[0],
                 bDomNode = domNode.firstChild.childNodes[1];
 
-            mountSync(domNode, node('div').setChildren([node('b').setKey('b'), node('a').setKey('a')]));
+            mountSync(domNode, elem('div').setChildren([elem('b').setKey('b'), elem('a').setKey('a')]));
 
             const { childNodes } = domNode.firstChild;
 
@@ -418,12 +418,12 @@ describe('patchDom', () => {
 
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('div').setKey(1).setChildren([
-                        node('input').setAttrs({ id : 'id1', onFocus, onBlur }).setKey(1),
-                        node('input').setKey(2)
+                elem('div').setChildren([
+                    elem('div').setKey(1).setChildren([
+                        elem('input').setAttrs({ id : 'id1', onFocus, onBlur }).setKey(1),
+                        elem('input').setKey(2)
                     ]),
-                    node('div').setKey(2)
+                    elem('div').setKey(2)
                 ]));
 
             const activeElement = document.getElementById('id1');
@@ -432,11 +432,11 @@ describe('patchDom', () => {
 
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('div').setKey(2),
-                    node('div').setKey(1).setChildren([
-                        node('input').setKey(2),
-                        node('input').setAttrs({ id : 'id1', onFocus, onBlur }).setKey(1)
+                elem('div').setChildren([
+                    elem('div').setKey(2),
+                    elem('div').setKey(1).setChildren([
+                        elem('input').setKey(2),
+                        elem('input').setAttrs({ id : 'id1', onFocus, onBlur }).setKey(1)
                     ])
                 ]));
 
@@ -448,17 +448,17 @@ describe('patchDom', () => {
         it('should move child fragment', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('fragment').setKey('b').setChildren([node('b'), node('i')]),
-                    node('a').setKey('a'),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('fragment').setKey('b').setChildren([elem('b'), elem('i')]),
+                    elem('a').setKey('a'),
+                    elem('span').setKey('c')
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('fragment').setKey('b').setChildren([node('b'), node('i')]),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('fragment').setKey('b').setChildren([elem('b'), elem('i')]),
+                    elem('span').setKey('c')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -468,19 +468,19 @@ describe('patchDom', () => {
         it('should move child fragment before another one', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('fragment').setKey('c').setChildren([node('h1'), node('h2')]),
-                    node('fragment').setKey('a').setChildren([node('a'), node('b')]),
-                    node('fragment').setKey('b').setChildren([node('i'), node('u')]),
-                    node('fragment').setKey('d').setChildren([node('h3'), node('h4')])
+                elem('div').setChildren([
+                    elem('fragment').setKey('c').setChildren([elem('h1'), elem('h2')]),
+                    elem('fragment').setKey('a').setChildren([elem('a'), elem('b')]),
+                    elem('fragment').setKey('b').setChildren([elem('i'), elem('u')]),
+                    elem('fragment').setKey('d').setChildren([elem('h3'), elem('h4')])
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('fragment').setKey('a').setChildren([node('a'), node('b')]),
-                    node('fragment').setKey('b').setChildren([node('i'), node('u')]),
-                    node('fragment').setKey('c').setChildren([node('h1'), node('h2')]),
-                    node('fragment').setKey('e').setChildren([node('h3'), node('h4')])
+                elem('div').setChildren([
+                    elem('fragment').setKey('a').setChildren([elem('a'), elem('b')]),
+                    elem('fragment').setKey('b').setChildren([elem('i'), elem('u')]),
+                    elem('fragment').setKey('c').setChildren([elem('h1'), elem('h2')]),
+                    elem('fragment').setKey('e').setChildren([elem('h3'), elem('h4')])
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -492,17 +492,17 @@ describe('patchDom', () => {
         it('should move child fragment after another one', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('fragment').setKey('a').setChildren([node('a'), node('b')]),
-                    node('fragment').setKey('b').setChildren([node('i'), node('u')]),
-                    node('fragment').setKey('c').setChildren([node('h1'), node('h2')])
+                elem('div').setChildren([
+                    elem('fragment').setKey('a').setChildren([elem('a'), elem('b')]),
+                    elem('fragment').setKey('b').setChildren([elem('i'), elem('u')]),
+                    elem('fragment').setKey('c').setChildren([elem('h1'), elem('h2')])
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('fragment').setKey('a').setChildren([node('a'), node('b')]),
-                    node('fragment').setKey('c').setChildren([node('h1'), node('h2')]),
-                    node('fragment').setKey('b').setChildren([node('i'), node('u')])
+                elem('div').setChildren([
+                    elem('fragment').setKey('a').setChildren([elem('a'), elem('b')]),
+                    elem('fragment').setKey('c').setChildren([elem('h1'), elem('h2')]),
+                    elem('fragment').setKey('b').setChildren([elem('i'), elem('u')])
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -514,17 +514,17 @@ describe('patchDom', () => {
         it('should move text node', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('plaintext').setKey('b').setChildren('text'),
-                    node('a').setKey('a'),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('plaintext').setKey('b').setChildren('text'),
+                    elem('a').setKey('a'),
+                    elem('span').setKey('c')
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a').setKey('a'),
-                    node('plaintext').setKey('b').setChildren('text'),
-                    node('span').setKey('c')
+                elem('div').setChildren([
+                    elem('a').setKey('a'),
+                    elem('plaintext').setKey('b').setChildren('text'),
+                    elem('span').setKey('c')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -534,19 +534,19 @@ describe('patchDom', () => {
         it('should move text node before another one', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('plaintext').setKey('c').setChildren('c'),
-                    node('plaintext').setKey('a').setChildren('a'),
-                    node('plaintext').setKey('b').setChildren('b'),
-                    node('plaintext').setKey('d').setChildren('d')
+                elem('div').setChildren([
+                    elem('plaintext').setKey('c').setChildren('c'),
+                    elem('plaintext').setKey('a').setChildren('a'),
+                    elem('plaintext').setKey('b').setChildren('b'),
+                    elem('plaintext').setKey('d').setChildren('d')
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('plaintext').setKey('a').setChildren('a'),
-                    node('plaintext').setKey('b').setChildren('b'),
-                    node('plaintext').setKey('c').setChildren('c'),
-                    node('plaintext').setKey('e').setChildren('e')
+                elem('div').setChildren([
+                    elem('plaintext').setKey('a').setChildren('a'),
+                    elem('plaintext').setKey('b').setChildren('b'),
+                    elem('plaintext').setKey('c').setChildren('c'),
+                    elem('plaintext').setKey('e').setChildren('e')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -556,17 +556,17 @@ describe('patchDom', () => {
         it('should move text node before another one', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('plaintext').setKey('a').setChildren('a'),
-                    node('plaintext').setKey('b').setChildren('b'),
-                    node('plaintext').setKey('c').setChildren('c')
+                elem('div').setChildren([
+                    elem('plaintext').setKey('a').setChildren('a'),
+                    elem('plaintext').setKey('b').setChildren('b'),
+                    elem('plaintext').setKey('c').setChildren('c')
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('plaintext').setKey('a').setChildren('a'),
-                    node('plaintext').setKey('c').setChildren('c'),
-                    node('plaintext').setKey('b').setChildren('b')
+                elem('div').setChildren([
+                    elem('plaintext').setKey('a').setChildren('a'),
+                    elem('plaintext').setKey('c').setChildren('c'),
+                    elem('plaintext').setKey('b').setChildren('b')
                 ]));
 
             expect(domNode.firstChild.innerHTML)
@@ -576,8 +576,8 @@ describe('patchDom', () => {
 
     describe('removeChildren', () => {
         it('should remove children nodes', () => {
-            mountSync(domNode, node('div').setChildren([node('a'), node('span')]));
-            mountSync(domNode, node('div'));
+            mountSync(domNode, elem('div').setChildren([elem('a'), elem('span')]));
+            mountSync(domNode, elem('div'));
 
             expect(domNode.firstChild.childNodes.length).to.equal(0);
         });
@@ -585,15 +585,15 @@ describe('patchDom', () => {
         it('should remove children nodes of fragment', () => {
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a'),
-                    node('fragment').setChildren([node('a'), node('b')])
+                elem('div').setChildren([
+                    elem('a'),
+                    elem('fragment').setChildren([elem('a'), elem('b')])
                 ]));
             mountSync(
                 domNode,
-                node('div').setChildren([
-                    node('a'),
-                    node('fragment')
+                elem('div').setChildren([
+                    elem('a'),
+                    elem('fragment')
                 ]));
 
             expect(domNode.firstChild.innerHTML)

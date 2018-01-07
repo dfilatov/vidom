@@ -1,17 +1,17 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('select').setAttrs({
+const node = createElement('select').setAttrs({
         multiple : true,
         value : [1, 2, 3]
     }),
-    rootNode = node._getInstance().getRootNode();
+    rootNode = node._getInstance().getRootElement();
 
 export default {
     'name' : 'updateAttr5',
     'trees' : [
         node,
-        createNode('select')
+        createElement('select')
             .setAttrs({
                 multiple : true,
                 value : [1, 2, 4]

@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import emptyObj from '../../src/utils/emptyObj';
-import { node, mountSync, unmountSync } from '../../src/vidom';
+import { elem, mountSync, unmountSync } from '../../src/vidom';
 
 describe('functionComponent', () => {
     let domNode;
@@ -18,7 +18,7 @@ describe('functionComponent', () => {
 
         stub.returns(null);
 
-        mountSync(domNode, node(stub));
+        mountSync(domNode, elem(stub));
 
         expect(stub.args[0][0]).to.be.equal(emptyObj);
     });
@@ -30,7 +30,7 @@ describe('functionComponent', () => {
 
         stub.defaultAttrs = { a : 1, b : 2 };
 
-        mountSync(domNode, node(stub).setAttrs({ a : 3 }));
+        mountSync(domNode, elem(stub).setAttrs({ a : 3 }));
 
         expect(stub.args[0][0]).to.be.eql({ a : 3, b : 2 });
     });

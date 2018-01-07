@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onUnmount', () => {
     let domNode;
@@ -20,25 +20,25 @@ describe('onUnmount', () => {
             C1 = createComponent({
                 onUnmount : spy1,
                 onRender() {
-                    return node('div').setChildren(
-                        node('fragment').setChildren(
-                            node(C2).setChildren(node(C3))));
+                    return elem('div').setChildren(
+                        elem('fragment').setChildren(
+                            elem(C2).setChildren(elem(C3))));
                 }
             }),
             C2 = createComponent({
                 onUnmount : spy2,
                 onRender() {
-                    return node('div').setChildren(this.children);
+                    return elem('div').setChildren(this.children);
                 }
             }),
             C3 = createComponent({
                 onUnmount : spy3,
                 onRender() {
-                    return node('div');
+                    return elem('div');
                 }
             });
 
-        mountSync(domNode, node(C1));
+        mountSync(domNode, elem(C1));
         unmountSync(domNode);
 
         expect(spy1.called).to.be.ok();
@@ -53,8 +53,8 @@ describe('onUnmount', () => {
             }),
             C2 = createComponent();
 
-        mountSync(domNode, node(C1));
-        mountSync(domNode, node(C2));
+        mountSync(domNode, elem(C1));
+        mountSync(domNode, elem(C2));
 
         expect(spy.called).to.be.ok();
     });
@@ -63,14 +63,14 @@ describe('onUnmount', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onRender() {
-                    return node('div');
+                    return elem('div');
                 },
 
                 onUnmount : spy
             });
 
-        mountSync(domNode, node(C));
-        mountSync(domNode, node('div'));
+        mountSync(domNode, elem(C));
+        mountSync(domNode, elem('div'));
 
         expect(spy.called).to.be.ok();
     });
@@ -79,14 +79,14 @@ describe('onUnmount', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onRender() {
-                    return node('div');
+                    return elem('div');
                 },
 
                 onUnmount : spy
             });
 
-        mountSync(domNode, node(C));
-        mountSync(domNode, node(() => node('div')));
+        mountSync(domNode, elem(C));
+        mountSync(domNode, elem(() => elem('div')));
 
         expect(spy.called).to.be.ok();
     });

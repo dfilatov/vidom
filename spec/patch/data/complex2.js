@@ -1,27 +1,27 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeB = createNode('a').setKey('b'),
-    nodeC = createNode('a').setKey('c'),
-    nodeD = createNode('a').setKey('d'),
-    nodeE = createNode('a').setKey('e'),
-    nodeF = createNode('a').setKey('f'),
-    parentNode = createNode('div');
+const nodeB = createElement('a').setKey('b'),
+    nodeC = createElement('a').setKey('c'),
+    nodeD = createElement('a').setKey('d'),
+    nodeE = createElement('a').setKey('e'),
+    nodeF = createElement('a').setKey('f'),
+    parentNode = createElement('div');
 
 export default {
     'name' : 'complex2',
     'trees' : [
-        createNode('div').setChildren([
-            createNode('a').setKey('a'),
+        createElement('div').setChildren([
+            createElement('a').setKey('a'),
             nodeC,
             nodeE
         ]),
         parentNode.setChildren([
-            createNode('a').setKey('a'),
+            createElement('a').setKey('a'),
             nodeB,
-            createNode('a').setKey('c'),
+            createElement('a').setKey('c'),
             nodeD,
-            createNode('a').setKey('e'),
+            createElement('a').setKey('e'),
             nodeF
         ])
     ],

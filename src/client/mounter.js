@@ -3,31 +3,25 @@ import rafBatch from './rafBatch';
 import globalHook from '../globalHook';
 import domOps from './domOps';
 import { getNs } from './utils/ns';
-import TopNode from '../nodes/TopNode';
-import isNode from '../nodes/utils/isNode';
+import TopElement from '../nodes/TopElement';
+import nodeToElement from '../nodes/utils/nodeToElement';
 import { IS_DEBUG } from '../utils/debug';
 
-const mountedNodes = Object.create(null);
+const mountedElements = Object.create(null);
 let counter = 0;
 
 function mountToDomNode(domNode, node, ctx, cb, syncMode) {
-    if(IS_DEBUG) {
-        if(!isNode(node)) {
-            throw TypeError(`vidom: Unexpected type of node is passed to mount.`);
-        }
-    }
-
     const domNodeId = getDomNodeId(domNode);
-    let mounted = mountedNodes[domNodeId],
+    let mounted = mountedElements[domNodeId],
         mountId;
 
     if(mounted && mounted.tree !== null) {
         mountId = ++mounted.id;
         const patchFn = () => {
-            mounted = mountedNodes[domNodeId];
+            mounted = mountedElements[domNodeId];
             if(mounted && mounted.id === mountId) {
                 const prevTree = mounted.tree,
-                    newTree = new TopNode(node);
+                    newTree = new TopElement(nodeToElement(node));
 
                 newTree
                     .setNs(prevTree._ns)
@@ -46,7 +40,7 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
         syncMode? patchFn() : rafBatch(patchFn);
     }
     else {
-        mounted = mountedNodes[domNodeId] = { tree : null, id : mountId = ++counter };
+        mounted = mountedElements[domNodeId] = { tree : null, id : mountId = ++counter };
 
         if(domNode.childNodes.length > 0) {
             const topDomChildNodes = collectTopDomChildNodes(domNode);
@@ -55,7 +49,7 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
                 domNode.textContent = '';
             }
             else {
-                const tree = mounted.tree = new TopNode(node);
+                const tree = mounted.tree = new TopElement(nodeToElement(node));
 
                 tree
                     .setNs(getNs(domNode))
@@ -74,10 +68,10 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
         }
 
         const renderFn = () => {
-            const mounted = mountedNodes[domNodeId];
+            const mounted = mountedElements[domNodeId];
 
             if(mounted && mounted.id === mountId) {
-                const tree = mounted.tree = new TopNode(node);
+                const tree = mounted.tree = new TopElement(nodeToElement(node));
 
                 tree
                     .setNs(getNs(domNode))
@@ -98,14 +92,14 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
 
 function unmountFromDomNode(domNode, cb, syncMode) {
     const domNodeId = getDomNodeId(domNode);
-    let mounted = mountedNodes[domNodeId];
+    let mounted = mountedElements[domNodeId];
 
     if(mounted) {
         const mountId = ++mounted.id,
             unmountFn = () => {
-                mounted = mountedNodes[domNodeId];
+                mounted = mountedElements[domNodeId];
                 if(mounted && mounted.id === mountId) {
-                    delete mountedNodes[domNodeId];
+                    delete mountedElements[domNodeId];
                     const tree = mounted.tree;
 
                     if(tree !== null) {
@@ -132,7 +126,9 @@ function unmountFromDomNode(domNode, cb, syncMode) {
 }
 
 function callCb(cb) {
-    cb && cb();
+    if(cb) {
+        cb();
+    }
 }
 
 function collectTopDomChildNodes(node) {
@@ -180,8 +176,8 @@ export function unmountSync(domNode) {
 export function getMountedRootNodes() {
     const res = [];
 
-    for(const domNodeId in mountedNodes) {
-        const { tree } = mountedNodes[domNodeId];
+    for(const domNodeId in mountedElements) {
+        const { tree } = mountedElements[domNodeId];
 
         if(tree) {
             res.push(tree);

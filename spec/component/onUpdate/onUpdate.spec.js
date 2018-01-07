@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
 
 describe('onUpdate', () => {
@@ -29,13 +29,13 @@ describe('onUpdate', () => {
             }),
             prevAttrs = { id : 1 },
             nextAttrs = { id : 2 },
-            prevChildren = [node('div')],
-            nextChildren = [node('span')],
+            prevChildren = [elem('div')],
+            nextChildren = [elem('span')],
             prevContext = { ctx : 1 },
             nextContext = { ctx : 2 };
 
-        mountSync(domNode, node(C).setAttrs(prevAttrs).setChildren(prevChildren), prevContext);
-        mountSync(domNode, node(C).setAttrs(nextAttrs).setChildren(nextChildren), nextContext);
+        mountSync(domNode, elem(C).setAttrs(prevAttrs).setChildren(prevChildren), prevContext);
+        mountSync(domNode, elem(C).setAttrs(nextAttrs).setChildren(nextChildren), nextContext);
     });
 
     it('should not be called if component hasn\'t updated', () => {
@@ -48,8 +48,8 @@ describe('onUpdate', () => {
                 onUpdate : spy
             });
 
-        mountSync(domNode, node(C).setAttrs({ id : 1 }));
-        mountSync(domNode, node(C).setAttrs({ id : 2 }));
+        mountSync(domNode, elem(C).setAttrs({ id : 1 }));
+        mountSync(domNode, elem(C).setAttrs({ id : 2 }));
 
         expect(spy.called).not.to.be.ok();
     });

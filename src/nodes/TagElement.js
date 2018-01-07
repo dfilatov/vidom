@@ -15,8 +15,9 @@ import createElement from '../client/utils/createElement';
 import createElementByHtml from '../client/utils/createElementByHtml';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
-import { NODE_TYPE_TAG } from './utils/nodeTypes';
+import { ELEMENT_TYPE_TAG } from './utils/elementTypes';
 import { setKey, setRef } from './utils/setters';
+import normalizeNode from './utils/normalizeNode';
 
 const SHORT_TAGS = [
         'area', 'base', 'br', 'col', 'command', 'embed', 'hr', 'img', 'input',
@@ -32,7 +33,7 @@ const SHORT_TAGS = [
     CHILDREN_SET = 8,
     NS_SET = 16;
 
-export default function TagNode(tag) {
+export default function TagElement(tag) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'tag');
@@ -43,7 +44,7 @@ export default function TagNode(tag) {
         this.__isFrozen = false;
     }
 
-    this.type = NODE_TYPE_TAG;
+    this.type = ELEMENT_TYPE_TAG;
     this.tag = tag;
     this.key = null;
     this.attrs = emptyObj;
@@ -61,7 +62,7 @@ export default function TagNode(tag) {
     this._ref = null;
 }
 
-TagNode.prototype = {
+TagElement.prototype = {
     getDomNode() {
         return this._domNode;
     },
@@ -375,7 +376,7 @@ TagNode.prototype = {
     },
 
     clone() {
-        const res = new TagNode(this.tag);
+        const res = new TagElement(this.tag);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
@@ -398,24 +399,24 @@ TagNode.prototype = {
         return res;
     },
 
-    patch(node) {
-        if(this === node) {
-            this._patchChildren(node);
+    patch(element) {
+        if(this === element) {
+            this._patchChildren(element);
         }
-        else if(this.type === node.type && this.tag === node.tag && this._ns === node._ns) {
-            node._domNode = this._domNode;
-            this._patchAttrs(node);
-            this._patchChildren(node);
-            this._patchRef(node);
+        else if(this.type === element.type && this.tag === element.tag && this._ns === element._ns) {
+            element._domNode = this._domNode;
+            this._patchAttrs(element);
+            this._patchChildren(element);
+            this._patchRef(element);
         }
         else {
-            patchOps.replace(this, node);
+            patchOps.replace(this, element);
         }
     },
 
-    _patchChildren(node) {
+    _patchChildren(element) {
         const childrenA = this.children,
-            childrenB = node.children;
+            childrenB = element.children;
 
         if(childrenA === null && childrenB === null) {
             return;
@@ -427,7 +428,7 @@ TagNode.prototype = {
         if(isChildrenBText) {
             if(isChildrenAText) {
                 if(childrenA !== childrenB) {
-                    patchOps.updateText(this, childrenB, node._escapeChildren);
+                    patchOps.updateText(this, childrenB, element._escapeChildren);
                 }
                 return;
             }
@@ -437,7 +438,7 @@ TagNode.prototype = {
             }
 
             if(childrenB !== '') {
-                patchOps.updateText(this, childrenB, node._escapeChildren);
+                patchOps.updateText(this, childrenB, element._escapeChildren);
             }
 
             return;
@@ -465,18 +466,18 @@ TagNode.prototype = {
             let iB = 0;
 
             while(iB < childrenBLen) {
-                patchOps.appendChild(node, childrenB[iB++]);
+                patchOps.appendChild(element, childrenB[iB++]);
             }
 
             return;
         }
 
-        patchChildren(this, node);
+        patchChildren(this, element);
     },
 
-    _patchAttrs(node) {
+    _patchAttrs(element) {
         const attrsA = this.attrs,
-            attrsB = node.attrs;
+            attrsB = element.attrs;
 
         if(attrsA === attrsB) {
             return;
@@ -580,46 +581,37 @@ TagNode.prototype = {
         }
     },
 
-    _patchRef(node) {
+    _patchRef(element) {
         if(this._ref !== null) {
-            if(this._ref !== node._ref) {
+            if(this._ref !== element._ref) {
                 this._ref(null);
 
-                if(node._ref !== null) {
-                    node._ref(node._domNode);
+                if(element._ref !== null) {
+                    element._ref(element._domNode);
                 }
             }
         }
-        else if(node._ref !== null) {
-            node._ref(node._domNode);
+        else if(element._ref !== null) {
+            element._ref(element._domNode);
         }
     }
 };
 
 function processChildren(children) {
-    if(children == null) {
-        return null;
+    const normalizedChildren = normalizeNode(children),
+        res = normalizedChildren !== null &&
+                typeof normalizedChildren === 'object' &&
+                !Array.isArray(normalizedChildren)?
+            [normalizedChildren] :
+            normalizedChildren;
+
+    if(IS_DEBUG) {
+        if(Array.isArray(res)) {
+            checkChildren(res);
+        }
     }
 
-    switch(typeof children) {
-        case 'string':
-            return children;
-
-        case 'boolean':
-            return null;
-
-        case 'object':
-            const res = Array.isArray(children)? children : [children];
-
-            if(IS_DEBUG) {
-                checkChildren(res);
-            }
-
-            return res;
-
-        default:
-            return '' + children;
-    }
+    return res;
 }
 
 function checkAttrs(attrs) {

@@ -1,5 +1,5 @@
 import simulate from 'simulate';
-import { node, mountSync, unmountSync } from '../../../src/vidom';
+import { elem, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('select', () => {
     let domNode;
@@ -14,9 +14,9 @@ describe('select', () => {
     });
 
     it('should maintain value', () => {
-        mountSync(domNode, node('select').setAttrs({ id : 'select', value : '1' }).setChildren([
-            node('option').setAttrs({ value : '1', id : 'opt1' }),
-            node('option').setAttrs({ value : '2', id : 'opt2' })
+        mountSync(domNode, elem('select').setAttrs({ id : 'select', value : '1' }).setChildren([
+            elem('option').setAttrs({ value : '1', id : 'opt1' }),
+            elem('option').setAttrs({ value : '2', id : 'opt2' })
         ]));
 
         const select = document.getElementById('select'),
@@ -32,10 +32,10 @@ describe('select', () => {
     });
 
     it('should maintain multiple value', () => {
-        mountSync(domNode, node('select').setAttrs({ id : 'select', multiple : true, value : ['1', '2'] }).setChildren([
-            node('option').setAttrs({ value : '1', id : 'opt1' }),
-            node('option').setAttrs({ value : '2', id : 'opt2' }),
-            node('option').setAttrs({ value : '3', id : 'opt3' })
+        mountSync(domNode, elem('select').setAttrs({ id : 'select', multiple : true, value : ['1', '2'] }).setChildren([
+            elem('option').setAttrs({ value : '1', id : 'opt1' }),
+            elem('option').setAttrs({ value : '2', id : 'opt2' }),
+            elem('option').setAttrs({ value : '3', id : 'opt3' })
         ]));
 
         const select = document.getElementById('select'),
@@ -61,9 +61,9 @@ describe('select', () => {
         }
 
         function render() {
-            mountSync(domNode, node('select').setAttrs({ id : 'select', value, onChange }).setChildren([
-                node('option').setAttrs({ value : '1', id : 'opt1' }),
-                node('option').setAttrs({ value : '2', id : 'opt2' })
+            mountSync(domNode, elem('select').setAttrs({ id : 'select', value, onChange }).setChildren([
+                elem('option').setAttrs({ value : '1', id : 'opt1' }),
+                elem('option').setAttrs({ value : '2', id : 'opt2' })
             ]));
         }
 
@@ -88,9 +88,9 @@ describe('select', () => {
         }
 
         function render() {
-            mountSync(domNode, node('select').setAttrs({ id : 'select', multiple : true, value, onChange }).setChildren([
-                node('option').setAttrs({ value : '1', id : 'opt1' }),
-                node('option').setAttrs({ value : '2', id : 'opt2' })
+            mountSync(domNode, elem('select').setAttrs({ id : 'select', multiple : true, value, onChange }).setChildren([
+                elem('option').setAttrs({ value : '1', id : 'opt1' }),
+                elem('option').setAttrs({ value : '2', id : 'opt2' })
             ]));
         }
 
@@ -112,7 +112,7 @@ describe('select', () => {
 
         mountSync(
             domNode,
-            node('select').setAttrs({ id : 'select', ref(_ref) { ref = _ref; } }));
+            elem('select').setAttrs({ id : 'select', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('select'));
     });

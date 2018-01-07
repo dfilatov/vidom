@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onContextReceive', () => {
     let domNode;
@@ -24,8 +24,8 @@ describe('onContextReceive', () => {
                 }
             });
 
-        mountSync(domNode, node(C), prevContext);
-        mountSync(domNode, node(C), nextContext);
+        mountSync(domNode, elem(C), prevContext);
+        mountSync(domNode, elem(C), nextContext);
     });
 
     it('shouldn\'t be called if component updates itself', done => {
@@ -40,7 +40,7 @@ describe('onContextReceive', () => {
                 }
             });
 
-        mountSync(domNode, node(C));
+        mountSync(domNode, elem(C));
     });
 
     it('shouldn\'t cause additional render if calls update()', done => {
@@ -48,7 +48,7 @@ describe('onContextReceive', () => {
             C = createComponent({
                 onRender() {
                     spy();
-                    return node('div');
+                    return elem('div');
                 },
 
                 onContextReceive() {
@@ -59,7 +59,7 @@ describe('onContextReceive', () => {
                 }
             });
 
-        mountSync(domNode, node(C), { ctx : 1 });
-        mountSync(domNode, node(C), { ctx : 2 });
+        mountSync(domNode, elem(C), { ctx : 1 });
+        mountSync(domNode, elem(C), { ctx : 2 });
     });
 });

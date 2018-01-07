@@ -1,20 +1,20 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeB = createNode('fragment').setKey('b'),
-    nodeC = createNode('a').setKey('c'),
-    nodeBA = createNode('fragment').setKey('ba'),
-    nodeBAA = createNode('b').setKey('baa'),
-    nodeBAB = createNode('b').setKey('bab'),
-    nodeBB = createNode('a').setKey('bb'),
-    nodeD = createNode('a').setKey('d'),
-    parentNode = createNode('fragment');
+const nodeB = createElement('fragment').setKey('b'),
+    nodeC = createElement('a').setKey('c'),
+    nodeBA = createElement('fragment').setKey('ba'),
+    nodeBAA = createElement('b').setKey('baa'),
+    nodeBAB = createElement('b').setKey('bab'),
+    nodeBB = createElement('a').setKey('bb'),
+    nodeD = createElement('a').setKey('d'),
+    parentNode = createElement('fragment');
 
 export default {
     'name' : 'complex4',
     'trees' : [
-        createNode('fragment').setChildren([
-            createNode('a').setKey('a'),
+        createElement('fragment').setChildren([
+            createElement('a').setKey('a'),
             nodeB.setChildren([
                 nodeBA.setChildren([
                     nodeBAA,
@@ -26,13 +26,13 @@ export default {
             nodeD
         ]),
         parentNode.setChildren([
-            createNode('a').setKey('a'),
-            createNode('a').setKey('c'),
-            createNode('fragment').setKey('b').setChildren([
-                createNode('a').setKey('bb'),
-                createNode('fragment').setKey('ba').setChildren([
-                    createNode('b').setKey('bab'),
-                    createNode('b').setKey('baa')
+            createElement('a').setKey('a'),
+            createElement('a').setKey('c'),
+            createElement('fragment').setKey('b').setChildren([
+                createElement('a').setKey('bb'),
+                createElement('fragment').setKey('ba').setChildren([
+                    createElement('b').setKey('bab'),
+                    createElement('b').setKey('baa')
                 ])
             ])
         ])

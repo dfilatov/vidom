@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mount, unmount, IS_DEBUG } from '../../src/vidom';
+import { elem, createComponent, mount, unmount } from '../../src/vidom';
 
 describe('mount', () => {
     let domNode;
@@ -15,30 +15,17 @@ describe('mount', () => {
         });
     });
 
-    if(IS_DEBUG) {
-        describe('exceptions', () => {
-            it('should throw TypeError exception if not a node is passed', done => {
-                expect(() => {
-                    mount(domNode, {});
-                }).to.throwException(function(e) {
-                    expect(e).to.be.a(TypeError);
-                    done();
-                });
-            });
-        });
-    }
-
     describe('callbacks', () => {
         it('should properly call callback on initial mount', done => {
-            mount(domNode, node('div'), () => {
+            mount(domNode, elem('div'), () => {
                 expect(domNode.childNodes.length).to.equal(1);
                 done();
             });
         });
 
         it('should properly call callback after tree is remounted with diff', done => {
-            mount(domNode, node('div'), () => {
-                mount(domNode, node('span'), () => {
+            mount(domNode, elem('div'), () => {
+                mount(domNode, elem('span'), () => {
                     expect(domNode.childNodes[0].tagName).to.equal('SPAN');
                     done();
                 });
@@ -46,8 +33,8 @@ describe('mount', () => {
         });
 
         it('should properly call callback after tree is remounted without diff', done => {
-            mount(domNode, node('div'), () => {
-                mount(domNode, node('div'), () => {
+            mount(domNode, elem('div'), () => {
+                mount(domNode, elem('div'), () => {
                     done();
                 });
             });
@@ -56,8 +43,8 @@ describe('mount', () => {
         it('shouldn\'t call callback if a new tree is mounted', done => {
             const spy = sinon.spy();
 
-            mount(domNode, node('div'), spy);
-            mount(domNode, node('div'), () => {
+            mount(domNode, elem('div'), spy);
+            mount(domNode, elem('div'), () => {
                 expect(spy.called).not.to.be.ok();
                 done();
             });
@@ -66,7 +53,7 @@ describe('mount', () => {
         it('shouldn\'t call callback if a tree is unmounted', done => {
             const spy = sinon.spy();
 
-            mount(domNode, node('div'), spy);
+            mount(domNode, elem('div'), spy);
             unmount(domNode, () => {
                 expect(spy.called).not.to.be.ok();
                 done();
@@ -77,7 +64,7 @@ describe('mount', () => {
     describe('replacing', () => {
         it('should replace extraneous dom', done => {
             domNode.appendChild(document.createElement('span'));
-            mount(domNode, node('div'), () => {
+            mount(domNode, elem('div'), () => {
                 expect(domNode.childNodes.length).to.equal(1);
                 expect(domNode.childNodes[0].tagName.toLowerCase()).to.equal('div');
                 done();
@@ -95,7 +82,7 @@ describe('mount', () => {
                     }
                 });
 
-            mount(domNode, node('div').setChildren(node(C)), ctx);
+            mount(domNode, elem('div').setChildren(elem(C)), ctx);
         });
     });
 });

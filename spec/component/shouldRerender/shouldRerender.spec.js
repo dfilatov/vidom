@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { node, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
 
 describe('shouldRerender', () => {
@@ -30,13 +30,13 @@ describe('shouldRerender', () => {
             }),
             prevAttrs = { id : 1 },
             nextAttrs = { id : 2 },
-            prevChildren = [node('div')],
-            nextChildren = [node('span')],
+            prevChildren = [elem('div')],
+            nextChildren = [elem('span')],
             prevContext = { ctx : 1 },
             nextContext = { ctx : 2 };
 
-        mountSync(domNode, node(C).setAttrs(prevAttrs).setChildren(prevChildren), prevContext);
-        mountSync(domNode, node(C).setAttrs(nextAttrs).setChildren(nextChildren), nextContext);
+        mountSync(domNode, elem(C).setAttrs(prevAttrs).setChildren(prevChildren), prevContext);
+        mountSync(domNode, elem(C).setAttrs(nextAttrs).setChildren(nextChildren), nextContext);
     });
 
     it('should prevent rendering if returns false', () => {
@@ -44,7 +44,7 @@ describe('shouldRerender', () => {
             C = createComponent({
                 onRender() {
                     spy();
-                    return node('div');
+                    return elem('div');
                 },
 
                 shouldRerender() {
@@ -52,8 +52,8 @@ describe('shouldRerender', () => {
                 }
             });
 
-        mountSync(domNode, node(C));
-        mountSync(domNode, node(C));
+        mountSync(domNode, elem(C));
+        mountSync(domNode, elem(C));
 
         expect(spy.calledOnce).to.be.ok();
     });

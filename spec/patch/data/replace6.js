@@ -1,8 +1,8 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 
-const C1 = () => createNode('div'),
-    oldNode = createNode(C1),
-    newNode = createNode(C1);
+const C1 = () => createElement('div'),
+    oldNode = createElement(C1),
+    newNode = createElement(C1);
 
 export default {
     'name' : 'replace6',

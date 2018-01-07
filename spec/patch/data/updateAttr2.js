@@ -1,13 +1,13 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('button').setAttrs({ value : 'text' });
+const node = createElement('button').setAttrs({ value : 'text' });
 
 export default {
     'name' : 'updateAttr2',
     'trees' : [
         node,
-        createNode('button').setAttrs({ value : 'text', disabled : true })
+        createElement('button').setAttrs({ value : 'text', disabled : true })
     ],
     'patch' : [
         { op : patchOps.updateAttr, args : [node, 'disabled', true] }

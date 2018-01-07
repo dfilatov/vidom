@@ -1,8 +1,8 @@
 import patchOps from '../../client/patchOps';
 
-export default function patchChildren(nodeA, nodeB) {
-    const childrenA = nodeA.children,
-        childrenB = nodeB.children,
+export default function patchChildren(elementA, elementB) {
+    const childrenA = elementA.children,
+        childrenB = elementB.children,
         childrenALen = childrenA.length,
         childrenBLen = childrenB.length;
 
@@ -123,7 +123,7 @@ export default function patchChildren(nodeA, nodeB) {
             patchOps.insertChild(childrenB[leftIdxB], childrenB[rightIdxB + 1]);
         }
         else {
-            patchOps.appendChild(nodeB, childrenB[leftIdxB]);
+            patchOps.appendChild(elementB, childrenB[leftIdxB]);
         }
 
         ++leftIdxB;

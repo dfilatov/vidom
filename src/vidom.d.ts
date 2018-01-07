@@ -7,82 +7,82 @@ interface MapLike<T> {
     readonly [key: string]: T
 }
 
+type DOMElement = Element;
+
 declare namespace vidom {
     type Key = string | number;
     type Ref<T> = (instance: T | null) => void;
     type Attrs = {};
 
-    abstract class BaseVNode {
+    abstract class BaseElement {
         readonly key: Key | null;
 
         setKey(key: Key): this;
-        abstract clone(): BaseVNode;
+        clone(): this;
     }
 
-    class TagVNode extends BaseVNode {
+    class TagElement extends BaseElement {
         readonly tag: string;
-        readonly attrs: vidom.HTMLAttributes<Element>;
+        readonly attrs: vidom.HTMLAttributes<DOMElement>;
         readonly ns: string | null;
-        readonly children: VNode[] | string | null;
+        readonly children: Element[] | string | null;
 
-        setAttrs(attrs: vidom.HTMLAttributes<Element>): this;
+        setAttrs(attrs: vidom.HTMLAttributes<DOMElement>): this;
         setNs(ns: string): this;
-        setChildren(children: VNode | VNode[] | string): this;
+        setChildren(children: Node): this;
         setHtml(html: string): this;
         setRef(callback: Ref<Element>): this;
-        clone(): TagVNode;
     }
 
-    class TextVNode extends BaseVNode {
+    class TextElement extends BaseElement {
         readonly children: string;
 
         setChildren(children: string): this;
-        clone(): TextVNode;
     }
 
-    class FragmentVNode extends BaseVNode {
-        readonly children: VNode[] | null;
+    class FragmentElement extends BaseElement {
+        readonly children: Element[] | null;
 
-        setChildren(children: VNode | VNode[]): this;
-        clone(): FragmentVNode;
+        setChildren(children: Node): this;
     }
 
-    class ComponentVNode<
-        VNodeAttrs extends Attrs = Attrs,
-        VNodeChildren = any,
-        VNodeComponent extends Component<VNodeAttrs> = Component<VNodeAttrs>,
-        VNodeComponentClass extends ComponentClass<VNodeAttrs> = ComponentClass<VNodeAttrs>
-    > extends BaseVNode {
-        readonly component: VNodeComponentClass;
-        readonly attrs: Readonly<VNodeAttrs>;
-        readonly children?: VNodeChildren;
+    class ComponentElement<
+        ElementAttrs extends Attrs = Attrs,
+        ElementChildren = any,
+        ElementComponent extends Component<ElementAttrs> = Component<ElementAttrs>,
+        ElementComponentClass extends ComponentClass<ElementAttrs> = ComponentClass<ElementAttrs>
+    > extends BaseElement {
+        readonly component: ElementComponentClass;
+        readonly attrs: Readonly<ElementAttrs>;
+        readonly children?: ElementChildren;
 
-        setAttrs(attrs: VNodeAttrs): this;
-        setChildren(children: VNodeChildren): this;
-        setRef(callback: Ref<VNodeComponent>): this;
-        clone(): ComponentVNode<VNodeAttrs, VNodeChildren, VNodeComponent, VNodeComponentClass>;
+        setAttrs(attrs: ElementAttrs): this;
+        setChildren(children: ElementChildren): this;
+        setRef(callback: Ref<ElementComponent>): this;
     }
 
-    class FunctionComponentVNode<
-        VNodeAttrs extends Attrs = Attrs,
-        VNodeChildren = any,
-        VNodeFunctionComponent extends FunctionComponent<VNodeAttrs> = FunctionComponent<VNodeAttrs>
-    > extends BaseVNode {
-        readonly component: VNodeFunctionComponent;
-        readonly attrs: Readonly<VNodeAttrs>;
-        readonly children?: VNodeChildren;
+    class FunctionComponentElement<
+        ElementAttrs extends Attrs = Attrs,
+        ElementChildren = any,
+        ElementFunctionComponent extends FunctionComponent<ElementAttrs> = FunctionComponent<ElementAttrs>
+    > extends BaseElement {
+        readonly component: ElementFunctionComponent;
+        readonly attrs: Readonly<ElementAttrs>;
+        readonly children?: ElementChildren;
 
-        setAttrs(attrs: VNodeAttrs): this;
-        setChildren(children: VNodeChildren): this;
-        clone(): FunctionComponentVNode<VNodeAttrs, VNodeChildren, VNodeFunctionComponent>;
+        setAttrs(attrs: ElementAttrs): this;
+        setChildren(children: ElementChildren): this;
     }
 
-    type VNode =
-        TagVNode |
-        TextVNode |
-        FragmentVNode |
-        ComponentVNode |
-        FunctionComponentVNode;
+    type Element =
+        TagElement |
+        TextElement |
+        FragmentElement |
+        ComponentElement |
+        FunctionComponentElement;
+
+    type Node = Element | string | number | boolean | null | undefined | NodeArray;
+    interface NodeArray extends Array<Node> {}
 
     interface WithKey {
         key?: Key;
@@ -587,7 +587,7 @@ declare namespace vidom {
     }
 
     interface FunctionComponent<FunctionComponentAttrs extends Attrs = Attrs, Children = any, Context = {}> {
-         (attrs: FunctionComponentAttrs, children: Children, context: Context): VNode;
+         (attrs: FunctionComponentAttrs, children: Children, context: Context): Element | null;
          defaultAttrs?: Partial<FunctionComponentAttrs>;
     }
 
@@ -606,7 +606,7 @@ declare namespace vidom {
         protected setState(state: Partial<ComponentState>): void;
         protected update(callback?: () => void): void;
         protected isMounted(): boolean;
-        protected getDomNode(): Element | Element[];
+        protected getDomNode(): DOMElement | DOMElement[];
 
         protected onInit(): void;
         protected onMount(): void;
@@ -620,7 +620,7 @@ declare namespace vidom {
             prevState: ComponentState,
             prevContext: ComponentContext
         ): boolean;
-        protected abstract onRender(): VNode | null;
+        protected abstract onRender(): Node;
         protected onUpdate(
             prevAttrs: ComponentAttrs,
             prevChildren: ComponentChildren,
@@ -630,30 +630,30 @@ declare namespace vidom {
         protected onUnmount(): void;
     }
 
-    function node(tag: 'fragment'): FragmentVNode;
-    function node(tag: 'plaintext'): TextVNode;
-    function node(tag: string): TagVNode;
-    function node<Attrs, State, Children, T extends Component<Attrs, State, Children>, U extends ComponentClass<Attrs, Children, T>>(
+    function elem(tag: 'fragment'): FragmentElement;
+    function elem(tag: 'plaintext'): TextElement;
+    function elem(tag: string): TagElement;
+    function elem<Attrs, State, Children, T extends Component<Attrs, State, Children>, U extends ComponentClass<Attrs, Children, T>>(
         component: U & ComponentClass<Attrs, Children, T>
-        ): ComponentVNode<Attrs, Children, T, U>;
-    function node<Attrs, Children, T extends FunctionComponent<Attrs, Children>> (
+    ): ComponentElement<Attrs, Children, T, U>;
+    function elem<Attrs, Children, T extends FunctionComponent<Attrs, Children>> (
         component: T & FunctionComponent<Attrs, Children>
-        ): FunctionComponentVNode<Attrs, Children, T>;
+    ): FunctionComponentElement<Attrs, Children, T>;
 
-    function mount(elem: Element, rootVNode: BaseVNode, callback?: () => void): void;
-    function mount(elem: Element, rootVNode: BaseVNode, context?: MapLike<any>, callback?: () => void): void;
-    function mountSync(elem: Element, rootVNode: BaseVNode, context?: MapLike<any>): void;
-    function unmount(elem: Element, callback?: () => void): void;
-    function unmountSync(elem: Element): void;
+    function mount(domElem: DOMElement, node: Node, callback?: () => void): void;
+    function mount(domElem: DOMElement, node: Node, context?: MapLike<any>, callback?: () => void): void;
+    function mountSync(domElem: DOMElement, node: Node, context?: MapLike<any>): void;
+    function unmount(domElem: DOMElement, callback?: () => void): void;
+    function unmountSync(domElem: DOMElement): void;
 
-    function renderToString(rootVNode: VNode): string;
+    function renderToString(node: Node): string;
 
     const IS_DEBUG: boolean;
 }
 
 declare global {
     namespace JSX {
-        type Element = vidom.VNode;
+        type Element = vidom.Element;
         type ElementClass = vidom.Component;
         type ElementAttributesProperty = { attrs: {}; };
 

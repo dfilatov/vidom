@@ -1,4 +1,4 @@
-import { node, createComponent, mountSync, unmountSync } from '../../src/vidom';
+import { elem, createComponent, mountSync, unmountSync } from '../../src/vidom';
 
 describe('adoptDom', () => {
     let domNode;
@@ -15,9 +15,9 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing dom nodes', () => {
-        const firstChildNode = node('span'),
-            secondChildNode = node('i'),
-            tree = node('div').setChildren([firstChildNode, secondChildNode]),
+        const firstChildNode = elem('span'),
+            secondChildNode = elem('i'),
+            tree = elem('div').setChildren([firstChildNode, secondChildNode]),
             treeDomNode = document.createElement('div'),
             firstChildDomNode = document.createElement('span'),
             secondChildDomNode = document.createElement('i');
@@ -34,9 +34,9 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing text dom nodes', () => {
-        const firstChildNode = node('plaintext').setChildren('text1'),
-            secondChildNode = node('plaintext').setChildren('text2'),
-            tree = node('div').setChildren([firstChildNode, secondChildNode]),
+        const firstChildNode = elem('plaintext').setChildren('text1'),
+            secondChildNode = elem('plaintext').setChildren('text2'),
+            tree = elem('div').setChildren([firstChildNode, secondChildNode]),
             treeDomNode = document.createElement('div'),
             firstChildDomNode = [document.createComment(''), document.createComment('')],
             secondChildDomNode = [document.createComment(''), document.createComment('')];
@@ -56,7 +56,7 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing top level text dom node', () => {
-        const tree = node('plaintext').setChildren('text1'),
+        const tree = elem('plaintext').setChildren('text1'),
             textDomNode = [document.createComment(''), document.createComment('')];
 
         domNode.appendChild(textDomNode[0]);
@@ -69,7 +69,7 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing top level fragment dom node', () => {
-        const tree = node('fragment').setChildren([node('div'), node('div')]),
+        const tree = elem('fragment').setChildren([elem('div'), elem('div')]),
             fragmentDomNode = [document.createComment(''), document.createComment('')];
 
         domNode.appendChild(fragmentDomNode[0]);
@@ -83,10 +83,10 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing dom nodes through components', () => {
-        const spanNode = node('span'),
+        const spanNode = elem('span'),
             C1 = createComponent({
                 onRender() {
-                    return node(C2);
+                    return elem(C2);
                 }
             }),
             C2 = createComponent({
@@ -94,7 +94,7 @@ describe('adoptDom', () => {
                     return spanNode;
                 }
             }),
-            tree = node('div').setChildren(node(C1)),
+            tree = elem('div').setChildren(elem(C1)),
             treeDomNode = document.createElement('div'),
             childDomNode = document.createElement('span');
 
@@ -107,10 +107,10 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing dom nodes through function components', () => {
-        const spanNode = node('span'),
-            C1 = () => node(C2),
+        const spanNode = elem('span'),
+            C1 = () => elem(C2),
             C2 = () => spanNode,
-            tree = node('div').setChildren(node(C1)),
+            tree = elem('div').setChildren(elem(C1)),
             treeDomNode = document.createElement('div'),
             childDomNode = document.createElement('span');
 

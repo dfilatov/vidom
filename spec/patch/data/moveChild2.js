@@ -1,19 +1,19 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeA = createNode('input').setKey('a'),
-    nodeB = createNode('input').setKey('b');
+const nodeA = createElement('input').setKey('a'),
+    nodeB = createElement('input').setKey('b');
 
 export default {
     'name' : 'moveChild2',
     'trees' : [
-        createNode('fragment').setChildren([
+        createElement('fragment').setChildren([
             nodeA,
             nodeB
         ]),
-        createNode('fragment').setChildren([
-            createNode('input').setKey('b'),
-            createNode('input').setKey('a')
+        createElement('fragment').setChildren([
+            createElement('input').setKey('b'),
+            createElement('input').setKey('a')
         ])
     ],
     'patch' : [

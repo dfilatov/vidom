@@ -1,7 +1,7 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createNode('div').setAttrs({
+const node = createElement('div').setAttrs({
     style : {
         width : '100px',
         height : '100px',
@@ -15,7 +15,7 @@ export default {
     'name' : 'updateAttr4',
     'trees' : [
         node,
-        createNode('div').setAttrs({
+        createElement('div').setAttrs({
             style : {
                 width : '100px',
                 float : 'right',

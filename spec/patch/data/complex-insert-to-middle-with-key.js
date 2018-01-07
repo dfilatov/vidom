@@ -1,21 +1,21 @@
-import createNode from '../../../src/createNode';
+import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
 
-const nodeC = createNode('a').setKey('c'),
-    nodeD = createNode('a').setKey('d'),
-    nodeE = createNode('a').setKey('e');
+const nodeC = createElement('a').setKey('c'),
+    nodeD = createElement('a').setKey('d'),
+    nodeE = createElement('a').setKey('e');
 
 export default {
     'name' : 'complex-insert-to-middle-with-key',
     'trees' : [
-        createNode('div').setChildren([
-            createNode('a').setKey('a'),
-            createNode('a').setKey('b'),
-            createNode('a').setKey('e')
+        createElement('div').setChildren([
+            createElement('a').setKey('a'),
+            createElement('a').setKey('b'),
+            createElement('a').setKey('e')
         ]),
-        createNode('div').setChildren([
-            createNode('a').setKey('a'),
-            createNode('a').setKey('b'),
+        createElement('div').setChildren([
+            createElement('a').setKey('a'),
+            createElement('a').setKey('b'),
             nodeC,
             nodeD,
             nodeE
