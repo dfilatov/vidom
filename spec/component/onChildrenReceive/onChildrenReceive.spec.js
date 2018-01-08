@@ -32,11 +32,14 @@ describe('onChildrenReceive', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onChildrenReceive : spy,
+
                 onMount() {
-                    this.update(() => {
-                        expect(spy.called).not.to.be.ok();
-                        done();
-                    });
+                    this.update();
+                },
+
+                onUpdate() {
+                    expect(spy.called).not.to.be.ok();
+                    done();
                 }
             });
 
@@ -52,10 +55,12 @@ describe('onChildrenReceive', () => {
                 },
 
                 onChildrenReceive() {
-                    this.update(() => {
-                        expect(spy.calledTwice).to.be.ok();
-                        done();
-                    });
+                    this.update();
+                },
+
+                onUpdate() {
+                    expect(spy.calledTwice).to.be.ok();
+                    done();
                 }
             });
 

@@ -198,35 +198,24 @@ function renderComponent() {
     return rootElem;
 }
 
-function updateComponent(cb) {
-    if(!this.isMounted()) {
+function updateComponent() {
+    if(!this.isMounted() || this.__isUpdating) {
         return;
     }
 
-    if(this.__isUpdating) {
-        if(cb) {
-            rafBatch(() => cb.call(this));
-        }
-    }
-    else {
-        this.__isUpdating = true;
-        rafBatch(() => {
-            if(this.isMounted()) {
-                this.__isUpdating = false;
-                const prevRootElem = this.__rootElement;
+    this.__isUpdating = true;
+    rafBatch(() => {
+        if(this.isMounted()) {
+            this.__isUpdating = false;
+            const prevRootElem = this.__rootElement;
 
-                this.patch(this.attrs, this.children, this.context, false);
+            this.patch(this.attrs, this.children, this.context, false);
 
-                if(cb) {
-                    cb.call(this);
-                }
-
-                if(IS_DEBUG) {
-                    globalHook.emit('replace', prevRootElem, this.__rootElement);
-                }
+            if(IS_DEBUG) {
+                globalHook.emit('replace', prevRootElem, this.__rootElement);
             }
-        });
-    }
+        }
+    });
 }
 
 function getComponentRootElem() {
