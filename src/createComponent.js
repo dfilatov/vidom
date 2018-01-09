@@ -197,7 +197,7 @@ function renderComponent() {
 }
 
 function updateComponent() {
-    if(!this.isMounted() || this.__isUpdating) {
+    if(this.__isUpdating || !this.isMounted()) {
         return;
     }
 
@@ -205,12 +205,16 @@ function updateComponent() {
     rafBatch(() => {
         if(this.isMounted()) {
             this.__isUpdating = false;
-            const prevRootElem = this.__rootElement;
-
-            this.patch(this.attrs, this.children, this.context, false);
 
             if(IS_DEBUG) {
+                const prevRootElem = this.__rootElement;
+
+                this.patch(this.attrs, this.children, this.context, false);
+
                 globalHook.emit('replace', prevRootElem, this.__rootElement);
+            }
+            else {
+                this.patch(this.attrs, this.children, this.context, false);
             }
         }
     });
