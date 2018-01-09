@@ -8,6 +8,12 @@ import { IS_DEBUG } from './utils/debug';
 import nodeToElement from './nodes/utils/nodeToElement';
 import globalHook from './globalHook';
 
+function initComponent() {
+    this.onInit();
+    this.__prevState = this.state;
+    this.__isInited = true;
+}
+
 function mountComponent() {
     this.__isMounted = true;
     this.getRootElement().mount();
@@ -147,27 +153,19 @@ function setComponentState(state) {
 
             console.warn(`${name}#setState() should not be called during rendering`);
         }
-    }
 
-    let nextState;
-
-    if(this.__rootElement === null) { // wasn't inited
-        nextState = state === emptyObj? state : merge(this.state, state);
-    }
-    else {
-        this.update();
-        nextState = merge(this.state, state);
-    }
-
-    if(IS_DEBUG) {
         this.__isFrozen = false;
     }
 
-    this.state = nextState;
+    this.state = merge(this.state, state);
 
     if(IS_DEBUG) {
         Object.freeze(this.state);
         this.__isFrozen = true;
+    }
+
+    if(this.__isInited) {
+        this.update();
     }
 }
 
@@ -275,20 +273,20 @@ function createComponent(props, staticProps) {
                 this.__isFrozen = true;
             }
 
+            this.__isInited = false;
             this.__isMounted = false;
             this.__isUpdating = false;
 
             this.__rootElement = null;
 
-            this.onInit();
-
             this.__prevAttrs = this.attrs;
             this.__prevChildren = this.children;
-            this.__prevState = this.state;
+            this.__prevState = emptyObj;
             this.__prevContext = this.context;
         },
         ptp = {
             constructor : res,
+            init : initComponent,
             onInit : noOp,
             mount : mountComponent,
             unmount : unmountComponent,

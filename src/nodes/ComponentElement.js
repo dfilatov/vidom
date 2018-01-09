@@ -206,8 +206,11 @@ ComponentElement.prototype = {
     },
 
     _getInstance() {
-        return this._instance === null?
-            this._instance = new this.component(this.attrs, this.children, this._ctx) :
-            this._instance;
+        if(this._instance === null) {
+            this._instance = new this.component(this.attrs, this.children, this._ctx);
+            this._instance.init();
+        }
+
+        return this._instance;
     }
 };
