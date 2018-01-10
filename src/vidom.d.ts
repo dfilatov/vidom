@@ -3,16 +3,13 @@
 export = vidom;
 export as namespace vidom;
 
-interface MapLike<T> {
-    readonly [key: string]: T
-}
+type MapLike<T = any> = Record<string, any>;
 
 type DOMElement = Element;
 
 declare namespace vidom {
     type Key = string | number;
-    type Ref<T> = (instance: T | null) => void;
-    type Attrs = {};
+    type Ref<T> = (ref: T | null) => void;
 
     abstract class BaseElement {
         readonly key: Key | null;
@@ -23,11 +20,11 @@ declare namespace vidom {
 
     class TagElement extends BaseElement {
         readonly tag: string;
-        readonly attrs: HTMLAttributes<DOMElement>;
+        readonly attrs: HTMLAttributes | SVGAttributes;
         readonly ns: string | null;
         readonly children: Element[] | string | null;
 
-        setAttrs(attrs: HTMLAttributes<DOMElement>): this;
+        setAttrs(attrs: HTMLAttributes | SVGAttributes): this;
         setNs(ns: string): this;
         setChildren(children: Node): this;
         setHtml(html: string): this;
@@ -47,31 +44,31 @@ declare namespace vidom {
     }
 
     class ComponentElement<
-        ElementAttrs extends Attrs = Attrs,
-        ElementChildren = any,
-        ElementComponent extends Component<ElementAttrs> = Component<ElementAttrs>,
-        ElementComponentClass extends ComponentClass<ElementAttrs> = ComponentClass<ElementAttrs>
+        TAttrs extends MapLike = MapLike,
+        TChildren = any,
+        TComponent extends Component<TAttrs, {}, TChildren> = Component<TAttrs, {}, TChildren>,
+        TComponentClass extends ComponentClass<TAttrs, TChildren> = ComponentClass<TAttrs, TChildren>
     > extends BaseElement {
-        readonly component: ElementComponentClass;
-        readonly attrs: Readonly<ElementAttrs>;
-        readonly children?: ElementChildren;
+        readonly component: TComponentClass;
+        readonly attrs: Readonly<TAttrs>;
+        readonly children?: TChildren;
 
-        setAttrs(attrs: ElementAttrs): this;
-        setChildren(children: ElementChildren): this;
-        setRef(callback: Ref<ElementComponent>): this;
+        setAttrs(attrs: TAttrs): this;
+        setChildren(children: TChildren): this;
+        setRef(callback: Ref<TComponent>): this;
     }
 
     class FunctionComponentElement<
-        ElementAttrs extends Attrs = Attrs,
-        ElementChildren = any,
-        ElementFunctionComponent extends FunctionComponent<ElementAttrs> = FunctionComponent<ElementAttrs>
+        TAttrs extends MapLike = MapLike,
+        TChildren = any,
+        TFunctionComponent extends FunctionComponent<TAttrs, TChildren> = FunctionComponent<TAttrs, TChildren>
     > extends BaseElement {
-        readonly component: ElementFunctionComponent;
-        readonly attrs: Readonly<ElementAttrs>;
-        readonly children?: ElementChildren;
+        readonly component: TFunctionComponent;
+        readonly attrs: Readonly<TAttrs>;
+        readonly children?: TChildren;
 
-        setAttrs(attrs: ElementAttrs): this;
-        setChildren(children: ElementChildren): this;
+        setAttrs(attrs: TAttrs): this;
+        setChildren(children: TChildren): this;
     }
 
     type Element =
@@ -92,10 +89,10 @@ declare namespace vidom {
         ref?: Ref<T>;
     }
 
-    class SyntheticEvent<T = HTMLElement, NativeEvent = Event> {
+    class SyntheticEvent<TTarget extends DOMElement = DOMElement, TNativeEvent extends Event = Event> {
         type: string;
-        target: T;
-        nativeEvent: NativeEvent;
+        target: TTarget;
+        nativeEvent: TNativeEvent;
 
         stopPropagation(): void;
         isPropagationStopped(): boolean;
@@ -104,83 +101,83 @@ declare namespace vidom {
         persist(): void;
     }
 
-    type MouseSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, MouseEvent>;
-    type KeyboardSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, KeyboardEvent>;
-    type DragSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, DragEvent>;
-    type TouchSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, TouchEvent>;
-    type FocusSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, FocusEvent>;
-    type WheelSyntheticEvent<T = HTMLElement> = SyntheticEvent<T, WheelEvent>;
+    type MouseSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, MouseEvent>;
+    type KeyboardSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, KeyboardEvent>;
+    type DragSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, DragEvent>;
+    type TouchSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, TouchEvent>;
+    type FocusSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, FocusEvent>;
+    type WheelSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, WheelEvent>;
 
-    interface DOMEventHandler<T = SyntheticEvent> {
-        (event: T): void;
+    interface DOMEventHandler<TSyntheticEvent extends SyntheticEvent = SyntheticEvent> {
+        (event: TSyntheticEvent): void;
     }
 
-    interface DOMAttributes<T = HTMLElement> {
-        onAnimationEnd?: DOMEventHandler<SyntheticEvent<T>>;
-        onAnimationIteration?: DOMEventHandler<SyntheticEvent<T>>;
-        onAnimationStart?: DOMEventHandler<SyntheticEvent<T>>;
-        onBlur?: DOMEventHandler<FocusSyntheticEvent<T>>;
-        onCanPlay?: DOMEventHandler<SyntheticEvent<T>>;
-        onCanPlayThrough?: DOMEventHandler<SyntheticEvent<T>>;
-        onChange?: DOMEventHandler<SyntheticEvent<T>>;
-        onClick?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onComplete?: DOMEventHandler<SyntheticEvent<T>>;
-        onContextMenu?: DOMEventHandler<SyntheticEvent<T>>;
-        onCopy?: DOMEventHandler<SyntheticEvent<T>>;
-        onCut?: DOMEventHandler<SyntheticEvent<T>>;
-        onDblClick?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onDrag?: DOMEventHandler<DragSyntheticEvent<T>>;
-        onDragEnd?: DOMEventHandler<DragSyntheticEvent<T>>;
-        onDragEnter?: DOMEventHandler<DragSyntheticEvent<T>>;
-        onDragLeave?: DOMEventHandler<DragSyntheticEvent<T>>;
-        onDragOver?: DOMEventHandler<DragSyntheticEvent<T>>;
-        onDragStart?: DOMEventHandler<DragSyntheticEvent<T>>;
-        onDrop?: DOMEventHandler<DragSyntheticEvent<T>>;
-        onDurationChange?: DOMEventHandler<SyntheticEvent<T>>;
-        onEmptied?: DOMEventHandler<SyntheticEvent<T>>;
-        onEnded?: DOMEventHandler<SyntheticEvent<T>>;
-        onError?: DOMEventHandler<SyntheticEvent<T>>;
-        onFocus?: DOMEventHandler<FocusSyntheticEvent<T>>;
-        onInput?: DOMEventHandler<SyntheticEvent<T>>;
-        onKeyDown?: DOMEventHandler<KeyboardSyntheticEvent<T>>;
-        onKeyPress?: DOMEventHandler<KeyboardSyntheticEvent<T>>;
-        onKeyUp?: DOMEventHandler<KeyboardSyntheticEvent<T>>;
-        onLoad?: DOMEventHandler<SyntheticEvent<T>>;
-        onLoadedData?: DOMEventHandler<SyntheticEvent<T>>;
-        onLoadedMetadata?: DOMEventHandler<SyntheticEvent<T>>;
-        onLoadStart?: DOMEventHandler<SyntheticEvent<T>>;
-        onMouseDown?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onMouseEnter?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onMouseLeave?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onMouseMove?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onMouseOut?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onMouseOver?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onMouseUp?: DOMEventHandler<MouseSyntheticEvent<T>>;
-        onPaste?: DOMEventHandler<SyntheticEvent<T>>;
-        onPause?: DOMEventHandler<SyntheticEvent<T>>;
-        onPlay?: DOMEventHandler<SyntheticEvent<T>>;
-        onPlaying?: DOMEventHandler<SyntheticEvent<T>>;
-        onProgress?: DOMEventHandler<SyntheticEvent<T>>;
-        onRateChange?: DOMEventHandler<SyntheticEvent<T>>;
-        onScroll?: DOMEventHandler<SyntheticEvent<T>>;
-        onSeeked?: DOMEventHandler<SyntheticEvent<T>>;
-        onSeeking?: DOMEventHandler<SyntheticEvent<T>>;
-        onSelect?: DOMEventHandler<SyntheticEvent<T>>;
-        onStalled?: DOMEventHandler<SyntheticEvent<T>>;
-        onSubmit?: DOMEventHandler<SyntheticEvent<T>>;
-        onSuspend?: DOMEventHandler<SyntheticEvent<T>>;
-        onTimeUpdate?: DOMEventHandler<SyntheticEvent<T>>;
-        onTouchCancel?: DOMEventHandler<TouchSyntheticEvent<T>>;
-        onTouchEnd?: DOMEventHandler<TouchSyntheticEvent<T>>;
-        onTouchMove?: DOMEventHandler<TouchSyntheticEvent<T>>;
-        onTouchStart?: DOMEventHandler<TouchSyntheticEvent<T>>;
-        onTransitionEnd?: DOMEventHandler<SyntheticEvent<T>>;
-        onVolumeChange?: DOMEventHandler<SyntheticEvent<T>>;
-        onWaiting?: DOMEventHandler<SyntheticEvent<T>>;
-        onWheel?: DOMEventHandler<WheelSyntheticEvent<T>>;
+    interface DOMAttributes<TDOMElement extends DOMElement = DOMElement> {
+        onAnimationEnd?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onAnimationIteration?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onAnimationStart?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onBlur?: DOMEventHandler<FocusSyntheticEvent<TDOMElement>>;
+        onCanPlay?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onCanPlayThrough?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onClick?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onComplete?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onContextMenu?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onCopy?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onCut?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onDblClick?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onDrag?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
+        onDragEnd?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
+        onDragEnter?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
+        onDragLeave?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
+        onDragOver?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
+        onDragStart?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
+        onDrop?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
+        onDurationChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onEmptied?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onEnded?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onError?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onFocus?: DOMEventHandler<FocusSyntheticEvent<TDOMElement>>;
+        onInput?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onKeyDown?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
+        onKeyPress?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
+        onKeyUp?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
+        onLoad?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onLoadedData?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onLoadedMetadata?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onLoadStart?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onMouseDown?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onMouseEnter?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onMouseLeave?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onMouseMove?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onMouseOut?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onMouseOver?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onMouseUp?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
+        onPaste?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onPause?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onPlay?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onPlaying?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onProgress?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onRateChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onScroll?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onSeeked?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onSeeking?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onSelect?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onStalled?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onSubmit?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onSuspend?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onTimeUpdate?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onTouchCancel?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
+        onTouchEnd?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
+        onTouchMove?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
+        onTouchStart?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
+        onTransitionEnd?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onVolumeChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onWaiting?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onWheel?: DOMEventHandler<WheelSyntheticEvent<TDOMElement>>;
     }
 
-    interface HTMLAttributes<T = HTMLElement> extends DOMAttributes<T> {
+    interface HTMLAttributes<THTMLElement extends HTMLElement = HTMLElement> extends DOMAttributes<THTMLElement> {
         accept?: string;
         acceptCharset?: string;
         accessKey?: string;
@@ -324,7 +321,7 @@ declare namespace vidom {
         unselectable?: boolean;
     }
 
-    interface SVGAttributes<T> extends DOMAttributes<T> {
+    interface SVGAttributes<TSVGElement extends SVGElement = SVGElement> extends DOMAttributes<TSVGElement> {
         class?: string;
         color?: string;
         height?: number | string;
@@ -343,7 +340,9 @@ declare namespace vidom {
         accentHeight?: number | string;
         accumulate?: 'none' | 'sum';
         additive?: 'replace' | 'sum';
-        alignmentBaseline?: 'auto' | 'baseline' | 'before-edge' | 'text-before-edge' | 'middle' | 'central' | 'after-edge' | 'text-after-edge' | 'ideographic' | 'alphabetic' | 'hanging' | 'mathematical' | 'inherit';
+        alignmentBaseline?:
+            'auto' | 'baseline' | 'before-edge' | 'text-before-edge' | 'middle' | 'central' | 'after-edge' |
+            'text-after-edge' | 'ideographic' | 'alphabetic' | 'hanging' | 'mathematical' | 'inherit';
         allowReorder?: 'no' | 'yes';
         alphabetic?: number | string;
         amplitude?: number | string;
@@ -581,51 +580,68 @@ declare namespace vidom {
         zoomAndPan?: string;
     }
 
-    interface ComponentClass<ComponentClassAttrs extends Attrs = Attrs, Children = any, T = Component> {
-        new (attrs: ComponentClassAttrs, children: Children): T;
-        defaultAttrs?: Partial<ComponentClassAttrs>;
+    interface ComponentClass<
+        TAttrs extends MapLike = {},
+        TChildren = any,
+        TContext extends MapLike = {},
+        TComponent = Component<TAttrs, {}, TChildren, TContext>
+    > {
+        new (attrs: TAttrs, children: TChildren, context: TContext): TComponent;
+        defaultAttrs?: Partial<TAttrs>;
     }
 
-    interface FunctionComponent<FunctionComponentAttrs extends Attrs = Attrs, Children = any, Context = {}> {
-         (attrs: FunctionComponentAttrs, children: Children, context: Context): Element | null;
-         defaultAttrs?: Partial<FunctionComponentAttrs>;
+    interface FunctionComponent<
+        TAttrs extends MapLike = {},
+        TChildren = any,
+        TContext extends MapLike = {}
+    > {
+         (attrs: TAttrs, children: TChildren, context: TContext): Element | null;
+         defaultAttrs?: Partial<TAttrs>;
     }
+
+    type ComponentType<
+        TAttrs extends MapLike = {},
+        TChildren = any,
+        TContext extends MapLike = {}
+    > =
+        ComponentClass<TAttrs, TChildren, TContext> |
+        FunctionComponent<TAttrs, TChildren, TContext>;
 
     abstract class Component<
-        ComponentAttrs extends Attrs = Attrs,
-        ComponentState extends {} = {},
-        ComponentChildren = any,
-        ComponentContext extends {} = {}
+        TAttrs extends MapLike = {},
+        TState extends MapLike = {},
+        TChildren = any,
+        TContext extends MapLike = {}
     > {
-        protected readonly attrs: Readonly<ComponentAttrs>;
-        protected readonly children: ComponentChildren;
-        protected readonly state: Readonly<ComponentState>;
-        protected readonly context: Readonly<ComponentContext>;
+        protected readonly attrs: Readonly<TAttrs>;
+        protected readonly children: TChildren;
+        protected readonly state: Readonly<TState>;
+        protected readonly context: Readonly<TContext>;
 
-        constructor(attrs: ComponentAttrs, children: ComponentChildren);
-        protected setState(state: Partial<ComponentState>): void;
+        constructor(attrs: TAttrs, children: TChildren);
+        protected setState(state: Partial<TState>): void;
         protected update(): void;
         protected isMounted(): boolean;
-        protected getDomNode(): DOMElement | DOMElement[];
+        protected getDomNode(): HTMLElement | HTMLElement[];
 
         protected onInit(): void;
         protected onMount(): void;
-        protected onAttrsReceive(prevAttrs: ComponentAttrs): void;
-        protected onChildrenReceive(prevChildren: ComponentChildren): void;
-        protected onContextReceive(prevContext: ComponentContext): void;
-        protected onChildContextRequest(): MapLike<any>;
+        protected onAttrsReceive(prevAttrs: TAttrs): void;
+        protected onChildrenReceive(prevChildren: TChildren): void;
+        protected onContextReceive(prevContext: TContext): void;
+        protected onChildContextRequest(): MapLike;
         protected shouldRerender(
-            prevAttrs: ComponentAttrs,
-            prevChildren: ComponentChildren,
-            prevState: ComponentState,
-            prevContext: ComponentContext
+            prevAttrs: TAttrs,
+            prevChildren: TChildren,
+            prevState: TState,
+            prevContext: TContext
         ): boolean;
         protected abstract onRender(): Node;
         protected onUpdate(
-            prevAttrs: ComponentAttrs,
-            prevChildren: ComponentChildren,
-            prevState: ComponentState,
-            prevContext: ComponentContext
+            prevAttrs: TAttrs,
+            prevChildren: TChildren,
+            prevState: TState,
+            prevContext: TContext
         ): void;
         protected onUnmount(): void;
     }
@@ -633,18 +649,23 @@ declare namespace vidom {
     function elem(tag: 'fragment'): FragmentElement;
     function elem(tag: 'plaintext'): TextElement;
     function elem(tag: string): TagElement;
-    function elem<Attrs, State, Children, T extends Component<Attrs, State, Children>, U extends ComponentClass<Attrs, Children, T>>(
-        component: U & ComponentClass<Attrs, Children, T>
-    ): ComponentElement<Attrs, Children, T, U>;
-    function elem<Attrs, Children, T extends FunctionComponent<Attrs, Children>> (
-        component: T & FunctionComponent<Attrs, Children>
-    ): FunctionComponentElement<Attrs, Children, T>;
+    function elem<
+        TAttrs,
+        TChildren,
+        TComponent extends Component<TAttrs, {}, TChildren>,
+        TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>
+    >(
+        component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>
+    ): ComponentElement<TAttrs, TChildren, TComponent, TComponentClass>;
+    function elem<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
+        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>
+    ): FunctionComponentElement<TAttrs, TChildren, TFunctionComponent>;
 
-    function mount(domElem: DOMElement, node: Node, callback?: () => void): void;
-    function mount(domElem: DOMElement, node: Node, context?: MapLike<any>, callback?: () => void): void;
-    function mountSync(domElem: DOMElement, node: Node, context?: MapLike<any>): void;
-    function unmount(domElem: DOMElement, callback?: () => void): void;
-    function unmountSync(domElem: DOMElement): void;
+    function mount(domElem: HTMLElement, node: Node, callback?: () => void): void;
+    function mount(domElem: HTMLElement, node: Node, context?: MapLike, callback?: () => void): void;
+    function mountSync(domElem: HTMLElement, node: Node, context?: MapLike): void;
+    function unmount(domElem: HTMLElement, callback?: () => void): void;
+    function unmountSync(domElem: HTMLElement): void;
 
     function renderToString(node: Node): string;
 
@@ -658,9 +679,11 @@ declare global {
         type ElementAttributesProperty = { attrs: {}; };
 
         interface IntrinsicAttributes extends vidom.WithKey {}
-        interface IntrinsicClassAttributes<T> extends vidom.WithKey, vidom.WithRef<T> {}
-        interface IntrinsicHMTLAttributes<T = HTMLElement> extends vidom.HTMLAttributes<T>, vidom.WithRef<T>, vidom.WithKey {}
-        interface IntrinsicSVGAttributes<T> extends vidom.SVGAttributes<T>, vidom.WithRef<T>, vidom.WithKey {}
+        interface IntrinsicClassAttributes extends vidom.WithKey, vidom.WithRef<vidom.Component> {}
+        interface IntrinsicHMTLAttributes<THTMLElement extends HTMLElement = HTMLElement>
+            extends vidom.HTMLAttributes<THTMLElement>, vidom.WithRef<THTMLElement>, vidom.WithKey {}
+        interface IntrinsicSVGAttributes<TSVGElement extends SVGElement>
+            extends vidom.SVGAttributes<TSVGElement>, vidom.WithRef<TSVGElement>, vidom.WithKey {}
 
         interface IntrinsicElements {
             fragment: vidom.WithKey;
