@@ -23,11 +23,11 @@ declare namespace vidom {
 
     class TagElement extends BaseElement {
         readonly tag: string;
-        readonly attrs: vidom.HTMLAttributes<DOMElement>;
+        readonly attrs: HTMLAttributes<DOMElement>;
         readonly ns: string | null;
         readonly children: Element[] | string | null;
 
-        setAttrs(attrs: vidom.HTMLAttributes<DOMElement>): this;
+        setAttrs(attrs: HTMLAttributes<DOMElement>): this;
         setNs(ns: string): this;
         setChildren(children: Node): this;
         setHtml(html: string): this;
@@ -604,7 +604,7 @@ declare namespace vidom {
 
         constructor(attrs: ComponentAttrs, children: ComponentChildren);
         protected setState(state: Partial<ComponentState>): void;
-        protected update(callback?: () => void): void;
+        protected update(): void;
         protected isMounted(): boolean;
         protected getDomNode(): DOMElement | DOMElement[];
 
