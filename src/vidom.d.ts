@@ -611,7 +611,8 @@ declare namespace vidom {
         TAttrs extends MapLike = {},
         TState extends MapLike = {},
         TChildren = any,
-        TContext extends MapLike = {}
+        TContext extends MapLike = {},
+        TChildContext extends MapLike = {}
     > {
         protected readonly attrs: Readonly<TAttrs>;
         protected readonly children: TChildren;
@@ -629,7 +630,7 @@ declare namespace vidom {
         protected onAttrsReceive(prevAttrs: TAttrs): void;
         protected onChildrenReceive(prevChildren: TChildren): void;
         protected onContextReceive(prevContext: TContext): void;
-        protected onChildContextRequest(): MapLike;
+        protected onChildContextRequest(): TChildContext;
         protected shouldRerender(
             prevAttrs: TAttrs,
             prevChildren: TChildren,
