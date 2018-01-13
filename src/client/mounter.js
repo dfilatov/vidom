@@ -21,11 +21,9 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
             mounted = mountedElements[domNodeId];
             if(mounted && mounted.id === mountId) {
                 const prevTree = mounted.tree,
-                    newTree = new TopElement(nodeToElement(node));
+                    newTree = new TopElement(nodeToElement(node), prevTree._ns);
 
-                newTree
-                    .setNs(prevTree._ns)
-                    .setCtx(ctx);
+                newTree.setCtx(ctx);
 
                 prevTree.patch(newTree);
                 mounted.tree = newTree;
@@ -49,12 +47,9 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
                 domNode.textContent = '';
             }
             else {
-                const tree = mounted.tree = new TopElement(nodeToElement(node));
+                const tree = mounted.tree = new TopElement(nodeToElement(node), getNs(domNode));
 
-                tree
-                    .setNs(getNs(domNode))
-                    .setCtx(ctx);
-
+                tree.setCtx(ctx);
                 tree.adoptDom(topDomChildNodes);
                 tree.mount();
                 callCb(cb);
@@ -71,11 +66,9 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
             const mounted = mountedElements[domNodeId];
 
             if(mounted && mounted.id === mountId) {
-                const tree = mounted.tree = new TopElement(nodeToElement(node));
+                const tree = mounted.tree = new TopElement(nodeToElement(node), getNs(domNode));
 
-                tree
-                    .setNs(getNs(domNode))
-                    .setCtx(ctx);
+                tree.setCtx(ctx);
 
                 domOps.append(domNode, tree.renderToDom());
                 tree.mount();

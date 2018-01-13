@@ -175,12 +175,10 @@ describe('patchDom', () => {
             mountSync(
                 domNode,
                 elem('svg')
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren(elem('g').setChildren(elem('circle'))));
             mountSync(
                 domNode,
                 elem('svg')
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren(elem('g').setChildren(elem('path'))));
 
             expect(domNode.firstChild.firstChild.firstChild.namespaceURI)
@@ -248,12 +246,10 @@ describe('patchDom', () => {
             mountSync(
                 domNode,
                 elem('svg')
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren(elem('circle')));
             mountSync(
                 domNode,
                 elem('svg')
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren([elem('circle'), elem('circle')]));
 
             expect(domNode.firstChild.childNodes[1].namespaceURI)
@@ -348,12 +344,10 @@ describe('patchDom', () => {
             mountSync(
                 domNode,
                 elem('svg')
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren(elem('circle').setKey('b')));
             mountSync(
                 domNode,
                 elem('svg')
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren([elem('circle').setKey('a'), elem('circle').setKey('b')]));
 
             expect(domNode.firstChild.firstChild.namespaceURI)

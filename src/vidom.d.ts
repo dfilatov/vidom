@@ -21,11 +21,9 @@ declare namespace vidom {
     class TagElement extends BaseElement {
         readonly tag: string;
         readonly attrs: HTMLAttributes | SVGAttributes;
-        readonly ns: string | null;
         readonly children: Element[] | string | null;
 
         setAttrs(attrs: HTMLAttributes | SVGAttributes): this;
-        setNs(ns: string): this;
         setChildren(children: Node): this;
         setHtml(html: string): this;
         setRef(callback: Ref<Element>): this;

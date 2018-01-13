@@ -1,5 +1,6 @@
 import patchOps from '../client/patchOps';
 import domAttrs from '../client/domAttrs';
+import ns from '../client/utils/ns';
 import checkReuse from './utils/checkReuse';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
@@ -30,8 +31,7 @@ const SHORT_TAGS = [
         Object.create(null)),
     USE_DOM_STRINGS = isTrident || isEdge,
     ATTRS_SET = 4,
-    CHILDREN_SET = 8,
-    NS_SET = 16;
+    CHILDREN_SET = 8;
 
 export default function TagElement(tag) {
     if(IS_DEBUG) {
@@ -56,7 +56,7 @@ export default function TagElement(tag) {
     }
 
     this._domNode = null;
-    this._ns = null;
+    this._ns = tag in ns? ns[tag] : null;
     this._escapeChildren = true;
     this._ctx = emptyObj;
     this._ref = null;
@@ -70,22 +70,6 @@ TagElement.prototype = {
     setKey,
 
     setRef,
-
-    setNs(ns) {
-        if(IS_DEBUG) {
-            if(this._sets & NS_SET) {
-                console.warn('Namespace is already set and shouldn\'t be set again.');
-            }
-        }
-
-        this._ns = ns;
-
-        if(IS_DEBUG) {
-            this._sets |= NS_SET;
-        }
-
-        return this;
-    },
 
     setAttrs(attrs) {
         if(IS_DEBUG) {
@@ -390,7 +374,6 @@ TagElement.prototype = {
             res.__isFrozen = true;
         }
 
-        res._sets = NS_SET;
         res._ns = this._ns;
         res._escapeChildren = this._escapeChildren;
         res._ctx = this._ctx;
