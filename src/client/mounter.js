@@ -3,7 +3,6 @@ import rafBatch from './rafBatch';
 import globalHook from '../globalHook';
 import domOps from './domOps';
 import { getNs } from './utils/ns';
-import TopElement from '../nodes/TopElement';
 import nodeToElement from '../nodes/utils/nodeToElement';
 import { IS_DEBUG } from '../utils/debug';
 
@@ -21,21 +20,29 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
             mounted = mountedElements[domNodeId];
             if(mounted && mounted.id === mountId) {
                 const prevTree = mounted.tree,
-                    newTree = new TopElement(nodeToElement(node), prevTree._ns);
+                    newTree = nodeToElement(node);
 
-                newTree.setCtx(ctx);
+                if(ctx) {
+                    newTree.setCtx(ctx);
+                }
 
                 prevTree.patch(newTree);
                 mounted.tree = newTree;
 
                 callCb(cb);
+
                 if(IS_DEBUG) {
                     globalHook.emit('replace', prevTree, newTree);
                 }
             }
         };
 
-        syncMode? patchFn() : rafBatch(patchFn);
+        if(syncMode) {
+            patchFn();
+        }
+        else {
+            rafBatch(patchFn);
+        }
     }
     else {
         mounted = mountedElements[domNodeId] = { tree : null, id : mountId = ++counter };
@@ -47,11 +54,15 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
                 domNode.textContent = '';
             }
             else {
-                const tree = mounted.tree = new TopElement(nodeToElement(node), getNs(domNode));
+                const tree = mounted.tree = nodeToElement(node);
 
-                tree.setCtx(ctx);
-                tree.adoptDom(topDomChildNodes);
+                if(ctx) {
+                    tree.setCtx(ctx);
+                }
+
+                tree.adoptDom(topDomChildNodes, 0);
                 tree.mount();
+
                 callCb(cb);
 
                 if(IS_DEBUG) {
@@ -66,20 +77,29 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
             const mounted = mountedElements[domNodeId];
 
             if(mounted && mounted.id === mountId) {
-                const tree = mounted.tree = new TopElement(nodeToElement(node), getNs(domNode));
+                const tree = mounted.tree = nodeToElement(node);
 
-                tree.setCtx(ctx);
+                if(ctx) {
+                    tree.setCtx(ctx);
+                }
 
-                domOps.append(domNode, tree.renderToDom());
+                domOps.append(domNode, tree.renderToDom(getNs(domNode)));
                 tree.mount();
+
                 callCb(cb);
+
                 if(IS_DEBUG) {
                     globalHook.emit('mount', tree);
                 }
             }
         };
 
-        syncMode? renderFn() : rafBatch(renderFn);
+        if(syncMode) {
+            renderFn();
+        }
+        else {
+            rafBatch(renderFn);
+        }
     }
 }
 
@@ -103,15 +123,24 @@ function unmountFromDomNode(domNode, cb, syncMode) {
                     }
 
                     callCb(cb);
+
                     if(IS_DEBUG) {
                         tree && globalHook.emit('unmount', tree);
                     }
                 }
             };
 
-        mounted.tree?
-            syncMode? unmountFn() : rafBatch(unmountFn) :
-            syncMode || callCb(cb);
+        if(mounted.tree) {
+            if(syncMode) {
+                unmountFn();
+            }
+            else {
+                rafBatch(unmountFn);
+            }
+        }
+        else if(!syncMode) {
+            callCb(cb);
+        }
     }
     else if(!syncMode) {
         callCb(cb);
