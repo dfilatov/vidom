@@ -1,9 +1,15 @@
-const DEFAULT_NS_URI = 'http://www.w3.org/1999/xhtml';
+const NS = Object.create(null);
+
+NS.html = 'http://www.w3.org/1999/xhtml';
+NS.svg = 'http://www.w3.org/2000/svg';
+NS.math = 'http://www.w3.org/1998/Math/MathML';
+
+export default NS;
 
 export function getNs(domNode) {
     return Array.isArray(domNode)?
         getParentNs(domNode) :
-        domNode.namespaceURI === DEFAULT_NS_URI?
+        domNode.namespaceURI === NS.html?
             null :
             domNode.namespaceURI;
 }

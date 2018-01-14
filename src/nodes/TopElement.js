@@ -1,22 +1,14 @@
 import { ELEMENT_TYPE_TOP } from './utils/elementTypes';
 
-export default function TopElement(childElement) {
+export default function TopElement(childElement, ns) {
     this.type = ELEMENT_TYPE_TOP;
     this._childElement = childElement;
-    this._ns = null;
+    this._ns = ns;
 }
 
 TopElement.prototype = {
     getDomNode() {
         return this._childElement.getDomNode();
-    },
-
-    setNs(ns) {
-        if(ns) {
-            this._ns = ns;
-        }
-
-        return this;
     },
 
     setCtx(ctx) {

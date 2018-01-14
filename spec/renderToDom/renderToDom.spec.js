@@ -19,14 +19,13 @@ describe('renderToDom', () => {
                 .to.equal('http://www.w3.org/1999/xhtml');
         });
 
-        it('should be rendered with given namespace', () => {
-            expect((topNode = elem('svg')).setNs('http://www.w3.org/2000/svg').renderToDom(null).namespaceURI)
+        it('should be rendered with corresponding namespace', () => {
+            expect((topNode = elem('svg')).renderToDom(null).namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should be inherited from parent', () => {
             const domNode = (topNode = elem('svg'))
-                .setNs('http://www.w3.org/2000/svg')
                 .setChildren(elem('g').setChildren(elem('circle')))
                 .renderToDom(null);
 
@@ -265,7 +264,6 @@ describe('renderToDom', () => {
                     }
                 }),
                 domNode = (topNode = elem('svg'))
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren(elem('g').setChildren(elem(Component)))
                     .renderToDom(null);
 
@@ -367,7 +365,6 @@ describe('renderToDom', () => {
         it('should pass parent namespace', () => {
             const Component = () => elem('circle'),
                 domNode = (topNode = elem('svg'))
-                    .setNs('http://www.w3.org/2000/svg')
                     .setChildren(elem('g').setChildren(elem(Component)))
                     .renderToDom(null);
 

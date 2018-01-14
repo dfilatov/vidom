@@ -15,7 +15,7 @@ describe('renderToString', () => {
 
     describe('ns', () => {
         it('should be rendered with given namespace', () => {
-            expect(elem('svg').setNs('http://www.w3.org/2000/svg').renderToString())
+            expect(elem('svg').renderToString())
                 .to.equal('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
         });
     });
