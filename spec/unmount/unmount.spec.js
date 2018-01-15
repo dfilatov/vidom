@@ -1,7 +1,9 @@
-import { elem, mount, unmount } from '../../src/vidom';
+import { mount, unmount } from '../../src/vidom';
+import { h } from '../helpers';
 
 describe('unmount', () => {
-    var domNode;
+    let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -12,7 +14,7 @@ describe('unmount', () => {
 
     describe('callbacks', () => {
         it('should properly call callback on unmount', function(done) {
-            mount(domNode, elem('div'), () => {
+            mount(domNode, h('div'), () => {
                 unmount(domNode, () => {
                     expect(domNode.childNodes.length).to.equal(0);
                     done();

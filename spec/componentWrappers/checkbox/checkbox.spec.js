@@ -1,5 +1,6 @@
 import simulate from 'simulate';
-import { elem, mountSync, unmountSync } from '../../../src/vidom';
+import { mountSync, unmountSync } from '../../../src/vidom';
+import { h } from '../../helpers';
 
 describe('checkbox', () => {
     let domNode;
@@ -14,10 +15,10 @@ describe('checkbox', () => {
     });
 
     it('should maintain checked property', () => {
-        mountSync(domNode, elem('div').setChildren([
-            elem('input').setAttrs({ type : 'checkbox', id : 'id1', checked : true }),
-            elem('input').setAttrs({ type : 'checkbox', id : 'id2', checked : false })
-        ]));
+        mountSync(domNode, h('div', { children : [
+            h('input', { type : 'checkbox', id : 'id1', checked : true }),
+            h('input', { type : 'checkbox', id : 'id2', checked : false })
+        ] }));
 
         const firstCheckbox = document.getElementById('id1'),
             secondCheckbox = document.getElementById('id2');
@@ -41,9 +42,12 @@ describe('checkbox', () => {
         }
 
         function render() {
-            mountSync(domNode, elem('div').setChildren(
-                elem('input').setAttrs({ type : 'checkbox', id : 'id1', checked : checkedState, onChange })
-            ));
+            mountSync(
+                domNode,
+                h('div', {
+                    children : h('input', { type : 'checkbox', id : 'id1', checked : checkedState, onChange })
+                })
+            );
         }
 
         render();
@@ -61,7 +65,7 @@ describe('checkbox', () => {
 
         mountSync(
             domNode,
-            elem('input').setAttrs({ type : 'checkbox', id : 'id1', ref(_ref) { ref = _ref; } }));
+            h('input', { type : 'checkbox', id : 'id1', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('id1'));
     });

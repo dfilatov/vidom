@@ -1,21 +1,21 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const newNode = createElement('input').setKey('b'),
-    nodeC = createElement('input').setKey('c');
+const newNode = h('input', { key : 'b' }),
+    nodeC = h('input', { key : 'c' });
 
 export default {
     'name' : 'insertChild1',
     'trees' : [
-        createElement('div').setChildren([
-            createElement('input').setKey('a'),
-            createElement('input').setKey('c')
-        ]),
-        createElement('div').setChildren([
-            createElement('input').setKey('a'),
+        h('div', { children : [
+            h('input', { key : 'a' }),
+            h('input', { key : 'c' })
+        ] }),
+        h('div', { children : [
+            h('input', { key : 'a' }),
             newNode,
             nodeC
-        ])
+        ] })
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [newNode, nodeC] }

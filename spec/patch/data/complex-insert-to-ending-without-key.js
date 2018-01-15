@@ -1,23 +1,23 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const nodeC = createElement('a'),
-    nodeD = createElement('a'),
-    parentNode = createElement('div');
+const nodeC = h('a'),
+    nodeD = h('a'),
+    parentNode = h('div', { children : [
+        h('a', { key : 'a' }),
+        h('a', { key : 'b' }),
+        nodeC,
+        nodeD
+    ] });
 
 export default {
     'name' : 'complex-insert-to-ending-without-key',
     'trees' : [
-        createElement('div').setChildren([
-            createElement('a').setKey('a'),
-            createElement('a').setKey('b')
-        ]),
-        parentNode.setChildren([
-            createElement('a').setKey('a'),
-            createElement('a').setKey('b'),
-            nodeC,
-            nodeD
-        ])
+        h('div', { children : [
+            h('a', { key : 'a' }),
+            h('a', { key : 'b' })
+        ] }),
+        parentNode
     ],
     'patch' : [
         { op : patchOps.appendChild, args : [parentNode, nodeC] },

@@ -1,12 +1,12 @@
-import createElement from '../../../src/createElement';
+import { h } from '../../helpers';
 
-const node = createElement('a');
+const node = h('a', { children : '' });
 
 export default {
     'name' : 'removeText2',
     'trees' : [
-        node.setChildren(''),
-        createElement('a')
+        node,
+        h('a')
     ],
     'patch' : []
 };

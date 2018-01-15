@@ -14,7 +14,7 @@ export default createComponent({
     },
 
     onRender() {
-        return new TagElement('textarea').setAttrs(merge(this.attrs, this._addAttrs));
+        return new TagElement('textarea', null, merge(this.attrs, this._addAttrs));
     },
 
     onInput(e) {

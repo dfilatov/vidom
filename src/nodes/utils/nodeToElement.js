@@ -8,7 +8,7 @@ export default function nodeToElement(node) {
         createElement('!') :
         typeof normalizedNode === 'object'?
             Array.isArray(normalizedNode)?
-                createElement('fragment').setChildren(normalizedNode) :
+                createElement('fragment', null, null, normalizedNode) :
                 normalizedNode :
-            createElement('plaintext').setChildren(normalizedNode);
+            createElement('plaintext', null, null, normalizedNode);
 }

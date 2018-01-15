@@ -1,13 +1,13 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const node = createElement('button');
+const node = h('button', { value : 'text', className : 'button' });
 
 export default {
     'name' : 'removeAttr2',
     'trees' : [
-        node.setAttrs({ value : 'text', className : 'button' }),
-        createElement('button')
+        node,
+        h('button')
     ],
     'patch' : [
         { op : patchOps.removeAttr, args : [node, 'value'] },

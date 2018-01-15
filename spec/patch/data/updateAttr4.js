@@ -1,7 +1,7 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const node = createElement('div').setAttrs({
+const node = h('div', {
     style : {
         width : '100px',
         height : '100px',
@@ -15,7 +15,7 @@ export default {
     'name' : 'updateAttr4',
     'trees' : [
         node,
-        createElement('div').setAttrs({
+        h('div', {
             style : {
                 width : '100px',
                 float : 'right',

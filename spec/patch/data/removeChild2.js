@@ -1,20 +1,20 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const oldNode = createElement('div');
+const oldNode = h('div');
 
 export default {
     'name' : 'removeChild2',
     'trees' : [
-        createElement('fragment').setChildren([
-            createElement('div'),
-            createElement('div'),
+        h('fragment', { children : [
+            h('div'),
+            h('div'),
             oldNode
-        ]),
-        createElement('fragment').setChildren([
-            createElement('div'),
-            createElement('div')
-        ])
+        ] }),
+        h('fragment', { children : [
+            h('div'),
+            h('div')
+        ] })
     ],
     'patch' : [
         { op : patchOps.removeChild, args : [oldNode] }

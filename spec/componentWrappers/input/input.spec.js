@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import simulate from 'simulate';
-import { elem, mountSync, unmountSync } from '../../../src/vidom';
+import { mountSync, unmountSync } from '../../../src/vidom';
+import { h } from '../../helpers';
 
 describe('input', () => {
     let domNode;
@@ -15,7 +16,7 @@ describe('input', () => {
     });
 
     it('should maintain value', () => {
-        mountSync(domNode, elem('input').setAttrs({ id : 'input', value : 'test' }));
+        mountSync(domNode, h('input', { id : 'input', value : 'test' }));
 
         const input = document.getElementById('input');
 
@@ -34,7 +35,7 @@ describe('input', () => {
         }
 
         function render() {
-            mountSync(domNode, elem('input').setAttrs({ id : 'input', value, onChange }));
+            mountSync(domNode, h('input', { id : 'input', value, onChange }));
         }
 
         render();
@@ -52,7 +53,7 @@ describe('input', () => {
 
         mountSync(
             domNode,
-            elem('input').setAttrs({ id : 'input', value : 'test', onChange : spy }));
+            h('input', { id : 'input', value : 'test', onChange : spy }));
 
         const input = document.getElementById('input');
 
@@ -66,7 +67,7 @@ describe('input', () => {
 
         mountSync(
             domNode,
-            elem('input').setAttrs({ id : 'input', ref(_ref) { ref = _ref; } }));
+            h('input', { id : 'input', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('input'));
     });

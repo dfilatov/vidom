@@ -1,5 +1,6 @@
 import sinon from 'sinon';
-import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { h } from '../../helpers';
 
 describe('onMount', () => {
     let domNode;
@@ -20,25 +21,23 @@ describe('onMount', () => {
             C1 = createComponent({
                 onMount : spy1,
                 onRender() {
-                    return elem('div').setChildren(
-                        elem('fragment').setChildren(
-                            elem(C2).setChildren(elem(C3))));
+                    return h('div', { children : h('fragment', { children : h(C2, { children : h(C3) }) }) });
                 }
             }),
             C2 = createComponent({
                 onMount : spy2,
                 onRender() {
-                    return elem('div').setChildren(this.children);
+                    return h('div', { children : this.children });
                 }
             }),
             C3 = createComponent({
                 onMount : spy3,
                 onRender() {
-                    return elem('div');
+                    return h('div');
                 }
             });
 
-        mountSync(domNode, elem(C1));
+        mountSync(domNode, h(C1));
 
         expect(spy1.called).to.be.ok();
         expect(spy2.called).to.be.ok();
@@ -54,7 +53,7 @@ describe('onMount', () => {
             }),
             attrs = { name : 'value' };
 
-        mountSync(domNode, elem(C1).setAttrs(attrs));
+        mountSync(domNode, h(C1, attrs));
     });
 
     it('should be recursively called when existing dom is adopted', () => {
@@ -63,18 +62,18 @@ describe('onMount', () => {
             C1 = createComponent({
                 onMount : spy1,
                 onRender() {
-                    return elem('div').setChildren(elem(C2));
+                    return h('div', { children : h(C2) });
                 }
             }),
             C2 = createComponent({
                 onMount : spy2,
                 onRender() {
-                    return elem('div');
+                    return h('div');
                 }
             });
 
         domNode.innerHTML = '<div><div></div></div>';
-        mountSync(domNode, elem(C1));
+        mountSync(domNode, h(C1));
 
         expect(spy1.called).to.be.ok();
         expect(spy2.called).to.be.ok();
@@ -87,8 +86,8 @@ describe('onMount', () => {
                 onMount : spy
             });
 
-        mountSync(domNode, elem(C1));
-        mountSync(domNode, elem(C2));
+        mountSync(domNode, h(C1));
+        mountSync(domNode, h(C2));
 
         expect(spy.called).to.be.ok();
     });
@@ -97,14 +96,14 @@ describe('onMount', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onRender() {
-                    return elem('div');
+                    return h('div');
                 },
 
                 onMount : spy
             });
 
-        mountSync(domNode, elem('div'));
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h('div'));
+        mountSync(domNode, h(C));
 
         expect(spy.called).to.be.ok();
     });
@@ -113,14 +112,14 @@ describe('onMount', () => {
         const spy = sinon.spy(),
             C = createComponent({
                 onRender() {
-                    return elem('div');
+                    return h('div');
                 },
 
                 onMount : spy
             });
 
-        mountSync(domNode, elem(() => elem('div')));
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(() => h('div')));
+        mountSync(domNode, h(C));
 
         expect(spy.called).to.be.ok();
     });

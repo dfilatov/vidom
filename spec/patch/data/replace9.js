@@ -1,11 +1,11 @@
-import createElement from '../../../src/createElement';
 import createComponent from '../../../src/createComponent';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const oldNode = createElement('div'),
-    newNode = createElement(createComponent({
+const oldNode = h('div'),
+    newNode = h(createComponent({
         onRender() {
-            return createElement('div');
+            return h('div');
         }
     })),
     replaceOp = patchOps.replace;

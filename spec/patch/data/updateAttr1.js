@@ -1,13 +1,13 @@
-import createElement from '../../../src/createElement';
+import { h } from '../../helpers';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createElement('div').setAttrs({ id : 'id1' });
+const node = h('div', { id : 'id1' });
 
 export default {
     'name' : 'updateAttr1',
     'trees' : [
         node,
-        createElement('div').setAttrs({ id : 'id2' })
+        h('div', { id : 'id2' })
     ],
     'patch' : [
         { op : patchOps.updateAttr, args : [node, 'id', 'id2'] }

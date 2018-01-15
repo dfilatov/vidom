@@ -5,11 +5,8 @@ import restrictObjProp from '../utils/restrictObjProp';
 import noOp from '../utils/noOp';
 import { IS_DEBUG } from '../utils/debug';
 import { ELEMENT_TYPE_TEXT } from './utils/elementTypes';
-import { setKey } from './utils/setters';
 
-const CHILDREN_SET = 8;
-
-export default function TextElement() {
+export default function TextElement(key, children) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -19,8 +16,8 @@ export default function TextElement() {
     }
 
     this.type = ELEMENT_TYPE_TEXT;
-    this.key = null;
-    this.children = null;
+    this.key = key == null? null : key;
+    this.children = processChildren(children);
 
     if(IS_DEBUG) {
         this.__isFrozen = true;
@@ -32,27 +29,6 @@ export default function TextElement() {
 TextElement.prototype = {
     getDomNode() {
         return this._domNode;
-    },
-
-    setKey,
-
-    setChildren(children) {
-        if(IS_DEBUG) {
-            if(this._sets & CHILDREN_SET) {
-                console.warn('Children are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        this.children = processChildren(children);
-
-        if(IS_DEBUG) {
-            this._sets |= CHILDREN_SET;
-            this.__isFrozen = true;
-        }
-
-        return this;
     },
 
     setCtx() {
@@ -107,15 +83,14 @@ TextElement.prototype = {
 
     unmount : noOp,
 
-    clone() {
-        const res = new TextElement();
+    clone(children) {
+        const res = new TextElement(this.key);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
         }
 
-        res.key = this.key;
-        res.children = this.children;
+        res.children = children == null? this.children : processChildren(children);
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
@@ -150,12 +125,6 @@ TextElement.prototype = {
         }
     }
 };
-
-if(IS_DEBUG) {
-    TextElement.prototype.setRef = function() {
-        throw Error('vidom: Text elements don\'t support refs.');
-    };
-}
 
 function processChildren(children) {
     if(children == null) {

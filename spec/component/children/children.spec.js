@@ -1,4 +1,5 @@
-import { elem, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
+import { createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
+import { h } from '../../helpers';
 
 describe('children', () => {
     let domNode;
@@ -10,6 +11,19 @@ describe('children', () => {
     afterEach(() => {
         unmountSync(domNode);
         document.body.removeChild(domNode);
+    });
+
+    it('should be passed as is', done => {
+        const children = function() {},
+            C = createComponent({
+                onInit() {
+                    expect(this.children)
+                        .to.be.equal(children);
+                    done();
+                }
+            });
+
+        mountSync(domNode, h(C, { children }));
     });
 
     if(IS_DEBUG) {
@@ -25,7 +39,7 @@ describe('children', () => {
                 }
             });
 
-            mountSync(domNode, elem(C));
+            mountSync(domNode, h(C));
         });
     }
 });
