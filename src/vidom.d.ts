@@ -23,22 +23,32 @@ declare namespace vidom {
         readonly attrs: HTMLAttributes | SVGAttributes;
         readonly children: Element[] | string | null;
 
-        setAttrs(attrs: HTMLAttributes | SVGAttributes): this;
-        setChildren(children: Node): this;
-        setHtml(html: string): this;
-        setRef(callback: Ref<Element>): this;
+        constructor(
+            tag: string,
+            key?: Key | null,
+            attrs?: HTMLAttributes | SVGAttributes | null,
+            children?: Node,
+            ref?: Ref<Element> | null,
+            escapeChildren?: boolean
+        );
     }
 
     class TextElement extends BaseElement {
         readonly children: string;
 
-        setChildren(children: string): this;
+        constructor(
+            key?: Key | null,
+            children?: string
+        );
     }
 
     class FragmentElement extends BaseElement {
         readonly children: Element[] | null;
 
-        setChildren(children: Node): this;
+        constructor(
+            key?: Key | null,
+            children?: Node
+        );
     }
 
     class ComponentElement<
@@ -51,9 +61,13 @@ declare namespace vidom {
         readonly attrs: Readonly<TAttrs>;
         readonly children?: TChildren;
 
-        setAttrs(attrs: TAttrs): this;
-        setChildren(children: TChildren): this;
-        setRef(callback: Ref<TComponent>): this;
+        constructor(
+            component: TComponentClass,
+            key?: Key | null,
+            attrs?: TAttrs,
+            children?: TChildren,
+            ref?: Ref<TComponent> | null
+        );
     }
 
     class FunctionComponentElement<
@@ -65,8 +79,12 @@ declare namespace vidom {
         readonly attrs: Readonly<TAttrs>;
         readonly children?: TChildren;
 
-        setAttrs(attrs: TAttrs): this;
-        setChildren(children: TChildren): this;
+        constructor(
+            component: TFunctionComponent,
+            key?: Key | null,
+            attrs?: TAttrs,
+            children?: TChildren
+        );
     }
 
     type Element =
