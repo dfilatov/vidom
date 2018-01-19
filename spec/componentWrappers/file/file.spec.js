@@ -1,4 +1,5 @@
-import { elem, mountSync, unmountSync } from '../../../src/vidom';
+import { mountSync, unmountSync } from '../../../src/vidom';
+import { h } from '../../helpers';
 
 describe('file', () => {
     let domNode;
@@ -17,7 +18,7 @@ describe('file', () => {
 
         mountSync(
             domNode,
-            elem('input').setAttrs({ type : 'file', id : 'id1', ref(_ref) { ref = _ref; } }));
+            h('input', { type : 'file', id : 'id1', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('id1'));
     });

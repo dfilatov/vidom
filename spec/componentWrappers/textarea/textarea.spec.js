@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import simulate from 'simulate';
-import { elem, mountSync, unmountSync } from '../../../src/vidom';
+import { mountSync, unmountSync } from '../../../src/vidom';
+import { h } from '../../helpers';
 
 describe('textarea', () => {
     let domNode;
@@ -15,7 +16,7 @@ describe('textarea', () => {
     });
 
     it('should maintain value', () => {
-        mountSync(domNode, elem('textarea').setAttrs({ id : 'textarea', value : 'test' }));
+        mountSync(domNode, h('textarea', { id : 'textarea', value : 'test' }));
 
         const input = document.getElementById('textarea');
 
@@ -34,7 +35,7 @@ describe('textarea', () => {
         }
 
         function render() {
-            mountSync(domNode, elem('textarea').setAttrs({ id : 'textarea', value, onChange }));
+            mountSync(domNode, h('textarea', { id : 'textarea', value, onChange }));
         }
 
         render();
@@ -52,7 +53,7 @@ describe('textarea', () => {
 
         mountSync(
             domNode,
-            elem('textarea').setAttrs({ id : 'input', value : 'test', onChange : spy }));
+            h('textarea', { id : 'input', value : 'test', onChange : spy }));
 
         const input = document.getElementById('input');
 
@@ -66,7 +67,7 @@ describe('textarea', () => {
 
         mountSync(
             domNode,
-            elem('textarea').setAttrs({ id : 'textarea', ref(_ref) { ref = _ref; } }));
+            h('textarea', { id : 'textarea', ref(_ref) { ref = _ref; } }));
 
         expect(ref === document.getElementById('textarea'));
     });

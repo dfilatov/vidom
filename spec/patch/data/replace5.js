@@ -1,13 +1,13 @@
-import createElement from '../../../src/createElement';
 import createComponent from '../../../src/createComponent';
+import { h } from '../../helpers';
 
 const C1 = createComponent({
         onRender() {
-            return createElement('div');
+            return h('div');
         }
     }),
-    oldNode = createElement(C1),
-    newNode = createElement(C1);
+    oldNode = h(C1),
+    newNode = h(C1);
 
 export default {
     'name' : 'replace5',

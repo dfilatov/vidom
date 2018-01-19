@@ -1,5 +1,6 @@
-import { elem, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
+import { createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
+import { h } from '../../helpers';
 
 describe('state', () => {
     let domNode;
@@ -16,12 +17,13 @@ describe('state', () => {
     it('should be empty by default', done => {
         const C = createComponent({
             onInit() {
-                expect(this.state).to.be.equal(emptyObj);
+                expect(this.state)
+                    .to.be.equal(emptyObj);
                 done();
             }
         });
 
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(C));
     });
 
     it('should be possible to fill it from init', done => {
@@ -33,11 +35,12 @@ describe('state', () => {
             },
 
             onMount() {
-                expect(this.state).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+                expect(this.state)
+                    .to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
             }
         });
 
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(C));
     });
 
     it('should be properly updated with setState', done => {
@@ -52,12 +55,13 @@ describe('state', () => {
             },
 
             onUpdate() {
-                expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4' });
+                expect(this.state)
+                    .to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4' });
                 done();
             }
         });
 
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(C));
     });
 
     it('shouldn\'t affect prev state till updating', done => {
@@ -73,12 +77,13 @@ describe('state', () => {
             },
 
             onUpdate(prevAttrs, prevChildren, prevState) {
-                expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+                expect(prevState)
+                    .to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
             }
         });
 
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(C));
     });
 
     it('should be possible to get both state and previous state inside shouldRerender', done => {
@@ -92,14 +97,16 @@ describe('state', () => {
             },
 
             shouldRerender(prevAttrs, prevChildren, prevState) {
-                expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
-                expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+                expect(this.state)
+                    .to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
+                expect(prevState)
+                    .to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
                 return true;
             }
         });
 
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(C));
     });
 
     it('should be possible to get both state and previous state inside onUpdate', done => {
@@ -113,13 +120,15 @@ describe('state', () => {
             },
 
             onUpdate(prevAttrs, prevChildren, prevState) {
-                expect(this.state).to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
-                expect(prevState).to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
+                expect(this.state)
+                    .to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
+                expect(prevState)
+                    .to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
             }
         });
 
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(C));
     });
 
     if(IS_DEBUG) {
@@ -135,7 +144,7 @@ describe('state', () => {
                 }
             });
 
-            mountSync(domNode, elem(C));
+            mountSync(domNode, h(C));
         });
 
         it('should throw exception if attempt to modify state directly', done => {
@@ -150,7 +159,7 @@ describe('state', () => {
                 }
             });
 
-            mountSync(domNode, elem(C));
+            mountSync(domNode, h(C));
         });
     }
 });

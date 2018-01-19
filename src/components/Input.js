@@ -14,7 +14,7 @@ export default createComponent({
     },
 
     onRender() {
-        return new TagElement('input').setAttrs(merge(this.attrs, this._addAttrs));
+        return new TagElement('input', null, merge(this.attrs, this._addAttrs));
     },
 
     onInput(e) {

@@ -1,41 +1,41 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const nodeB = createElement('fragment').setKey('b'),
-    nodeC = createElement('a').setKey('c'),
-    nodeBA = createElement('fragment').setKey('ba'),
-    nodeBAA = createElement('b').setKey('baa'),
-    nodeBAB = createElement('b').setKey('bab'),
-    nodeBB = createElement('a').setKey('bb'),
-    nodeD = createElement('a').setKey('d'),
-    parentNode = createElement('fragment');
+const nodeC = h('a', { key : 'c' }),
+    nodeBAA = h('b', { key : 'baa' }),
+    nodeBAB = h('b', { key : 'bab' }),
+    nodeBA = h('fragment', { key : 'ba', children : [
+        nodeBAA,
+        nodeBAB
+    ] }),
+    nodeBB = h('a', { key : 'bb' }),
+    nodeB = h('fragment', { key : 'b', children : [
+        nodeBA,
+        nodeBB
+    ] }),
+    nodeD = h('a', { key : 'd' }),
+    parentNode = h('fragment', { children : [
+        h('a', { key : 'a' }),
+        h('a', { key : 'c' }),
+        h('fragment', { key : 'b', children : [
+            h('a', { key : 'bb' }),
+            h('fragment', { key : 'ba', children : [
+                h('b', { key : 'bab' }),
+                h('b', { key : 'baa' })
+            ] })
+        ] })
+    ] });
 
 export default {
     'name' : 'complex4',
     'trees' : [
-        createElement('fragment').setChildren([
-            createElement('a').setKey('a'),
-            nodeB.setChildren([
-                nodeBA.setChildren([
-                    nodeBAA,
-                    nodeBAB
-                ]),
-                nodeBB
-            ]),
+        h('fragment', { children : [
+            h('a', { key : 'a' }),
+            nodeB,
             nodeC,
             nodeD
-        ]),
-        parentNode.setChildren([
-            createElement('a').setKey('a'),
-            createElement('a').setKey('c'),
-            createElement('fragment').setKey('b').setChildren([
-                createElement('a').setKey('bb'),
-                createElement('fragment').setKey('ba').setChildren([
-                    createElement('b').setKey('bab'),
-                    createElement('b').setKey('baa')
-                ])
-            ])
-        ])
+        ] }),
+        parentNode
     ],
     'patch' : [
         { op : patchOps.moveChild, args : [nodeB, nodeD, true] },

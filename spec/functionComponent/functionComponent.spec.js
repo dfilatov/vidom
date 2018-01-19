@@ -1,9 +1,11 @@
 import sinon from 'sinon';
 import emptyObj from '../../src/utils/emptyObj';
-import { elem, mountSync, unmountSync } from '../../src/vidom';
+import { mountSync, unmountSync } from '../../src/vidom';
+import { h } from '../helpers';
 
 describe('functionComponent', () => {
     let domNode;
+
     beforeEach(() => {
         document.body.appendChild(domNode = document.createElement('div'));
     });
@@ -18,7 +20,7 @@ describe('functionComponent', () => {
 
         stub.returns(null);
 
-        mountSync(domNode, elem(stub));
+        mountSync(domNode, h(stub));
 
         expect(stub.args[0][0]).to.be.equal(emptyObj);
     });
@@ -30,7 +32,7 @@ describe('functionComponent', () => {
 
         stub.defaultAttrs = { a : 1, b : 2 };
 
-        mountSync(domNode, elem(stub).setAttrs({ a : 3 }));
+        mountSync(domNode, h(stub, { a : 3 }));
 
         expect(stub.args[0][0]).to.be.eql({ a : 3, b : 2 });
     });

@@ -1,19 +1,19 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const node = createElement('button').setAttrs({ value : 'text' });
+const node = h('button', { value : 'text' });
 
 export default {
     'name' : 'updateAttr3',
     'trees' : [
-        createElement('div').setChildren([
-            createElement('button').setAttrs({ value : 'text' }),
+        h('div', { children : [
+            h('button', { value : 'text' }),
             node
-        ]),
-        createElement('div').setChildren([
-            createElement('button').setAttrs({ value : 'text' }),
-            createElement('button').setAttrs({ value : 'new text' })
-        ])
+        ] }),
+        h('div', { children : [
+            h('button', { value : 'text' }),
+            h('button', { value : 'new text' })
+        ] })
     ],
     'patch' : [
         { op : patchOps.updateAttr, args : [node, 'value', 'new text'] }

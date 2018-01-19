@@ -1,13 +1,13 @@
-import createElement from '../../../src/createElement';
+import { h } from '../../helpers';
 import patchOps from '../../../src/client/patchOps';
 
-const node = createElement('plaintext').setChildren('text');
+const node = h('plaintext', { children : 'text' });
 
 export default {
     'name' : 'updateText4',
     'trees' : [
         node,
-        createElement('plaintext').setChildren('new text')
+        h('plaintext', { children : 'new text' })
     ],
     'patch' : [
         { op : patchOps.updateText, args : [node, 'new text', false] }

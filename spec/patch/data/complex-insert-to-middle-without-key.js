@@ -1,25 +1,25 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const nodeC = createElement('a'),
-    nodeD = createElement('a'),
-    nodeE = createElement('a').setKey('e');
+const nodeC = h('a'),
+    nodeD = h('a'),
+    nodeE = h('a', { key : 'e' });
 
 export default {
     'name' : 'complex-insert-to-middle-without-key',
     'trees' : [
-        createElement('div').setChildren([
-            createElement('a').setKey('a'),
-            createElement('a').setKey('b'),
-            createElement('a').setKey('e')
-        ]),
-        createElement('div').setChildren([
-            createElement('a').setKey('a'),
-            createElement('a').setKey('b'),
+        h('div', { children : [
+            h('a', { key : 'a' }),
+            h('a', { key : 'b' }),
+            h('a', { key : 'e' })
+        ] }),
+        h('div', { children : [
+            h('a', { key : 'a' }),
+            h('a', { key : 'b' }),
             nodeC,
             nodeD,
             nodeE
-        ])
+        ] })
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [nodeC, nodeE] },

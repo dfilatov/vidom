@@ -1,20 +1,20 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const oldNode = createElement('div').setKey('a'),
-    newNode = createElement('span').setKey('a');
+const oldNode = h('div', { key : 'a' }),
+    newNode = h('span', { key : 'a' });
 
 export default {
     'name' : 'replace3',
     'trees' : [
-        createElement('div').setChildren([
-            createElement('div'),
+        h('div', { children : [
+            h('div'),
             oldNode
-        ]),
-        createElement('div').setChildren([
-            createElement('div'),
+        ] }),
+        h('div', { children : [
+            h('div'),
             newNode
-        ])
+        ] })
     ],
     'patch' : [
         { op : patchOps.replace, args : [oldNode, newNode] }

@@ -1,10 +1,10 @@
-import createElement from '../../../src/createElement';
+import { h } from '../../helpers';
 
 export default {
     'name' : 'updateText2',
     'trees' : [
-        createElement('span').setChildren('text'),
-        createElement('span').setChildren('text')
+        h('span', { children : 'text' }),
+        h('span', { children : 'text' })
     ],
     'patch' : []
 };

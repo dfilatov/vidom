@@ -1,8 +1,8 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const oldNode = createElement('div'),
-    newNode = createElement('fragment'),
+const oldNode = h('div'),
+    newNode = h('fragment'),
     replaceOp = patchOps.replace;
 
 export default {

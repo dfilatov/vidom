@@ -1,5 +1,5 @@
 import normalizeNode from '../../src/nodes/utils/normalizeNode';
-import { elem } from '../../src/vidom';
+import { h } from '../helpers';
 
 describe('normalizeNode', () => {
     it('should return null if passed object is null', () => {
@@ -18,62 +18,62 @@ describe('normalizeNode', () => {
     });
 
     it('should skip null, undefined and boolean items', () => {
-        const node1 = elem('a'),
-            node2 = elem('b');
+        const node1 = h('a'),
+            node2 = h('b');
 
         expect(normalizeNode([node1, true, null, node2, false, undefined]))
             .to.be.eql([node1, node2]);
     });
 
     it('should flatten items', () => {
-        const node1 = elem('a'),
-            node2 = elem('b'),
-            node3 = elem('i');
+        const node1 = h('a'),
+            node2 = h('b'),
+            node3 = h('i');
 
         expect(normalizeNode([[node1], [[[node2]], node3]]))
             .to.be.eql([node1, node2, node3]);
     });
 
     it('should skip null while flattening', () => {
-        const node1 = elem('a'),
-            node2 = elem('b');
+        const node1 = h('a'),
+            node2 = h('b');
 
         expect(normalizeNode([[null, node1], [node2]]))
             .to.be.eql([node1, node2]);
     });
 
     it('should create text nodes for strings and numbers', () => {
-        const node1 = elem('a'),
-            node2 = elem('b');
+        const node1 = h('a'),
+            node2 = h('b');
 
         expect(normalizeNode(['str', node1, 0, node2, true]))
             .to.be.eql([
-                elem('plaintext').setChildren('str'),
+                h('plaintext', { children : 'str' }),
                 node1,
-                elem('plaintext').setChildren(0),
+                h('plaintext', { children : 0 }),
                 node2
             ]);
     });
 
     it('should concat sibling text nodes', () => {
-        const node = elem('a');
+        const node = h('a');
 
         expect(normalizeNode(['t1', 't2', node, 't3', 't4', ['t5', ['t6']]]))
             .to.be.eql([
-                elem('plaintext').setChildren('t1t2'),
+                h('plaintext', { children : 't1t2' }),
                 node,
-                elem('plaintext').setChildren('t3t4t5t6')
+                h('plaintext', { children : 't3t4t5t6' })
             ]);
     });
 
     it('should concat sibling text nodes in the middle of items', () => {
-        const node1 = elem('a'),
-            node2 = elem('b');
+        const node1 = h('a'),
+            node2 = h('b');
 
         expect(normalizeNode([node1, 't1', 't2', node2]))
             .to.be.eql([
                 node1,
-                elem('plaintext').setChildren('t1t2'),
+                h('plaintext', { children : 't1t2' }),
                 node2
             ]);
     });
@@ -84,10 +84,10 @@ describe('normalizeNode', () => {
     });
 
     it('should normalize items with last string item', () => {
-        const node = elem('a');
+        const node = h('a');
 
         expect(normalizeNode([node, 'test']))
-            .to.be.eql([node, elem('plaintext').setChildren('test')]);
+            .to.be.eql([node, h('plaintext', { children : 'test' })]);
     });
 
     it('should concat simple items to only node', () => {
@@ -106,14 +106,14 @@ describe('normalizeNode', () => {
     });
 
     it('should do nothing for only node child', () => {
-        const node = elem('a');
+        const node = h('a');
 
         expect(normalizeNode(node))
             .to.be.eql(node);
     });
 
     it('should reuse existing array if possible', () => {
-        const children = [elem('a'), elem('b')];
+        const children = [h('a'), h('b')];
 
         expect(normalizeNode(children))
             .to.be.equal(children);

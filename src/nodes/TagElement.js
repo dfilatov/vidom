@@ -8,7 +8,6 @@ import { addListener, removeListeners } from '../client/events/domEventManager';
 import ATTRS_TO_EVENTS from '../client/events/attrsToEvents';
 import escapeHtml from '../utils/escapeHtml';
 import isInArray from '../utils/isInArray';
-import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
 import merge from '../utils/merge';
 import { isTrident, isEdge } from '../client/utils/ua';
@@ -17,7 +16,6 @@ import createElementByHtml from '../client/utils/createElementByHtml';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { ELEMENT_TYPE_TAG } from './utils/elementTypes';
-import { setKey, setRef } from './utils/setters';
 import normalizeNode from './utils/normalizeNode';
 
 const SHORT_TAGS = [
@@ -29,11 +27,9 @@ const SHORT_TAGS = [
             return res;
         },
         Object.create(null)),
-    USE_DOM_STRINGS = isTrident || isEdge,
-    ATTRS_SET = 4,
-    CHILDREN_SET = 8;
+    USE_DOM_STRINGS = isTrident || isEdge;
 
-export default function TagElement(tag) {
+export default function TagElement(tag, key, attrs, children, ref, escapeChildren) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'tag');
@@ -46,97 +42,31 @@ export default function TagElement(tag) {
 
     this.type = ELEMENT_TYPE_TAG;
     this.tag = tag;
-    this.key = null;
-    this.attrs = emptyObj;
-    this.children = null;
+    this.key = key == null? null : key;
+    this.attrs = attrs || emptyObj;
+    this.children = processChildren(children);
 
     if(IS_DEBUG) {
+        checkAttrs(this.attrs);
+
+        Object.freeze(this.attrs);
+        if(Array.isArray(this.children)) {
+            Object.freeze(this.children);
+        }
+
         this.__isFrozen = true;
-        this._sets = 0;
     }
 
     this._domNode = null;
     this._ns = tag in ns? ns[tag] : null;
-    this._escapeChildren = true;
+    this._escapeChildren = escapeChildren !== false;
     this._ctx = emptyObj;
-    this._ref = null;
+    this._ref = ref == null? null : ref;
 }
 
 TagElement.prototype = {
     getDomNode() {
         return this._domNode;
-    },
-
-    setKey,
-
-    setRef,
-
-    setAttrs(attrs) {
-        if(IS_DEBUG) {
-            if(this._sets & ATTRS_SET) {
-                console.warn('Attrs are already set and shouldn\'t be set again.');
-            }
-
-            checkAttrs(attrs);
-            this.__isFrozen = false;
-        }
-
-        if(attrs != null) {
-            this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
-
-            if(IS_DEBUG) {
-                Object.freeze(this.attrs);
-                this._sets |= ATTRS_SET;
-                this.__isFrozen = true;
-            }
-        }
-
-        return this;
-    },
-
-    setChildren(children) {
-        if(IS_DEBUG) {
-            if(this._sets & CHILDREN_SET) {
-                console.warn('Children are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        this.children = processChildren(children);
-
-        if(IS_DEBUG) {
-            if(Array.isArray(this.children)) {
-                Object.freeze(this.children);
-            }
-
-            this._sets |= CHILDREN_SET;
-            this.__isFrozen = true;
-        }
-
-        return this;
-    },
-
-    setHtml(html) {
-        if(IS_DEBUG) {
-            if(this._sets & CHILDREN_SET) {
-                console.warn('Children are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        if(html != null && typeof html !== 'boolean') {
-            this.children = '' + html;
-        }
-
-        if(IS_DEBUG) {
-            this._sets |= CHILDREN_SET;
-            this.__isFrozen = true;
-        }
-
-        this._escapeChildren = false;
-        return this;
     },
 
     setCtx(ctx) {
@@ -359,22 +289,20 @@ TagElement.prototype = {
         }
     },
 
-    clone() {
-        const res = new TagElement(this.tag);
+    clone(attrs, children) {
+        const res = new TagElement(this.tag, this.key);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
         }
 
-        res.key = this.key;
-        res.attrs = this.attrs;
-        res.children = this.children;
+        res.attrs = attrs == null? this.attrs : merge(this.attrs, attrs);
+        res.children = children == null? this.children : processChildren(children);
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
         }
 
-        res._ns = this._ns;
         res._escapeChildren = this._escapeChildren;
         res._ctx = this._ctx;
         res._ref = this._ref;

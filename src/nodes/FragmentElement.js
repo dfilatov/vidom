@@ -4,16 +4,12 @@ import checkReuse from './utils/checkReuse';
 import checkChildren from './utils/checkChildren';
 import patchChildren from './utils/patchChildren';
 import emptyObj from '../utils/emptyObj';
-import console from '../utils/console';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { ELEMENT_TYPE_FRAGMENT } from './utils/elementTypes';
-import { setKey } from './utils/setters';
 import normalizeNode from './utils/normalizeNode';
 
-const CHILDREN_SET = 8;
-
-export default function FragmentElement() {
+export default function FragmentElement(key, children) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -23,12 +19,14 @@ export default function FragmentElement() {
     }
 
     this.type = ELEMENT_TYPE_FRAGMENT;
-    this.key = null;
-    this.children = null;
+    this.key = key == null? null : key;
+    this.children = processChildren(children);
 
     if(IS_DEBUG) {
+        if(Array.isArray(this.children)) {
+            Object.freeze(this.children);
+        }
         this.__isFrozen = true;
-        this._sets = 0;
     }
 
     this._domNode = null;
@@ -38,31 +36,6 @@ export default function FragmentElement() {
 FragmentElement.prototype = {
     getDomNode() {
         return this._domNode;
-    },
-
-    setKey,
-
-    setChildren(children) {
-        if(IS_DEBUG) {
-            if(this._sets & CHILDREN_SET) {
-                console.warn('Children are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        this.children = processChildren(children);
-
-        if(IS_DEBUG) {
-            if(Array.isArray(this.children)) {
-                Object.freeze(this.children);
-            }
-
-            this._sets |= CHILDREN_SET;
-            this.__isFrozen = true;
-        }
-
-        return this;
     },
 
     setCtx(ctx) {
@@ -176,15 +149,14 @@ FragmentElement.prototype = {
         }
     },
 
-    clone() {
-        const res = new FragmentElement();
+    clone(children) {
+        const res = new FragmentElement(this.key);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
         }
 
-        res.key = this.key;
-        res.children = this.children;
+        res.children = children == null? this.children : processChildren(children);
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
@@ -238,12 +210,6 @@ FragmentElement.prototype = {
         patchChildren(this, element);
     }
 };
-
-if(IS_DEBUG) {
-    FragmentElement.prototype.setRef = function() {
-        throw Error('vidom: Fragment elements don\'t support refs.');
-    };
-}
 
 function processChildren(children) {
     const normalizedChildren = normalizeNode(children);

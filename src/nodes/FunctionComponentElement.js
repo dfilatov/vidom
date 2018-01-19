@@ -1,18 +1,13 @@
 import patchOps from '../client/patchOps';
 import checkReuse from './utils/checkReuse';
-import console from '../utils/console';
 import emptyObj from '../utils/emptyObj';
 import merge from '../utils/merge';
 import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { ELEMENT_TYPE_FUNCTION_COMPONENT } from './utils/elementTypes';
 import nodeToElement from './utils/nodeToElement';
-import { setKey } from './utils/setters';
 
-const ATTRS_SET = 4,
-    CHILDREN_SET = 8;
-
-export default function FunctionComponentElement(component) {
+export default function FunctionComponentElement(component, key, attrs, children) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -24,13 +19,13 @@ export default function FunctionComponentElement(component) {
 
     this.type = ELEMENT_TYPE_FUNCTION_COMPONENT;
     this.component = component;
-    this.key = null;
-    this.attrs = emptyObj;
-    this.children = null;
+    this.key = key == null? null : key;
+    this.attrs = attrs || emptyObj;
+    this.children = children;
 
     if(IS_DEBUG) {
+        Object.freeze(this.attrs);
         this.__isFrozen = true;
-        this._sets = 0;
     }
 
     this._rootElement = null;
@@ -42,49 +37,6 @@ FunctionComponentElement.prototype = {
         return this._rootElement === null?
             null:
             this._rootElement.getDomNode();
-    },
-
-    setKey,
-
-    setAttrs(attrs) {
-        if(IS_DEBUG) {
-            if(this._sets & ATTRS_SET) {
-                console.warn('Attrs are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        if(attrs != null) {
-            this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
-
-            if(IS_DEBUG) {
-                Object.freeze(this.attrs);
-                this._sets |= ATTRS_SET;
-                this.__isFrozen = true;
-            }
-        }
-
-        return this;
-    },
-
-    setChildren(children) {
-        if(IS_DEBUG) {
-            if(this._sets & CHILDREN_SET) {
-                console.warn('Children are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        this.children = children;
-
-        if(IS_DEBUG) {
-            this._sets |= CHILDREN_SET;
-            this.__isFrozen = true;
-        }
-
-        return this;
     },
 
     setCtx(ctx) {
@@ -123,16 +75,15 @@ FunctionComponentElement.prototype = {
         }
     },
 
-    clone() {
-        const res = new FunctionComponentElement(this.component);
+    clone(attrs, children) {
+        const res = new FunctionComponentElement(this.component, this.key);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
         }
 
-        res.key = this.key;
-        res.attrs = this.attrs;
-        res.children = this.children;
+        res.attrs = attrs == null? this.attrs : merge(this.attrs, attrs);
+        res.children = children == null? this.children : children;
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
@@ -182,9 +133,3 @@ FunctionComponentElement.prototype = {
         return this._rootElement;
     }
 };
-
-if(IS_DEBUG) {
-    FunctionComponentElement.prototype.setRef = function() {
-        throw Error('vidom: Function component elements don\'t support refs.');
-    };
-}

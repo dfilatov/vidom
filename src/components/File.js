@@ -3,7 +3,7 @@ import TagElement from '../nodes/TagElement';
 
 export default createComponent({
     onRender() {
-        return new TagElement('input').setAttrs(this.attrs);
+        return new TagElement('input', null, this.attrs);
     },
 
     onRefRequest() {

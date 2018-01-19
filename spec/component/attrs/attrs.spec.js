@@ -1,5 +1,6 @@
-import { elem, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
+import { createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
+import { h } from '../../helpers';
 
 describe('attrs', () => {
     let domNode;
@@ -21,7 +22,7 @@ describe('attrs', () => {
             }
         });
 
-        mountSync(domNode, elem(C1));
+        mountSync(domNode, h(C1));
     });
 
     it('should provide passed attributes if not defined', done => {
@@ -33,7 +34,7 @@ describe('attrs', () => {
                 }
             });
 
-        mountSync(domNode, elem(C1).setAttrs(attrs));
+        mountSync(domNode, h(C1, attrs));
     });
 
     it('should merge passed with default attributes', done => {
@@ -46,7 +47,7 @@ describe('attrs', () => {
             defaultAttrs : { a : 1, b : 2, c : 3 }
         });
 
-        mountSync(domNode, elem(C1).setAttrs({ a : 3, c : undefined }));
+        mountSync(domNode, h(C1, { a : 3, c : undefined }));
     });
 
     it('should merge passed with default attributes after update', done => {
@@ -59,8 +60,8 @@ describe('attrs', () => {
             defaultAttrs : { a : 1, b : 2, c : 3 }
         });
 
-        mountSync(domNode, elem(C1).setAttrs({ a : 3, c : undefined }));
-        mountSync(domNode, elem(C1).setAttrs({ a : 4, c : undefined }));
+        mountSync(domNode, h(C1, { a : 3, c : undefined }));
+        mountSync(domNode, h(C1, { a : 4, c : undefined }));
     });
 
     if(IS_DEBUG) {
@@ -76,7 +77,7 @@ describe('attrs', () => {
                 }
             });
 
-            mountSync(domNode, elem(C));
+            mountSync(domNode, h(C));
         });
 
         it('should throw exception if attempt to modify attrs directly', done => {
@@ -91,7 +92,7 @@ describe('attrs', () => {
                 }
             });
 
-            mountSync(domNode, elem(C));
+            mountSync(domNode, h(C));
         });
     }
 });

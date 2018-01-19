@@ -1,5 +1,6 @@
 import sinon from 'sinon';
-import { elem, createComponent, mount, unmount } from '../../src/vidom';
+import { createComponent, mount, unmount } from '../../src/vidom';
+import { h } from '../helpers';
 
 describe('mount', () => {
     let domNode;
@@ -17,15 +18,15 @@ describe('mount', () => {
 
     describe('callbacks', () => {
         it('should properly call callback on initial mount', done => {
-            mount(domNode, elem('div'), () => {
+            mount(domNode, h('div'), () => {
                 expect(domNode.childNodes.length).to.equal(1);
                 done();
             });
         });
 
         it('should properly call callback after tree is remounted with diff', done => {
-            mount(domNode, elem('div'), () => {
-                mount(domNode, elem('span'), () => {
+            mount(domNode, h('div'), () => {
+                mount(domNode, h('span'), () => {
                     expect(domNode.childNodes[0].tagName).to.equal('SPAN');
                     done();
                 });
@@ -33,8 +34,8 @@ describe('mount', () => {
         });
 
         it('should properly call callback after tree is remounted without diff', done => {
-            mount(domNode, elem('div'), () => {
-                mount(domNode, elem('div'), () => {
+            mount(domNode, h('div'), () => {
+                mount(domNode, h('div'), () => {
                     done();
                 });
             });
@@ -43,8 +44,8 @@ describe('mount', () => {
         it('shouldn\'t call callback if a new tree is mounted', done => {
             const spy = sinon.spy();
 
-            mount(domNode, elem('div'), spy);
-            mount(domNode, elem('div'), () => {
+            mount(domNode, h('div'), spy);
+            mount(domNode, h('div'), () => {
                 expect(spy.called).not.to.be.ok();
                 done();
             });
@@ -53,7 +54,7 @@ describe('mount', () => {
         it('shouldn\'t call callback if a tree is unmounted', done => {
             const spy = sinon.spy();
 
-            mount(domNode, elem('div'), spy);
+            mount(domNode, h('div'), spy);
             unmount(domNode, () => {
                 expect(spy.called).not.to.be.ok();
                 done();
@@ -64,7 +65,7 @@ describe('mount', () => {
     describe('replacing', () => {
         it('should replace extraneous dom', done => {
             domNode.appendChild(document.createElement('span'));
-            mount(domNode, elem('div'), () => {
+            mount(domNode, h('div'), () => {
                 expect(domNode.childNodes.length).to.equal(1);
                 expect(domNode.childNodes[0].tagName.toLowerCase()).to.equal('div');
                 done();
@@ -82,7 +83,7 @@ describe('mount', () => {
                     }
                 });
 
-            mount(domNode, elem('div').setChildren(elem(C)), ctx);
+            mount(domNode, h('div', { children : h(C) }), ctx);
         });
     });
 });

@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import simulate from 'simulate';
-import { elem, mountSync, unmountSync } from '../../src/vidom';
+import { mountSync, unmountSync } from '../../src/vidom';
+import { h } from '../helpers';
 
 describe('domEvents', () => {
     let domNode;
@@ -21,12 +22,10 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ onClick : spy1 }).setChildren([
-                    elem('div').setAttrs({ onClick : spy2 }).setChildren(
-                        elem('div').setAttrs({ id : 'id1' })),
-                    elem('div').setAttrs({ onClick : spy3 }).setChildren(
-                        elem('div').setAttrs({ id : 'id2' }))
-                ]));
+                h('div', { onClick : spy1, children : [
+                    h('div', { onClick : spy2, children : h('div', { id : 'id1' }) }),
+                    h('div', { onClick : spy3, children : h('div', { id : 'id2' }) })
+                ] }));
 
             simulate.click(document.getElementById('id1'));
 
@@ -46,11 +45,11 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onClick : spy }));
+                h('div', { id : 'id1', onClick : spy }));
 
             simulate.click(document.getElementById('id1'));
 
-            const e = spy.args[0][0];
+            const [[e]] = spy.args;
 
             expect(e.type).to.be.equal('click');
             expect(e.nativeEvent.type).to.be.equal('click');
@@ -61,13 +60,15 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ onClick : spy }).setChildren(
-                    elem('div').setAttrs({
+                h('div', {
+                    onClick : spy,
+                    children : h('div', {
                         id : 'id1',
-                        onClick : function(e) {
+                        onClick(e) {
                             e.stopPropagation();
                         }
-                    })));
+                    })
+                }));
 
             simulate.click(document.getElementById('id1'));
 
@@ -77,10 +78,10 @@ describe('domEvents', () => {
         it('should properly prevent default', () => {
             mountSync(
                 domNode,
-                elem('input').setAttrs({
+                h('input', {
                     type : 'checkbox',
                     id : 'id1',
-                    onClick : function(e) {
+                    onClick(e) {
                         e.preventDefault();
                     }
                 }));
@@ -96,11 +97,11 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onClick : spy1 }));
+                h('div', { id : 'id1', onClick : spy1 }));
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onDblClick : spy2 }));
+                h('div', { id : 'id1', onDblClick : spy2 }));
 
             simulate.click(document.getElementById('id1'));
             simulate.dblclick(document.getElementById('id1'));
@@ -115,11 +116,11 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onClick : spy1 }));
+                h('div', { id : 'id1', onClick : spy1 }));
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onClick : spy2 }));
+                h('div', { id : 'id1', onClick : spy2 }));
 
             simulate.click(document.getElementById('id1'));
 
@@ -132,8 +133,7 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onFocus : spy })
-                    .setChildren(elem('input')));
+                h('div', { id : 'id1', onFocus : spy, children : h('input') }));
 
             simulate.focusin(document.getElementById('id1'));
 
@@ -145,8 +145,7 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ onBlur : spy }).setChildren(
-                    elem('input').setAttrs({ id : 'id1' })));
+                h('div', { onBlur : spy, children : h('input', { id : 'id1' }) }));
 
             simulate.focus(document.getElementById('id1'));
             simulate.focusout(document.getElementById('id1'));
@@ -162,9 +161,10 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ onClick : spy1 }).setChildren(
-                    elem('div').setAttrs({ onClick : spy2 }).setChildren(
-                        elem('div').setAttrs({ id : 'id1' }))));
+                h('div', {
+                    onClick : spy1,
+                    children : h('div', { onClick : spy2, children : h('div', { id : 'id1' }) })
+                }));
 
             simulate.click(document.getElementById('id1'));
 
@@ -181,10 +181,10 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ onScroll : spy1 }).setChildren([
-                    elem('div').setAttrs({ id : 'id1', onScroll : spy2 }),
-                    elem('div').setAttrs({ id : 'id2', onScroll : spy3 })
-                ]));
+                h('div', { onScroll : spy1, children : [
+                    h('div', { id : 'id1', onScroll : spy2 }),
+                    h('div', { id : 'id2', onScroll : spy3 })
+                ] }));
 
             simulate.scroll(document.getElementById('id1'));
 
@@ -198,11 +198,11 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onScroll : spy }));
+                h('div', { id : 'id1', onScroll : spy }));
 
             simulate.scroll(document.getElementById('id1'));
 
-            const e = spy.args[0][0];
+            const [[e]] = spy.args;
 
             expect(e.type).to.be.equal('scroll');
         });
@@ -212,11 +212,11 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onScroll : spy }));
+                h('div', { id : 'id1', onScroll : spy }));
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1' }));
+                h('div', { id : 'id1' }));
 
             simulate.scroll(document.getElementById('id1'));
 
@@ -229,11 +229,11 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onScroll : spy1 }));
+                h('div', { id : 'id1', onScroll : spy1 }));
 
             mountSync(
                 domNode,
-                elem('div').setAttrs({ id : 'id1', onScroll : spy2 }));
+                h('div', { id : 'id1', onScroll : spy2 }));
 
             simulate.scroll(document.getElementById('id1'));
 
@@ -246,9 +246,11 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div')
-                    .setAttrs({ id : 'id1', onClick : spy })
-                    .setChildren(elem('div').setAttrs({ id : 'id2', onClick : spy })));
+                h('div', {
+                    id : 'id1',
+                    onClick : spy,
+                    children : h('div', { id : 'id2', onClick : spy })
+                }));
 
             simulate.click(document.getElementById('id1'));
             simulate.click(document.getElementById('id2'));
@@ -262,11 +264,13 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                elem('div')
-                    .setAttrs({
-                        id : 'id1',
-                        onClick : e => { e.persist(); spy(e); }
-                    }));
+                h('div', {
+                    id : 'id1',
+                    onClick(e) {
+                        e.persist();
+                        spy(e);
+                    }
+                }));
 
             simulate.click(document.getElementById('id1'));
             simulate.click(document.getElementById('id1'));

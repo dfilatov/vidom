@@ -1,22 +1,22 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const nodeC = createElement('a').setKey('c'),
-    nodeD = createElement('a').setKey('d');
+const nodeC = h('a', { key : 'c' }),
+    nodeD = h('a', { key : 'd' });
 
 export default {
     'name' : 'complex-remove-from-ending-with-key',
     'trees' : [
-        createElement('div').setChildren([
-            createElement('a').setKey('a'),
-            createElement('a').setKey('b'),
+        h('div', { children : [
+            h('a', { key : 'a' }),
+            h('a', { key : 'b' }),
             nodeC,
             nodeD
-        ]),
-        createElement('div').setChildren([
-            createElement('a').setKey('a'),
-            createElement('a').setKey('b')
-        ])
+        ] }),
+        h('div', { children : [
+            h('a', { key : 'a' }),
+            h('a', { key : 'b' })
+        ] })
     ],
     'patch' : [
         { op : patchOps.removeChild, args : [nodeC] },

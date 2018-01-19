@@ -4,17 +4,13 @@ import checkReuse from './utils/checkReuse';
 import merge from '../utils/merge';
 import restrictObjProp from '../utils/restrictObjProp';
 import { ELEMENT_TYPE_COMPONENT } from './utils/elementTypes';
-import { setKey, setRef } from './utils/setters';
 import { IS_DEBUG } from '../utils/debug';
 import Input from '../components/Input';
 import Radio from '../components/Radio';
 import CheckBox from '../components/CheckBox';
 import File from '../components/File';
 
-const ATTRS_SET = 4,
-    CHILDREN_SET = 8;
-
-export default function ComponentElement(component) {
+export default function ComponentElement(component, key, attrs, children, ref) {
     if(IS_DEBUG) {
         restrictObjProp(this, 'type');
         restrictObjProp(this, 'key');
@@ -25,19 +21,41 @@ export default function ComponentElement(component) {
     }
 
     this.type = ELEMENT_TYPE_COMPONENT;
-    this.component = component;
-    this.key = null;
-    this.attrs = emptyObj;
-    this.children = null;
+    this.key = key == null? null : key;
+    this.attrs = attrs || emptyObj;
+    this.children = children;
+
+    if(component === Input) {
+        switch(this.attrs.type) {
+            case 'radio':
+                this.component = Radio;
+                break;
+
+            case 'checkbox':
+                this.component = CheckBox;
+                break;
+
+            case 'file':
+                this.component = File;
+                break;
+
+            default:
+                this.component = component;
+        }
+    }
+    else {
+        this.component = component;
+    }
 
     if(IS_DEBUG) {
+        Object.freeze(this.attrs);
+
         this.__isFrozen = true;
-        this._sets = 0;
     }
 
     this._instance = null;
     this._ctx = emptyObj;
-    this._ref = null;
+    this._ref = ref == null? null : ref;
 }
 
 ComponentElement.prototype = {
@@ -45,67 +63,6 @@ ComponentElement.prototype = {
         return this._instance === null?
             null :
             this._instance.getDomNode();
-    },
-
-    setKey,
-
-    setRef,
-
-    setAttrs(attrs) {
-        if(IS_DEBUG) {
-            if(this._sets & ATTRS_SET) {
-                console.warn('Attrs are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        if(attrs != null) {
-            this.attrs = this.attrs === emptyObj? attrs : merge(this.attrs, attrs);
-
-            if(IS_DEBUG) {
-                Object.freeze(this.attrs);
-                this._sets |= ATTRS_SET;
-                this.__isFrozen = true;
-            }
-
-            if(this.component === Input) {
-                switch(this.attrs.type) {
-                    case 'radio':
-                        this.component = Radio;
-                        break;
-
-                    case 'checkbox':
-                        this.component = CheckBox;
-                        break;
-
-                    case 'file':
-                        this.component = File;
-                        break;
-                }
-            }
-        }
-
-        return this;
-    },
-
-    setChildren(children) {
-        if(IS_DEBUG) {
-            if(this._sets & CHILDREN_SET) {
-                console.warn('Children are already set and shouldn\'t be set again.');
-            }
-
-            this.__isFrozen = false;
-        }
-
-        this.children = children;
-
-        if(IS_DEBUG) {
-            this._sets |= CHILDREN_SET;
-            this.__isFrozen = true;
-        }
-
-        return this;
     },
 
     setCtx(ctx) {
@@ -152,16 +109,15 @@ ComponentElement.prototype = {
         }
     },
 
-    clone() {
-        const res = new ComponentElement(this.component);
+    clone(attrs, children) {
+        const res = new ComponentElement(this.component, this.key);
 
         if(IS_DEBUG) {
             res.__isFrozen = false;
         }
 
-        res.key = this.key;
-        res.attrs = this.attrs;
-        res.children = this.children;
+        res.attrs = attrs == null? this.attrs : merge(this.attrs, attrs);
+        res.children = children == null? this.children : children;
 
         if(IS_DEBUG) {
             res.__isFrozen = true;

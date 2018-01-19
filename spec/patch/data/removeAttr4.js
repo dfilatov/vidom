@@ -1,10 +1,10 @@
-import createElement from '../../../src/createElement';
+import { h } from '../../helpers';
 
 export default {
     'name' : 'removeAttr4',
     'trees' : [
-        createElement('input').setAttrs({ className : null }),
-        createElement('input')
+        h('input', { className : null }),
+        h('input')
     ],
     'patch' : []
 };

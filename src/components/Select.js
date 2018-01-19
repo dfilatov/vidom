@@ -14,9 +14,7 @@ export default createComponent({
     },
 
     onRender() {
-        return new TagElement('select')
-            .setAttrs(merge(this.attrs, this._addAttrs))
-            .setChildren(this.children);
+        return new TagElement('select', null, merge(this.attrs, this._addAttrs), this.children);
     },
 
     onChange(e) {

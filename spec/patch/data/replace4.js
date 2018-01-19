@@ -1,8 +1,8 @@
-import createElement from '../../../src/createElement';
 import patchOps from '../../../src/client/patchOps';
+import { h } from '../../helpers';
 
-const oldNode = createElement('div'),
-    newNode = createElement('svg'),
+const oldNode = h('div'),
+    newNode = h('svg'),
     replaceOp = patchOps.replace;
 
 export default {

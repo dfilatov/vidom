@@ -1,5 +1,6 @@
 import sinon from 'sinon';
-import { elem, createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { h } from '../../helpers';
 
 describe('onChildrenReceive', () => {
     let domNode;
@@ -14,8 +15,8 @@ describe('onChildrenReceive', () => {
     });
 
     it('should be called when new children are passed', done => {
-        const prevChildren = [elem('div')],
-            nextChildren = [elem('span')],
+        const prevChildren = [h('div')],
+            nextChildren = [h('span')],
             C = createComponent({
                 onChildrenReceive(_prevChildren) {
                     expect(this.children).to.be.equal(nextChildren);
@@ -24,8 +25,8 @@ describe('onChildrenReceive', () => {
                 }
             });
 
-        mountSync(domNode, elem(C).setChildren(prevChildren));
-        mountSync(domNode, elem(C).setChildren(nextChildren));
+        mountSync(domNode, h(C, { children : prevChildren }));
+        mountSync(domNode, h(C, { children : nextChildren }));
     });
 
     it('shouldn\'t be called if component updates itself', done => {
@@ -43,7 +44,7 @@ describe('onChildrenReceive', () => {
                 }
             });
 
-        mountSync(domNode, elem(C));
+        mountSync(domNode, h(C));
     });
 
     it('shouldn\'t cause additional render if calls update()', done => {
@@ -51,7 +52,7 @@ describe('onChildrenReceive', () => {
             C = createComponent({
                 onRender() {
                     spy();
-                    return elem('div');
+                    return h('div');
                 },
 
                 onChildrenReceive() {
@@ -64,7 +65,7 @@ describe('onChildrenReceive', () => {
                 }
             });
 
-        mountSync(domNode, elem(C));
-        mountSync(domNode, elem(C).setChildren([]));
+        mountSync(domNode, h(C));
+        mountSync(domNode, h(C, { children : [] }));
     });
 });
