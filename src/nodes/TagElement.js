@@ -36,6 +36,7 @@ export default function TagElement(tag, key, attrs, children, ref, escapeChildre
         restrictObjProp(this, 'key');
         restrictObjProp(this, 'attrs');
         restrictObjProp(this, 'children');
+        restrictObjProp(this, 'ref');
 
         this.__isFrozen = false;
     }
@@ -45,6 +46,7 @@ export default function TagElement(tag, key, attrs, children, ref, escapeChildre
     this.key = key == null? null : key;
     this.attrs = attrs || emptyObj;
     this.children = processChildren(children);
+    this.ref = ref == null? null : ref;
 
     if(IS_DEBUG) {
         checkAttrs(this.attrs);
@@ -61,7 +63,6 @@ export default function TagElement(tag, key, attrs, children, ref, escapeChildre
     this._ns = tag in ns? ns[tag] : null;
     this._escapeChildren = escapeChildren !== false;
     this._ctx = emptyObj;
-    this._ref = ref == null? null : ref;
 }
 
 TagElement.prototype = {
@@ -263,8 +264,8 @@ TagElement.prototype = {
             }
         }
 
-        if(this._ref !== null) {
-            this._ref(this._domNode);
+        if(this.ref !== null) {
+            this.ref(this._domNode);
         }
     },
 
@@ -284,12 +285,12 @@ TagElement.prototype = {
 
         this._domNode = null;
 
-        if(this._ref !== null) {
-            this._ref(null);
+        if(this.ref !== null) {
+            this.ref(null);
         }
     },
 
-    clone(attrs, children) {
+    clone(attrs, children, ref) {
         const res = new TagElement(this.tag, this.key);
 
         if(IS_DEBUG) {
@@ -298,6 +299,7 @@ TagElement.prototype = {
 
         res.attrs = attrs == null? this.attrs : merge(this.attrs, attrs);
         res.children = children == null? this.children : processChildren(children);
+        res.ref = ref == null? this.ref : ref;
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
@@ -305,7 +307,6 @@ TagElement.prototype = {
 
         res._escapeChildren = this._escapeChildren;
         res._ctx = this._ctx;
-        res._ref = this._ref;
 
         return res;
     },
@@ -493,17 +494,17 @@ TagElement.prototype = {
     },
 
     _patchRef(element) {
-        if(this._ref !== null) {
-            if(this._ref !== element._ref) {
-                this._ref(null);
+        if(this.ref !== null) {
+            if(this.ref !== element.ref) {
+                this.ref(null);
 
-                if(element._ref !== null) {
-                    element._ref(element._domNode);
+                if(element.ref !== null) {
+                    element.ref(element._domNode);
                 }
             }
         }
-        else if(element._ref !== null) {
-            element._ref(element._domNode);
+        else if(element.ref !== null) {
+            element.ref(element._domNode);
         }
     }
 };

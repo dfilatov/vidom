@@ -16,6 +16,7 @@ export default function ComponentElement(component, key, attrs, children, ref) {
         restrictObjProp(this, 'key');
         restrictObjProp(this, 'attrs');
         restrictObjProp(this, 'children');
+        restrictObjProp(this, 'ref');
 
         this.__isFrozen = false;
     }
@@ -24,6 +25,7 @@ export default function ComponentElement(component, key, attrs, children, ref) {
     this.key = key == null? null : key;
     this.attrs = attrs || emptyObj;
     this.children = children;
+    this.ref = ref == null? null : ref;
 
     if(component === Input) {
         switch(this.attrs.type) {
@@ -55,7 +57,6 @@ export default function ComponentElement(component, key, attrs, children, ref) {
 
     this._instance = null;
     this._ctx = emptyObj;
-    this._ref = ref == null? null : ref;
 }
 
 ComponentElement.prototype = {
@@ -93,8 +94,8 @@ ComponentElement.prototype = {
     mount() {
         this._instance.mount();
 
-        if(this._ref !== null) {
-            this._ref(this._instance.onRefRequest());
+        if(this.ref !== null) {
+            this.ref(this._instance.onRefRequest());
         }
     },
 
@@ -104,12 +105,12 @@ ComponentElement.prototype = {
             this._instance = null;
         }
 
-        if(this._ref !== null) {
-            this._ref(null);
+        if(this.ref !== null) {
+            this.ref(null);
         }
     },
 
-    clone(attrs, children) {
+    clone(attrs, children, ref) {
         const res = new ComponentElement(this.component, this.key);
 
         if(IS_DEBUG) {
@@ -118,13 +119,13 @@ ComponentElement.prototype = {
 
         res.attrs = attrs == null? this.attrs : merge(this.attrs, attrs);
         res.children = children == null? this.children : children;
+        res.ref = ref == null? this.ref : ref;
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
         }
 
         res._ctx = this._ctx;
-        res._ref = this._ref;
 
         return res;
     },
@@ -147,17 +148,17 @@ ComponentElement.prototype = {
     },
 
     _patchRef(element) {
-        if(this._ref !== null) {
-            if(this._ref !== element._ref) {
-                this._ref(null);
+        if(this.ref !== null) {
+            if(this.ref !== element.ref) {
+                this.ref(null);
 
-                if(element._ref !== null) {
-                    element._ref(element._instance.onRefRequest());
+                if(element.ref !== null) {
+                    element.ref(element._instance.onRefRequest());
                 }
             }
         }
-        else if(element._ref !== null) {
-            element._ref(element._instance.onRefRequest());
+        else if(element.ref !== null) {
+            element.ref(element._instance.onRefRequest());
         }
     },
 
