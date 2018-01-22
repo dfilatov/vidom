@@ -14,7 +14,6 @@ declare namespace vidom {
     abstract class BaseElement {
         readonly key: Key | null;
 
-        setKey(key: Key): this;
         clone(): this;
     }
 
@@ -22,20 +21,21 @@ declare namespace vidom {
         readonly tag: string;
         readonly attrs: HTMLAttributes | SVGAttributes;
         readonly children: Element[] | string | null;
+        readonly ref: Ref<DOMElement> | null;
 
         constructor(
             tag: string,
             key?: Key | null,
             attrs?: HTMLAttributes | SVGAttributes | null,
             children?: Node,
-            ref?: Ref<Element> | null,
+            ref?: Ref<DOMElement> | null,
             escapeChildren?: boolean
         );
 
         clone(
             attrs?: HTMLAttributes | SVGAttributes | null,
             children?: Node,
-            ref?: Ref<Element> | null
+            ref?: Ref<DOMElement> | null
         ): this;
     }
 
@@ -70,6 +70,7 @@ declare namespace vidom {
         readonly component: TComponentClass;
         readonly attrs: Readonly<TAttrs>;
         readonly children?: TChildren;
+        readonly ref: Ref<TComponent> | null;
 
         constructor(
             component: TComponentClass,
@@ -660,7 +661,7 @@ declare namespace vidom {
         protected setState(state: Partial<TState>): void;
         protected update(): void;
         protected isMounted(): boolean;
-        protected getDomNode(): HTMLElement | HTMLElement[];
+        protected getDomNode(): DOMElement | DOMElement[];
 
         protected onInit(): void;
         protected onMount(): void;
