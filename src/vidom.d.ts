@@ -31,6 +31,12 @@ declare namespace vidom {
             ref?: Ref<Element> | null,
             escapeChildren?: boolean
         );
+
+        clone(
+            attrs?: HTMLAttributes | SVGAttributes | null,
+            children?: Node,
+            ref?: Ref<Element> | null
+        ): this;
     }
 
     class TextElement extends BaseElement {
@@ -40,6 +46,8 @@ declare namespace vidom {
             key?: Key | null,
             children?: string
         );
+
+        clone(children?: string): this;
     }
 
     class FragmentElement extends BaseElement {
@@ -49,6 +57,8 @@ declare namespace vidom {
             key?: Key | null,
             children?: Node
         );
+
+        clone(children?: Node): this;
     }
 
     class ComponentElement<
@@ -68,6 +78,12 @@ declare namespace vidom {
             children?: TChildren,
             ref?: Ref<TComponent> | null
         );
+
+        clone(
+            attrs?: TAttrs | null,
+            children?: Node,
+            ref?: Ref<TComponent> | null
+        ): this;
     }
 
     class FunctionComponentElement<
@@ -85,6 +101,11 @@ declare namespace vidom {
             attrs?: TAttrs,
             children?: TChildren
         );
+
+        clone(
+            attrs?: TAttrs | null,
+            children?: Node
+        ): this;
     }
 
     type Element =
@@ -663,26 +684,48 @@ declare namespace vidom {
         protected onUnmount(): void;
     }
 
-    function elem(tag: 'fragment'): FragmentElement;
-    function elem(tag: 'plaintext'): TextElement;
-    function elem(tag: string): TagElement;
+    function elem(
+        tag: 'fragment',
+        key?: Key | null,
+        children?: Node
+    ): FragmentElement;
+    function elem(
+        tag: 'plaintext',
+        key?: Key | null,
+        children?: string
+    ): TextElement;
+    function elem(
+        tag: string,
+        key?: Key | null,
+        attrs?: HTMLAttributes | SVGAttributes | null,
+        children?: Node,
+        ref?: Ref<Element> | null,
+        escapeChildren?: boolean
+    ): TagElement;
     function elem<
         TAttrs,
         TChildren,
         TComponent extends Component<TAttrs, {}, TChildren>,
         TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>
     >(
-        component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>
+        component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>,
+        key?: Key | null,
+        attrs?: TAttrs,
+        children?: TChildren,
+        ref?: Ref<TComponent> | null
     ): ComponentElement<TAttrs, TChildren, TComponent, TComponentClass>;
     function elem<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
-        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>
+        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>,
+        key?: Key | null,
+        attrs?: TAttrs,
+        children?: TChildren
     ): FunctionComponentElement<TAttrs, TChildren, TFunctionComponent>;
 
-    function mount(domElem: HTMLElement, node: Node, callback?: () => void): void;
-    function mount(domElem: HTMLElement, node: Node, context?: MapLike, callback?: () => void): void;
-    function mountSync(domElem: HTMLElement, node: Node, context?: MapLike): void;
-    function unmount(domElem: HTMLElement, callback?: () => void): void;
-    function unmountSync(domElem: HTMLElement): void;
+    function mount(domElem: DOMElement, node: Node, callback?: () => void): void;
+    function mount(domElem: DOMElement, node: Node, context?: MapLike, callback?: () => void): void;
+    function mountSync(domElem: DOMElement, node: Node, context?: MapLike): void;
+    function unmount(domElem: DOMElement, callback?: () => void): void;
+    function unmountSync(domElem: DOMElement): void;
 
     function renderToString(node: Node): string;
 
