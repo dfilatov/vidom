@@ -9,6 +9,6 @@ describe('component', () => {
     require('./onAttrsReceive/onAttrsReceive.spec.js');
     require('./onChildrenReceive/onChildrenReceive.spec.js');
     require('./onContextReceive/onContextReceive.spec.js');
-    require('./shouldRerender/shouldRerender.spec.js');
+    require('./shouldUpdate/shouldUpdate.spec.js');
     require('./onUpdate/onUpdate.spec.js');
 });

@@ -42,7 +42,7 @@ describe('onUpdate', () => {
     it('should not be called if component hasn\'t rerendered', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                shouldRerender() {
+                shouldUpdate() {
                     return false;
                 },
 

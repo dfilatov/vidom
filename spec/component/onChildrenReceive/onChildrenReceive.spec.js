@@ -18,9 +18,9 @@ describe('onChildrenReceive', () => {
         const prevChildren = [h('div')],
             nextChildren = [h('span')],
             C = createComponent({
-                onChildrenReceive(_prevChildren) {
-                    expect(this.children).to.be.equal(nextChildren);
-                    expect(_prevChildren).to.be.equal(prevChildren);
+                onChildrenReceive(receivedChildren) {
+                    expect(receivedChildren).to.be.equal(nextChildren);
+                    expect(this.children).to.be.equal(prevChildren);
                     done();
                 }
             });

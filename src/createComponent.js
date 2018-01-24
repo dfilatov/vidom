@@ -10,7 +10,17 @@ import globalHook from './globalHook';
 
 function initComponent() {
     this.onInit();
-    this.__prevState = this.state;
+
+    if(IS_DEBUG) {
+        this.__isFrozen = false;
+    }
+
+    this.state = this.__nextState;
+
+    if(IS_DEBUG) {
+        this.__isFrozen = true;
+    }
+
     this.__isInited = true;
 }
 
@@ -32,50 +42,15 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
     }
 
     if(callReceivers) {
-        this.__prevAttrs = this.attrs;
-        this.__prevChildren = this.children;
-        this.__prevContext = this.context;
-
         const isUpdating = this.__isUpdating;
 
         this.__isUpdating = true;
 
-        if(IS_DEBUG) {
-            this.__isFrozen = false;
-        }
+        nextAttrs = this.__buildAttrs(nextAttrs);
 
-        this.attrs = this.__buildAttrs(nextAttrs);
-
-        if(IS_DEBUG) {
-            this.__isFrozen = true;
-        }
-
-        this.onAttrsReceive(this.__prevAttrs);
-
-        if(IS_DEBUG) {
-            this.__isFrozen = false;
-        }
-
-        this.children = nextChildren;
-
-        if(IS_DEBUG) {
-            this.__isFrozen = true;
-        }
-
-        this.onChildrenReceive(this.__prevChildren);
-
-        if(IS_DEBUG) {
-            this.__isFrozen = false;
-        }
-
-        this.context = nextContext;
-
-        if(IS_DEBUG) {
-            Object.freeze(this.context);
-            this.__isFrozen = true;
-        }
-
-        this.onContextReceive(this.__prevContext);
+        this.onAttrsReceive(nextAttrs);
+        this.onChildrenReceive(nextChildren);
+        this.onContextReceive(nextContext);
 
         this.__isUpdating = isUpdating;
     }
@@ -84,41 +59,62 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         return;
     }
 
-    const shouldRerender = this.shouldRerender(
-        this.__prevAttrs,
-        this.__prevChildren,
-        this.__prevState,
-        this.__prevContext);
+    const shouldUpdate = this.shouldUpdate(
+        nextAttrs,
+        nextChildren,
+        this.__nextState,
+        nextContext);
 
     if(IS_DEBUG) {
-        const shouldRerenderResType = typeof shouldRerender;
+        const shouldUpdateResType = typeof shouldUpdate;
 
-        if(shouldRerenderResType !== 'boolean') {
+        if(shouldUpdateResType !== 'boolean') {
             const name = getComponentName(this);
 
-            console.warn(`${name}#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
+            console.warn(`${name}#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
         }
     }
 
-    if(shouldRerender) {
+    const prevAttrs = this.attrs,
+        prevChildren = this.children,
+        prevState = this.state,
+        prevContext = this.context;
+
+    if(IS_DEBUG) {
+        this.__isFrozen = false;
+    }
+
+    if(callReceivers) {
+        this.attrs = nextAttrs;
+        this.children = nextChildren;
+        this.context = nextContext;
+
+        if(IS_DEBUG) {
+            Object.freeze(this.context);
+        }
+    }
+
+    this.state = this.__nextState;
+
+    if(IS_DEBUG) {
+        Object.freeze(this.state);
+        this.__isFrozen = true;
+    }
+
+    if(shouldUpdate) {
         const prevRootElem = this.getRootElement();
 
         this.__rootElement = this.render();
         prevRootElem.patch(this.__rootElement);
         this.onUpdate(
-            this.__prevAttrs,
-            this.__prevChildren,
-            this.__prevState,
-            this.__prevContext);
+            prevAttrs,
+            prevChildren,
+            prevState,
+            prevContext);
     }
-
-    this.__prevAttrs = this.attrs;
-    this.__prevChildren = this.children;
-    this.__prevState = this.state;
-    this.__prevContext = this.context;
 }
 
-function shouldComponentRerender() {
+function shouldComponentUpdate() {
     return true;
 }
 
@@ -153,16 +149,9 @@ function setComponentState(state) {
 
             console.warn(`${name}#setState() should not be called during rendering`);
         }
-
-        this.__isFrozen = false;
     }
 
-    this.state = merge(this.state, state);
-
-    if(IS_DEBUG) {
-        Object.freeze(this.state);
-        this.__isFrozen = true;
-    }
+    this.__nextState = merge(this.__nextState, state);
 
     if(this.__isInited) {
         this.update();
@@ -280,13 +269,8 @@ function createComponent(props, staticProps) {
             this.__isInited = false;
             this.__isMounted = false;
             this.__isUpdating = false;
-
             this.__rootElement = null;
-
-            this.__prevAttrs = this.attrs;
-            this.__prevChildren = this.children;
-            this.__prevState = emptyObj;
-            this.__prevContext = this.context;
+            this.__nextState = this.state;
         },
         ptp = {
             constructor : res,
@@ -299,7 +283,7 @@ function createComponent(props, staticProps) {
             onAttrsReceive : noOp,
             onChildrenReceive : noOp,
             onContextReceive : noOp,
-            shouldRerender : shouldComponentRerender,
+            shouldUpdate : shouldComponentUpdate,
             onRender : onComponentRender,
             onUpdate : noOp,
             isMounted : isComponentMounted,

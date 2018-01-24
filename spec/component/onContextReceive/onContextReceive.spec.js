@@ -18,9 +18,9 @@ describe('onContextReceive', () => {
         const prevContext = { ctx : 1 },
             nextContext = { ctx : 2 },
             C = createComponent({
-                onContextReceive(_prevContext) {
-                    expect(this.context).to.be.equal(nextContext);
-                    expect(_prevContext).to.be.equal(_prevContext);
+                onContextReceive(receivedContext) {
+                    expect(receivedContext).to.be.equal(nextContext);
+                    expect(this.context).to.be.equal(prevContext);
                     done();
                 }
             });
