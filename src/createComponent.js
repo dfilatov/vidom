@@ -10,12 +10,12 @@ import globalHook from './globalHook';
 
 function initComponent() {
     this.onInit();
-    this.__prevState = this.state;
-    this.__isInited = true;
 }
 
 function mountComponent() {
     this.__isMounted = true;
+    this.__prevState = this.state;
+
     this.getRootElement().mount();
     this.onMount();
 }
@@ -155,14 +155,16 @@ function setComponentState(state) {
         this.__isFrozen = false;
     }
 
-    this.state = merge(this.state, state);
+    this.state = this.state === emptyObj?
+        state :
+        merge(this.state, state);
 
     if(IS_DEBUG) {
         Object.freeze(this.state);
         this.__isFrozen = true;
     }
 
-    if(this.__isInited) {
+    if(this.isMounted()) {
         this.update();
     }
 }
@@ -275,7 +277,6 @@ function createComponent(props, staticProps) {
                 this.__isFrozen = true;
             }
 
-            this.__isInited = false;
             this.__isMounted = false;
             this.__isUpdating = false;
 
