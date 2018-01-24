@@ -665,7 +665,7 @@ declare namespace vidom {
 
         protected onInit(): void;
         protected onMount(): void;
-        protected onAttrsReceive(next: TAttrs): void;
+        protected onAttrsReceive(nextAttrs: TAttrs): void;
         protected onChildrenReceive(nextChildren: TChildren): void;
         protected onContextReceive(nextContext: TContext): void;
         protected onChildContextRequest(): TChildContext;
