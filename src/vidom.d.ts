@@ -120,11 +120,11 @@ declare namespace vidom {
     interface NodeArray extends Array<Node> {}
 
     interface WithKey {
-        readonly key?: Key | null;
+        key?: Key | null;
     }
 
     interface WithRef<T> {
-        readonly ref?: Ref<T> | null;
+        ref?: Ref<T> | null;
     }
 
     class SyntheticEvent<TTarget extends DOMElement = DOMElement, TNativeEvent extends Event = Event> {
