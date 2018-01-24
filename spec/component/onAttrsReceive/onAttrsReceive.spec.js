@@ -16,17 +16,17 @@ describe('onAttrsReceive', () => {
 
     it('should be called when new attrs are passed', done => {
         const prevAttrs = { id : 1 },
-            nextAttrs = { id : 2 },
+            newAttrs = { id : 2 },
             C = createComponent({
-                onAttrsReceive(receivedAttrs) {
-                    expect(receivedAttrs).to.be.equal(nextAttrs);
-                    expect(this.attrs).to.be.equal(prevAttrs);
+                onAttrsReceive(_prevAttrs) {
+                    expect(this.attrs).to.be.equal(newAttrs);
+                    expect(_prevAttrs).to.be.equal(prevAttrs);
                     done();
                 }
             });
 
         mountSync(domNode, h(C, prevAttrs));
-        mountSync(domNode, h(C, nextAttrs));
+        mountSync(domNode, h(C, newAttrs));
     });
 
     it('shouldn\'t be called if component updates itself', done => {

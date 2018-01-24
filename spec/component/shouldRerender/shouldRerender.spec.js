@@ -3,7 +3,7 @@ import { createComponent, mountSync, unmountSync } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
 import { h } from '../../helpers';
 
-describe('onUpdate', () => {
+describe('shouldRerender', () => {
     let domNode;
 
     beforeEach(() => {
@@ -15,9 +15,9 @@ describe('onUpdate', () => {
         document.body.removeChild(domNode);
     });
 
-    it('should be called after a component has updated with previous attributes, children and context', done => {
+    it('should be called before rerender with proper arguments', done => {
         const C = createComponent({
-                onUpdate(arg1, arg2, arg3, arg4) {
+                shouldRerender(arg1, arg2, arg3, arg4) {
                     expect(this.attrs).to.be.eql(nextAttrs);
                     expect(this.children).to.be.equal(nextChildren);
                     expect(this.context).to.be.equal(nextContext);
@@ -26,6 +26,7 @@ describe('onUpdate', () => {
                     expect(arg3).to.be.equal(emptyObj);
                     expect(arg4).to.be.equal(prevContext);
                     done();
+                    return true;
                 }
             }),
             prevAttrs = { id : 1 },
@@ -39,19 +40,22 @@ describe('onUpdate', () => {
         mountSync(domNode, h(C, { ...nextAttrs, children : nextChildren }), nextContext);
     });
 
-    it('should be called if component hasn\'t rerendered', () => {
+    it('should prevent rendering if returns false', () => {
         const spy = sinon.spy(),
             C = createComponent({
-                shouldRerender() {
-                    return false;
+                onRender() {
+                    spy();
+                    return h('div');
                 },
 
-                onUpdate : spy
+                shouldRerender() {
+                    return false;
+                }
             });
 
-        mountSync(domNode, h(C, { id : 1 }));
-        mountSync(domNode, h(C, { id : 2 }));
+        mountSync(domNode, h(C));
+        mountSync(domNode, h(C));
 
-        expect(spy.called).to.be.ok();
+        expect(spy.calledOnce).to.be.ok();
     });
 });

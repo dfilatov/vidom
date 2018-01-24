@@ -10,17 +10,8 @@ import globalHook from './globalHook';
 
 function initComponent() {
     this.onInit();
-
-    if(IS_DEBUG) {
-        this.__isFrozen = false;
-    }
-
-    this.state = this.__nextState;
-
-    if(IS_DEBUG) {
-        Object.freeze(this.state);
-        this.__isFrozen = true;
-    }
+    this.__prevState = this.state;
+    this.__isInited = true;
 }
 
 function mountComponent() {
@@ -41,15 +32,50 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
     }
 
     if(callReceivers) {
+        this.__prevAttrs = this.attrs;
+        this.__prevChildren = this.children;
+        this.__prevContext = this.context;
+
         const isUpdating = this.__isUpdating;
 
         this.__isUpdating = true;
 
-        nextAttrs = this.__buildAttrs(nextAttrs);
+        if(IS_DEBUG) {
+            this.__isFrozen = false;
+        }
 
-        this.onAttrsReceive(nextAttrs);
-        this.onChildrenReceive(nextChildren);
-        this.onContextReceive(nextContext);
+        this.attrs = this.__buildAttrs(nextAttrs);
+
+        if(IS_DEBUG) {
+            this.__isFrozen = true;
+        }
+
+        this.onAttrsReceive(this.__prevAttrs);
+
+        if(IS_DEBUG) {
+            this.__isFrozen = false;
+        }
+
+        this.children = nextChildren;
+
+        if(IS_DEBUG) {
+            this.__isFrozen = true;
+        }
+
+        this.onChildrenReceive(this.__prevChildren);
+
+        if(IS_DEBUG) {
+            this.__isFrozen = false;
+        }
+
+        this.context = nextContext;
+
+        if(IS_DEBUG) {
+            Object.freeze(this.context);
+            this.__isFrozen = true;
+        }
+
+        this.onContextReceive(this.__prevContext);
 
         this.__isUpdating = isUpdating;
     }
@@ -58,62 +84,39 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         return;
     }
 
-    const shouldUpdate = this.shouldUpdate(
-        nextAttrs,
-        nextChildren,
-        this.__nextState,
-        nextContext);
+    const shouldRerender = this.shouldRerender(
+        this.__prevAttrs,
+        this.__prevChildren,
+        this.__prevState,
+        this.__prevContext);
 
     if(IS_DEBUG) {
-        const shouldUpdateResType = typeof shouldUpdate;
+        const shouldRerenderResType = typeof shouldRerender;
 
-        if(shouldUpdateResType !== 'boolean') {
+        if(shouldRerenderResType !== 'boolean') {
             const name = getComponentName(this);
 
-            console.warn(`${name}#shouldUpdate() should return boolean instead of ${shouldUpdateResType}`);
+            console.warn(`${name}#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
         }
     }
 
-    const prevAttrs = this.attrs,
-        prevChildren = this.children,
-        prevState = this.state,
-        prevContext = this.context;
-
-    if(IS_DEBUG) {
-        this.__isFrozen = false;
-    }
-
-    if(callReceivers) {
-        this.attrs = nextAttrs;
-        this.children = nextChildren;
-        this.context = nextContext;
-
-        if(IS_DEBUG) {
-            Object.freeze(this.context);
-        }
-    }
-
-    this.state = this.__nextState;
-
-    if(IS_DEBUG) {
-        Object.freeze(this.state);
-        this.__isFrozen = true;
-    }
-
-    if(shouldUpdate) {
+    if(shouldRerender) {
         const prevRootElem = this.getRootElement();
 
         this.__rootElement = this.render();
         prevRootElem.patch(this.__rootElement);
-        this.onUpdate(
-            prevAttrs,
-            prevChildren,
-            prevState,
-            prevContext);
     }
+
+    this.onUpdate(
+        this.__prevAttrs,
+        this.__prevChildren,
+        this.__prevState,
+        this.__prevContext);
+
+    this.__prevState = this.state;
 }
 
-function shouldComponentUpdate() {
+function shouldComponentRerender() {
     return true;
 }
 
@@ -148,13 +151,18 @@ function setComponentState(state) {
 
             console.warn(`${name}#setState() should not be called during rendering`);
         }
+
+        this.__isFrozen = false;
     }
 
-    this.__nextState = this.__nextState === emptyObj?
-        state :
-        merge(this.__nextState, state);
+    this.state = merge(this.state, state);
 
-    if(this.isMounted()) {
+    if(IS_DEBUG) {
+        Object.freeze(this.state);
+        this.__isFrozen = true;
+    }
+
+    if(this.__isInited) {
         this.update();
     }
 }
@@ -267,10 +275,16 @@ function createComponent(props, staticProps) {
                 this.__isFrozen = true;
             }
 
+            this.__isInited = false;
             this.__isMounted = false;
             this.__isUpdating = false;
+
             this.__rootElement = null;
-            this.__nextState = this.state;
+
+            this.__prevAttrs = this.attrs;
+            this.__prevChildren = this.children;
+            this.__prevState = emptyObj;
+            this.__prevContext = this.context;
         },
         ptp = {
             constructor : res,
@@ -283,7 +297,7 @@ function createComponent(props, staticProps) {
             onAttrsReceive : noOp,
             onChildrenReceive : noOp,
             onContextReceive : noOp,
-            shouldUpdate : shouldComponentUpdate,
+            shouldRerender : shouldComponentRerender,
             onRender : onComponentRender,
             onUpdate : noOp,
             isMounted : isComponentMounted,

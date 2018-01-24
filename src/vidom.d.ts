@@ -665,15 +665,15 @@ declare namespace vidom {
 
         protected onInit(): void;
         protected onMount(): void;
-        protected onAttrsReceive(nextAttrs: TAttrs): void;
-        protected onChildrenReceive(nextChildren: TChildren): void;
-        protected onContextReceive(nextContext: TContext): void;
+        protected onAttrsReceive(prevAttrs: TAttrs): void;
+        protected onChildrenReceive(prevChildren: TChildren): void;
+        protected onContextReceive(prevContext: TContext): void;
         protected onChildContextRequest(): TChildContext;
-        protected shouldUpdate(
-            nextAttrs: TAttrs,
-            nextChildren: TChildren,
-            nextState: TState,
-            nextContext: TContext
+        protected shouldRerender(
+            prevAttrs: TAttrs,
+            prevChildren: TChildren,
+            prevState: TState,
+            prevContext: TContext
         ): boolean;
         protected abstract onRender(): Node;
         protected onUpdate(
