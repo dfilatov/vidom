@@ -18,10 +18,9 @@ function initComponent() {
     this.state = this.__nextState;
 
     if(IS_DEBUG) {
+        Object.freeze(this.state);
         this.__isFrozen = true;
     }
-
-    this.__isInited = true;
 }
 
 function mountComponent() {
@@ -151,9 +150,11 @@ function setComponentState(state) {
         }
     }
 
-    this.__nextState = merge(this.__nextState, state);
+    this.__nextState = this.__nextState === emptyObj?
+        state :
+        merge(this.__nextState, state);
 
-    if(this.__isInited) {
+    if(this.isMounted()) {
         this.update();
     }
 }
@@ -266,7 +267,6 @@ function createComponent(props, staticProps) {
                 this.__isFrozen = true;
             }
 
-            this.__isInited = false;
             this.__isMounted = false;
             this.__isUpdating = false;
             this.__rootElement = null;
