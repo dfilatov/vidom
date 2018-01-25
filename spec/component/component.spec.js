@@ -6,9 +6,7 @@ describe('component', () => {
     require('./onInit/onInit.spec.js');
     require('./onMount/onMount.spec.js');
     require('./onUnmount/onUnmount.spec.js');
-    require('./onAttrsReceive/onAttrsReceive.spec.js');
-    require('./onChildrenReceive/onChildrenReceive.spec.js');
-    require('./onContextReceive/onContextReceive.spec.js');
-    require('./shouldRerender/shouldRerender.spec.js');
     require('./onUpdate/onUpdate.spec.js');
+    require('./shouldRerender/shouldRerender.spec.js');
+    require('./onReconcile/onReconcile.spec.js');
 });

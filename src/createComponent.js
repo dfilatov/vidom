@@ -36,53 +36,32 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         this.__prevChildren = this.children;
         this.__prevContext = this.context;
 
-        const isUpdating = this.__isUpdating;
-
-        this.__isUpdating = true;
-
         if(IS_DEBUG) {
             this.__isFrozen = false;
         }
 
         this.attrs = this.__buildAttrs(nextAttrs);
-
-        if(IS_DEBUG) {
-            this.__isFrozen = true;
-        }
-
-        this.onAttrsReceive(this.__prevAttrs);
-
-        if(IS_DEBUG) {
-            this.__isFrozen = false;
-        }
-
         this.children = nextChildren;
-
-        if(IS_DEBUG) {
-            this.__isFrozen = true;
-        }
-
-        this.onChildrenReceive(this.__prevChildren);
-
-        if(IS_DEBUG) {
-            this.__isFrozen = false;
-        }
-
         this.context = nextContext;
 
         if(IS_DEBUG) {
-            Object.freeze(this.context);
             this.__isFrozen = true;
         }
-
-        this.onContextReceive(this.__prevContext);
-
-        this.__isUpdating = isUpdating;
     }
 
     if(this.__isUpdating) {
         return;
     }
+
+    this.__isUpdating = true;
+
+    this.onUpdate(
+        this.__prevAttrs,
+        this.__prevChildren,
+        this.__prevState,
+        this.__prevContext);
+
+    this.__isUpdating = false;
 
     const shouldRerender = this.shouldRerender(
         this.__prevAttrs,
@@ -107,13 +86,16 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         prevRootElem.patch(this.__rootElement);
     }
 
-    this.onUpdate(
+    this.onReconcile(
         this.__prevAttrs,
         this.__prevChildren,
         this.__prevState,
         this.__prevContext);
 
+    this.__prevAttrs = this.attrs;
+    this.__prevChildren = this.children;
     this.__prevState = this.state;
+    this.__prevContext = this.context;
 }
 
 function shouldComponentRerender() {
@@ -295,12 +277,10 @@ function createComponent(props, staticProps) {
             unmount : unmountComponent,
             onMount : noOp,
             onUnmount : noOp,
-            onAttrsReceive : noOp,
-            onChildrenReceive : noOp,
-            onContextReceive : noOp,
+            onUpdate : noOp,
             shouldRerender : shouldComponentRerender,
             onRender : onComponentRender,
-            onUpdate : noOp,
+            onReconcile : noOp,
             isMounted : isComponentMounted,
             setState : setComponentState,
             renderToDom : renderComponentToDom,

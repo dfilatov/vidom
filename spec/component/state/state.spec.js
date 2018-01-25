@@ -54,7 +54,7 @@ describe('state', () => {
                 this.setState({ prop4 : 'val4' });
             },
 
-            onUpdate() {
+            onReconcile() {
                 expect(this.state)
                     .to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4' });
                 done();
@@ -76,7 +76,7 @@ describe('state', () => {
                 this.setState({ prop4 : 'val4' });
             },
 
-            onUpdate(prevAttrs, prevChildren, prevState) {
+            onReconcile(prevAttrs, prevChildren, prevState) {
                 expect(prevState)
                     .to.be.eql({ prop1 : 'val1', prop2 : 'val2' });
                 done();
@@ -109,7 +109,7 @@ describe('state', () => {
         mountSync(domNode, h(C));
     });
 
-    it('should be possible to get both state and previous state inside onUpdate', done => {
+    it('should be possible to get both state and previous state inside onReconcile', done => {
         const C = createComponent({
             onInit() {
                 this.setState({ prop1 : 'val1', prop2 : 'val2' });
@@ -119,7 +119,7 @@ describe('state', () => {
                 this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
             },
 
-            onUpdate(prevAttrs, prevChildren, prevState) {
+            onReconcile(prevAttrs, prevChildren, prevState) {
                 expect(this.state)
                     .to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3' });
                 expect(prevState)

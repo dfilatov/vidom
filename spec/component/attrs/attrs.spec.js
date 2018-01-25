@@ -52,7 +52,7 @@ describe('attrs', () => {
 
     it('should merge passed with default attributes after update', done => {
         const C1 = createComponent({
-            onUpdate() {
+            onReconcile() {
                 expect(this.attrs).to.be.eql({ a : 4, b : 2, c : 3 });
                 done();
             }
