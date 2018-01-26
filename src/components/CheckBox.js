@@ -7,7 +7,7 @@ export default createComponent({
     onInit() {
         this._addAttrs = {
             onChange : e => {
-                this.onChange(e);
+                this.onInputChange(e);
             }
         };
     },
@@ -16,7 +16,7 @@ export default createComponent({
         return new TagElement('input', null, merge(this.attrs, this._addAttrs));
     },
 
-    onChange(e) {
+    onInputChange(e) {
         const { onChange } = this.attrs;
 
         if(onChange) {

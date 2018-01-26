@@ -139,7 +139,7 @@ describe('context', () => {
                 }
             }),
             C3 = createComponent({
-                onReconcile() {
+                onUpdate() {
                     expect(this.context).to.be.eql({
                         prop1 : 'val3',
                         prop2 : 'val4'

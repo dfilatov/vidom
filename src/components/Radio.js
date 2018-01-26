@@ -9,7 +9,7 @@ export default createComponent({
     onInit() {
         this._addAttrs = {
             onChange : e => {
-                this.onChange(e);
+                this.onInputChange(e);
             }
         };
     },
@@ -48,7 +48,7 @@ export default createComponent({
         }
     },
 
-    onChange(e) {
+    onInputChange(e) {
         const { onChange } = this.attrs;
 
         if(onChange) {

@@ -55,7 +55,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
 
     this.__isUpdating = true;
 
-    this.onUpdate(
+    this.onChange(
         this.__prevAttrs,
         this.__prevChildren,
         this.__prevState,
@@ -86,7 +86,7 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         prevRootElem.patch(this.__rootElement);
     }
 
-    this.onReconcile(
+    this.onUpdate(
         this.__prevAttrs,
         this.__prevChildren,
         this.__prevState,
@@ -277,10 +277,10 @@ function createComponent(props, staticProps) {
             unmount : unmountComponent,
             onMount : noOp,
             onUnmount : noOp,
-            onUpdate : noOp,
+            onChange : noOp,
             shouldRerender : shouldComponentRerender,
             onRender : onComponentRender,
-            onReconcile : noOp,
+            onUpdate : noOp,
             isMounted : isComponentMounted,
             setState : setComponentState,
             renderToDom : renderComponentToDom,

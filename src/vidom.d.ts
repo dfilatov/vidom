@@ -665,7 +665,7 @@ declare namespace vidom {
 
         protected onInit(): void;
         protected onMount(): void;
-        protected onUpdate(
+        protected onChange(
             prevAttrs: TAttrs,
             prevChildren: TChildren,
             prevState: TState,
@@ -679,7 +679,7 @@ declare namespace vidom {
             prevContext: TContext
         ): boolean;
         protected abstract onRender(): Node;
-        protected onReconcile(
+        protected onUpdate(
             prevAttrs: TAttrs,
             prevChildren: TChildren,
             prevState: TState,
