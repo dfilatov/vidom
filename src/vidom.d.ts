@@ -64,7 +64,7 @@ declare namespace vidom {
     class ComponentElement<
         TAttrs extends MapLike = MapLike,
         TChildren = any,
-        TComponent extends Component<TAttrs, {}, TChildren> = Component<TAttrs, {}, TChildren>,
+        TComponent extends Component<TAttrs, TChildren> = Component<TAttrs, TChildren>,
         TComponentClass extends ComponentClass<TAttrs, TChildren> = ComponentClass<TAttrs, TChildren>
     > extends BaseElement {
         readonly component: TComponentClass;
@@ -622,7 +622,7 @@ declare namespace vidom {
         TAttrs extends MapLike = {},
         TChildren = any,
         TContext extends MapLike = {},
-        TComponent = Component<TAttrs, {}, TChildren, TContext>
+        TComponent = Component<TAttrs, TChildren, {}, TContext>
     > {
         new (attrs: TAttrs, children: TChildren, context: TContext): TComponent;
         defaultAttrs?: Partial<TAttrs>;
@@ -647,8 +647,8 @@ declare namespace vidom {
 
     abstract class Component<
         TAttrs extends MapLike = {},
-        TState extends MapLike = {},
         TChildren = any,
+        TState extends MapLike = {},
         TContext extends MapLike = {},
         TChildContext extends MapLike = {}
     > {
@@ -709,7 +709,7 @@ declare namespace vidom {
     function elem<
         TAttrs,
         TChildren,
-        TComponent extends Component<TAttrs, {}, TChildren>,
+        TComponent extends Component<TAttrs, TChildren>,
         TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>
     >(
         component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>,
