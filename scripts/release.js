@@ -10,7 +10,7 @@ var vow = require('vow'),
 exec('git pull')
     .then(() => exec('npm i'))
     .then(() => exec('npm run build'))
-    .then(() => exec('npm version ' + version))
+    .then(() => exec(`npm version ${version}`))
     .then(() => vow.all([
         readFile('package.json', 'utf8'),
         readFile(__dirname + '/distHeaderTmpl.txt', 'utf8'),
@@ -28,7 +28,7 @@ exec('git pull')
         ]);
     })
     .then(() => exec('git push --follow-tags'))
-    .then(() => exec('npm publish'))
+    .then(() => exec('npm publish' + (version.includes('rc')? ' --tag next' : '')))
     .then(() => {
         console.log(`version ${version} has just been released`);
     })
