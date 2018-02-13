@@ -8,6 +8,8 @@ import { IS_DEBUG } from './utils/debug';
 import nodeToElement from './nodes/utils/nodeToElement';
 import globalHook from './globalHook';
 
+let componentId = 1;
+
 function initComponent() {
     this.onInit();
 }
@@ -47,10 +49,6 @@ function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
         if(IS_DEBUG) {
             this.__isFrozen = true;
         }
-    }
-
-    if(this.__isUpdating) {
-        return;
     }
 
     this.__isUpdating = true;
@@ -184,22 +182,26 @@ function updateComponent() {
     }
 
     this.__isUpdating = true;
-    rafBatch(() => {
-        if(this.isMounted()) {
-            this.__isUpdating = false;
-
-            if(IS_DEBUG) {
-                const prevRootElem = this.__rootElement;
-
-                this.patch(this.attrs, this.children, this.context, false);
-
-                globalHook.emit('replace', prevRootElem, this.__rootElement);
-            }
-            else {
-                this.patch(this.attrs, this.children, this.context, false);
-            }
-        }
+    rafBatch({
+        priority : this.__id,
+        fn : applyUpdate,
+        ctx : this
     });
+}
+
+function applyUpdate() {
+    if(this.__isUpdating && this.isMounted()) {
+        if(IS_DEBUG) {
+            const prevRootElem = this.__rootElement;
+
+            this.patch(this.attrs, this.children, this.context, false);
+
+            globalHook.emit('replace', prevRootElem, this.__rootElement);
+        }
+        else {
+            this.patch(this.attrs, this.children, this.context, false);
+        }
+    }
 }
 
 function getComponentRootElem() {
@@ -259,6 +261,7 @@ function createComponent(props, staticProps) {
                 this.__isFrozen = true;
             }
 
+            this.__id = componentId++;
             this.__isMounted = false;
             this.__isUpdating = false;
 
