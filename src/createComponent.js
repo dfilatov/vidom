@@ -144,9 +144,7 @@ function setComponentState(state) {
         this.__isFrozen = true;
     }
 
-    if(this.isMounted()) {
-        this.update();
-    }
+    this.update();
 }
 
 function renderComponent() {
