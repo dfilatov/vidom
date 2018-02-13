@@ -81,7 +81,7 @@ declare namespace vidom {
         );
 
         clone(
-            attrs?: TAttrs | null,
+            attrs?: Partial<TAttrs> | null,
             children?: Node,
             ref?: Ref<TComponent> | null
         ): this;
@@ -104,7 +104,7 @@ declare namespace vidom {
         );
 
         clone(
-            attrs?: TAttrs | null,
+            attrs?: Partial<TAttrs> | null,
             children?: Node
         ): this;
     }
