@@ -3,6 +3,7 @@ describe('component', () => {
     require('./children/children.spec.js');
     require('./state/state.spec.js');
     require('./context/context.spec.js');
+    require('./update/update.spec.js');
     require('./onInit/onInit.spec.js');
     require('./onMount/onMount.spec.js');
     require('./onUnmount/onUnmount.spec.js');

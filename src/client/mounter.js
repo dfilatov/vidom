@@ -41,7 +41,7 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
             patchFn();
         }
         else {
-            rafBatch(patchFn);
+            rafBatch({ priority : 0, fn : patchFn });
         }
     }
     else {
@@ -98,7 +98,7 @@ function mountToDomNode(domNode, node, ctx, cb, syncMode) {
             renderFn();
         }
         else {
-            rafBatch(renderFn);
+            rafBatch({ priority : 0, fn : renderFn });
         }
     }
 }
@@ -135,7 +135,7 @@ function unmountFromDomNode(domNode, cb, syncMode) {
                 unmountFn();
             }
             else {
-                rafBatch(unmountFn);
+                rafBatch({ priority : 0, fn : unmountFn });
             }
         }
         else if(!syncMode) {
