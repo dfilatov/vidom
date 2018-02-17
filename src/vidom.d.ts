@@ -658,6 +658,7 @@ declare namespace vidom {
         protected readonly context: Readonly<TContext>;
 
         constructor(attrs: TAttrs, children: TChildren);
+
         protected setState(state: Partial<TState>): void;
         protected update(): void;
         protected isMounted(): boolean;
@@ -678,7 +679,7 @@ declare namespace vidom {
             prevState: TState,
             prevContext: TContext
         ): boolean;
-        protected abstract onRender(): Node;
+        protected onRender(): Node;
         protected onUpdate(
             prevAttrs: TAttrs,
             prevChildren: TChildren,
