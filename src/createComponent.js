@@ -28,12 +28,8 @@ function unmountComponent() {
     this.onUnmount();
 }
 
-function patchComponent(nextAttrs, nextChildren, nextContext, callReceivers) {
-    if(!this.isMounted()) {
-        return;
-    }
-
-    if(callReceivers) {
+function patchComponent(nextAttrs, nextChildren, nextContext, byParent) {
+    if(byParent) {
         this.__prevAttrs = this.attrs;
         this.__prevChildren = this.children;
         this.__prevContext = this.context;
