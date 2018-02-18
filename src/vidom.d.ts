@@ -1,4 +1,4 @@
-// TypeScript Version: 2.6
+// TypeScript Version: 2.7
 
 export = vidom;
 export as namespace vidom;
@@ -10,6 +10,76 @@ type DOMElement = Element;
 declare namespace vidom {
     type Key = string | number;
     type Ref<T> = (ref: T | null) => void;
+
+    interface FunctionComponent<
+        TAttrs extends MapLike = {},
+        TChildren = any,
+        TContext extends MapLike = {}
+    > {
+        (attrs: TAttrs, children: TChildren, context: TContext): Element | null;
+        defaultAttrs?: Partial<TAttrs>;
+    }
+
+    interface ComponentClass<
+        TAttrs extends MapLike = {},
+        TChildren = any,
+        TContext extends MapLike = {},
+        TComponent = Component<TAttrs, TChildren, {}, TContext>
+    > {
+        new (attrs: TAttrs, children: TChildren, context: TContext): TComponent;
+        defaultAttrs?: Partial<TAttrs>;
+    }
+
+    type ComponentType<
+        TAttrs extends MapLike = {},
+        TChildren = any,
+        TContext extends MapLike = {}
+    > =
+        ComponentClass<TAttrs, TChildren, TContext> |
+        FunctionComponent<TAttrs, TChildren, TContext>;
+
+    abstract class Component<
+        TAttrs extends MapLike = {},
+        TChildren = any,
+        TState extends MapLike = {},
+        TContext extends MapLike = {},
+        TChildContext extends MapLike = {}
+    > {
+        protected readonly attrs: Readonly<TAttrs>;
+        protected readonly children: TChildren;
+        protected readonly state: Readonly<TState>;
+        protected readonly context: Readonly<TContext>;
+
+        constructor(attrs: TAttrs, children: TChildren);
+        protected setState(state: Partial<TState>): void;
+        protected update(): void;
+        protected isMounted(): boolean;
+        protected getDomNode(): DOMElement | DOMElement[];
+
+        protected onInit(): void;
+        protected onMount(): void;
+        protected onChange(
+            prevAttrs: TAttrs,
+            prevChildren: TChildren,
+            prevState: TState,
+            prevContext: TContext
+        ): void;
+        protected onChildContextRequest(): TChildContext;
+        protected shouldRerender(
+            prevAttrs: TAttrs,
+            prevChildren: TChildren,
+            prevState: TState,
+            prevContext: TContext
+        ): boolean;
+        protected abstract onRender(): Node;
+        protected onUpdate(
+            prevAttrs: TAttrs,
+            prevChildren: TChildren,
+            prevState: TState,
+            prevContext: TContext
+        ): void;
+        protected onUnmount(): void;
+    }
 
     abstract class BaseElement {
         readonly key: Key | null;
@@ -616,77 +686,6 @@ declare namespace vidom {
         yChannelSelector?: string;
         z?: number | string;
         zoomAndPan?: string;
-    }
-
-    interface ComponentClass<
-        TAttrs extends MapLike = {},
-        TChildren = any,
-        TContext extends MapLike = {},
-        TComponent = Component<TAttrs, TChildren, {}, TContext>
-    > {
-        new (attrs: TAttrs, children: TChildren, context: TContext): TComponent;
-        defaultAttrs?: Partial<TAttrs>;
-    }
-
-    interface FunctionComponent<
-        TAttrs extends MapLike = {},
-        TChildren = any,
-        TContext extends MapLike = {}
-    > {
-         (attrs: TAttrs, children: TChildren, context: TContext): Element | null;
-         defaultAttrs?: Partial<TAttrs>;
-    }
-
-    type ComponentType<
-        TAttrs extends MapLike = {},
-        TChildren = any,
-        TContext extends MapLike = {}
-    > =
-        ComponentClass<TAttrs, TChildren, TContext> |
-        FunctionComponent<TAttrs, TChildren, TContext>;
-
-    abstract class Component<
-        TAttrs extends MapLike = {},
-        TChildren = any,
-        TState extends MapLike = {},
-        TContext extends MapLike = {},
-        TChildContext extends MapLike = {}
-    > {
-        protected readonly attrs: Readonly<TAttrs>;
-        protected readonly children: TChildren;
-        protected readonly state: Readonly<TState>;
-        protected readonly context: Readonly<TContext>;
-
-        constructor(attrs: TAttrs, children: TChildren);
-
-        protected setState(state: Partial<TState>): void;
-        protected update(): void;
-        protected isMounted(): boolean;
-        protected getDomNode(): DOMElement | DOMElement[];
-
-        protected onInit(): void;
-        protected onMount(): void;
-        protected onChange(
-            prevAttrs: TAttrs,
-            prevChildren: TChildren,
-            prevState: TState,
-            prevContext: TContext
-        ): void;
-        protected onChildContextRequest(): TChildContext;
-        protected shouldRerender(
-            prevAttrs: TAttrs,
-            prevChildren: TChildren,
-            prevState: TState,
-            prevContext: TContext
-        ): boolean;
-        protected onRender(): Node;
-        protected onUpdate(
-            prevAttrs: TAttrs,
-            prevChildren: TChildren,
-            prevState: TState,
-            prevContext: TContext
-        ): void;
-        protected onUnmount(): void;
     }
 
     function elem(
