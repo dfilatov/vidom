@@ -27,7 +27,7 @@
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-plugin-vidom-jsx": "0.5.1",
+    "babel-plugin-vidom-jsx": "0.6.1",
     "babel-preset-es2015": "6.24.1",
     "babel-preset-es2015-loose-rollup": "7.0.0",
     "babelify": "8.0.0",
