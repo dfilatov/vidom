@@ -1,6 +1,7 @@
 import 'expect.js';
 import './normalizeNode/normalizeNode.spec.js';
 import './nodeToElement/nodeToElement.spec.js';
+import './nodeToElements/nodeToElements.spec.js';
 import './renderToDom/renderToDom.spec.js';
 import './renderToString/renderToString.spec.js';
 import './patch/patch.spec.js';
