@@ -733,6 +733,9 @@ declare namespace vidom {
 
     function renderToString(node: Node): string;
 
+    function toElem(node: Node): Element;
+    function toElems(node: Node): Element[];
+
     const IS_DEBUG: boolean;
 }
 

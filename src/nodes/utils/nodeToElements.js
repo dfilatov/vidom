@@ -1,8 +1,8 @@
 import createElement from '../../createElement';
 import normalizeNode from './normalizeNode';
 
-export default function nodeToElements(children) {
-    const normalizedNode = normalizeNode(children);
+export default function nodeToElements(node) {
+    const normalizedNode = normalizeNode(node);
 
     return normalizedNode === null?
         [] :
