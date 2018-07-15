@@ -34,7 +34,7 @@
     "browserify": "14.5.0",
     "codemirror": "5.23.0",
     "css-loader": "0.26.1",
-    "eslint": "3.12.2",
+    "eslint": "5.1.0",
     "expect.js": "0.3.1",
     "mocha": "4.0.1",
     "mocha-phantomjs-core": "2.1.2",
