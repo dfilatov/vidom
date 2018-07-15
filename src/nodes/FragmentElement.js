@@ -8,6 +8,7 @@ import restrictObjProp from '../utils/restrictObjProp';
 import { IS_DEBUG } from '../utils/debug';
 import { ELEMENT_TYPE_FRAGMENT } from './utils/elementTypes';
 import normalizeNode from './utils/normalizeNode';
+import nodeToElement from './utils/nodeToElement';
 
 export default function FragmentElement(key, children) {
     if(IS_DEBUG) {
@@ -212,17 +213,14 @@ FragmentElement.prototype = {
 };
 
 function processChildren(children) {
-    const normalizedChildren = normalizeNode(children);
-
-    if(IS_DEBUG) {
-        if(typeof normalizedChildren === 'string') {
-            throw TypeError('vidom: Unexpected type of child. Only an element is expected to be here.');
-        }
-    }
-
-    const res = normalizedChildren !== null && !Array.isArray(normalizedChildren)?
-        [normalizedChildren] :
-        normalizedChildren;
+    const normalizedChildren = normalizeNode(children),
+        res = normalizedChildren !== null && !Array.isArray(normalizedChildren)?
+            [
+                typeof normalizedChildren === 'string'?
+                    nodeToElement(normalizedChildren) :
+                    normalizedChildren
+            ] :
+            normalizedChildren;
 
     if(IS_DEBUG) {
         if(Array.isArray(res)) {

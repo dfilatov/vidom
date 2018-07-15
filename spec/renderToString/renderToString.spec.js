@@ -151,6 +151,15 @@ describe('renderToString', () => {
             ] }).renderToString())
                 .to.equal('<div><a></a><!----><!----><b></b></div>');
         });
+
+        it('should be rendered if only string child', () => {
+            expect(h('div', { children : [
+                h('a'),
+                h('fragment', { children : 'test' }),
+                h('b')
+            ] }).renderToString())
+                .to.equal('<div><a></a><!----><!---->test<!----><!----><b></b></div>');
+        });
     });
 
     describe('select', () => {
