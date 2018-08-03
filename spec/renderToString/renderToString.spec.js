@@ -103,6 +103,11 @@ describe('renderToString', () => {
             expect(h('textarea', { className : '"&' }).renderToString())
                 .to.equal('<textarea class="&quot;&amp;"></textarea>');
         });
+
+        it('shouldn\'t render attributes with invalid names', () => {
+            expect(h('div', { '> ' : 'val' }).renderToString())
+                .to.equal('<div></div>');
+        });
     });
 
     describe('text', () => {
