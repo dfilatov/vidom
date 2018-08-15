@@ -1,4 +1,4 @@
-// TypeScript Version: 2.7
+// TypeScript Version: 3.0
 
 export = vidom;
 export as namespace vidom;
@@ -706,11 +706,17 @@ declare namespace vidom {
         ref?: Ref<Element> | null,
         escapeChildren?: boolean
     ): TagElement;
+    function elem<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
+        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>,
+        key?: Key | null,
+        attrs?: TAttrs,
+        children?: TChildren
+    ): FunctionComponentElement<TAttrs, TChildren, TFunctionComponent>;
     function elem<
         TAttrs,
         TChildren,
+        TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>,
         TComponent extends Component<TAttrs, TChildren>,
-        TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>
     >(
         component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>,
         key?: Key | null,
@@ -718,12 +724,6 @@ declare namespace vidom {
         children?: TChildren,
         ref?: Ref<TComponent> | null
     ): ComponentElement<TAttrs, TChildren, TComponent, TComponentClass>;
-    function elem<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
-        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>,
-        key?: Key | null,
-        attrs?: TAttrs,
-        children?: TChildren
-    ): FunctionComponentElement<TAttrs, TChildren, TFunctionComponent>;
 
     function mount(domElem: DOMElement, node: Node, callback?: () => void): void;
     function mount(domElem: DOMElement, node: Node, context?: MapLike, callback?: () => void): void;
@@ -744,6 +744,15 @@ declare global {
         type Element = vidom.Element;
         type ElementClass = vidom.Component;
         type ElementAttributesProperty = { attrs: {}; };
+        type LibraryManagedAttributes<TComponent, TAttrs> = TComponent extends { defaultAttrs: infer DefaultAttrs; }?
+            TAttrs extends any?
+                string extends keyof TAttrs?
+                    TAttrs :
+                    Pick<TAttrs, Exclude<keyof TAttrs, keyof DefaultAttrs>> &
+                        Partial<Pick<TAttrs, Extract<keyof TAttrs, keyof DefaultAttrs>>> &
+                        Partial<Pick<DefaultAttrs, Exclude<keyof DefaultAttrs, keyof TAttrs>>> :
+                never :
+            TAttrs;
 
         interface IntrinsicAttributes extends vidom.WithKey {}
         interface IntrinsicClassAttributes extends vidom.WithKey, vidom.WithRef<vidom.Component> {}
