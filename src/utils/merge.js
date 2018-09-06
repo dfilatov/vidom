@@ -1,4 +1,4 @@
-export default function merge(source1, source2) {
+export default function merge(source1, source2, overrideWithUndefined) {
     const res = {};
 
     for(const key in source1) {
@@ -8,7 +8,7 @@ export default function merge(source1, source2) {
     for(const key in source2) {
         const val = source2[key];
 
-        if(typeof val !== 'undefined') {
+        if(overrideWithUndefined || typeof val !== 'undefined') {
             res[key] = val;
         }
     }

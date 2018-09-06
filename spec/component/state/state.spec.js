@@ -46,17 +46,17 @@ describe('state', () => {
     it('should be properly updated with setState', done => {
         const C = createComponent({
             onInit() {
-                this.setState({ prop1 : 'val1', prop2 : 'val2' });
+                this.setState({ prop1 : 'val1', prop2 : 'val2', prop5 : 'val5' });
             },
 
             onMount() {
                 this.setState({ prop1 : 'val1_1', prop3 : 'val3' });
-                this.setState({ prop4 : 'val4' });
+                this.setState({ prop4 : 'val4', prop5 : undefined });
             },
 
             onUpdate() {
                 expect(this.state)
-                    .to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4' });
+                    .to.be.eql({ prop1 : 'val1_1', prop2 : 'val2', prop3 : 'val3', prop4 : 'val4', prop5 : undefined });
                 done();
             }
         });

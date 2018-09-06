@@ -133,7 +133,7 @@ function setComponentState(state) {
 
     this.state = this.state === emptyObj?
         state :
-        merge(this.state, state);
+        merge(this.state, state, true);
 
     if(IS_DEBUG) {
         Object.freeze(this.state);
