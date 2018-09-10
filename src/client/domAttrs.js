@@ -99,14 +99,10 @@ function removeSelectValue(node) {
 }
 
 function attrToString(name, value) {
-    if(value === false) {
-        return '';
-    }
-
     const attrName = getAttrName(name);
 
     return attrName &&
-        attrName + (value === true? '' : '="' + escapeAttr(value) + '"');
+        attrName + '="' + escapeAttr(value) + '"';
 }
 
 function booleanAttrToString(name, value) {
@@ -188,6 +184,7 @@ attrsCfg.autoPlay = BOOLEAN_ATTR_CFG;
 attrsCfg.checked = BOOLEAN_PROP_CFG;
 attrsCfg.controls = DEFAULT_PROP_CFG;
 attrsCfg.disabled = BOOLEAN_ATTR_CFG;
+attrsCfg.download = BOOLEAN_ATTR_CFG;
 attrsCfg.id = DEFAULT_PROP_CFG;
 attrsCfg.ismap = BOOLEAN_ATTR_CFG;
 attrsCfg.loop = DEFAULT_PROP_CFG;

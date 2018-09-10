@@ -40,13 +40,13 @@ describe('renderToString', () => {
         });
 
         it('should be rendered properly for overloaded with "true" attribute', () => {
-            expect(h('a', { download : true }).renderToString())
-                .to.equal('<a download></a>');
+            expect(h('div', { draggable : true }).renderToString())
+                .to.equal('<div draggable="true"></div>');
         });
 
         it('should be rendered properly for overloaded with "false" attribute', () => {
-            expect(h('a', { download : false }).renderToString())
-                .to.equal('<a></a>');
+            expect(h('div', { draggable : false }).renderToString())
+                .to.equal('<div draggable="false"></div>');
         });
 
         it('shouldn\'t render null value', () => {
