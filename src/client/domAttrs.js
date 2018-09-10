@@ -109,6 +109,12 @@ function booleanAttrToString(name, value) {
     return value? getAttrName(name) : '';
 }
 
+function overloadedBooleanAttrToString(name, value) {
+    return typeof value === 'boolean'?
+        booleanAttrToString(name, value) :
+        attrToString(name, value);
+}
+
 function stylePropToString(name, value) {
     let styles = '',
         i;
@@ -159,9 +165,13 @@ const DEFAULT_ATTR_CFG = {
         toString : attrToString
     },
     BOOLEAN_ATTR_CFG = {
+        ...DEFAULT_ATTR_CFG,
         set : setBooleanAttr,
-        remove : removeAttr,
         toString : booleanAttrToString
+    },
+    OVERLOADED_BOOLEAN_ATTR_CFG = {
+        ...BOOLEAN_ATTR_CFG,
+        toString : overloadedBooleanAttrToString
     },
     DEFAULT_PROP_CFG = {
         set : setProp,
@@ -169,8 +179,7 @@ const DEFAULT_ATTR_CFG = {
         toString : attrToString
     },
     BOOLEAN_PROP_CFG = {
-        set : setProp,
-        remove : removeProp,
+        ...DEFAULT_PROP_CFG,
         toString : booleanAttrToString
     },
     attrsCfg = Object.create(null);
@@ -184,7 +193,7 @@ attrsCfg.autoPlay = BOOLEAN_ATTR_CFG;
 attrsCfg.checked = BOOLEAN_PROP_CFG;
 attrsCfg.controls = DEFAULT_PROP_CFG;
 attrsCfg.disabled = BOOLEAN_ATTR_CFG;
-attrsCfg.download = BOOLEAN_ATTR_CFG;
+attrsCfg.download = OVERLOADED_BOOLEAN_ATTR_CFG;
 attrsCfg.id = DEFAULT_PROP_CFG;
 attrsCfg.ismap = BOOLEAN_ATTR_CFG;
 attrsCfg.loop = DEFAULT_PROP_CFG;

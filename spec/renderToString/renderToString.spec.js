@@ -39,12 +39,22 @@ describe('renderToString', () => {
                 .to.equal('<input checked disabled/>');
         });
 
-        it('should be rendered properly for overloaded with "true" attribute', () => {
+        it('should be rendered properly for with "true" attribute', () => {
             expect(h('div', { draggable : true }).renderToString())
                 .to.equal('<div draggable="true"></div>');
         });
 
-        it('should be rendered properly for overloaded with "false" attribute', () => {
+        it('should be rendered properly for overloaded boolean attribute', () => {
+            expect(h('a', { download : 'file' }).renderToString())
+                .to.equal('<a download="file"></a>');
+        });
+
+        it('should be rendered properly for "true" attribute', () => {
+            expect(h('div', { draggable : true }).renderToString())
+                .to.equal('<div draggable="true"></div>');
+        });
+
+        it('should be rendered properly for "false" attribute', () => {
             expect(h('div', { draggable : false }).renderToString())
                 .to.equal('<div draggable="false"></div>');
         });
