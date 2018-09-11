@@ -744,15 +744,15 @@ declare global {
         type Element = vidom.Element;
         type ElementClass = vidom.Component;
         type ElementAttributesProperty = { attrs: {}; };
-        type LibraryManagedAttributes<TComponent, TAttrs> = TComponent extends { defaultAttrs: infer DefaultAttrs; }?
-            TAttrs extends any?
-                string extends keyof TAttrs?
-                    TAttrs :
-                    Pick<TAttrs, Exclude<keyof TAttrs, keyof DefaultAttrs>> &
-                        Partial<Pick<TAttrs, Extract<keyof TAttrs, keyof DefaultAttrs>>> &
-                        Partial<Pick<DefaultAttrs, Exclude<keyof DefaultAttrs, keyof TAttrs>>> :
-                never :
-            TAttrs;
+        // type LibraryManagedAttributes<TComponent, TAttrs> = TComponent extends { defaultAttrs: infer DefaultAttrs; }?
+        //     TAttrs extends any?
+        //         string extends keyof TAttrs?
+        //             TAttrs :
+        //             Pick<TAttrs, Exclude<keyof TAttrs, keyof DefaultAttrs>> &
+        //                 Partial<Pick<TAttrs, Extract<keyof TAttrs, keyof DefaultAttrs>>> &
+        //                 Partial<Pick<DefaultAttrs, Exclude<keyof DefaultAttrs, keyof TAttrs>>> :
+        //         never :
+        //     TAttrs;
 
         interface IntrinsicAttributes extends vidom.WithKey {}
         interface IntrinsicClassAttributes extends vidom.WithKey, vidom.WithRef<vidom.Component> {}
