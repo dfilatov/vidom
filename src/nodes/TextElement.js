@@ -3,6 +3,7 @@ import createElement from '../client/utils/createElement';
 import checkReuse from './utils/checkReuse';
 import restrictObjProp from '../utils/restrictObjProp';
 import noOp from '../utils/noOp';
+import escapeHtml from '../utils/escapeHtml';
 import { IS_DEBUG } from '../utils/debug';
 import { ELEMENT_TYPE_TEXT } from './utils/elementTypes';
 
@@ -58,7 +59,7 @@ TextElement.prototype = {
     },
 
     renderToString() {
-        return '<!---->' + (this.children || '') + '<!---->';
+        return '<!---->' + (this.children? escapeHtml(this.children) : '') + '<!---->';
     },
 
     adoptDom(domNodes, domIdx) {
