@@ -135,6 +135,11 @@ describe('renderToString', () => {
             expect(h('plaintext', { children : 'text' }).renderToString())
                 .to.equal('<!---->text<!---->');
         });
+
+        it('should escape content of text node', () => {
+            expect(h('plaintext', { children : '<&/>' }).renderToString())
+                .to.equal('<!---->&lt;&amp;/&gt;<!---->');
+        });
     });
 
     describe('html', () => {
