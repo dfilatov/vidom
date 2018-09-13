@@ -8,7 +8,7 @@ var vow = require('vow'),
     version = process.argv.slice(2)[0] || 'patch';
 
 exec('git pull')
-    .then(() => exec('npm i'))
+    .then(() => exec('npm ci'))
     .then(() => exec('npm run build'))
     .then(() => exec(`npm version ${version}`))
     .then(() => vow.all([
