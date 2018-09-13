@@ -1,7 +1,6 @@
 import sinon from 'sinon';
-import { createComponent, mountSync, unmountSync } from '../../../src/vidom';
+import { h, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
-import { h } from '../../helpers';
 
 describe('onUpdate', () => {
     let domNode;
@@ -35,8 +34,8 @@ describe('onUpdate', () => {
             prevContext = { ctx : 1 },
             nextContext = { ctx : 2 };
 
-        mountSync(domNode, h(C, { ...prevAttrs, children : prevChildren }), prevContext);
-        mountSync(domNode, h(C, { ...nextAttrs, children : nextChildren }), nextContext);
+        mountSync(domNode, h(C, prevAttrs, prevChildren), prevContext);
+        mountSync(domNode, h(C, nextAttrs, nextChildren), nextContext);
     });
 
     it('should be called if component hasn\'t rerendered', () => {

@@ -1,6 +1,5 @@
 import sinon from 'sinon';
-import { createComponent, mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onChange', () => {
     let domNode;
@@ -40,8 +39,8 @@ describe('onChange', () => {
                 }
             });
 
-        mountSync(domNode, h(C, { ...prevAttrs, children : prevChildren }), prevContext);
-        mountSync(domNode, h(C, { ...newAttrs, children : nextChildren }), nextContext);
+        mountSync(domNode, h(C, prevAttrs, prevChildren), prevContext);
+        mountSync(domNode, h(C, newAttrs, nextChildren), nextContext);
     });
 
     it('should be called if component updates itself', done => {

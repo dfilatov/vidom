@@ -1,5 +1,4 @@
-import { mount, unmount } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, mount, unmount } from '../../src/vidom';
 
 describe('unmount', () => {
     let domNode;

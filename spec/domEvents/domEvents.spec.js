@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import simulate from 'simulate';
-import { mountSync, unmountSync } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, mountSync, unmountSync } from '../../src/vidom';
 
 describe('domEvents', () => {
     let domNode;
@@ -22,10 +21,10 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                h('div', { onClick : spy1, children : [
-                    h('div', { onClick : spy2, children : h('div', { id : 'id1' }) }),
-                    h('div', { onClick : spy3, children : h('div', { id : 'id2' }) })
-                ] }));
+                h('div', { onClick : spy1 }, [
+                    h('div', { onClick : spy2 }, h('div', { id : 'id1' })),
+                    h('div', { onClick : spy3 }, h('div', { id : 'id2' }))
+                ]));
 
             simulate.click(document.getElementById('id1'));
 
@@ -60,15 +59,16 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                h('div', {
-                    onClick : spy,
-                    children : h('div', {
+                h(
+                    'div',
+                    { onClick : spy },
+                    h('div', {
                         id : 'id1',
                         onClick(e) {
                             e.stopPropagation();
                         }
                     })
-                }));
+                ));
 
             simulate.click(document.getElementById('id1'));
 
@@ -133,7 +133,7 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                h('div', { id : 'id1', onFocus : spy, children : h('input') }));
+                h('div', { id : 'id1', onFocus : spy }, h('input')));
 
             simulate.focusin(document.getElementById('id1'));
 
@@ -145,7 +145,7 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                h('div', { onBlur : spy, children : h('input', { id : 'id1' }) }));
+                h('div', { onBlur : spy }, h('input', { id : 'id1' })));
 
             simulate.focus(document.getElementById('id1'));
             simulate.focusout(document.getElementById('id1'));
@@ -161,10 +161,7 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                h('div', {
-                    onClick : spy1,
-                    children : h('div', { onClick : spy2, children : h('div', { id : 'id1' }) })
-                }));
+                h('div', { onClick : spy1 }, h('div', { onClick : spy2 }, h('div', { id : 'id1' }))));
 
             simulate.click(document.getElementById('id1'));
 
@@ -181,10 +178,10 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                h('div', { onScroll : spy1, children : [
+                h('div', { onScroll : spy1 }, [
                     h('div', { id : 'id1', onScroll : spy2 }),
                     h('div', { id : 'id2', onScroll : spy3 })
-                ] }));
+                ]));
 
             simulate.scroll(document.getElementById('id1'));
 
@@ -246,11 +243,7 @@ describe('domEvents', () => {
 
             mountSync(
                 domNode,
-                h('div', {
-                    id : 'id1',
-                    onClick : spy,
-                    children : h('div', { id : 'id2', onClick : spy })
-                }));
+                h('div', { id : 'id1', onClick : spy }, h('div', { id : 'id2', onClick : spy })));
 
             simulate.click(document.getElementById('id1'));
             simulate.click(document.getElementById('id2'));

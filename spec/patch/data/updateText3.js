@@ -1,7 +1,7 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
-const node = h('span', { children : 'text' });
+const node = h('span', null, 'text');
 
 export default {
     'name' : 'updateText3',

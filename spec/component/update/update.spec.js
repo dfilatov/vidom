@@ -1,5 +1,4 @@
-import { createComponent, mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('update', () => {
     let domNode;

@@ -1,5 +1,5 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const oldNode = h('fragment'),
     newNode = h('div'),

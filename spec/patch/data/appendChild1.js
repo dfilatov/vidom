@@ -1,14 +1,14 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const node1 = h('div'),
     node2 = h('span'),
-    parentNode = h('div', { children : [h('div'), node1, node2] });
+    parentNode = h('div', null, h('div'), node1, node2);
 
 export default {
     'name' : 'appendChild1',
     'trees' : [
-        h('div', { children : h('div') }),
+        h('div', null, h('div')),
         parentNode
     ],
     'patch' : [

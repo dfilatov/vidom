@@ -1,5 +1,5 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const oldNode = h('div'),
     newNode = h('span');
@@ -7,14 +7,8 @@ const oldNode = h('div'),
 export default {
     'name' : 'replace2',
     'trees' : [
-        h('div', { children : [
-            h('div'),
-            oldNode
-        ] }),
-        h('div', { children : [
-            h('div'),
-            newNode
-        ] })
+        h('div', null, h('div'), oldNode),
+        h('div', null, h('div'), newNode)
     ],
     'patch' : [
         { op : patchOps.replace, args : [oldNode, newNode] }

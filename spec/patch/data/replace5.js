@@ -1,5 +1,5 @@
 import createComponent from '../../../src/createComponent';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const C1 = createComponent({
         onRender() {

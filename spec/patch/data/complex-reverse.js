@@ -1,5 +1,5 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const nodeA = h('a', { key : 'a' }),
     nodeB = h('a', { key : 'b' }),
@@ -9,18 +9,8 @@ const nodeA = h('a', { key : 'a' }),
 export default {
     'name' : 'complex-reverse',
     'trees' : [
-        h('div', { children : [
-            nodeA,
-            nodeB,
-            nodeC,
-            nodeD
-        ] }),
-        h('div', { children : [
-            h('a', { key : 'd' }),
-            h('a', { key : 'c' }),
-            h('a', { key : 'b' }),
-            h('a', { key : 'a' })
-        ] })
+        h('div', null, nodeA, nodeB, nodeC, nodeD),
+        h('div', null, h('a', { key : 'd' }), h('a', { key : 'c' }), h('a', { key : 'b' }), h('a', { key : 'a' }))
     ],
     'patch' : [
         { op : patchOps.moveChild, args : [nodeA, nodeD, true] },

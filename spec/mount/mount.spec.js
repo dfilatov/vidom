@@ -1,6 +1,5 @@
 import sinon from 'sinon';
-import { createComponent, mount, unmount } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, createComponent, mount, unmount } from '../../src/vidom';
 
 describe('mount', () => {
     let domNode;
@@ -83,7 +82,7 @@ describe('mount', () => {
                     }
                 });
 
-            mount(domNode, h('div', { children : h(C) }), ctx);
+            mount(domNode, h('div', null, h(C)), ctx);
         });
     });
 });

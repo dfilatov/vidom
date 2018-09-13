@@ -1,4 +1,4 @@
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const C1 = () => h('div'),
     oldNode = h(C1),

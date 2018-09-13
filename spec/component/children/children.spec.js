@@ -1,5 +1,4 @@
-import { createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 
 describe('children', () => {
     let domNode;
@@ -23,7 +22,7 @@ describe('children', () => {
                 }
             });
 
-        mountSync(domNode, h(C, { children }));
+        mountSync(domNode, h(C, null, children));
     });
 
     if(IS_DEBUG) {

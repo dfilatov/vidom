@@ -1,22 +1,14 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const nodeC = h('a', { key : 'c' }),
     nodeD = h('a', { key : 'd' }),
-    parentNode = h('div', { children : [
-        h('a', { key : 'a' }),
-        h('a', { key : 'b' }),
-        nodeC,
-        nodeD
-    ] });
+    parentNode = h('div', null, h('a', { key : 'a' }), h('a', { key : 'b' }), nodeC, nodeD);
 
 export default {
     'name' : 'complex-insert-to-ending-with-key',
     'trees' : [
-        h('div', { children : [
-            h('a', { key : 'a' }),
-            h('a', { key : 'b' })
-        ] }),
+        h('div', null, h('a', { key : 'a' }), h('a', { key : 'b' })),
         parentNode
     ],
     'patch' : [

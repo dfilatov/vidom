@@ -1,7 +1,7 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
-const parentNode = h('fragment', { children : [h('div'), h('div')] });
+const parentNode = h('fragment', null, h('div'), h('div'));
 
 export default {
     'name' : 'removeChildren2',
