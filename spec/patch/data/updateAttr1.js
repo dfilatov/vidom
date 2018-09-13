@@ -1,4 +1,4 @@
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 import patchOps from '../../../src/client/patchOps';
 
 const node = h('div', { id : 'id1' });

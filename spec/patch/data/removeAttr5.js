@@ -1,4 +1,4 @@
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 export default {
     'name' : 'removeAttr5',

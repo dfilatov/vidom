@@ -1,6 +1,5 @@
 import simulate from 'simulate';
-import { mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('select', () => {
     let domNode;
@@ -15,14 +14,10 @@ describe('select', () => {
     });
 
     it('should maintain value', () => {
-        mountSync(domNode, h('select', {
-            id : 'select',
-            value : '1',
-            children : [
-                h('option', { value : '1', id : 'opt1' }),
-                h('option', { value : '2', id : 'opt2' })
-            ]
-        }));
+        mountSync(domNode, h('select', { id : 'select', value : '1' }, [
+            h('option', { value : '1', id : 'opt1' }),
+            h('option', { value : '2', id : 'opt2' })
+        ]));
 
         const select = document.getElementById('select'),
             firstOption = document.getElementById('opt1'),
@@ -37,16 +32,11 @@ describe('select', () => {
     });
 
     it('should maintain multiple value', () => {
-        mountSync(domNode, h('select', {
-            id : 'select',
-            multiple : true,
-            value : ['1', '2'],
-            children : [
-                h('option', { value : '1', id : 'opt1' }),
-                h('option', { value : '2', id : 'opt2' }),
-                h('option', { value : '3', id : 'opt3' })
-            ]
-        }));
+        mountSync(domNode, h('select', { id : 'select', multiple : true, value : ['1', '2'] }, [
+            h('option', { value : '1', id : 'opt1' }),
+            h('option', { value : '2', id : 'opt2' }),
+            h('option', { value : '3', id : 'opt3' })
+        ]));
 
         const select = document.getElementById('select'),
             firstOption = document.getElementById('opt1'),
@@ -71,15 +61,10 @@ describe('select', () => {
         }
 
         function render() {
-            mountSync(domNode, h('select', {
-                id : 'select',
-                value,
-                onChange,
-                children : [
-                    h('option', { value : '1', id : 'opt1' }),
-                    h('option', { value : '2', id : 'opt2' })
-                ]
-            }));
+            mountSync(domNode, h('select', { id : 'select', value, onChange }, [
+                h('option', { value : '1', id : 'opt1' }),
+                h('option', { value : '2', id : 'opt2' })
+            ]));
         }
 
         render();
@@ -103,16 +88,10 @@ describe('select', () => {
         }
 
         function render() {
-            mountSync(domNode, h('select', {
-                id : 'select',
-                multiple : true,
-                value,
-                onChange,
-                children : [
-                    h('option', { value : '1', id : 'opt1' }),
-                    h('option', { value : '2', id : 'opt2' })
-                ]
-            }));
+            mountSync(domNode, h('select', { id : 'select', multiple : true, value, onChange }, [
+                h('option', { value : '1', id : 'opt1' }),
+                h('option', { value : '2', id : 'opt2' })
+            ]));
         }
 
         render();

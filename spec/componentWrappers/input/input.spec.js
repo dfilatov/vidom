@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import simulate from 'simulate';
-import { mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('input', () => {
     let domNode;

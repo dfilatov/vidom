@@ -1,4 +1,4 @@
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 import patchOps from '../../../src/client/patchOps';
 
 const nodeA = h('a', { key : 'a' }),
@@ -12,20 +12,8 @@ const nodeA = h('a', { key : 'a' }),
 export default {
     'name' : 'complex-shuffle-with-inserts-removes',
     'trees' : [
-        h('div', { children : [
-            nodeA,
-            nodeB,
-            nodeC,
-            nodeD
-        ] }),
-        h('div', { children : [
-            nodeE,
-            h('a', { key : 'b' }),
-            nodeF,
-            nodeG,
-            h('a', { key : 'c' }),
-            h('a', { key : 'a' })
-        ] })
+        h('div', null, nodeA, nodeB, nodeC, nodeD),
+        h('div', null, nodeE, h('a', { key : 'b' }), nodeF, nodeG, h('a', { key : 'c' }), h('a', { key : 'a' }))
     ],
     'patch' : [
         { op : patchOps.moveChild, args : [nodeA, nodeD, true] },

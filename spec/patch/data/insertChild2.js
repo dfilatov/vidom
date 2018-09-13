@@ -1,5 +1,5 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const newNode = h('input', { key : 'a' }),
     beforeNode = h('input');
@@ -7,15 +7,8 @@ const newNode = h('input', { key : 'a' }),
 export default {
     'name' : 'insertChild2',
     'trees' : [
-        h('div', { children : [
-            h('span'),
-            h('input')
-        ] }),
-        h('div', { children : [
-            h('span'),
-            newNode,
-            beforeNode
-        ] })
+        h('div', null, h('span'), h('input')),
+        h('div', null, h('span'), newNode, beforeNode)
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [newNode, beforeNode] }

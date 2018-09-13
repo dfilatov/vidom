@@ -1,4 +1,4 @@
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const node = h('select', {
     multiple : true,

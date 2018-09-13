@@ -1,6 +1,5 @@
 import sinon from 'sinon';
-import { createComponent, mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, createComponent, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('onUnmount', () => {
     let domNode;
@@ -21,13 +20,13 @@ describe('onUnmount', () => {
             C1 = createComponent({
                 onUnmount : spy1,
                 onRender() {
-                    return h('div', { children : h('fragment', { children : h(C2, { children : h(C3) }) }) });
+                    return h('div', null, h('fragment', null, h(C2, null, h(C3))));
                 }
             }),
             C2 = createComponent({
                 onUnmount : spy2,
                 onRender() {
-                    return h('div', { children : this.children });
+                    return h('div', null, this.children);
                 }
             }),
             C3 = createComponent({

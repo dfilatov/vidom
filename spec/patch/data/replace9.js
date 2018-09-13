@@ -1,6 +1,6 @@
 import createComponent from '../../../src/createComponent';
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const oldNode = h('div'),
     newNode = h(createComponent({

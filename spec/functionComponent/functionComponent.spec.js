@@ -1,7 +1,6 @@
 import sinon from 'sinon';
 import emptyObj from '../../src/utils/emptyObj';
-import { mountSync, unmountSync } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, mountSync, unmountSync } from '../../src/vidom';
 
 describe('functionComponent', () => {
     let domNode;

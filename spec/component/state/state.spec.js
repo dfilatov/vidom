@@ -1,6 +1,5 @@
-import { createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
+import { h, createComponent, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
-import { h } from '../../helpers';
 
 describe('state', () => {
     let domNode;

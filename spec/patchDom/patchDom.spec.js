@@ -1,6 +1,5 @@
 import sinon from 'sinon';
-import { mountSync, unmountSync } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, mountSync, unmountSync } from '../../src/vidom';
 
 describe('patchDom', () => {
     let domNode;
@@ -16,8 +15,8 @@ describe('patchDom', () => {
 
     describe('updateText', () => {
         it('should update node text', () => {
-            mountSync(domNode, h('span', { children : 'text' }));
-            mountSync(domNode, h('span', { children : 'new text' }));
+            mountSync(domNode, h('span', null, 'text'));
+            mountSync(domNode, h('span', null, 'new text'));
 
             expect(domNode.firstChild.textContent)
                 .to.equal('new text');
@@ -32,16 +31,16 @@ describe('patchDom', () => {
         });
 
         it('should update empty text node', () => {
-            mountSync(domNode, h('span', { children : h('plaintext') }));
-            mountSync(domNode, h('span', { children : h('plaintext', { children : 'text' }) }));
+            mountSync(domNode, h('span', null, h('plaintext')));
+            mountSync(domNode, h('span', null, h('plaintext', null, 'text')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->text<!---->');
         });
 
         it('should update not empty text node', () => {
-            mountSync(domNode, h('span', { children : h('plaintext', { children : 'text' }) }));
-            mountSync(domNode, h('span', { children : h('plaintext', { children : 'new text' }) }));
+            mountSync(domNode, h('span', null, h('plaintext', null, 'text')));
+            mountSync(domNode, h('span', null, h('plaintext', null, 'new text')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->new text<!---->');
@@ -50,7 +49,7 @@ describe('patchDom', () => {
 
     describe('removeText', () => {
         it('should remove node text', () => {
-            mountSync(domNode, h('span', { children : 'text' }));
+            mountSync(domNode, h('span', null, 'text'));
             mountSync(domNode, h('span'));
 
             expect(domNode.firstChild.textContent)
@@ -58,8 +57,8 @@ describe('patchDom', () => {
         });
 
         it('should remove text node text', () => {
-            mountSync(domNode, h('span', { children : h('plaintext', { children : 'text' }) }));
-            mountSync(domNode, h('span', { children : h('plaintext') }));
+            mountSync(domNode, h('span', null, h('plaintext', null, 'text')));
+            mountSync(domNode, h('span', null, h('plaintext')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!----><!---->');
@@ -91,24 +90,18 @@ describe('patchDom', () => {
         it('should update select children', () => {
             mountSync(
                 domNode,
-                h('select', {
-                    multiple : true,
-                    value : [1],
-                    children : [
-                        h('option', { value : 1 }),
-                        h('option', { value : 2 }),
-                        h('option', { value : 3 })
-                    ] }));
+                h('select', { multiple : true, value : [1] }, [
+                    h('option', { value : 1 }),
+                    h('option', { value : 2 }),
+                    h('option', { value : 3 })
+                ]));
             mountSync(
                 domNode,
-                h('select', {
-                    multiple : true,
-                    value : [2, 3],
-                    children : [
-                        h('option', { value : 1 }),
-                        h('option', { value : 2 }),
-                        h('option', { value : 3 })
-                    ] }));
+                h('select', { multiple : true, value : [2, 3] }, [
+                    h('option', { value : 1 }),
+                    h('option', { value : 2 }),
+                    h('option', { value : 3 })
+                ]));
 
             const { options } = domNode.firstChild;
 
@@ -143,20 +136,16 @@ describe('patchDom', () => {
         it('should update select children', () => {
             mountSync(
                 domNode,
-                h('select', {
-                    value : 1,
-                    children : [
-                        h('option', { value : 1 }),
-                        h('option', { value : 2 })
-                    ] }));
+                h('select', { value : 1 }, [
+                    h('option', { value : 1 }),
+                    h('option', { value : 2 })
+                ]));
             mountSync(
                 domNode,
-                h('select', {
-                    multiple : true,
-                    children : [
-                        h('option', { value : 1 }),
-                        h('option', { value : 2 })
-                    ] }));
+                h('select', { multiple : true }, [
+                    h('option', { value : 1 }),
+                    h('option', { value : 2 })
+                ]));
 
             const { options } = domNode.firstChild;
 
@@ -167,8 +156,8 @@ describe('patchDom', () => {
 
     describe('replace', () => {
         it('should replace node', () => {
-            mountSync(domNode, h('div', { children : [h('a'), h('span')] }));
-            mountSync(domNode, h('div', { children : [h('a'), h('div')] }));
+            mountSync(domNode, h('div', null, h('a'), h('span')));
+            mountSync(domNode, h('div', null, h('a'), h('div')));
 
             expect(domNode.firstChild.childNodes[1].tagName.toLowerCase())
                 .to.equal('div');
@@ -177,10 +166,10 @@ describe('patchDom', () => {
         it('should keep parent namespace', () => {
             mountSync(
                 domNode,
-                h('svg', { children : h('g', { children : h('circle') }) }));
+                h('svg', null, h('g', null, h('circle'))));
             mountSync(
                 domNode,
-                h('svg', { children : h('g', { children : h('path') }) }));
+                h('svg', null, h('g', null, h('path'))));
 
             expect(domNode.firstChild.firstChild.firstChild.namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
@@ -189,45 +178,42 @@ describe('patchDom', () => {
         it('should replace fragment with single node', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a'),
-                    h('fragment', { children : [h('b'), h('i')] })
-                ] }));
+                    h('fragment', null, h('b'), h('i'))
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('a'),
-                    h('span')
-                ] }));
+                h('div', null, h('a'), h('span')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><span></span>');
         });
 
         it('should replace node with fragment', () => {
-            mountSync(domNode, h('div', { children : [h('a'), h('span')] }));
+            mountSync(domNode, h('div', null, h('a'), h('span')));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a'),
-                    h('fragment', { children : [h('b'), h('i')] })
-                ] }));
+                    h('fragment', null, h('b'), h('i'))
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><b></b><i></i><!---->');
         });
 
         it('should replace node with text node', () => {
-            mountSync(domNode, h('div', { children : [h('a'), h('span')] }));
-            mountSync(domNode, h('div', { children : [h('a'), h('plaintext')] }));
+            mountSync(domNode, h('div', null, h('a'), h('span')));
+            mountSync(domNode, h('div', null, h('a'), h('plaintext')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><!---->');
         });
 
         it('should replace text node with node', () => {
-            mountSync(domNode, h('div', { children : [h('a'), h('plaintext')] }));
-            mountSync(domNode, h('div', { children : [h('a'), h('span')] }));
+            mountSync(domNode, h('div', null, h('a'), h('plaintext')));
+            mountSync(domNode, h('div', null, h('a'), h('span')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><span></span>');
@@ -236,8 +222,8 @@ describe('patchDom', () => {
 
     describe('appendChild', () => {
         it('should append child node', () => {
-            mountSync(domNode, h('div', { children : [h('a'), h('span')] }));
-            mountSync(domNode, h('div', { children : [h('a'), h('span'), h('div')] }));
+            mountSync(domNode, h('div', null, h('a'), h('span')));
+            mountSync(domNode, h('div', null, h('a'), h('span'), h('div')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><span></span><div></div>');
@@ -246,23 +232,23 @@ describe('patchDom', () => {
         it('should keep parent namespace', () => {
             mountSync(
                 domNode,
-                h('svg', { children : h('circle') }));
+                h('svg', null, h('circle')));
             mountSync(
                 domNode,
-                h('svg', { children : [h('circle'), h('circle')] }));
+                h('svg', null, h('circle'), h('circle')));
 
             expect(domNode.firstChild.childNodes[1].namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
         });
 
         it('should append child fragment', () => {
-            mountSync(domNode, h('div', { children : [h('a')] }));
+            mountSync(domNode, h('div', null, [h('a')]));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a'),
-                    h('fragment', { children : [h('b'), h('i')] })
-                ] }));
+                    h('fragment', null, h('b'), h('i'))
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><b></b><i></i><!---->');
@@ -271,25 +257,22 @@ describe('patchDom', () => {
         it('should append child fragment to another one', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
-                    h('fragment', { key : 'b', children : [
-                        h('b'),
-                        h('i')
-                    ] }),
+                    h('fragment', { key : 'b'}, h('b'), h('i')),
                     h('u', { key : 'c' })
-                ] }));
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
-                    h('fragment', { key : 'b', children : [
+                    h('fragment', { key : 'b'}, [
                         h('b', { key : 'a' }),
                         h('i', { key : 'b' }),
-                        h('fragment', { key : 'c', children : [h('h1'), h('h2')] })
-                    ] }),
+                        h('fragment', { key : 'c' }, h('h1'), h('h2'))
+                    ]),
                     h('u', { key : 'c' })
-                ] }));
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><b></b><i></i><!----><h1></h1><h2></h2><!----><!----><u></u>');
@@ -298,8 +281,8 @@ describe('patchDom', () => {
 
     describe('removeChild', () => {
         it('should remove child node', () => {
-            mountSync(domNode, h('div', { children : [h('a'), h('span')] }));
-            mountSync(domNode, h('div', { children : h('a') }));
+            mountSync(domNode, h('div', null, h('a'), h('span')));
+            mountSync(domNode, h('div', null, h('a')));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a>');
@@ -308,11 +291,11 @@ describe('patchDom', () => {
         it('should remove child fragment', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a'),
-                    h('fragment', { children : [h('b'), h('i')] })
-                ] }));
-            mountSync(domNode, h('div', { children : [h('a')] }));
+                    h('fragment', null, h('b'), h('i'))
+                ]));
+            mountSync(domNode, h('div', null, [h('a')]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a>');
@@ -323,17 +306,17 @@ describe('patchDom', () => {
         it('should insert child node', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
                     h('div', { key : 'b' }),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><div></div><span></span>');
@@ -342,10 +325,10 @@ describe('patchDom', () => {
         it('should keep parent namespace', () => {
             mountSync(
                 domNode,
-                h('svg', { children : h('circle', { key : 'b' }) }));
+                h('svg', null, h('circle', { key : 'b' })));
             mountSync(
                 domNode,
-                h('svg', { children : [h('circle', { key : 'a' }), h('circle', { key : 'b' })] }));
+                h('svg', null, h('circle', { key : 'a' }), h('circle', { key : 'b' })));
 
             expect(domNode.firstChild.firstChild.namespaceURI)
                 .to.equal('http://www.w3.org/2000/svg');
@@ -354,17 +337,17 @@ describe('patchDom', () => {
         it('should insert child fragment', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
-                    h('fragment', { key : 'b', children : [h('b'), h('i')] }),
+                    h('fragment', { key : 'b'}, h('b'), h('i')),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><b></b><i></i><!----><span></span>');
@@ -373,15 +356,13 @@ describe('patchDom', () => {
         it('should insert child fragment before another one', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('fragment', { key : 'b', children : [h('i'), h('u')] })
-                ] }));
+                h('div', null, h('fragment', { key : 'b' }, h('i'), h('u'))));
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('fragment', { key : 'a', children : [h('a'), h('b')] }),
-                    h('fragment', { key : 'b', children : [h('i'), h('u')] })
-                ] }));
+                h('div', null, [
+                    h('fragment', { key : 'a' }, h('a'), h('b')),
+                    h('fragment', { key : 'b' }, h('i'), h('u'))
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!----><a></a><b></b><!----><!----><i></i><u></u><!---->');
@@ -390,12 +371,12 @@ describe('patchDom', () => {
 
     describe('moveChild', () => {
         it('should move child node', () => {
-            mountSync(domNode, h('div', { children : [h('a', { key : 'a' }), h('b', { key : 'b' })] }));
+            mountSync(domNode, h('div', null, h('a', { key : 'a' }), h('b', { key : 'b' })));
 
             const aDomNode = domNode.firstChild.childNodes[0],
                 bDomNode = domNode.firstChild.childNodes[1];
 
-            mountSync(domNode, h('div', { children : [h('b', { key : 'b' }), h('a', { key : 'a' })] }));
+            mountSync(domNode, h('div', null, h('b', { key : 'b' }), h('a', { key : 'a' })));
 
             const { childNodes } = domNode.firstChild;
 
@@ -409,13 +390,13 @@ describe('patchDom', () => {
 
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('div', { key : 1, children : [
+                h('div', null, [
+                    h('div', { key : 1 }, [
                         h('input', { key : 1, id : 'id1', onFocus, onBlur }),
                         h('input', { key : 2 })
-                    ] }),
+                    ]),
                     h('div', { key : 2 })
-                ] }));
+                ]));
 
             const activeElement = document.getElementById('id1');
 
@@ -423,13 +404,13 @@ describe('patchDom', () => {
 
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('div', { key : 2 }),
-                    h('div', { key : 1, children : [
+                    h('div', { key : 1 }, [
                         h('input', { key : 2 }),
                         h('input', { key : 1, id : 'id1', onFocus, onBlur })
-                    ] })
-                ] }));
+                    ])
+                ]));
 
             expect(document.activeElement).to.equal(activeElement);
             expect(onFocus.calledOnce).to.be.ok();
@@ -439,18 +420,18 @@ describe('patchDom', () => {
         it('should move child fragment', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('fragment', { key : 'b', children : [h('b'), h('i')] }),
+                h('div', null, [
+                    h('fragment', { key : 'b' }, h('b'), h('i')),
                     h('a', { key : 'a' }),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
-                    h('fragment', { key : 'b', children : [h('b'), h('i')] }),
+                    h('fragment', { key : 'b' }, h('b'), h('i')),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><b></b><i></i><!----><span></span>');
@@ -459,20 +440,20 @@ describe('patchDom', () => {
         it('should move child fragment before another one', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('fragment', { key : 'c', children : [h('h1'), h('h2')] }),
-                    h('fragment', { key : 'a', children : [h('a'), h('b')] }),
-                    h('fragment', { key : 'b', children : [h('i'), h('u')] }),
-                    h('fragment', { key : 'd', children : [h('h3'), h('h4')] })
-                ] }));
+                h('div', null, [
+                    h('fragment', { key : 'c' }, h('h1'), h('h2')),
+                    h('fragment', { key : 'a' }, h('a'), h('b')),
+                    h('fragment', { key : 'b' }, h('i'), h('u')),
+                    h('fragment', { key : 'd' }, h('h3'), h('h4'))
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('fragment', { key : 'a', children : [h('a'), h('b')] }),
-                    h('fragment', { key : 'b', children : [h('i'), h('u')] }),
-                    h('fragment', { key : 'c', children : [h('h1'), h('h2')] }),
-                    h('fragment', { key : 'e', children : [h('h3'), h('h4')] })
-                ] }));
+                h('div', null, [
+                    h('fragment', { key : 'a' }, h('a'), h('b')),
+                    h('fragment', { key : 'b' }, h('i'), h('u')),
+                    h('fragment', { key : 'c' }, h('h1'), h('h2')),
+                    h('fragment', { key : 'e' }, h('h3'), h('h4'))
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal(
@@ -483,18 +464,18 @@ describe('patchDom', () => {
         it('should move child fragment after another one', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('fragment', { key : 'a', children : [h('a'), h('b')] }),
-                    h('fragment', { key : 'b', children : [h('i'), h('u')] }),
-                    h('fragment', { key : 'c', children : [h('h1'), h('h2')] })
-                ] }));
+                h('div', null, [
+                    h('fragment', { key : 'a' }, h('a'), h('b')),
+                    h('fragment', { key : 'b' }, h('i'), h('u')),
+                    h('fragment', { key : 'c' }, h('h1'), h('h2'))
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('fragment', { key : 'a', children : [h('a'), h('b')] }),
-                    h('fragment', { key : 'c', children : [h('h1'), h('h2')] }),
-                    h('fragment', { key : 'b', children : [h('i'), h('u')] })
-                ] }));
+                h('div', null, [
+                    h('fragment', { key : 'a' }, h('a'), h('b')),
+                    h('fragment', { key : 'c' }, h('h1'), h('h2')),
+                    h('fragment', { key : 'b' }, h('i'), h('u'))
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal(
@@ -505,18 +486,18 @@ describe('patchDom', () => {
         it('should move text node', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('plaintext', { key : 'b', children : 'text' }),
+                h('div', null, [
+                    h('plaintext', { key : 'b' }, 'text'),
                     h('a', { key : 'a' }),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a', { key : 'a' }),
-                    h('plaintext', { key : 'b', children : 'text' }),
+                    h('plaintext', { key : 'b' }, 'text'),
                     h('span', { key : 'c' })
-                ] }));
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!---->text<!----><span></span>');
@@ -525,20 +506,20 @@ describe('patchDom', () => {
         it('should move text node before another one', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('plaintext', { key : 'c', children : 'c' }),
-                    h('plaintext', { key : 'a', children : 'a' }),
-                    h('plaintext', { key : 'b', children : 'b' }),
-                    h('plaintext', { key : 'd', children : 'd' })
-                ] }));
+                h('div', null, [
+                    h('plaintext', { key : 'c' }, 'c'),
+                    h('plaintext', { key : 'a' }, 'a'),
+                    h('plaintext', { key : 'b' }, 'b'),
+                    h('plaintext', { key : 'd' }, 'd')
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('plaintext', { key : 'a', children : 'a' }),
-                    h('plaintext', { key : 'b', children : 'b' }),
-                    h('plaintext', { key : 'c', children : 'c' }),
-                    h('plaintext', { key : 'e', children : 'e' })
-                ] }));
+                h('div', null, [
+                    h('plaintext', { key : 'a' }, 'a'),
+                    h('plaintext', { key : 'b' }, 'b'),
+                    h('plaintext', { key : 'c' }, 'c'),
+                    h('plaintext', { key : 'e' }, 'e')
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->a<!----><!---->b<!----><!---->c<!----><!---->e<!---->');
@@ -547,18 +528,18 @@ describe('patchDom', () => {
         it('should move text node before another one', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('plaintext', { key : 'a', children : 'a' }),
-                    h('plaintext', { key : 'b', children : 'b' }),
-                    h('plaintext', { key : 'c', children : 'c' })
-                ] }));
+                h('div', null, [
+                    h('plaintext', { key : 'a' }, 'a'),
+                    h('plaintext', { key : 'b' }, 'b'),
+                    h('plaintext', { key : 'c' }, 'c')
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
-                    h('plaintext', { key : 'a', children : 'a' }),
-                    h('plaintext', { key : 'c', children : 'c' }),
-                    h('plaintext', { key : 'b', children : 'b' })
-                ] }));
+                h('div', null, [
+                    h('plaintext', { key : 'a' }, 'a'),
+                    h('plaintext', { key : 'c' }, 'c'),
+                    h('plaintext', { key : 'b' }, 'b')
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<!---->a<!----><!---->c<!----><!---->b<!---->');
@@ -567,7 +548,7 @@ describe('patchDom', () => {
 
     describe('removeChildren', () => {
         it('should remove children nodes', () => {
-            mountSync(domNode, h('div', { children : [h('a'), h('span')] }));
+            mountSync(domNode, h('div', null, [h('a'), h('span')]));
             mountSync(domNode, h('div'));
 
             expect(domNode.firstChild.childNodes.length).to.equal(0);
@@ -576,16 +557,16 @@ describe('patchDom', () => {
         it('should remove children nodes of fragment', () => {
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a'),
-                    h('fragment', { children : [h('a'), h('b')] })
-                ] }));
+                    h('fragment', null, h('a'), h('b'))
+                ]));
             mountSync(
                 domNode,
-                h('div', { children : [
+                h('div', null, [
                     h('a'),
                     h('fragment')
-                ] }));
+                ]));
 
             expect(domNode.firstChild.innerHTML)
                 .to.equal('<a></a><!----><!---->');

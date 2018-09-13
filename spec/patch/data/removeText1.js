@@ -1,7 +1,7 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
-const node = h('a', { children : 'text' });
+const node = h('a', null, 'text');
 
 export default {
     'name' : 'removeText1',

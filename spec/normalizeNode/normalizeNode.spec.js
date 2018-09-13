@@ -1,5 +1,5 @@
 import normalizeNode from '../../src/nodes/utils/normalizeNode';
-import { h } from '../helpers';
+import { h } from '../../src/vidom';
 
 describe('normalizeNode', () => {
     it('should return null if passed object is null', () => {
@@ -48,9 +48,9 @@ describe('normalizeNode', () => {
 
         expect(normalizeNode(['str', node1, 0, node2, true]))
             .to.be.eql([
-                h('plaintext', { children : 'str' }),
+                h('plaintext', null, 'str'),
                 node1,
-                h('plaintext', { children : 0 }),
+                h('plaintext', null, 0),
                 node2
             ]);
     });
@@ -60,9 +60,9 @@ describe('normalizeNode', () => {
 
         expect(normalizeNode(['t1', 't2', node, 't3', 't4', ['t5', ['t6']]]))
             .to.be.eql([
-                h('plaintext', { children : 't1t2' }),
+                h('plaintext', null, 't1t2'),
                 node,
-                h('plaintext', { children : 't3t4t5t6' })
+                h('plaintext', null, 't3t4t5t6')
             ]);
     });
 
@@ -73,7 +73,7 @@ describe('normalizeNode', () => {
         expect(normalizeNode([node1, 't1', 't2', node2]))
             .to.be.eql([
                 node1,
-                h('plaintext', { children : 't1t2' }),
+                h('plaintext', null, 't1t2'),
                 node2
             ]);
     });
@@ -87,7 +87,7 @@ describe('normalizeNode', () => {
         const node = h('a');
 
         expect(normalizeNode([node, 'test']))
-            .to.be.eql([node, h('plaintext', { children : 'test' })]);
+            .to.be.eql([node, h('plaintext', null, 'test')]);
     });
 
     it('should concat simple items to only node', () => {

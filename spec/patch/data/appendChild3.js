@@ -1,9 +1,9 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const node1 = h('div'),
     node2 = h('span'),
-    parentNode = h('fragment', { children : [node1, node2] });
+    parentNode = h('fragment', null, node1, node2);
 
 export default {
     'name' : 'appendChild3',

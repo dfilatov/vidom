@@ -1,5 +1,5 @@
 import childrenToArray from '../../src/nodes/utils/nodeToElements';
-import { h } from '../helpers';
+import { h } from '../../src/vidom';
 
 describe('nodeToElements', () => {
     it('should return empty array if passed object is nullified item', () => {
@@ -26,12 +26,12 @@ describe('nodeToElements', () => {
 
     it('should transform string to array with plaintext node', () => {
         expect(childrenToArray('str'))
-            .to.be.eql([h('plaintext', { children : 'str' })]);
+            .to.be.eql([h('plaintext', null, 'str')]);
     });
 
     it('should trasnform array of strings to array with only plaintext node', () => {
         expect(childrenToArray(['str1', 'str2']))
-            .to.be.eql([h('plaintext', { children : 'str1str2' })]);
+            .to.be.eql([h('plaintext', null, 'str1str2')]);
     });
 
     it('should transform given element to array with only item', () => {
@@ -41,7 +41,7 @@ describe('nodeToElements', () => {
 
     it('should transform given array to array with only valid items', () => {
         expect(childrenToArray(['', h('div'), 'str', false, h('span'), null]))
-            .to.be.eql([h('div'), h('plaintext', { children : 'str' }), h('span')]);
+            .to.be.eql([h('div'), h('plaintext', null, 'str'), h('span')]);
     });
 
     it('should return exact given array if it contains only valid items', () => {

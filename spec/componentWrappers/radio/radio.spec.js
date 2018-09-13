@@ -1,6 +1,5 @@
 import simulate from 'simulate';
-import { mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('radio', () => {
     let domNode;
@@ -15,10 +14,10 @@ describe('radio', () => {
     });
 
     it('should maintain checked property', () => {
-        mountSync(domNode, h('div', { children : [
+        mountSync(domNode, h('div', null, [
             h('input', { type : 'radio', name : 'test', id : 'id1', checked : true }),
             h('input', { type : 'radio', name : 'test', id : 'id2', checked : false })
-        ] }));
+        ]));
 
         const secondRadio = document.getElementById('id2');
 
@@ -37,10 +36,10 @@ describe('radio', () => {
         }
 
         function render() {
-            mountSync(domNode, h('div', { children : [
+            mountSync(domNode, h('div', null, [
                 h('input', { type : 'radio', name : 'test', id : 'id1', checked : !checkedState }),
                 h('input', { type : 'radio', name : 'test', id : 'id2', checked : checkedState, onChange })
-            ] }));
+            ]));
         }
 
         render();

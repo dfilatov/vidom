@@ -1,5 +1,4 @@
-import { createComponent } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, createComponent } from '../../src/vidom';
 
 describe('clone', () => {
     describe('tag element', () => {
@@ -7,9 +6,8 @@ describe('clone', () => {
             const origNode = h('a', {
                     key : '1',
                     href : '/',
-                    ref : () => {},
-                    children : 'link'
-                }).setCtx({}),
+                    ref : () => {}
+                }, 'link').setCtx({}),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
@@ -29,7 +27,7 @@ describe('clone', () => {
         });
 
         it('should replace children', () => {
-            const origNode = h('a', { children : 'link1' }),
+            const origNode = h('a', null, 'link1'),
                 clonedNode = origNode.clone({}, 'link2');
 
             expect(clonedNode.children).to.equal('link2');
@@ -43,9 +41,8 @@ describe('clone', () => {
             const origNode = h(C, {
                     key : '1',
                     href : '/',
-                    ref : () => {},
-                    children : 'link'
-                }).setCtx({}),
+                    ref : () => {}
+                }, 'link').setCtx({}),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
@@ -65,7 +62,7 @@ describe('clone', () => {
         });
 
         it('should replace children', () => {
-            const origNode = h(C, { children : 'link1' }),
+            const origNode = h(C, null, 'link1'),
                 clonedNode = origNode.clone({}, 'link2');
 
             expect(clonedNode.children).to.equal('link2');
@@ -78,9 +75,8 @@ describe('clone', () => {
         it('should copy original fields', () => {
             const origNode = h(C, {
                     key : '1',
-                    href : '/',
-                    children : 'link'
-                }).setCtx({}),
+                    href : '/'
+                }, 'link').setCtx({}),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
@@ -99,7 +95,7 @@ describe('clone', () => {
         });
 
         it('should replace children', () => {
-            const origNode = h(C, { children : 'link1' }),
+            const origNode = h(C, null, 'link1'),
                 clonedNode = origNode.clone({}, 'link2');
 
             expect(clonedNode.children).to.equal('link2');
@@ -108,10 +104,7 @@ describe('clone', () => {
 
     describe('fragment element', () => {
         it('should copy original fields', () => {
-            const origNode = h('fragment', {
-                    key : '1',
-                    children : [h('a'), h('b')]
-                }).setCtx({}),
+            const origNode = h('fragment', { key : '1' }, h('a'), h('b')).setCtx({}),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
@@ -121,7 +114,7 @@ describe('clone', () => {
         });
 
         it('should replace children', () => {
-            const origNode = h('fragment', { children : [h('a'), h('b')] }),
+            const origNode = h('fragment', null, h('a'), h('b')),
                 newChildren = [h('i')],
                 clonedNode = origNode.clone(newChildren);
 
@@ -131,7 +124,7 @@ describe('clone', () => {
 
     describe('text element', () => {
         it('should copy original fields', () => {
-            const origNode = h('plaintext', { key : '1', children : 'link' }),
+            const origNode = h('plaintext', { key : '1' }, 'link'),
                 clonedNode = origNode.clone();
 
             expect(clonedNode.type).to.equal(origNode.type);
@@ -140,7 +133,7 @@ describe('clone', () => {
         });
 
         it('should replace children', () => {
-            const origNode = h('plaintext', { children : 'link1' }),
+            const origNode = h('plaintext', null, 'link1'),
                 clonedNode = origNode.clone('link2');
 
             expect(clonedNode.children).to.equal('link2');

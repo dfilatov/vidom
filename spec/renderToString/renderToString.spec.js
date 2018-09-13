@@ -1,5 +1,4 @@
-import { createComponent } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, createComponent } from '../../src/vidom';
 
 describe('renderToString', () => {
     describe('tag', () => {
@@ -23,7 +22,7 @@ describe('renderToString', () => {
 
     describe('children', () => {
         it('should be rendered as child nodes', () => {
-            expect(h('div', { children : [h('span'), h('img')] }).renderToString())
+            expect(h('div', null, h('span'), h('img')).renderToString())
                 .to.equal('<div><span></span><img/></div>');
         });
     });
@@ -122,22 +121,22 @@ describe('renderToString', () => {
 
     describe('text', () => {
         it('should be rendered as wrapped text node', () => {
-            expect(h('span', { children : 'some text' }).renderToString())
+            expect(h('span', null, 'some text').renderToString())
                 .to.equal('<span>some text</span>');
         });
 
         it('should escape html', () => {
-            expect(h('span', { children : '<&/>' }).renderToString())
+            expect(h('span', null, '<&/>').renderToString())
                 .to.equal('<span>&lt;&amp;/&gt;</span>');
         });
 
         it('should be rendered as a text node', () => {
-            expect(h('plaintext', { children : 'text' }).renderToString())
+            expect(h('plaintext', null, 'text').renderToString())
                 .to.equal('<!---->text<!---->');
         });
 
         it('should escape content of text node', () => {
-            expect(h('plaintext', { children : '<&/>' }).renderToString())
+            expect(h('plaintext', null, '<&/>').renderToString())
                 .to.equal('<!---->&lt;&amp;/&gt;<!---->');
         });
     });
@@ -151,33 +150,33 @@ describe('renderToString', () => {
 
     describe('fragment', () => {
         it('should be rendered as fragment', () => {
-            expect(h('div', { children : [
+            expect(h('div', null, [
                 h('a'),
-                h('fragment', { children : [
+                h('fragment', null, [
                     h('i'),
-                    h('fragment', { children : h('u') }),
+                    h('fragment', null, h('u')),
                     h('span')
-                ] }),
+                ]),
                 h('b')
-            ] }).renderToString())
+            ]).renderToString())
                 .to.equal('<div><a></a><!----><i></i><!----><u></u><!----><span></span><!----><b></b></div>');
         });
 
         it('should be rendered as comment if no children', () => {
-            expect(h('div', { children : [
+            expect(h('div', null, [
                 h('a'),
                 h('fragment'),
                 h('b')
-            ] }).renderToString())
+            ]).renderToString())
                 .to.equal('<div><a></a><!----><!----><b></b></div>');
         });
 
         it('should be rendered if only string child', () => {
-            expect(h('div', { children : [
+            expect(h('div', null, [
                 h('a'),
-                h('fragment', { children : 'test' }),
+                h('fragment', null, 'test'),
                 h('b')
-            ] }).renderToString())
+            ]).renderToString())
                 .to.equal('<div><a></a><!----><!---->test<!----><!----><b></b></div>');
         });
     });
@@ -185,30 +184,23 @@ describe('renderToString', () => {
     describe('select', () => {
         it('should be properly rendered', () => {
             expect(
-                h('select', {
-                    value : 2,
-                    children : [
-                        h('option', { value : 1 }),
-                        h('option', { value : 2 })
-                    ]
-                }).renderToString()
+                h('select', { value : 2 }, [
+                    h('option', { value : 1 }),
+                    h('option', { value : 2 })
+                ]).renderToString()
             )
                 .to.equal('<select><option value="1"></option><option selected value="2"></option></select>');
         });
 
         it('should be properly rendered with multiple values', () => {
             expect(
-                h('select', {
-                    multiple : true,
-                    value : [2, 3],
-                    children : [
-                        h('group', { children : [
-                            h('option', { value : 1 }),
-                            h('option', { value : 2 }),
-                            h('option', { value : 3 })
-                        ] })
-                    ]
-                }).renderToString()
+                h('select', { multiple : true, value : [2, 3] }, [
+                    h('group', null, [
+                        h('option', { value : 1 }),
+                        h('option', { value : 2 }),
+                        h('option', { value : 3 })
+                    ])
+                ]).renderToString()
             )
                 .to.equal(
                     '<select multiple>' +
@@ -225,14 +217,11 @@ describe('renderToString', () => {
         it('should be rendered as component', () => {
             const Component = createComponent({
                 onRender() {
-                    return h('div', {
-                        ...this.attrs,
-                        children : [h('a'), h('span')].concat(this.children)
-                    });
+                    return h('div', this.attrs, [h('a'), h('span')].concat(this.children));
                 }
             });
 
-            expect(h(Component, { id : 'id1', children : h('i') }).renderToString())
+            expect(h(Component, { id : 'id1' }, h('i')).renderToString())
                 .to.equal('<div id="id1"><a></a><span></span><i></i></div>');
         });
 
@@ -251,13 +240,10 @@ describe('renderToString', () => {
     describe('functional component', () => {
         it('should be rendered as component', () => {
             const Component = (attrs, children) => {
-                return h('div', {
-                    ...attrs,
-                    children : [h('a'), h('span')].concat(children)
-                });
+                return h('div', attrs, [h('a'), h('span')].concat(children));
             };
 
-            expect(h(Component, { id : 'id1', children : h('i') }).renderToString())
+            expect(h(Component, { id : 'id1' }, h('i')).renderToString())
                 .to.equal('<div id="id1"><a></a><span></span><i></i></div>');
         });
 

@@ -1,6 +1,5 @@
-import { createComponent, mount, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
+import { h, createComponent, mount, mountSync, unmountSync, IS_DEBUG } from '../../../src/vidom';
 import emptyObj from '../../../src/utils/emptyObj';
-import { h } from '../../helpers';
 
 describe('context', () => {
     let domNode;
@@ -33,7 +32,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return h('div', { children : h('fragment', { children : this.children }) });
+                    return h('div', null, h('fragment', null, this.children));
                 }
             }),
             C2 = createComponent({
@@ -43,13 +42,7 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, h(C1, {
-            children : h('div', {
-                children : h('div', {
-                    children : h(() => h('div', { children : h(C2) }))
-                })
-            })
-        }));
+        mountSync(domNode, h(C1, null, h('div', null, h('div', null, h(() => h('div', null, h(C2)))))));
     });
 
     it('should be merged through tree', done => {
@@ -59,7 +52,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return h('div', { children : this.children });
+                    return h('div', null, this.children);
                 }
             }),
             C2 = createComponent({
@@ -68,7 +61,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return h('div', { children : this.children });
+                    return h('div', null, this.children);
                 }
             }),
             C3 = createComponent({
@@ -81,17 +74,9 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, h(C1, {
-            children : h('div', {
-                children : h('div', {
-                    children : h(() => h('div', {
-                        children : h(C2, {
-                            children : h('div', { children : h(C3) })
-                        })
-                    }))
-                })
-            })
-        }));
+        mountSync(
+            domNode,
+            h(C1, null, h('div', null, h('div', null, h(() => h('div', null, h(C2, null, h('div', null, h(C3)))))))));
     });
 
     it('shouldn\'t be polluted for sibling nodes', done => {
@@ -101,7 +86,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return h('div', { children : this.children });
+                    return h('div', null, this.children);
                 }
             }),
             C2 = createComponent({
@@ -116,7 +101,7 @@ describe('context', () => {
                 }
             });
 
-        mountSync(domNode, h(C1, { children : [h(C2), h(C3)] }));
+        mountSync(domNode, h(C1, null, h(C2), h(C3)));
     });
 
     it('shouldn\'t be updated after patching', done => {
@@ -126,7 +111,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return h('div', { children : this.children });
+                    return h('div', null, this.children);
                 }
             }),
             C2 = createComponent({
@@ -135,7 +120,7 @@ describe('context', () => {
                 },
 
                 onRender() {
-                    return h('div', { children : this.children });
+                    return h('div', null, this.children);
                 }
             }),
             C3 = createComponent({
@@ -147,25 +132,15 @@ describe('context', () => {
                     done();
                 }
             }),
-            FC = ({ prop }) => h('div', {
-                children : h(C2, { prop, children : h('div', { children : h(C3) }) })
-            });
+            FC = ({ prop }) => h('div', null, h(C2, { prop }, h('div', null, h(C3))));
 
         mount(
             domNode,
-            h(C1, {
-                prop : 'val1',
-                children : h('div', {
-                    children : h('div', { children : h(FC, { prop : 'val2' }) })
-                })
-            }),
+            h(C1, { prop : 'val1' }, h('div', null, h('div', null, h(FC, { prop : 'val2' })))),
             () => {
                 mount(
                     domNode,
-                    h(C1, {
-                        prop : 'val3',
-                        children : h('div', { children : h('div', { children : h(FC, { prop : 'val4' }) }) })
-                    }));
+                    h(C1, { prop : 'val3' }, h('div', null, h('div', null, h(FC, { prop : 'val4' })))));
             });
     });
 

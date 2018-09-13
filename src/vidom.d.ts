@@ -703,7 +703,7 @@ declare namespace vidom {
         key?: Key | null,
         attrs?: HTMLAttributes | SVGAttributes | null,
         children?: Node,
-        ref?: Ref<Element> | null,
+        ref?: Ref<HTMLElement | SVGElement> | null,
         escapeChildren?: boolean
     ): TagElement;
     function elem<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
@@ -735,6 +735,43 @@ declare namespace vidom {
 
     function toElem(node: Node): Element;
     function toElems(node: Node): Element[];
+
+    function h(
+        tag: 'fragment',
+        props: WithKey | null,
+        ...children: Node[]
+    ): FragmentElement;
+    function h(
+        tag: 'plaintext',
+        props: WithKey | null,
+        ...children: string[]
+    ): TextElement;
+    function h(
+        tag: string,
+        props: (
+            (
+                (HTMLAttributes & WithRef<HTMLElement>) |
+                (SVGAttributes & WithRef<SVGElement>)
+            ) &
+            WithKey
+        ) | null,
+        ...children: Node[]
+    ): TagElement;
+    function h<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
+        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>,
+        props: (TAttrs & WithKey) | null,
+        children?: TChildren
+    ): FunctionComponentElement<TAttrs, TChildren, TFunctionComponent>;
+    function h<
+        TAttrs,
+        TChildren,
+        TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>,
+        TComponent extends Component<TAttrs, TChildren>,
+    >(
+        component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>,
+        props: (TAttrs & WithRef<vidom.Component> & WithKey) | null,
+        children?: TChildren
+    ): ComponentElement<TAttrs, TChildren, TComponent, TComponentClass>;
 
     const IS_DEBUG: boolean;
 }

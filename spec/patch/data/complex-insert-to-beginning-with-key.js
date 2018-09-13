@@ -1,5 +1,5 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 const nodeA = h('a', { key : 'a' }),
     nodeB = h('a', { key : 'b' }),
@@ -8,16 +8,8 @@ const nodeA = h('a', { key : 'a' }),
 export default {
     'name' : 'complex-insert-to-beginning-with-key',
     'trees' : [
-        h('div', { children : [
-            h('a', { key : 'c' }),
-            h('a', { key : 'd' })
-        ] }),
-        h('div', { children : [
-            nodeA,
-            nodeB,
-            nodeC,
-            h('a', { key : 'd' })
-        ] })
+        h('div', null, h('a', { key : 'c' }), h('a', { key : 'd' })),
+        h('div', null, nodeA, nodeB, nodeC, h('a', { key : 'd' }))
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [nodeA, nodeC] },

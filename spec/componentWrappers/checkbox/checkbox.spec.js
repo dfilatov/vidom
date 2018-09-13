@@ -1,6 +1,5 @@
 import simulate from 'simulate';
-import { mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('checkbox', () => {
     let domNode;
@@ -15,10 +14,10 @@ describe('checkbox', () => {
     });
 
     it('should maintain checked property', () => {
-        mountSync(domNode, h('div', { children : [
+        mountSync(domNode, h('div', null, [
             h('input', { type : 'checkbox', id : 'id1', checked : true }),
             h('input', { type : 'checkbox', id : 'id2', checked : false })
-        ] }));
+        ]));
 
         const firstCheckbox = document.getElementById('id1'),
             secondCheckbox = document.getElementById('id2');
@@ -44,10 +43,7 @@ describe('checkbox', () => {
         function render() {
             mountSync(
                 domNode,
-                h('div', {
-                    children : h('input', { type : 'checkbox', id : 'id1', checked : checkedState, onChange })
-                })
-            );
+                h('div', null, h('input', { type : 'checkbox', id : 'id1', checked : checkedState, onChange })));
         }
 
         render();

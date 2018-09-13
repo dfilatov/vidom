@@ -1,3 +1,4 @@
+import h from './h';
 import createElement from './createElement';
 import createComponent from './createComponent';
 import renderToString from './renderToString';
@@ -11,6 +12,7 @@ import './globalHook';
 export * from './client/mounter';
 
 export {
+    h,
     createElement as elem,
     createComponent,
     renderToString,

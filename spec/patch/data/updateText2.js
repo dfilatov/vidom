@@ -1,10 +1,10 @@
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
 export default {
     'name' : 'updateText2',
     'trees' : [
-        h('span', { children : 'text' }),
-        h('span', { children : 'text' })
+        h('span', null, 'text'),
+        h('span', null, 'text')
     ],
     'patch' : []
 };

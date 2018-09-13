@@ -1,5 +1,4 @@
-import { createComponent, mountSync, unmountSync } from '../../src/vidom';
-import { h } from '../helpers';
+import { h, createComponent, mountSync, unmountSync } from '../../src/vidom';
 
 describe('adoptDom', () => {
     let domNode;
@@ -18,7 +17,7 @@ describe('adoptDom', () => {
     it('should properly adopt existing dom nodes', () => {
         const firstChildNode = h('span'),
             secondChildNode = h('i'),
-            tree = h('div', { children : [firstChildNode, secondChildNode] }),
+            tree = h('div', null, firstChildNode, secondChildNode),
             treeDomNode = document.createElement('div'),
             firstChildDomNode = document.createElement('span'),
             secondChildDomNode = document.createElement('i');
@@ -35,9 +34,9 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing text dom nodes', () => {
-        const firstChildNode = h('plaintext', { children : 'text1' }),
-            secondChildNode = h('plaintext', { children : 'text2' }),
-            tree = h('div', { children : [firstChildNode, secondChildNode] }),
+        const firstChildNode = h('plaintext', null, 'text1'),
+            secondChildNode = h('plaintext', null, 'text2'),
+            tree = h('div', null, firstChildNode, secondChildNode),
             treeDomNode = document.createElement('div'),
             firstChildDomNode = [document.createComment(''), document.createComment('')],
             secondChildDomNode = [document.createComment(''), document.createComment('')];
@@ -57,7 +56,7 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing top level text dom node', () => {
-        const tree = h('plaintext', { children : 'text1' }),
+        const tree = h('plaintext', null, 'text1'),
             textDomNode = [document.createComment(''), document.createComment('')];
 
         domNode.appendChild(textDomNode[0]);
@@ -70,7 +69,7 @@ describe('adoptDom', () => {
     });
 
     it('should properly adopt existing top level fragment dom node', () => {
-        const tree = h('fragment', { children : [h('div'), h('div')] }),
+        const tree = h('fragment', null, h('div'), h('div')),
             fragmentDomNode = [document.createComment(''), document.createComment('')];
 
         domNode.appendChild(fragmentDomNode[0]);
@@ -95,7 +94,7 @@ describe('adoptDom', () => {
                     return spanNode;
                 }
             }),
-            tree = h('div', { children : h(C1) }),
+            tree = h('div', null, h(C1)),
             treeDomNode = document.createElement('div'),
             childDomNode = document.createElement('span');
 
@@ -111,7 +110,7 @@ describe('adoptDom', () => {
         const spanNode = h('span'),
             C1 = () => h(C2),
             C2 = () => spanNode,
-            tree = h('div', { children : h(C1) }),
+            tree = h('div', null, h(C1)),
             treeDomNode = document.createElement('div'),
             childDomNode = document.createElement('span');
 

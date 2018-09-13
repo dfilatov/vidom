@@ -1,7 +1,7 @@
 import patchOps from '../../../src/client/patchOps';
-import { h } from '../../helpers';
+import { h } from '../../../src/vidom';
 
-const nodeA = h('a', { key : 'a', children : h('div') }),
+const nodeA = h('a', { key : 'a' }, h('div')),
     nodeB = h('a', { key : 'b' }),
     nodeC = h('a', { key : 'c' }),
     nodeD = h('a', { key : 'd' });
@@ -9,15 +9,8 @@ const nodeA = h('a', { key : 'a', children : h('div') }),
 export default {
     'name' : 'complex1',
     'trees' : [
-        h('div', { children : [
-            nodeC,
-            nodeA,
-            nodeD
-        ] }),
-        h('div', { children : [
-            nodeB,
-            h('a', { key : 'a', children : 'new text' })
-        ] })
+        h('div', null, nodeC, nodeA, nodeD),
+        h('div', null, nodeB, h('a', { key : 'a'}, 'new text'))
     ],
     'patch' : [
         { op : patchOps.insertChild, args : [nodeB, nodeC] },

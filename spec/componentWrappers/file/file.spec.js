@@ -1,5 +1,4 @@
-import { mountSync, unmountSync } from '../../../src/vidom';
-import { h } from '../../helpers';
+import { h, mountSync, unmountSync } from '../../../src/vidom';
 
 describe('file', () => {
     let domNode;
