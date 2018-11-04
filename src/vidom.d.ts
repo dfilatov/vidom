@@ -214,6 +214,7 @@ declare namespace vidom {
     type DragSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, DragEvent>;
     type TouchSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, TouchEvent>;
     type FocusSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, FocusEvent>;
+    type PointerSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, PointerEvent>;
     type WheelSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, WheelEvent>;
 
     interface DOMEventHandler<TSyntheticEvent extends SyntheticEvent = SyntheticEvent> {
@@ -246,6 +247,7 @@ declare namespace vidom {
         onEnded?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onError?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onFocus?: DOMEventHandler<FocusSyntheticEvent<TDOMElement>>;
+        onGotPointerCapture?: DOMEventHandler<PointerEvent<TDOMElement>>;
         onInput?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onKeyDown?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
         onKeyPress?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
@@ -254,6 +256,7 @@ declare namespace vidom {
         onLoadedData?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onLoadedMetadata?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onLoadStart?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onLostPointerCapture?: DOMEventHandler<PointerEvent<TDOMElement>>;
         onMouseDown?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
         onMouseEnter?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
         onMouseLeave?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
@@ -265,6 +268,14 @@ declare namespace vidom {
         onPause?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onPlay?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onPlaying?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
+        onPointerCancel?: DOMEventHandler<PointerEvent<TDOMElement>>;
+        onPointerDown?: DOMEventHandler<PointerEvent<TDOMElement>>;
+        onPointerEnter?: DOMEventHandler<PointerEvent<TDOMElement>>;
+        onPointerLeave?: DOMEventHandler<PointerEvent<TDOMElement>>;
+        onPointerMove?: DOMEventHandler<PointerEvent<TDOMElement>>;
+        onPointerOut?: DOMEventHandler<PointerEvent<TDOMElement>>;
+        onPointerOver?: DOMEventHandler<PointerEvent<TDOMElement>>;
+        onPointerUp?: DOMEventHandler<PointerEvent<TDOMElement>>;
         onProgress?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onRateChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
         onScroll?: DOMEventHandler<SyntheticEvent<TDOMElement>>;

@@ -4,17 +4,17 @@ import { isIos } from '../utils/ua';
 
 const MOUSE_NATIVE_EVENTS = ['click', 'mousedown', 'mousemove', 'mouseout', 'mouseover', 'mouseup'];
 let BUBBLEABLE_NATIVE_EVENTS = [
-        'animationend', 'animationiteration', 'animationstart',
-        'blur', 'change', 'contextmenu', 'copy', 'cut',
-        'dblclick', 'drag', 'dragend', 'dragenter', 'dragleave', 'dragover', 'dragstart', 'drop',
-        'focus', 'input', 'keydown', 'keypress', 'keyup', 'paste', 'submit',
-        'touchcancel', 'touchend', 'touchmove', 'touchstart', 'transitionend', 'wheel'
+        'animationend', 'animationiteration', 'animationstart', 'blur', 'change', 'contextmenu',
+        'copy', 'cut', 'dblclick', 'drag', 'dragend', 'dragenter', 'dragleave', 'dragover',
+        'dragstart', 'drop', 'focus', 'input', 'keydown', 'keypress', 'keyup', 'paste',
+        'pointerover', 'pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'pointerout',
+        'submit', 'touchcancel', 'touchend', 'touchmove', 'touchstart', 'transitionend', 'wheel'
     ],
     NON_BUBBLEABLE_NATIVE_EVENTS = [
         'canplay', 'canplaythrough', 'complete', 'durationchange', 'emptied', 'ended', 'error',
-        'load', 'loadeddata', 'loadedmetadata', 'loadstart', 'mouseenter', 'mouseleave',
-        'pause', 'play', 'playing', 'progress', 'ratechange',
-        'scroll', 'seeked', 'seeking', 'select', 'stalled', 'suspend',
+        'gotpointercapture', 'load', 'loadeddata', 'loadedmetadata', 'loadstart', 'lostpointercapture',
+        'mouseenter', 'mouseleave', 'pause', 'play', 'playing', 'pointerenter', 'pointerleave',
+        'progress', 'ratechange', 'scroll', 'seeked', 'seeking', 'select', 'stalled', 'suspend',
         'timeupdate', 'volumechange', 'waiting'
     ];
 
