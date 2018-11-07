@@ -39,7 +39,7 @@ describe('domEvents', () => {
             expect(spy3.called).to.be.ok();
         });
 
-        it('should properly call handler with SyntheticEvent object', () => {
+        it('should properly call handler with Event object', () => {
             const spy = sinon.spy();
 
             mountSync(
@@ -50,8 +50,8 @@ describe('domEvents', () => {
 
             const [[e]] = spy.args;
 
+            expect(e instanceof Event).to.be.ok();
             expect(e.type).to.be.equal('click');
-            expect(e.nativeEvent.type).to.be.equal('click');
         });
 
         it('should properly stop propagation', () => {
@@ -66,6 +66,7 @@ describe('domEvents', () => {
                         id : 'id1',
                         onClick(e) {
                             e.stopPropagation();
+                            e.cancelBubble = true; // emulate browser behaviour
                         }
                     })
                 ));
@@ -190,7 +191,7 @@ describe('domEvents', () => {
             expect(spy3.called).not.to.be.ok();
         });
 
-        it('should properly call handler with SyntheticEvent object', () => {
+        it('should properly call handler with Event object', () => {
             const spy = sinon.spy();
 
             mountSync(
@@ -201,6 +202,7 @@ describe('domEvents', () => {
 
             const [[e]] = spy.args;
 
+            expect(e instanceof Event).to.be.ok();
             expect(e.type).to.be.equal('scroll');
         });
 
@@ -236,39 +238,6 @@ describe('domEvents', () => {
 
             expect(spy1.called).not.to.be.ok();
             expect(spy2.called).to.be.ok();
-        });
-
-        it('should properly reuse SyntheticEvent object', () => {
-            const spy = sinon.spy();
-
-            mountSync(
-                domNode,
-                h('div', { id : 'id1', onClick : spy }, h('div', { id : 'id2', onClick : spy })));
-
-            simulate.click(document.getElementById('id1'));
-            simulate.click(document.getElementById('id2'));
-
-            expect(spy.args[0][0]).to.equal(spy.args[1][0]);
-            expect(spy.args[1][0].target).to.equal(document.getElementById('id2'));
-        });
-
-        it('shouldn\'t reuse persisted SyntheticEvent object', () => {
-            const spy = sinon.spy();
-
-            mountSync(
-                domNode,
-                h('div', {
-                    id : 'id1',
-                    onClick(e) {
-                        e.persist();
-                        spy(e);
-                    }
-                }));
-
-            simulate.click(document.getElementById('id1'));
-            simulate.click(document.getElementById('id1'));
-
-            expect(spy.args[0][0]).not.to.equal(spy.args[1][0]);
         });
     });
 });

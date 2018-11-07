@@ -197,106 +197,86 @@ declare namespace vidom {
         ref?: Ref<T> | null;
     }
 
-    class SyntheticEvent<TTarget extends DOMElement = DOMElement, TNativeEvent extends Event = Event> {
-        readonly type: string;
-        readonly target: TTarget;
-        readonly nativeEvent: TNativeEvent;
-
-        stopPropagation(): void;
-        isPropagationStopped(): boolean;
-        preventDefault(): void;
-        isDefaultPrevented(): boolean;
-        persist(): void;
+    interface DOMEventHandler<TEvent extends Event = Event> {
+        (event: TEvent): void;
     }
 
-    type MouseSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, MouseEvent>;
-    type KeyboardSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, KeyboardEvent>;
-    type DragSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, DragEvent>;
-    type TouchSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, TouchEvent>;
-    type FocusSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, FocusEvent>;
-    type PointerSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, PointerEvent>;
-    type WheelSyntheticEvent<TTarget extends DOMElement = DOMElement> = SyntheticEvent<TTarget, WheelEvent>;
-
-    interface DOMEventHandler<TSyntheticEvent extends SyntheticEvent = SyntheticEvent> {
-        (event: TSyntheticEvent): void;
+    interface DOMAttributes {
+        onAnimationEnd?: DOMEventHandler;
+        onAnimationIteration?: DOMEventHandler;
+        onAnimationStart?: DOMEventHandler;
+        onBlur?: DOMEventHandler<FocusEvent>;
+        onCanPlay?: DOMEventHandler;
+        onCanPlayThrough?: DOMEventHandler;
+        onChange?: DOMEventHandler;
+        onClick?: DOMEventHandler<MouseEvent>;
+        onComplete?: DOMEventHandler;
+        onContextMenu?: DOMEventHandler;
+        onCopy?: DOMEventHandler;
+        onCut?: DOMEventHandler;
+        onDblClick?: DOMEventHandler<MouseEvent>;
+        onDrag?: DOMEventHandler<DragEvent>;
+        onDragEnd?: DOMEventHandler<DragEvent>;
+        onDragEnter?: DOMEventHandler<DragEvent>;
+        onDragLeave?: DOMEventHandler<DragEvent>;
+        onDragOver?: DOMEventHandler<DragEvent>;
+        onDragStart?: DOMEventHandler<DragEvent>;
+        onDrop?: DOMEventHandler<DragEvent>;
+        onDurationChange?: DOMEventHandler;
+        onEmptied?: DOMEventHandler;
+        onEnded?: DOMEventHandler;
+        onError?: DOMEventHandler;
+        onFocus?: DOMEventHandler<FocusEvent>;
+        onGotPointerCapture?: DOMEventHandler<PointerEvent>;
+        onInput?: DOMEventHandler;
+        onKeyDown?: DOMEventHandler<KeyboardEvent>;
+        onKeyPress?: DOMEventHandler<KeyboardEvent>;
+        onKeyUp?: DOMEventHandler<KeyboardEvent>;
+        onLoad?: DOMEventHandler;
+        onLoadedData?: DOMEventHandler;
+        onLoadedMetadata?: DOMEventHandler;
+        onLoadStart?: DOMEventHandler;
+        onLostPointerCapture?: DOMEventHandler<PointerEvent>;
+        onMouseDown?: DOMEventHandler<MouseEvent>;
+        onMouseEnter?: DOMEventHandler<MouseEvent>;
+        onMouseLeave?: DOMEventHandler<MouseEvent>;
+        onMouseMove?: DOMEventHandler<MouseEvent>;
+        onMouseOut?: DOMEventHandler<MouseEvent>;
+        onMouseOver?: DOMEventHandler<MouseEvent>;
+        onMouseUp?: DOMEventHandler<MouseEvent>;
+        onPaste?: DOMEventHandler;
+        onPause?: DOMEventHandler;
+        onPlay?: DOMEventHandler;
+        onPlaying?: DOMEventHandler;
+        onPointerCancel?: DOMEventHandler<PointerEvent>;
+        onPointerDown?: DOMEventHandler<PointerEvent>;
+        onPointerEnter?: DOMEventHandler<PointerEvent>;
+        onPointerLeave?: DOMEventHandler<PointerEvent>;
+        onPointerMove?: DOMEventHandler<PointerEvent>;
+        onPointerOut?: DOMEventHandler<PointerEvent>;
+        onPointerOver?: DOMEventHandler<PointerEvent>;
+        onPointerUp?: DOMEventHandler<PointerEvent>;
+        onProgress?: DOMEventHandler;
+        onRateChange?: DOMEventHandler;
+        onScroll?: DOMEventHandler;
+        onSeeked?: DOMEventHandler;
+        onSeeking?: DOMEventHandler;
+        onSelect?: DOMEventHandler;
+        onStalled?: DOMEventHandler;
+        onSubmit?: DOMEventHandler;
+        onSuspend?: DOMEventHandler;
+        onTimeUpdate?: DOMEventHandler;
+        onTouchCancel?: DOMEventHandler<TouchEvent>;
+        onTouchEnd?: DOMEventHandler<TouchEvent>;
+        onTouchMove?: DOMEventHandler<TouchEvent>;
+        onTouchStart?: DOMEventHandler<TouchEvent>;
+        onTransitionEnd?: DOMEventHandler;
+        onVolumeChange?: DOMEventHandler;
+        onWaiting?: DOMEventHandler;
+        onWheel?: DOMEventHandler<WheelEvent>;
     }
 
-    interface DOMAttributes<TDOMElement extends DOMElement = DOMElement> {
-        onAnimationEnd?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onAnimationIteration?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onAnimationStart?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onBlur?: DOMEventHandler<FocusSyntheticEvent<TDOMElement>>;
-        onCanPlay?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onCanPlayThrough?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onClick?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onComplete?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onContextMenu?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onCopy?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onCut?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onDblClick?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onDrag?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
-        onDragEnd?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
-        onDragEnter?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
-        onDragLeave?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
-        onDragOver?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
-        onDragStart?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
-        onDrop?: DOMEventHandler<DragSyntheticEvent<TDOMElement>>;
-        onDurationChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onEmptied?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onEnded?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onError?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onFocus?: DOMEventHandler<FocusSyntheticEvent<TDOMElement>>;
-        onGotPointerCapture?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onInput?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onKeyDown?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
-        onKeyPress?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
-        onKeyUp?: DOMEventHandler<KeyboardSyntheticEvent<TDOMElement>>;
-        onLoad?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onLoadedData?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onLoadedMetadata?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onLoadStart?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onLostPointerCapture?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onMouseDown?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onMouseEnter?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onMouseLeave?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onMouseMove?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onMouseOut?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onMouseOver?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onMouseUp?: DOMEventHandler<MouseSyntheticEvent<TDOMElement>>;
-        onPaste?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onPause?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onPlay?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onPlaying?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onPointerCancel?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onPointerDown?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onPointerEnter?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onPointerLeave?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onPointerMove?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onPointerOut?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onPointerOver?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onPointerUp?: DOMEventHandler<PointerEvent<TDOMElement>>;
-        onProgress?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onRateChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onScroll?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onSeeked?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onSeeking?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onSelect?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onStalled?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onSubmit?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onSuspend?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onTimeUpdate?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onTouchCancel?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
-        onTouchEnd?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
-        onTouchMove?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
-        onTouchStart?: DOMEventHandler<TouchSyntheticEvent<TDOMElement>>;
-        onTransitionEnd?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onVolumeChange?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onWaiting?: DOMEventHandler<SyntheticEvent<TDOMElement>>;
-        onWheel?: DOMEventHandler<WheelSyntheticEvent<TDOMElement>>;
-    }
-
-    interface HTMLAttributes<THTMLElement extends HTMLElement = HTMLElement> extends DOMAttributes<THTMLElement> {
+    interface HTMLAttributes extends DOMAttributes {
         accept?: string;
         acceptCharset?: string;
         accessKey?: string;
@@ -440,7 +420,7 @@ declare namespace vidom {
         unselectable?: boolean;
     }
 
-    interface SVGAttributes<TSVGElement extends SVGElement = SVGElement> extends DOMAttributes<TSVGElement> {
+    interface SVGAttributes extends DOMAttributes {
         class?: string;
         color?: string;
         height?: number | string;
@@ -805,9 +785,9 @@ declare global {
         interface IntrinsicAttributes extends vidom.WithKey {}
         interface IntrinsicClassAttributes extends vidom.WithKey, vidom.WithRef<vidom.Component> {}
         interface IntrinsicHMTLAttributes<THTMLElement extends HTMLElement = HTMLElement>
-            extends vidom.HTMLAttributes<THTMLElement>, vidom.WithRef<THTMLElement>, vidom.WithKey {}
+            extends vidom.HTMLAttributes, vidom.WithRef<THTMLElement>, vidom.WithKey {}
         interface IntrinsicSVGAttributes<TSVGElement extends SVGElement>
-            extends vidom.SVGAttributes<TSVGElement>, vidom.WithRef<TSVGElement>, vidom.WithKey {}
+            extends vidom.SVGAttributes, vidom.WithRef<TSVGElement>, vidom.WithKey {}
 
         interface IntrinsicElements {
             fragment: vidom.WithKey;

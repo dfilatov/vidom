@@ -1,4 +1,3 @@
-import createSyntheticEvent from './createSyntheticEvent';
 import getDomNodeId from '../getDomNodeId';
 import { isIos } from '../utils/ua';
 
@@ -37,8 +36,7 @@ function globalEventListener(e, type = e.type) {
     let { target } = e,
         { listenersCount } = eventsCfg[type],
         listener,
-        domNodeId,
-        syntheticEvent;
+        domNodeId;
 
     while(listenersCount && target && target !== document) { // need to check target for detached dom
         if(domNodeId = getDomNodeId(target, true)) {
@@ -46,8 +44,8 @@ function globalEventListener(e, type = e.type) {
                 listener = listenersStorage[domNodeId][type];
 
                 if(listener != null) {
-                    listener(syntheticEvent || (syntheticEvent = createSyntheticEvent(type, e)));
-                    if(--listenersCount === 0 || syntheticEvent.isPropagationStopped()) {
+                    listener(e);
+                    if(--listenersCount === 0 || e.cancelBubble) {
                         return;
                     }
                 }
@@ -60,7 +58,7 @@ function globalEventListener(e, type = e.type) {
 
 function eventListener(e) {
     if(areListenersEnabled) {
-        listenersStorage[getDomNodeId(e.currentTarget)][e.type](createSyntheticEvent(e.type, e));
+        listenersStorage[getDomNodeId(e.currentTarget)][e.type](e);
     }
 }
 
