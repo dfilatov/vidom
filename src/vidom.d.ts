@@ -277,133 +277,74 @@ declare namespace vidom {
     }
 
     interface HTMLAttributes extends DOMAttributes {
-        accept?: string;
-        acceptCharset?: string;
         accessKey?: string;
-        action?: string;
-        allowFullScreen?: boolean;
-        allowTransparency?: boolean;
-        alt?: string;
-        'aria-checked'?: string,
-        'aria-disabled'?: boolean,
-        'aria-hidden'?: boolean,
-        'aria-pressed'?: string,
-        async?: boolean;
-        autoComplete?: string;
-        autoFocus?: boolean;
-        autoPlay?: boolean;
-        capture?: boolean;
-        cellPadding?: number | string;
-        cellSpacing?: number | string;
-        charSet?: string;
-        challenge?: string;
-        checked?: boolean;
-        classID?: string;
+        'aria-activedescendant'?: string;
+        'aria-atomic'?: boolean | 'false' | 'true';
+        'aria-autocomplete'?: 'none' | 'inline' | 'list' | 'both';
+        'aria-busy'?: boolean | 'false' | 'true';
+        'aria-checked'?: boolean | 'false' | 'mixed' | 'true';
+        'aria-colcount'?: number;
+        'aria-colindex'?: number;
+        'aria-colspan'?: number;
+        'aria-controls'?: string;
+        'aria-current'?: boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time';
+        'aria-describedby'?: string;
+        'aria-details'?: string;
+        'aria-disabled'?: boolean | 'false' | 'true';
+        'aria-dropeffect'?: 'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup';
+        'aria-errormessage'?: string;
+        'aria-expanded'?: boolean | 'false' | 'true';
+        'aria-flowto'?: string;
+        'aria-grabbed'?: boolean | 'false' | 'true';
+        'aria-haspopup'?: boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog';
+        'aria-hidden'?: boolean | 'false' | 'true';
+        'aria-invalid'?: boolean | 'false' | 'true' | 'grammar' | 'spelling';
+        'aria-keyshortcuts'?: string;
+        'aria-label'?: string;
+        'aria-labelledby'?: string;
+        'aria-level'?: number;
+        'aria-live'?: 'off' | 'assertive' | 'polite';
+        'aria-modal'?: boolean | 'false' | 'true';
+        'aria-multiline'?: boolean | 'false' | 'true';
+        'aria-multiselectable'?: boolean | 'false' | 'true';
+        'aria-orientation'?: 'horizontal' | 'vertical';
+        'aria-owns'?: string;
+        'aria-placeholder'?: string;
+        'aria-posinset'?: number;
+        'aria-pressed'?: boolean | 'false' | 'mixed' | 'true';
+        'aria-readonly'?: boolean | 'false' | 'true';
+        'aria-relevant'?: 'additions' | 'additions text' | 'all' | 'removals' | 'text';
+        'aria-required'?: boolean | 'false' | 'true';
+        'aria-roledescription'?: string;
+        'aria-rowcount'?: number;
+        'aria-rowindex'?: number;
+        'aria-rowspan'?: number;
+        'aria-selected'?: boolean | 'false' | 'true';
+        'aria-setsize'?: number;
+        'aria-sort'?: 'none' | 'ascending' | 'descending' | 'other';
+        'aria-valuemax'?: number;
+        'aria-valuemin'?: number;
+        'aria-valuenow'?: number;
+        'aria-valuetext'?: string;
         class?: string;
-        cols?: number;
-        colSpan?: number;
-        content?: string;
         contentEditable?: boolean;
         contextMenu?: string;
-        controls?: boolean;
-        coords?: string;
-        crossOrigin?: string;
-        data?: string;
-        dateTime?: string;
-        default?: boolean;
-        defer?: boolean;
         dir?: string;
-        disabled?: boolean;
-        download?: any;
         draggable?: boolean;
-        encType?: string;
-        for?: string;
-        form?: string;
-        formAction?: string;
-        formEncType?: string;
-        formMethod?: string;
-        formNoValidate?: boolean;
-        formTarget?: string;
-        frameBorder?: number | string;
-        headers?: string;
-        height?: number | string;
         hidden?: boolean;
-        high?: number;
-        href?: string;
-        hrefLang?: string;
         html?: string,
-        httpEquiv?: string;
         id?: string;
         inputMode?: string;
-        integrity?: string;
         is?: string;
-        keyParams?: string;
-        keyType?: string;
-        kind?: string;
-        label?: string;
         lang?: string;
-        list?: string;
-        loop?: boolean;
-        low?: number;
-        manifest?: string;
-        marginHeight?: number;
-        marginWidth?: number;
-        max?: number | string;
-        maxLength?: number;
-        media?: string;
-        mediaGroup?: string;
-        method?: string;
-        min?: number | string;
-        minLength?: number;
-        multiple?: boolean;
-        muted?: boolean;
-        name?: string;
-        nonce?: string;
-        noValidate?: boolean;
-        open?: boolean;
-        optimum?: number;
-        pattern?: string;
         placeholder?: string;
-        playsInline?: boolean;
-        poster?: string;
-        preload?: string;
         radioGroup?: string;
-        readOnly?: boolean;
-        rel?: string;
-        required?: boolean;
-        reversed?: boolean;
         role?: string;
-        rows?: number;
-        rowSpan?: number;
-        sandbox?: string;
-        scope?: string;
-        scoped?: boolean;
-        scrolling?: string;
-        seamless?: boolean;
-        selected?: boolean;
-        shape?: string;
-        size?: number;
-        sizes?: string;
         slot?: string;
-        span?: number;
         spellCheck?: boolean;
-        src?: string;
-        srcDoc?: string;
-        srcLang?: string;
-        srcSet?: string;
-        start?: number;
-        step?: number | string;
         style?: MapLike<string | number | null>;
-        summary?: string;
         tabIndex?: number;
-        target?: string;
         title?: string;
-        type?: string;
-        useMap?: string;
-        value?: string | string[] | number;
-        width?: number | string;
-        wmode?: string;
-        wrap?: string;
 
         // Non-standard attributes
         autoCapitalize?: string;
@@ -417,7 +358,391 @@ declare namespace vidom {
         itemRef?: string;
         results?: number;
         security?: string;
-        unselectable?: boolean;
+        unselectable?: 'on' | 'off';
+    }
+
+    interface AnchorHTMLAttributes extends HTMLAttributes {
+        download?: any;
+        href?: string;
+        hrefLang?: string;
+        media?: string;
+        rel?: string;
+        target?: string;
+        type?: string;
+    }
+
+    interface AreaHTMLAttributes extends HTMLAttributes {
+        alt?: string;
+        coords?: string;
+        download?: any;
+        href?: string;
+        hrefLang?: string;
+        media?: string;
+        rel?: string;
+        shape?: string;
+        target?: string;
+    }
+
+    interface BaseHTMLAttributes extends HTMLAttributes {
+        href?: string;
+        target?: string;
+    }
+
+    interface BlockquoteHTMLAttributes extends HTMLAttributes {
+        cite?: string;
+    }
+
+    interface ButtonHTMLAttributes extends HTMLAttributes {
+        autoFocus?: boolean;
+        disabled?: boolean;
+        form?: string;
+        formAction?: string;
+        formEncType?: string;
+        formMethod?: string;
+        formNoValidate?: boolean;
+        formTarget?: string;
+        name?: string;
+        type?: string;
+        value?: string | string[] | number;
+    }
+
+    interface CanvasHTMLAttributes extends HTMLAttributes {
+        height?: number | string;
+        width?: number | string;
+    }
+
+    interface ColHTMLAttributes extends HTMLAttributes {
+        span?: number;
+        width?: number | string;
+    }
+
+    interface ColgroupHTMLAttributes extends HTMLAttributes {
+        span?: number;
+    }
+
+    interface DetailsHTMLAttributes extends HTMLAttributes {
+        open?: boolean;
+    }
+
+    interface DelHTMLAttributes extends HTMLAttributes {
+        cite?: string;
+        dateTime?: string;
+    }
+
+    interface DialogHTMLAttributes extends HTMLAttributes {
+        open?: boolean;
+    }
+
+    interface EmbedHTMLAttributes extends HTMLAttributes {
+        height?: number | string;
+        src?: string;
+        type?: string;
+        width?: number | string;
+    }
+
+    interface FieldsetHTMLAttributes extends HTMLAttributes {
+        disabled?: boolean;
+        form?: string;
+        name?: string;
+    }
+
+    interface FormHTMLAttributes extends HTMLAttributes {
+        acceptCharset?: string;
+        action?: string;
+        autoComplete?: string;
+        encType?: string;
+        method?: string;
+        name?: string;
+        noValidate?: boolean;
+        target?: string;
+    }
+
+    interface HtmlHTMLAttributes extends HTMLAttributes {
+        manifest?: string;
+    }
+
+    interface IframeHTMLAttributes extends HTMLAttributes {
+        allow?: string;
+        allowFullScreen?: boolean;
+        allowTransparency?: boolean;
+        frameBorder?: number | string;
+        height?: number | string;
+        marginHeight?: number;
+        marginWidth?: number;
+        name?: string;
+        sandbox?: string;
+        scrolling?: string;
+        seamless?: boolean;
+        src?: string;
+        srcDoc?: string;
+        width?: number | string;
+    }
+
+    interface ImgHTMLAttributes extends HTMLAttributes {
+        alt?: string;
+        crossOrigin?: 'anonymous' | 'use-credentials' | '';
+        decoding?: 'async' | 'auto' | 'sync';
+        height?: number | string;
+        sizes?: string;
+        src?: string;
+        srcSet?: string;
+        useMap?: string;
+        width?: number | string;
+    }
+
+    interface InsHTMLAttributes extends HTMLAttributes {
+        cite?: string;
+        dateTime?: string;
+    }
+
+    interface InputHTMLAttributes extends HTMLAttributes {
+        accept?: string;
+        alt?: string;
+        autoComplete?: string;
+        autoFocus?: boolean;
+        capture?: boolean | string;
+        checked?: boolean;
+        crossOrigin?: string;
+        disabled?: boolean;
+        form?: string;
+        formAction?: string;
+        formEncType?: string;
+        formMethod?: string;
+        formNoValidate?: boolean;
+        formTarget?: string;
+        height?: number | string;
+        list?: string;
+        max?: number | string;
+        maxLength?: number;
+        min?: number | string;
+        minLength?: number;
+        multiple?: boolean;
+        name?: string;
+        pattern?: string;
+        readOnly?: boolean;
+        required?: boolean;
+        size?: number;
+        src?: string;
+        step?: number | string;
+        type?: string;
+        value?: string | string[] | number;
+        width?: number | string;
+    }
+
+    interface KeygenHTMLAttributes extends HTMLAttributes {
+        autoFocus?: boolean;
+        challenge?: string;
+        disabled?: boolean;
+        form?: string;
+        keyType?: string;
+        keyParams?: string;
+        name?: string;
+    }
+
+    interface LabelHTMLAttributes extends HTMLAttributes {
+        form?: string;
+        for?: string;
+    }
+
+    interface LiHTMLAttributes extends HTMLAttributes {
+        value?: string | string[] | number;
+    }
+
+    interface LinkHTMLAttributes extends HTMLAttributes {
+        as?: string;
+        crossOrigin?: string;
+        href?: string;
+        hrefLang?: string;
+        integrity?: string;
+        media?: string;
+        rel?: string;
+        sizes?: string;
+        type?: string;
+    }
+
+    interface MapHTMLAttributes extends HTMLAttributes {
+        name?: string;
+    }
+
+    interface MenuHTMLAttributes extends HTMLAttributes {
+        type?: string;
+    }
+
+    interface MediaHTMLAttributes extends HTMLAttributes {
+        autoPlay?: boolean;
+        controls?: boolean;
+        controlsList?: string;
+        crossOrigin?: string;
+        loop?: boolean;
+        mediaGroup?: string;
+        muted?: boolean;
+        playsinline?: boolean;
+        preload?: string;
+        src?: string;
+    }
+
+    interface MetaHTMLAttributes extends HTMLAttributes {
+        charSet?: string;
+        content?: string;
+        httpEquiv?: string;
+        name?: string;
+    }
+
+    interface MeterHTMLAttributes extends HTMLAttributes {
+        form?: string;
+        high?: number;
+        low?: number;
+        max?: number | string;
+        min?: number | string;
+        optimum?: number;
+        value?: string | string[] | number;
+    }
+
+    interface QuoteHTMLAttributes extends HTMLAttributes {
+        cite?: string;
+    }
+
+    interface ObjectHTMLAttributes extends HTMLAttributes {
+        classID?: string;
+        data?: string;
+        form?: string;
+        height?: number | string;
+        name?: string;
+        type?: string;
+        useMap?: string;
+        width?: number | string;
+        wmode?: string;
+    }
+
+    interface OlHTMLAttributes extends HTMLAttributes {
+        reversed?: boolean;
+        start?: number;
+        type?: '1' | 'a' | 'A' | 'i' | 'I';
+    }
+
+    interface OptgroupHTMLAttributes extends HTMLAttributes {
+        disabled?: boolean;
+        label?: string;
+    }
+
+    interface OptionHTMLAttributes extends HTMLAttributes {
+        disabled?: boolean;
+        label?: string;
+        selected?: boolean;
+        value?: string | string[] | number;
+    }
+
+    interface OutputHTMLAttributes extends HTMLAttributes {
+        form?: string;
+        for?: string;
+        name?: string;
+    }
+
+    interface ParamHTMLAttributes extends HTMLAttributes {
+        name?: string;
+        value?: string | string[] | number;
+    }
+
+    interface ProgressHTMLAttributes extends HTMLAttributes {
+        max?: number | string;
+        value?: string | string[] | number;
+    }
+
+    interface ScriptHTMLAttributes extends HTMLAttributes {
+        async?: boolean;
+        charSet?: string;
+        crossOrigin?: string;
+        defer?: boolean;
+        integrity?: string;
+        noModule?: boolean;
+        nonce?: string;
+        src?: string;
+        type?: string;
+    }
+
+    interface SelectHTMLAttributes extends HTMLAttributes {
+        autoComplete?: string;
+        autoFocus?: boolean;
+        disabled?: boolean;
+        form?: string;
+        multiple?: boolean;
+        name?: string;
+        required?: boolean;
+        size?: number;
+        value?: string | string[] | number;
+    }
+
+    interface SourceHTMLAttributes extends HTMLAttributes {
+        media?: string;
+        sizes?: string;
+        src?: string;
+        srcSet?: string;
+        type?: string;
+    }
+
+    interface StyleHTMLAttributes extends HTMLAttributes {
+        media?: string;
+        nonce?: string;
+        scoped?: boolean;
+        type?: string;
+    }
+
+    interface TableHTMLAttributes extends HTMLAttributes {
+        cellPadding?: number | string;
+        cellSpacing?: number | string;
+        summary?: string;
+    }
+
+    interface TextareaHTMLAttributes extends HTMLAttributes {
+        autoComplete?: string;
+        autoFocus?: boolean;
+        cols?: number;
+        dirName?: string;
+        disabled?: boolean;
+        form?: string;
+        maxLength?: number;
+        minLength?: number;
+        name?: string;
+        placeholder?: string;
+        readOnly?: boolean;
+        required?: boolean;
+        rows?: number;
+        value?: string | string[] | number;
+        wrap?: string;
+    }
+
+    interface TdHTMLAttributes extends HTMLAttributes {
+        align?: 'left' | 'center' | 'right' | 'justify' | 'char';
+        colSpan?: number;
+        headers?: string;
+        rowSpan?: number;
+        scope?: string;
+    }
+
+    interface ThHTMLAttributes extends HTMLAttributes {
+        align?: 'left' | 'center' | 'right' | 'justify' | 'char';
+        colSpan?: number;
+        headers?: string;
+        rowSpan?: number;
+        scope?: string;
+    }
+
+    interface TimeHTMLAttributes extends HTMLAttributes {
+        dateTime?: string;
+    }
+
+    interface TrackHTMLAttributes extends HTMLAttributes {
+        default?: boolean;
+        kind?: string;
+        label?: string;
+        src?: string;
+        srcLang?: string;
+    }
+
+    interface VideoHTMLAttributes extends MediaHTMLAttributes {
+        height?: number | string;
+        poster?: string;
+        width?: number | string;
     }
 
     interface SVGAttributes extends DOMAttributes {
@@ -784,8 +1109,10 @@ declare global {
 
         interface IntrinsicAttributes extends vidom.WithKey {}
         interface IntrinsicClassAttributes extends vidom.WithKey, vidom.WithRef<vidom.Component> {}
-        interface IntrinsicHMTLAttributes<THTMLElement extends HTMLElement = HTMLElement>
-            extends vidom.HTMLAttributes, vidom.WithRef<THTMLElement>, vidom.WithKey {}
+        type IntrinsicHTMLAttributes<
+            THTMLAttributes extends vidom.HTMLAttributes = vidom.HTMLAttributes,
+            THTMLElement extends HTMLElement = HTMLElement
+        > = THTMLAttributes & vidom.HTMLAttributes & vidom.WithRef<THTMLElement> & vidom.WithKey;
         interface IntrinsicSVGAttributes<TSVGElement extends SVGElement>
             extends vidom.SVGAttributes, vidom.WithRef<TSVGElement>, vidom.WithKey {}
 
@@ -793,123 +1120,123 @@ declare global {
             fragment: vidom.WithKey;
             plaintext: vidom.WithKey;
 
-            a: IntrinsicHMTLAttributes<HTMLAnchorElement>;
-            abbr: IntrinsicHMTLAttributes;
-            address: IntrinsicHMTLAttributes;
-            area: IntrinsicHMTLAttributes<HTMLAreaElement>;
-            article: IntrinsicHMTLAttributes;
-            aside: IntrinsicHMTLAttributes;
-            audio: IntrinsicHMTLAttributes<HTMLAudioElement>;
-            b: IntrinsicHMTLAttributes;
-            base: IntrinsicHMTLAttributes<HTMLBaseElement>;
-            bdi: IntrinsicHMTLAttributes;
-            bdo: IntrinsicHMTLAttributes;
-            big: IntrinsicHMTLAttributes;
-            blockquote: IntrinsicHMTLAttributes;
-            body: IntrinsicHMTLAttributes<HTMLBodyElement>;
-            br: IntrinsicHMTLAttributes<HTMLBRElement>;
-            button: IntrinsicHMTLAttributes<HTMLButtonElement>;
-            canvas: IntrinsicHMTLAttributes<HTMLCanvasElement>;
-            caption: IntrinsicHMTLAttributes;
-            cite: IntrinsicHMTLAttributes;
-            code: IntrinsicHMTLAttributes;
-            col: IntrinsicHMTLAttributes<HTMLTableColElement>;
-            colgroup: IntrinsicHMTLAttributes<HTMLTableColElement>;
-            data: IntrinsicHMTLAttributes;
-            datalist: IntrinsicHMTLAttributes<HTMLDataListElement>;
-            dd: IntrinsicHMTLAttributes;
-            del: IntrinsicHMTLAttributes;
-            details: IntrinsicHMTLAttributes;
-            dfn: IntrinsicHMTLAttributes;
-            dialog: IntrinsicHMTLAttributes;
-            div: IntrinsicHMTLAttributes<HTMLDivElement>;
-            dl: IntrinsicHMTLAttributes<HTMLDListElement>;
-            dt: IntrinsicHMTLAttributes;
-            em: IntrinsicHMTLAttributes;
-            embed: IntrinsicHMTLAttributes<HTMLEmbedElement>;
-            fieldset: IntrinsicHMTLAttributes<HTMLFieldSetElement>;
-            figcaption: IntrinsicHMTLAttributes;
-            figure: IntrinsicHMTLAttributes;
-            footer: IntrinsicHMTLAttributes;
-            form: IntrinsicHMTLAttributes<HTMLFormElement>;
-            h1: IntrinsicHMTLAttributes<HTMLHeadingElement>;
-            h2: IntrinsicHMTLAttributes<HTMLHeadingElement>;
-            h3: IntrinsicHMTLAttributes<HTMLHeadingElement>;
-            h4: IntrinsicHMTLAttributes<HTMLHeadingElement>;
-            h5: IntrinsicHMTLAttributes<HTMLHeadingElement>;
-            h6: IntrinsicHMTLAttributes<HTMLHeadingElement>;
-            head: IntrinsicHMTLAttributes<HTMLHeadElement>;
-            header: IntrinsicHMTLAttributes;
-            hgroup: IntrinsicHMTLAttributes;
-            hr: IntrinsicHMTLAttributes<HTMLHRElement>;
-            html: IntrinsicHMTLAttributes<HTMLHtmlElement>;
-            i: IntrinsicHMTLAttributes;
-            iframe: IntrinsicHMTLAttributes<HTMLIFrameElement>;
-            img: IntrinsicHMTLAttributes<HTMLImageElement>;
-            input: IntrinsicHMTLAttributes<HTMLInputElement>;
-            ins: IntrinsicHMTLAttributes<HTMLModElement>;
-            kbd: IntrinsicHMTLAttributes;
-            keygen: IntrinsicHMTLAttributes;
-            label: IntrinsicHMTLAttributes<HTMLLabelElement>;
-            legend: IntrinsicHMTLAttributes<HTMLLegendElement>;
-            li: IntrinsicHMTLAttributes<HTMLLIElement>;
-            link: IntrinsicHMTLAttributes<HTMLLinkElement>;
-            main: IntrinsicHMTLAttributes;
-            map: IntrinsicHMTLAttributes<HTMLMapElement>;
-            mark: IntrinsicHMTLAttributes;
-            menu: IntrinsicHMTLAttributes;
-            menuitem: IntrinsicHMTLAttributes;
-            meta: IntrinsicHMTLAttributes<HTMLMetaElement>;
-            meter: IntrinsicHMTLAttributes;
-            nav: IntrinsicHMTLAttributes;
-            noindex: IntrinsicHMTLAttributes;
-            noscript: IntrinsicHMTLAttributes;
-            object: IntrinsicHMTLAttributes<HTMLObjectElement>;
-            ol: IntrinsicHMTLAttributes<HTMLOListElement>;
-            optgroup: IntrinsicHMTLAttributes<HTMLOptGroupElement>;
-            option: IntrinsicHMTLAttributes<HTMLOptionElement>;
-            output: IntrinsicHMTLAttributes;
-            p: IntrinsicHMTLAttributes<HTMLParagraphElement>;
-            param: IntrinsicHMTLAttributes<HTMLParamElement>;
-            picture: IntrinsicHMTLAttributes;
-            pre: IntrinsicHMTLAttributes<HTMLPreElement>;
-            progress: IntrinsicHMTLAttributes<HTMLProgressElement>;
-            q: IntrinsicHMTLAttributes<HTMLQuoteElement>;
-            rp: IntrinsicHMTLAttributes;
-            rt: IntrinsicHMTLAttributes;
-            ruby: IntrinsicHMTLAttributes;
-            s: IntrinsicHMTLAttributes;
-            samp: IntrinsicHMTLAttributes;
-            script: IntrinsicHMTLAttributes;
-            section: IntrinsicHMTLAttributes;
-            select: IntrinsicHMTLAttributes<HTMLSelectElement>;
-            small: IntrinsicHMTLAttributes;
-            source: IntrinsicHMTLAttributes<HTMLSourceElement>;
-            span: IntrinsicHMTLAttributes<HTMLSpanElement>;
-            strong: IntrinsicHMTLAttributes;
-            style: IntrinsicHMTLAttributes<HTMLStyleElement>;
-            sub: IntrinsicHMTLAttributes;
-            summary: IntrinsicHMTLAttributes;
-            sup: IntrinsicHMTLAttributes;
-            table: IntrinsicHMTLAttributes<HTMLTableElement>;
-            tbody: IntrinsicHMTLAttributes<HTMLTableSectionElement>;
-            td: IntrinsicHMTLAttributes<HTMLTableDataCellElement>;
-            textarea: IntrinsicHMTLAttributes<HTMLTextAreaElement>;
-            tfoot: IntrinsicHMTLAttributes<HTMLTableSectionElement>;
-            th: IntrinsicHMTLAttributes<HTMLTableHeaderCellElement>;
-            thead: IntrinsicHMTLAttributes<HTMLTableSectionElement>;
-            time: IntrinsicHMTLAttributes;
-            title: IntrinsicHMTLAttributes<HTMLTitleElement>;
-            tr: IntrinsicHMTLAttributes<HTMLTableRowElement>;
-            track: IntrinsicHMTLAttributes<HTMLTrackElement>;
-            u: IntrinsicHMTLAttributes;
-            ul: IntrinsicHMTLAttributes<HTMLUListElement>;
-            'var': IntrinsicHMTLAttributes;
-            video: IntrinsicHMTLAttributes<HTMLVideoElement>;
-            wbr: IntrinsicHMTLAttributes;
+            a: IntrinsicHTMLAttributes<vidom.AnchorHTMLAttributes, HTMLAnchorElement>;
+            abbr: IntrinsicHTMLAttributes;
+            address: IntrinsicHTMLAttributes;
+            area: IntrinsicHTMLAttributes<vidom.AreaHTMLAttributes, HTMLAreaElement>;
+            article: IntrinsicHTMLAttributes;
+            aside: IntrinsicHTMLAttributes;
+            audio: IntrinsicHTMLAttributes<vidom.MediaHTMLAttributes, HTMLAudioElement>;
+            b: IntrinsicHTMLAttributes;
+            base: IntrinsicHTMLAttributes<vidom.BaseHTMLAttributes, HTMLBaseElement>;
+            bdi: IntrinsicHTMLAttributes;
+            bdo: IntrinsicHTMLAttributes;
+            big: IntrinsicHTMLAttributes;
+            blockquote: IntrinsicHTMLAttributes<vidom.BlockquoteHTMLAttributes>;
+            body: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLBodyElement>;
+            br: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLBRElement>;
+            button: IntrinsicHTMLAttributes<vidom.ButtonHTMLAttributes, HTMLButtonElement>;
+            canvas: IntrinsicHTMLAttributes<vidom.CanvasHTMLAttributes, HTMLCanvasElement>;
+            caption: IntrinsicHTMLAttributes;
+            cite: IntrinsicHTMLAttributes;
+            code: IntrinsicHTMLAttributes;
+            col: IntrinsicHTMLAttributes<vidom.ColHTMLAttributes, HTMLTableColElement>;
+            colgroup: IntrinsicHTMLAttributes<vidom.ColgroupHTMLAttributes, HTMLTableColElement>;
+            data: IntrinsicHTMLAttributes;
+            datalist: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLDataListElement>;
+            dd: IntrinsicHTMLAttributes;
+            del: IntrinsicHTMLAttributes<vidom.DelHTMLAttributes>;
+            details: IntrinsicHTMLAttributes<vidom.DetailsHTMLAttributes>;
+            dfn: IntrinsicHTMLAttributes;
+            dialog: IntrinsicHTMLAttributes<vidom.DialogHTMLAttributes, HTMLDialogElement>;
+            div: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLDivElement>;
+            dl: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLDListElement>;
+            dt: IntrinsicHTMLAttributes;
+            em: IntrinsicHTMLAttributes;
+            embed: IntrinsicHTMLAttributes<vidom.EmbedHTMLAttributes, HTMLEmbedElement>;
+            fieldset: IntrinsicHTMLAttributes<vidom.FieldsetHTMLAttributes, HTMLFieldSetElement>;
+            figcaption: IntrinsicHTMLAttributes;
+            figure: IntrinsicHTMLAttributes;
+            footer: IntrinsicHTMLAttributes;
+            form: IntrinsicHTMLAttributes<vidom.FormHTMLAttributes, HTMLFormElement>;
+            h1: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHeadingElement>;
+            h2: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHeadingElement>;
+            h3: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHeadingElement>;
+            h4: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHeadingElement>;
+            h5: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHeadingElement>;
+            h6: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHeadingElement>;
+            head: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHeadElement>;
+            header: IntrinsicHTMLAttributes;
+            hgroup: IntrinsicHTMLAttributes;
+            hr: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLHRElement>;
+            html: IntrinsicHTMLAttributes<vidom.HtmlHTMLAttributes, HTMLHtmlElement>;
+            i: IntrinsicHTMLAttributes;
+            iframe: IntrinsicHTMLAttributes<vidom.IframeHTMLAttributes, HTMLIFrameElement>;
+            img: IntrinsicHTMLAttributes<vidom.ImgHTMLAttributes, HTMLImageElement>;
+            input: IntrinsicHTMLAttributes<vidom.InputHTMLAttributes, HTMLInputElement>;
+            ins: IntrinsicHTMLAttributes<vidom.InsHTMLAttributes, HTMLModElement>;
+            kbd: IntrinsicHTMLAttributes;
+            keygen: IntrinsicHTMLAttributes<vidom.KeygenHTMLAttributes>;
+            label: IntrinsicHTMLAttributes<vidom.LabelHTMLAttributes, HTMLLabelElement>;
+            legend: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLLegendElement>;
+            li: IntrinsicHTMLAttributes<vidom.LiHTMLAttributes, HTMLLIElement>;
+            link: IntrinsicHTMLAttributes<vidom.LinkHTMLAttributes, HTMLLinkElement>;
+            main: IntrinsicHTMLAttributes;
+            map: IntrinsicHTMLAttributes<vidom.MapHTMLAttributes, HTMLMapElement>;
+            mark: IntrinsicHTMLAttributes;
+            menu: IntrinsicHTMLAttributes<vidom.MenuHTMLAttributes>;
+            menuitem: IntrinsicHTMLAttributes;
+            meta: IntrinsicHTMLAttributes<vidom.MetaHTMLAttributes, HTMLMetaElement>;
+            meter: IntrinsicHTMLAttributes<vidom.MeterHTMLAttributes>;
+            nav: IntrinsicHTMLAttributes;
+            noindex: IntrinsicHTMLAttributes;
+            noscript: IntrinsicHTMLAttributes;
+            object: IntrinsicHTMLAttributes<vidom.ObjectHTMLAttributes, HTMLObjectElement>;
+            ol: IntrinsicHTMLAttributes<vidom.OlHTMLAttributes, HTMLOListElement>;
+            optgroup: IntrinsicHTMLAttributes<vidom.OptgroupHTMLAttributes, HTMLOptGroupElement>;
+            option: IntrinsicHTMLAttributes<vidom.OptionHTMLAttributes, HTMLOptionElement>;
+            output: IntrinsicHTMLAttributes<vidom.HTMLAttributes>;
+            p: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLParagraphElement>;
+            param: IntrinsicHTMLAttributes<vidom.ParamHTMLAttributes, HTMLParamElement>;
+            picture: IntrinsicHTMLAttributes;
+            pre: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLPreElement>;
+            progress: IntrinsicHTMLAttributes<vidom.ProgressHTMLAttributes, HTMLProgressElement>;
+            q: IntrinsicHTMLAttributes<vidom.QuoteHTMLAttributes, HTMLQuoteElement>;
+            rp: IntrinsicHTMLAttributes;
+            rt: IntrinsicHTMLAttributes;
+            ruby: IntrinsicHTMLAttributes;
+            s: IntrinsicHTMLAttributes;
+            samp: IntrinsicHTMLAttributes;
+            script: IntrinsicHTMLAttributes<vidom.ScriptHTMLAttributes, HTMLScriptElement>;
+            section: IntrinsicHTMLAttributes;
+            select: IntrinsicHTMLAttributes<vidom.SelectHTMLAttributes, HTMLSelectElement>;
+            small: IntrinsicHTMLAttributes;
+            source: IntrinsicHTMLAttributes<vidom.SourceHTMLAttributes, HTMLSourceElement>;
+            span: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLSpanElement>;
+            strong: IntrinsicHTMLAttributes;
+            style: IntrinsicHTMLAttributes<vidom.StyleHTMLAttributes, HTMLStyleElement>;
+            sub: IntrinsicHTMLAttributes;
+            summary: IntrinsicHTMLAttributes;
+            sup: IntrinsicHTMLAttributes;
+            table: IntrinsicHTMLAttributes<vidom.TableHTMLAttributes, HTMLTableElement>;
+            tbody: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLTableSectionElement>;
+            td: IntrinsicHTMLAttributes<vidom.TdHTMLAttributes, HTMLTableDataCellElement>;
+            textarea: IntrinsicHTMLAttributes<vidom.TextareaHTMLAttributes, HTMLTextAreaElement>;
+            tfoot: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLTableSectionElement>;
+            th: IntrinsicHTMLAttributes<vidom.ThHTMLAttributes, HTMLTableHeaderCellElement>;
+            thead: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLTableSectionElement>;
+            time: IntrinsicHTMLAttributes<vidom.TimeHTMLAttributes>;
+            title: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLTitleElement>;
+            tr: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLTableRowElement>;
+            track: IntrinsicHTMLAttributes<vidom.TrackHTMLAttributes, HTMLTrackElement>;
+            u: IntrinsicHTMLAttributes;
+            ul: IntrinsicHTMLAttributes<vidom.HTMLAttributes, HTMLUListElement>;
+            'var': IntrinsicHTMLAttributes;
+            video: IntrinsicHTMLAttributes<vidom.VideoHTMLAttributes, HTMLVideoElement>;
+            wbr: IntrinsicHTMLAttributes;
 
             // SVG
-            svg: IntrinsicSVGAttributes<SVGSVGElement> & { ns: string; };
+            svg: IntrinsicSVGAttributes<SVGSVGElement>;
 
             animate: IntrinsicSVGAttributes<SVGElement>;
             circle: IntrinsicSVGAttributes<SVGCircleElement>;
