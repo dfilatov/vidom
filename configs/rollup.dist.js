@@ -1,6 +1,6 @@
 import baseConfig from './rollup.base';
 import replace from 'rollup-plugin-replace';
-import uglify from 'rollup-plugin-uglify';
+import { terser } from "rollup-plugin-terser";
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -18,7 +18,7 @@ export default Object.assign(
                 replace({
                     'process.env.NODE_ENV': '\'production\''
                 }),
-                uglify()
+                terser()
             ] :
             [
                 replace({

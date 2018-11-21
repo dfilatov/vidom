@@ -1,4 +1,5 @@
 module.exports = {
+    mode : 'development',
     entry : __dirname + '/demo.js',
     output : {
         path : __dirname + '/demo',
@@ -6,7 +7,7 @@ module.exports = {
         publicPath : '/demo/'
     },
     module : {
-        loaders: [
+        rules : [
             { test : /\.js$/, loader : 'babel-loader' }
         ]
     },

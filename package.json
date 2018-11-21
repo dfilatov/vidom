@@ -26,12 +26,12 @@
     "@babel/cli": "7.1.5",
     "@babel/core": "7.1.6",
     "@babel/preset-env": "7.1.6",
-    "babel-loader": "7.1.2",
+    "babel-loader": "8.0.4",
     "babel-plugin-vidom-jsx": "0.6.1",
     "babelify": "10.0.0",
     "browserify": "16.2.3",
-    "codemirror": "5.23.0",
-    "css-loader": "0.26.1",
+    "codemirror": "5.42.0",
+    "css-loader": "1.0.1",
     "eslint": "5.1.0",
     "expect.js": "0.3.1",
     "mocha": "5.2.0",
@@ -41,16 +41,15 @@
     "rollup": "0.67.3",
     "rollup-plugin-babel": "4.0.3",
     "rollup-plugin-replace": "2.1.0",
-    "rollup-plugin-uglify": "1.0.1",
+    "rollup-plugin-terser": "3.0.0",
     "simulate": "git://github.com/dfilatov/simulate.js",
     "sinon": "7.1.1",
-    "style-loader": "0.16.1",
-    "uglify-js": "2.7.5",
-    "uglifyjs-webpack-plugin": "0.4.0",
+    "style-loader": "0.23.1",
     "vow": "0.4.17",
     "vow-node": "0.3.0",
-    "webpack": "2.3.3",
-    "webpack-dev-server": "2.4.2",
+    "webpack": "4.26.0",
+    "webpack-cli": "3.1.2",
+    "webpack-dev-server": "3.1.10",
     "zuul": "3.12.0"
   },
   "license": "MIT",
@@ -70,5 +69,8 @@
     "playground-server": "webpack-dev-server --config playground/webpack.config.js --progress --colors --port 3000",
     "deploy-playground": "./scripts/deployPlayground.sh",
     "release": "node scripts/release"
+  },
+  "dependencies": {
+    "rollup-plugin-terser": "3.0.0"
   }
 }

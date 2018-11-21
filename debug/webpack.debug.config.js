@@ -1,4 +1,5 @@
 module.exports = {
+    mode : 'development',
     entry : __dirname + '/vidom.js',
     output : {
         path : __dirname + '/debug',
@@ -6,8 +7,13 @@ module.exports = {
         publicPath : '/debug/'
     },
     module : {
-        loaders: [
+        rules : [
             { test : /\.js$/, loader : 'babel-loader' }
         ]
+    },
+    resolve : {
+        alias : {
+            'vidom' : '../src/vidom'
+        }
     }
 };

@@ -1,6 +1,5 @@
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-
 module.exports = {
+    mode : 'development',
     entry : __dirname + '/index.js',
     output : {
         path : __dirname,
@@ -8,17 +7,14 @@ module.exports = {
         publicPath : '/playground'
     },
     module : {
-        loaders: [
+        rules : [
             { test : /\.js$/, loader : 'babel-loader' },
             { test: /\.css$/, loaders : ['style-loader', 'css-loader'] }
         ]
     },
     resolve : {
         alias : {
-            'vidom' : __dirname + '/../src/vidom.js'
+            'vidom' : '../src/vidom.js'
         }
-    },
-    plugins : [
-        new UglifyJSPlugin()
-    ]
+    }
 };
