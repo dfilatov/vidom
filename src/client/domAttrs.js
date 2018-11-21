@@ -1,6 +1,7 @@
 import escapeAttr from '../utils/escapeAttr';
 import isInArray from '../utils/isInArray';
 import dasherize from '../utils/dasherize';
+import merge from '../utils/merge';
 import { IS_DEBUG } from '../utils/debug';
 
 function setAttr(node, name, val) {
@@ -164,24 +165,27 @@ const DEFAULT_ATTR_CFG = {
         remove : removeAttr,
         toString : attrToString
     },
-    BOOLEAN_ATTR_CFG = {
-        ...DEFAULT_ATTR_CFG,
-        set : setBooleanAttr,
-        toString : booleanAttrToString
-    },
-    OVERLOADED_BOOLEAN_ATTR_CFG = {
-        ...BOOLEAN_ATTR_CFG,
-        toString : overloadedBooleanAttrToString
-    },
+    BOOLEAN_ATTR_CFG = merge(
+        DEFAULT_ATTR_CFG,
+        {
+            set : setBooleanAttr,
+            toString : booleanAttrToString
+        }),
+    OVERLOADED_BOOLEAN_ATTR_CFG = merge(
+        BOOLEAN_ATTR_CFG,
+        {
+            toString : overloadedBooleanAttrToString
+        }),
     DEFAULT_PROP_CFG = {
         set : setProp,
         remove : removeProp,
         toString : attrToString
     },
-    BOOLEAN_PROP_CFG = {
-        ...DEFAULT_PROP_CFG,
-        toString : booleanAttrToString
-    },
+    BOOLEAN_PROP_CFG = merge(
+        DEFAULT_PROP_CFG,
+        {
+            toString : booleanAttrToString
+        }),
     attrsCfg = Object.create(null);
 
 attrNames.acceptCharset = 'accept-charset';
