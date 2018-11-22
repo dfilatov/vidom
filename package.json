@@ -71,6 +71,6 @@
     "release": "node scripts/release"
   },
   "dependencies": {
-    "rollup-plugin-terser": "3.0.0"
+    "csstype": "2.5.7"
   }
 }

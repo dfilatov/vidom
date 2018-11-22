@@ -1,5 +1,7 @@
 // TypeScript Version: 3.0
 
+import * as CSS from 'csstype';
+
 export = vidom;
 export as namespace vidom;
 
@@ -342,7 +344,7 @@ declare namespace vidom {
         role?: string;
         slot?: string;
         spellCheck?: boolean;
-        style?: MapLike<string | number | null>;
+        style?: CSS.Properties;
         tabIndex?: number;
         title?: string;
 
@@ -756,7 +758,7 @@ declare namespace vidom {
         method?: string;
         min?: number | string;
         name?: string;
-        style?: {};
+        style?: CSS.Properties;
         target?: string;
         type?: string;
         width?: number | string;
