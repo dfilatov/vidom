@@ -278,6 +278,10 @@ declare namespace vidom {
         onWheel?: DOMEventHandler<WheelEvent>;
     }
 
+    type CSSProperties = {
+        [key in keyof CSS.Properties]: CSS.Properties[key] | null;
+    }
+
     interface HTMLAttributes extends DOMAttributes {
         accessKey?: string;
         'aria-activedescendant'?: string;
@@ -344,7 +348,7 @@ declare namespace vidom {
         role?: string;
         slot?: string;
         spellCheck?: boolean;
-        style?: CSS.Properties;
+        style?: CSSProperties;
         tabIndex?: number;
         title?: string;
 
@@ -758,7 +762,7 @@ declare namespace vidom {
         method?: string;
         min?: number | string;
         name?: string;
-        style?: CSS.Properties;
+        style?: CSSProperties;
         target?: string;
         type?: string;
         width?: number | string;
