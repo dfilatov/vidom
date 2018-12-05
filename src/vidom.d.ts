@@ -15,7 +15,7 @@ declare namespace vidom {
 
     interface FunctionComponent<
         TAttrs extends MapLike = {},
-        TChildren = any,
+        TChildren = unknown,
         TContext extends MapLike = {}
     > {
         (attrs: TAttrs, children: TChildren, context: TContext): Element | null;
@@ -24,17 +24,16 @@ declare namespace vidom {
 
     interface ComponentClass<
         TAttrs extends MapLike = {},
-        TChildren = any,
-        TContext extends MapLike = {},
-        TComponent = Component<TAttrs, TChildren, {}, TContext>
+        TChildren = unknown,
+        TContext extends MapLike = {}
     > {
-        new (attrs: TAttrs, children: TChildren, context: TContext): TComponent;
+        new (attrs: TAttrs, children: TChildren, context: TContext): Component<TAttrs, TChildren, {}, TContext>;
         defaultAttrs?: Partial<TAttrs>;
     }
 
     type ComponentType<
         TAttrs extends MapLike = {},
-        TChildren = any,
+        TChildren = unknown,
         TContext extends MapLike = {}
     > =
         ComponentClass<TAttrs, TChildren, TContext> |
@@ -42,7 +41,7 @@ declare namespace vidom {
 
     abstract class Component<
         TAttrs extends MapLike = {},
-        TChildren = any,
+        TChildren = unknown,
         TState extends MapLike = {},
         TContext extends MapLike = {},
         TChildContext extends MapLike = {}
@@ -86,7 +85,7 @@ declare namespace vidom {
     abstract class BaseElement {
         readonly key: Key | null;
 
-        clone(): this;
+        clone(): BaseElement;
     }
 
     class TagElement extends BaseElement {
@@ -108,7 +107,7 @@ declare namespace vidom {
             attrs?: HTMLAttributes | SVGAttributes | null,
             children?: Node,
             ref?: Ref<DOMElement> | null
-        ): this;
+        ): TagElement;
     }
 
     class TextElement extends BaseElement {
@@ -119,7 +118,7 @@ declare namespace vidom {
             children?: string
         );
 
-        clone(children?: string): this;
+        clone(children?: string): TextElement;
     }
 
     class FragmentElement extends BaseElement {
@@ -130,46 +129,43 @@ declare namespace vidom {
             children?: Node
         );
 
-        clone(children?: Node): this;
+        clone(children?: Node): FragmentElement;
     }
 
     class ComponentElement<
         TAttrs extends MapLike = MapLike,
-        TChildren = any,
-        TComponent extends Component<TAttrs, TChildren> = Component<TAttrs, TChildren>,
-        TComponentClass extends ComponentClass<TAttrs, TChildren> = ComponentClass<TAttrs, TChildren>
+        TChildren = unknown
     > extends BaseElement {
-        readonly component: TComponentClass;
+        readonly component: ComponentClass<TAttrs, TChildren>;
         readonly attrs: Readonly<TAttrs>;
         readonly children?: TChildren;
-        readonly ref: Ref<TComponent> | null;
+        readonly ref: Ref<Component<TAttrs, TChildren>> | null;
 
         constructor(
-            component: TComponentClass,
+            component: ComponentClass<TAttrs, TChildren>,
             key?: Key | null,
             attrs?: TAttrs,
             children?: TChildren,
-            ref?: Ref<TComponent> | null
+            ref?: Ref<Component<TAttrs, TChildren>> | null
         );
 
         clone(
             attrs?: Partial<TAttrs> | null,
             children?: Node,
-            ref?: Ref<TComponent> | null
-        ): this;
+            ref?: Ref<Component<TAttrs, TChildren>> | null
+        ): ComponentElement<TAttrs, TChildren>;
     }
 
     class FunctionComponentElement<
         TAttrs extends MapLike = MapLike,
-        TChildren = any,
-        TFunctionComponent extends FunctionComponent<TAttrs, TChildren> = FunctionComponent<TAttrs, TChildren>
+        TChildren = unknown
     > extends BaseElement {
-        readonly component: TFunctionComponent;
+        readonly component: FunctionComponent<TAttrs, TChildren>;
         readonly attrs: Readonly<TAttrs>;
         readonly children?: TChildren;
 
         constructor(
-            component: TFunctionComponent,
+            component: FunctionComponent<TAttrs, TChildren>,
             key?: Key | null,
             attrs?: TAttrs,
             children?: TChildren
@@ -178,7 +174,7 @@ declare namespace vidom {
         clone(
             attrs?: Partial<TAttrs> | null,
             children?: Node
-        ): this;
+        ): FunctionComponentElement<TAttrs, TChildren>;
     }
 
     type Element =
@@ -1028,24 +1024,19 @@ declare namespace vidom {
         ref?: Ref<HTMLElement | SVGElement> | null,
         escapeChildren?: boolean
     ): TagElement;
-    function elem<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
-        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>,
+    function elem<TAttrs, TChildren> (
+        component: FunctionComponent<TAttrs, TChildren>,
         key?: Key | null,
         attrs?: TAttrs,
         children?: TChildren
-    ): FunctionComponentElement<TAttrs, TChildren, TFunctionComponent>;
-    function elem<
-        TAttrs,
-        TChildren,
-        TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>,
-        TComponent extends Component<TAttrs, TChildren>,
-    >(
-        component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>,
+    ): FunctionComponentElement<TAttrs, TChildren>;
+    function elem<TAttrs, TChildren>(
+        component: ComponentClass<TAttrs, TChildren>,
         key?: Key | null,
         attrs?: TAttrs,
         children?: TChildren,
-        ref?: Ref<TComponent> | null
-    ): ComponentElement<TAttrs, TChildren, TComponent, TComponentClass>;
+        ref?: Ref<Component<TAttrs, TChildren>> | null
+    ): ComponentElement<TAttrs, TChildren>;
 
     function mount(domElem: DOMElement, node: Node, callback?: () => void): void;
     function mount(domElem: DOMElement, node: Node, context?: MapLike, callback?: () => void): void;
@@ -1079,21 +1070,19 @@ declare namespace vidom {
         ) | null,
         ...children: Node[]
     ): TagElement;
-    function h<TAttrs, TChildren, TFunctionComponent extends FunctionComponent<TAttrs, TChildren>> (
-        component: TFunctionComponent & FunctionComponent<TAttrs, TChildren>,
+    function h<TAttrs, TChildren> (
+        component: FunctionComponent<TAttrs, TChildren>,
         props: (TAttrs & WithKey) | null,
         children?: TChildren
-    ): FunctionComponentElement<TAttrs, TChildren, TFunctionComponent>;
+    ): FunctionComponentElement<TAttrs, TChildren>;
     function h<
         TAttrs,
-        TChildren,
-        TComponentClass extends ComponentClass<TAttrs, TChildren, TComponent>,
-        TComponent extends Component<TAttrs, TChildren>,
+        TChildren
     >(
-        component: TComponentClass & ComponentClass<TAttrs, TChildren, TComponent>,
+        component: ComponentClass<TAttrs, TChildren>,
         props: (TAttrs & WithRef<vidom.Component> & WithKey) | null,
         children?: TChildren
-    ): ComponentElement<TAttrs, TChildren, TComponent, TComponentClass>;
+    ): ComponentElement<TAttrs, TChildren>;
 
     const IS_DEBUG: boolean;
 }
