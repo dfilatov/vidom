@@ -21,7 +21,7 @@ export default function FragmentElement(key, children) {
 
     this.type = ELEMENT_TYPE_FRAGMENT;
     this.key = key == null? null : key;
-    this.children = processChildren(children);
+    this.children = children;
 
     if(IS_DEBUG) {
         if(Array.isArray(this.children)) {
@@ -30,11 +30,18 @@ export default function FragmentElement(key, children) {
         this.__isFrozen = true;
     }
 
+    this._normalizedChildren = undefined;
     this._domNode = null;
     this._ctx = emptyObj;
 }
 
 FragmentElement.prototype = {
+    getNormalizedChildren() {
+        return this._normalizedChildren === undefined?
+            this._normalizedChildren = processChildren(this.children) :
+            this._normalizedChildren;
+    },
+
     getDomNode() {
         return this._domNode;
     },
@@ -43,7 +50,7 @@ FragmentElement.prototype = {
         if(ctx !== emptyObj) {
             this._ctx = ctx;
 
-            const { children } = this;
+            const children = this.getNormalizedChildren();
 
             if(children !== null) {
                 const len = children.length;
@@ -63,7 +70,7 @@ FragmentElement.prototype = {
             checkReuse(this, 'fragment');
         }
 
-        const { children } = this,
+        const children = this.getNormalizedChildren(),
             domNode = [createElement('!', null), createElement('!', null)],
             domFragment = document.createDocumentFragment();
 
@@ -86,7 +93,7 @@ FragmentElement.prototype = {
     },
 
     renderToString() {
-        const { children } = this;
+        const children = this.getNormalizedChildren();
         let res = '<!---->';
 
         if(children !== null) {
@@ -106,7 +113,7 @@ FragmentElement.prototype = {
         }
 
         const domNode = [domNodes[domIdx++]],
-            { children } = this;
+            children = this.getNormalizedChildren();
 
         if(children !== null) {
             const len = children.length;
@@ -125,7 +132,7 @@ FragmentElement.prototype = {
     },
 
     mount() {
-        const { children } = this;
+        const children = this.getNormalizedChildren();
 
         if(children !== null) {
             let i = 0;
@@ -138,7 +145,7 @@ FragmentElement.prototype = {
     },
 
     unmount() {
-        const { children } = this;
+        const children = this.getNormalizedChildren();
 
         if(children !== null) {
             const len = children.length;
@@ -157,12 +164,13 @@ FragmentElement.prototype = {
             res.__isFrozen = false;
         }
 
-        res.children = children == null? this.children : processChildren(children);
+        res.children = children == null? this.children : children;
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
         }
 
+        res._normalizedChildren = children == null? this._normalizedChildren : undefined;
         res._ctx = this._ctx;
 
         return res;
@@ -182,6 +190,10 @@ FragmentElement.prototype = {
     },
 
     _patchChildren(element) {
+        if(this.children === element.children) {
+            return;
+        }
+
         const childrenA = this.children,
             childrenB = element.children;
 

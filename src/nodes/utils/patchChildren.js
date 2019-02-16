@@ -1,8 +1,8 @@
 import patchOps from '../../client/patchOps';
 
 export default function patchChildren(elementA, elementB) {
-    const childrenA = elementA.children,
-        childrenB = elementB.children,
+    const childrenA = elementA.getNormalizedChildren(),
+        childrenB = elementB.getNormalizedChildren(),
         childrenALen = childrenA.length,
         childrenBLen = childrenB.length;
 

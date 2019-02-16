@@ -45,7 +45,7 @@ export default function TagElement(tag, key, attrs, children, ref, escapeChildre
     this.tag = tag;
     this.key = key == null? null : key;
     this.attrs = attrs || emptyObj;
-    this.children = processChildren(children);
+    this.children = children;
     this.ref = ref == null? null : ref;
 
     if(IS_DEBUG) {
@@ -59,6 +59,7 @@ export default function TagElement(tag, key, attrs, children, ref, escapeChildre
         this.__isFrozen = true;
     }
 
+    this._normalizedChildren = undefined;
     this._domNode = null;
     this._ns = tag in ns? ns[tag] : null;
     this._escapeChildren = escapeChildren !== false;
@@ -66,6 +67,12 @@ export default function TagElement(tag, key, attrs, children, ref, escapeChildre
 }
 
 TagElement.prototype = {
+    getNormalizedChildren() {
+        return this._normalizedChildren === undefined?
+            this._normalizedChildren = processChildren(this.children) :
+            this._normalizedChildren;
+    },
+
     getDomNode() {
         return this._domNode;
     },
@@ -74,7 +81,7 @@ TagElement.prototype = {
         if(ctx !== emptyObj) {
             this._ctx = ctx;
 
-            const { children } = this;
+            const children = this.getNormalizedChildren();
 
             if(children !== null && typeof children !== 'string') {
                 const len = children.length;
@@ -90,11 +97,13 @@ TagElement.prototype = {
     },
 
     renderToDom(parentNs) {
+        const { tag } = this;
+
         if(IS_DEBUG) {
-            checkReuse(this, this.tag);
+            checkReuse(this, tag);
         }
 
-        const { tag, children } = this,
+        const children = this.getNormalizedChildren(),
             ns = this._ns || parentNs;
 
         if(USE_DOM_STRINGS && children && typeof children !== 'string') {
@@ -150,7 +159,7 @@ TagElement.prototype = {
 
         const ns = this._ns,
             { attrs } = this;
-        let { children } = this,
+        let children = this.getNormalizedChildren(),
             res = '<' + tag;
 
         if(ns !== null) {
@@ -224,7 +233,8 @@ TagElement.prototype = {
         }
 
         const domNode = this._domNode = domNodes[domIdx],
-            { attrs, children } = this;
+            { attrs } = this,
+            children = this.getNormalizedChildren();
 
         if(attrs !== emptyObj) {
             let name, value;
@@ -253,7 +263,7 @@ TagElement.prototype = {
     },
 
     mount() {
-        const { children } = this;
+        const children = this.getNormalizedChildren();
 
         if(children !== null && typeof children !== 'string') {
             let i = 0;
@@ -270,7 +280,7 @@ TagElement.prototype = {
     },
 
     unmount() {
-        const { children } = this;
+        const children = this.getNormalizedChildren();
 
         if(children && typeof children !== 'string') {
             let i = 0;
@@ -298,13 +308,14 @@ TagElement.prototype = {
         }
 
         res.attrs = attrs == null? this.attrs : merge(this.attrs, attrs);
-        res.children = children == null? this.children : processChildren(children);
+        res.children = children == null? this.children : children;
         res.ref = ref == null? this.ref : ref;
 
         if(IS_DEBUG) {
             res.__isFrozen = true;
         }
 
+        res._normalizedChildren = children == null? this._normalizedChildren : undefined;
         res._escapeChildren = this._escapeChildren;
         res._ctx = this._ctx;
 
@@ -327,8 +338,12 @@ TagElement.prototype = {
     },
 
     _patchChildren(element) {
-        const childrenA = this.children,
-            childrenB = element.children;
+        if(this.children === element.children) {
+            return;
+        }
+
+        const childrenA = this.getNormalizedChildren(),
+            childrenB = element.getNormalizedChildren();
 
         if(childrenA === null && childrenB === null) {
             return;
