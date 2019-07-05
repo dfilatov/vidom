@@ -148,6 +148,8 @@ FragmentElement.prototype = {
                 children[i++].unmount();
             }
         }
+
+        this._domNode = null;
     },
 
     clone(children) {

@@ -82,7 +82,9 @@ TextElement.prototype = {
 
     mount : noOp,
 
-    unmount : noOp,
+    unmount() {
+        this._domNode = null;
+    },
 
     clone(children) {
         const res = new TextElement(this.key);
