@@ -8,8 +8,8 @@ export default Object.assign(
     {},
     baseConfig,
     {
-        name : 'vidom',
         output : {
+            name : 'vidom',
             file : 'dist/vidom' + (isProduction? '.min' : '') + '.js',
             format : 'umd'
         },

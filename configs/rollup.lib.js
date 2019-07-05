@@ -4,6 +4,8 @@ export default Object.assign(
     {},
     baseConfig,
     {
-        format : 'cjs',
-        dest : 'lib/vidom.js'
+        output : {
+            format : 'cjs',
+            file : 'lib/vidom.js'
+        }
     });
