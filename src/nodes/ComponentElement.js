@@ -136,7 +136,11 @@ ComponentElement.prototype = {
         if(this === element) {
             instance.patch(element.attrs, element.children, element._ctx, true);
         }
-        else if(this.type === element.type && this.component === element.component) {
+        else if(
+            this.key === element.key &&
+            this.type === element.type &&
+            this.component === element.component
+        ) {
             instance.patch(element.attrs, element.children, element._ctx, true);
             element._instance = instance;
             this._patchRef(element);

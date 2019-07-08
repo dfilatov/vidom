@@ -315,7 +315,12 @@ TagElement.prototype = {
         if(this === element) {
             this._patchChildren(element);
         }
-        else if(this.type === element.type && this.tag === element.tag && this._ns === element._ns) {
+        else if(
+            this.key === element.key &&
+            this.type === element.type &&
+            this.tag === element.tag &&
+            this._ns === element._ns
+        ) {
             element._domNode = this._domNode;
             this._patchAttrs(element);
             this._patchChildren(element);

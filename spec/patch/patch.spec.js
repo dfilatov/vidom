@@ -41,6 +41,7 @@ describe('patch', () => {
         require('./data/replace11'),
         require('./data/replace12'),
         require('./data/replace13'),
+        require('./data/replace14'),
         require('./data/appendChild1'),
         require('./data/appendChild2'),
         require('./data/appendChild3'),

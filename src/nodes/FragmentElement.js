@@ -174,7 +174,7 @@ FragmentElement.prototype = {
         if(this === element) {
             this._patchChildren(element);
         }
-        else if(this.type === element.type) {
+        else if(this.key === element.key && this.type === element.type) {
             element._domNode = this._domNode;
             this._patchChildren(element);
         }
