@@ -101,7 +101,11 @@ FunctionComponentElement.prototype = {
             this._rootElement = null;
             prevRootElement.patch(this._getRootElement());
         }
-        else if(this.type === element.type && this.component === element.component) {
+        else if(
+            this.key === element.key &&
+            this.type === element.type &&
+            this.component === element.component
+        ) {
             this._getRootElement().patch(element._getRootElement());
             this._rootElement = null;
         }
