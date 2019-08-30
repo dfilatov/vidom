@@ -51,7 +51,7 @@ declare namespace vidom {
         protected readonly state: Readonly<TState>;
         protected readonly context: Readonly<TContext>;
 
-        constructor(attrs: TAttrs, children: TChildren);
+        constructor(attrs: TAttrs, children: TChildren, context: TContext);
         protected setState(state: Partial<TState>): void;
         protected update(): void;
         protected isMounted(): boolean;
