@@ -51,7 +51,7 @@ export default function normalizeNode(obj) {
                     (res === obj?
                         res.slice(0, i) :
                         Array.isArray(res)? res : [nodeToElement(res)]).concat(child) :
-                    child;
+                    child.slice();
             }
             else if(res !== obj) {
                 if(!hasContentBefore) {

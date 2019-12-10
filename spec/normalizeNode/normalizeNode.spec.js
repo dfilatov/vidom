@@ -112,6 +112,14 @@ describe('normalizeNode', () => {
             .to.be.eql(node);
     });
 
+    it('should not modify array child', () => {
+        const child = [h('a')];
+
+        normalizeNode([child, h('b')]);
+
+        expect(child).to.have.length(1);
+    });
+
     it('should reuse existing array if possible', () => {
         const children = [h('a'), h('b')];
 
