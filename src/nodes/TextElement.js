@@ -1,5 +1,4 @@
 import patchOps from '../client/patchOps';
-import createElement from '../client/utils/createElement';
 import checkReuse from './utils/checkReuse';
 import restrictObjProp from '../utils/restrictObjProp';
 import noOp from '../utils/noOp';
@@ -41,25 +40,15 @@ TextElement.prototype = {
             checkReuse(this, 'text');
         }
 
-        const domFragment = document.createDocumentFragment(),
-            domNode = [createElement('!', null), createElement('!', null)],
-            { children } = this;
+        const { children } = this;
 
-        domFragment.appendChild(domNode[0]);
+        this._domNode = document.createTextNode(children === null? '' : children);
 
-        if(children !== null) {
-            domFragment.appendChild(document.createTextNode(children));
-        }
-
-        domFragment.appendChild(domNode[1]);
-
-        this._domNode = domNode;
-
-        return domFragment;
+        return this._domNode;
     },
 
     renderToString() {
-        return '<!---->' + (this.children? escapeHtml(this.children) : '') + '<!---->';
+        return '<!---->' + (this.children === null? '' : escapeHtml(this.children)) + '<!---->';
     },
 
     adoptDom(domNodes, domIdx) {
@@ -120,7 +109,7 @@ TextElement.prototype = {
 
         if(childrenA !== childrenB) {
             if(childrenB) {
-                patchOps.updateText(this, childrenB, false);
+                patchOps.updateText(this, childrenB, true);
             }
             else if(childrenA) {
                 patchOps.removeText(this);

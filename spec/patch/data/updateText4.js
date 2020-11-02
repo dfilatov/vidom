@@ -10,6 +10,6 @@ export default {
         h('plaintext', null, 'new text')
     ],
     'patch' : [
-        { op : patchOps.updateText, args : [node, 'new text', false] }
+        { op : patchOps.updateText, args : [node, 'new text', true] }
     ]
 };

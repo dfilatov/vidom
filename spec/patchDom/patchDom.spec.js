@@ -35,7 +35,7 @@ describe('patchDom', () => {
             mountSync(domNode, h('span', null, h('plaintext', null, 'text')));
 
             expect(domNode.firstChild.innerHTML)
-                .to.equal('<!---->text<!---->');
+                .to.equal('text');
         });
 
         it('should update not empty text node', () => {
@@ -43,6 +43,23 @@ describe('patchDom', () => {
             mountSync(domNode, h('span', null, h('plaintext', null, 'new text')));
 
             expect(domNode.firstChild.innerHTML)
+                .to.equal('new text');
+        });
+
+        it('should properly update adopted text node', () => {
+            const treeDomNode = document.createElement('div'),
+                childDomNode = [document.createComment(''), document.createComment('')];
+
+            treeDomNode.appendChild(childDomNode[0]);
+            treeDomNode.appendChild(document.createTextNode('text'));
+            treeDomNode.appendChild(childDomNode[1]);
+            domNode.appendChild(document.createComment('vidom'));
+            domNode.appendChild(treeDomNode);
+
+            mountSync(domNode, h('div', null, h('plaintext', null, 'text')));
+            mountSync(domNode, h('div', null, h('plaintext', null, 'new text')));
+
+            expect(domNode.childNodes[1].innerHTML)
                 .to.equal('<!---->new text<!---->');
         });
     });
@@ -61,7 +78,7 @@ describe('patchDom', () => {
             mountSync(domNode, h('span', null, h('plaintext')));
 
             expect(domNode.firstChild.innerHTML)
-                .to.equal('<!----><!---->');
+                .to.equal('');
         });
     });
 
@@ -205,10 +222,10 @@ describe('patchDom', () => {
 
         it('should replace node with text node', () => {
             mountSync(domNode, h('div', null, h('a'), h('span')));
-            mountSync(domNode, h('div', null, h('a'), h('plaintext')));
+            mountSync(domNode, h('div', null, h('a'), h('plaintext', null, 'text')));
 
             expect(domNode.firstChild.innerHTML)
-                .to.equal('<a></a><!----><!---->');
+                .to.equal('<a></a>text');
         });
 
         it('should replace text node with node', () => {
@@ -373,8 +390,7 @@ describe('patchDom', () => {
         it('should move child node', () => {
             mountSync(domNode, h('div', null, h('a', { key : 'a' }), h('b', { key : 'b' })));
 
-            const aDomNode = domNode.firstChild.childNodes[0],
-                bDomNode = domNode.firstChild.childNodes[1];
+            const [aDomNode, bDomNode] = domNode.firstChild.childNodes;
 
             mountSync(domNode, h('div', null, h('b', { key : 'b' }), h('a', { key : 'a' })));
 
@@ -500,7 +516,7 @@ describe('patchDom', () => {
                 ]));
 
             expect(domNode.firstChild.innerHTML)
-                .to.equal('<a></a><!---->text<!----><span></span>');
+                .to.equal('<a></a>text<span></span>');
         });
 
         it('should move text node before another one', () => {
@@ -522,10 +538,10 @@ describe('patchDom', () => {
                 ]));
 
             expect(domNode.firstChild.innerHTML)
-                .to.equal('<!---->a<!----><!---->b<!----><!---->c<!----><!---->e<!---->');
+                .to.equal('abce');
         });
 
-        it('should move text node before another one', () => {
+        it('should move text node after another one', () => {
             mountSync(
                 domNode,
                 h('div', null, [
@@ -542,7 +558,7 @@ describe('patchDom', () => {
                 ]));
 
             expect(domNode.firstChild.innerHTML)
-                .to.equal('<!---->a<!----><!---->c<!----><!---->b<!---->');
+                .to.equal('acb');
         });
     });
 

@@ -28,12 +28,12 @@ function removeChild(childElement) {
     domOps.remove(childDomNode);
 }
 
-function moveChild(childElement, toChildelement, after) {
+function moveChild(childElement, toChildElement, after) {
     const activeDomNode = document.activeElement;
 
     disableListeners();
 
-    domOps.move(childElement.getDomNode(), toChildelement.getDomNode(), after);
+    domOps.move(childElement.getDomNode(), toChildElement.getDomNode(), after);
 
     if(document.activeElement !== activeDomNode) {
         activeDomNode.focus();

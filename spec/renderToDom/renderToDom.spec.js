@@ -130,7 +130,7 @@ describe('renderToDom', () => {
             ])).renderToDom(null);
 
             expect(domNode.innerHTML)
-                .to.equal('<!---->text1<!----><!----><!----><!---->text2<!---->');
+                .to.equal('text1text2');
         });
 
         it('should not render booleans in a plain text node', () => {
@@ -140,7 +140,7 @@ describe('renderToDom', () => {
             ])).renderToDom(null);
 
             expect(domNode.innerHTML)
-                .to.equal('<!----><!----><!----><!---->');
+                .to.equal('');
         });
     });
 
@@ -300,7 +300,7 @@ describe('renderToDom', () => {
                 .to.equal('');
         });
 
-        it('should be rendered as a fragment if onRender() returns string', () => {
+        it('should be rendered as a text node if onRender() returns string', () => {
             const Component = createComponent({
                     onRender() {
                         return 'text';
@@ -309,7 +309,7 @@ describe('renderToDom', () => {
                 domNode = (topNode = h(Component)).renderToDom(null);
 
             expect(domNode.nodeType)
-                .to.equal(Node.DOCUMENT_FRAGMENT_NODE);
+                .to.equal(Node.TEXT_NODE);
         });
 
         it('should be rendered as a fragment if onRender() returns array', () => {
@@ -379,12 +379,12 @@ describe('renderToDom', () => {
                 .to.equal(Node.COMMENT_NODE);
         });
 
-        it('should be rendered as a fragment if it returns string', () => {
+        it('should be rendered as a text node if it returns string', () => {
             const Component = () => 'text',
                 domNode = (topNode = h(Component)).renderToDom(null);
 
             expect(domNode.nodeType)
-                .to.equal(Node.DOCUMENT_FRAGMENT_NODE);
+                .to.equal(Node.TEXT_NODE);
         });
 
         it('should be rendered as a fragment if it returns array', () => {
