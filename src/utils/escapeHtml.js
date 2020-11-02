@@ -5,8 +5,13 @@ const AMP_RE = /&/g,
 export default function escapeHtml(str) {
     str = str + '';
 
-    let i = str.length,
-        escapes = 0; // 1 — escape '&', 2 — escape '<', 4 — escape '>'
+    let i = str.length;
+
+    if(i === 0) {
+        return str;
+    }
+
+    let escapes = 0; // 1 — escape '&', 2 — escape '<', 4 — escape '>'
 
     while(i-- > 0) {
         switch(str.charCodeAt(i)) {
