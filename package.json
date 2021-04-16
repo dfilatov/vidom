@@ -71,6 +71,6 @@
     "release": "node scripts/release"
   },
   "dependencies": {
-    "csstype": "2.6.5"
+    "csstype": "3.0.7"
   }
 }

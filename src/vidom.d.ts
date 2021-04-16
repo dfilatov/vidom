@@ -363,14 +363,27 @@ declare namespace vidom {
         unselectable?: 'on' | 'off';
     }
 
+    type HTMLAttributeReferrerPolicy =
+        '' |
+        'no-referrer' |
+        'no-referrer-when-downgrade' |
+        'origin' |
+        'origin-when-cross-origin' |
+        'same-origin' |
+        'strict-origin' |
+        'strict-origin-when-cross-origin' |
+        'unsafe-url';
+
     interface AnchorHTMLAttributes extends HTMLAttributes {
         download?: any;
         href?: string;
         hrefLang?: string;
         media?: string;
+        ping?: string;
         rel?: string;
         target?: string;
         type?: string;
+        referrerPolicy?: HTMLAttributeReferrerPolicy;
     }
 
     interface AreaHTMLAttributes extends HTMLAttributes {
@@ -380,6 +393,7 @@ declare namespace vidom {
         href?: string;
         hrefLang?: string;
         media?: string;
+        referrerPolicy?: HTMLAttributeReferrerPolicy;
         rel?: string;
         shape?: string;
         target?: string;
@@ -467,12 +481,17 @@ declare namespace vidom {
         allow?: string;
         allowFullScreen?: boolean;
         allowTransparency?: boolean;
+        /** @deprecated */
         frameBorder?: number | string;
         height?: number | string;
+        /** @deprecated */
         marginHeight?: number;
+        /** @deprecated */
         marginWidth?: number;
         name?: string;
+        referrerPolicy?: HTMLAttributeReferrerPolicy;
         sandbox?: string;
+        /** @deprecated */
         scrolling?: string;
         seamless?: boolean;
         src?: string;
@@ -485,6 +504,8 @@ declare namespace vidom {
         crossOrigin?: 'anonymous' | 'use-credentials' | '';
         decoding?: 'async' | 'auto' | 'sync';
         height?: number | string;
+        loading?: 'eager' | 'lazy';
+        referrerPolicy?: HTMLAttributeReferrerPolicy;
         sizes?: string;
         src?: string;
         srcSet?: string;
@@ -557,6 +578,7 @@ declare namespace vidom {
         hrefLang?: string;
         integrity?: string;
         media?: string;
+        referrerPolicy?: HTMLAttributeReferrerPolicy;
         rel?: string;
         sizes?: string;
         type?: string;
@@ -658,6 +680,7 @@ declare namespace vidom {
         integrity?: string;
         noModule?: boolean;
         nonce?: string;
+        referrerPolicy?: HTMLAttributeReferrerPolicy;
         src?: string;
         type?: string;
     }
