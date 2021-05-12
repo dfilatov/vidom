@@ -30,7 +30,7 @@
     "babel-plugin-vidom-jsx": "0.7.1",
     "babelify": "10.0.0",
     "browserify": "16.2.3",
-    "codemirror": "5.42.0",
+    "codemirror": "5.58.2",
     "css-loader": "1.0.1",
     "eslint": "6.0.1",
     "expect.js": "0.3.1",
