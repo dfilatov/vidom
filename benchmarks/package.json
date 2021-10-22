@@ -8,7 +8,7 @@
     "preact": "8.2.6",
     "preact-render-to-string": "3.7.0",
     "react": "16.0.0",
-    "react-dom": "16.0.0",
+    "react-dom": "16.0.1",
     "vidom": "0.9.23",
     "vue": "2.5.2",
     "vue-server-renderer": "2.5.2"
