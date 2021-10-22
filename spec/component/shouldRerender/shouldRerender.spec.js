@@ -39,6 +39,24 @@ describe('shouldRerender', () => {
         mountSync(domNode, h(C, nextAttrs, nextChildren), nextContext);
     });
 
+    it('shouldn\'t be called if component updates itself', done => {
+        const C = createComponent({
+            onMount() {
+                this.update();
+            },
+
+            shouldRerender() {
+                done('Unexpected call of shouldRerender');
+            },
+
+            onUpdate() {
+                done();
+            }
+        });
+
+        mountSync(domNode, h(C));
+    });
+
     it('should prevent rendering if returns false', () => {
         const spy = sinon.spy(),
             C = createComponent({

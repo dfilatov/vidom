@@ -57,21 +57,27 @@ function patchComponent(nextAttrs, nextChildren, nextContext, byParent) {
 
     this.__isUpdating = false;
 
-    const shouldRerender = this.shouldRerender(
-        this.__prevAttrs,
-        this.__prevChildren,
-        this.__prevState,
-        this.__prevContext);
+    let shouldRerender = true;
 
-    if(IS_DEBUG) {
-        const shouldRerenderResType = typeof shouldRerender;
+    if(!this.__forcedUpdate__) {
+        shouldRerender = this.shouldRerender(
+            this.__prevAttrs,
+            this.__prevChildren,
+            this.__prevState,
+            this.__prevContext);
 
-        if(shouldRerenderResType !== 'boolean') {
-            const name = getComponentName(this);
+        if(IS_DEBUG) {
+            const shouldRerenderResType = typeof shouldRerender;
 
-            console.warn(`${name}#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
+            if(shouldRerenderResType !== 'boolean') {
+                const name = getComponentName(this);
+
+                console.warn(`${name}#shouldRerender() should return boolean instead of ${shouldRerenderResType}`);
+            }
         }
     }
+
+    this.__forcedUpdate__ = false;
 
     if(shouldRerender) {
         const prevRootElem = this.getRootElement();
@@ -176,6 +182,7 @@ function updateComponent() {
     }
 
     this.__isUpdating = true;
+    this.__forcedUpdate__ = true;
     rafBatch({
         priority : this.__id,
         fn : applyUpdate,
@@ -258,6 +265,7 @@ function createComponent(props, staticProps) {
             this.__id = componentId++;
             this.__isMounted = false;
             this.__isUpdating = false;
+            this.__forcedUpdate__ = false;
 
             this.__rootElement = null;
 
