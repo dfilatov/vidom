@@ -177,12 +177,17 @@ function renderComponent() {
 }
 
 function updateComponent() {
-    if(this.__isUpdating || !this.isMounted()) {
+    if(!this.isMounted()) {
+        return;
+    }
+
+    this.__forcedUpdate__ = true;
+
+    if(this.__isUpdating) {
         return;
     }
 
     this.__isUpdating = true;
-    this.__forcedUpdate__ = true;
     rafBatch({
         priority : this.__id,
         fn : applyUpdate,
